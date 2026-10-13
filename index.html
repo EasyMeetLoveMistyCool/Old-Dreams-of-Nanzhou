@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f5eed6">
+<title>南洲旧梦</title>
+<style>
+:root{
+  --paper:#f5eed6; --ink:#2a2018; --ink2:#6b5d4d; --red:#c23a2b; --red2:#cd6251; --line:#d4c9a8;
+  --indent:33px;   /* 首行缩进两字，两人共用同一基准 */
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='1 1 0.8 1 1 1 0.86 1 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;
+  font-size:16px; line-height:1.9;
+  overscroll-behavior-y:none;
+}
+body::before{content:"";position:fixed;inset:0;background-image:var(--noise);opacity:.07;pointer-events:none;z-index:999}
+#app,#pgSet,#pgCards{display:flex;flex-direction:column;height:100dvh;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+.hide{display:none !important}
+
+/* ---------- 刊头 ---------- */
+.mast{position:relative;text-align:center;padding:13px 16px 8px;flex:0 0 auto}
+/* 国号在上 —— 王权：先国，后殿阁，再纪年 */
+.mast .guo{font-size:10px;letter-spacing:.5em;text-indent:.5em;color:var(--red);
+  opacity:.75;margin:0 0 5px}
+.mast h1{margin:0;font-size:30px;letter-spacing:.34em;font-weight:600;color:var(--red);
+  text-indent:.34em;text-shadow:0 0 1px rgba(42,32,24,.14)}
+.mast .sub{margin-top:5px;font-size:11.5px;letter-spacing:.16em;color:var(--ink2)}
+.mast .set{position:absolute;right:10px;top:14px;font-size:12px;letter-spacing:.1em;
+  color:var(--ink2);border:1px solid var(--line);border-radius:2px;padding:2px 7px;background:transparent}
+.dline{border-top:2px solid var(--red);border-bottom:1px solid var(--line);height:3px;margin:0 10px;flex:0 0 auto}
+.tline{flex:0 0 auto;height:6px}
+
+/* ---------- 版面 ---------- */
+#stream{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:14px 18px 8px;scrollbar-width:none}
+#stream::-webkit-scrollbar{display:none}
+.entry{margin:0 0 14px}
+.entry.swap{margin-top:30px}
+.colhead{font-size:13.5px;letter-spacing:.2em;margin-bottom:2px;display:flex;align-items:center;gap:7px}
+.colhead .byline{font-size:11px;letter-spacing:.12em;opacity:.8;margin-left:.2em}
+.colhead .tag{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  width:19px;height:19px;font-size:11.5px;line-height:1;color:#fff;background:var(--red);
+  border-radius:2px;letter-spacing:0;padding-top:1px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);
+  -webkit-mask-image:var(--grain);mask-image:var(--grain);opacity:.95}
+.colhead .date{font-size:10.5px;letter-spacing:.1em;opacity:.6;margin:1px 0 10px}
+.colhead .regent{margin-left:auto;font-size:10px;letter-spacing:.1em;color:var(--ink2);
+  border:1px solid var(--line);border-radius:2px;padding:1px 4px;opacity:.8}
+/* ============================================================
+   朱分两阶：摄政王摄行朝政，本与御笔同用朱批
+   女王   → 正朱（#c23a2b），朱批之主
+   摄政王 → 淡朱（#cd6251），同色降一阶，可批红而不与正主齐
+   形制全同，唯此一阶之别；印泥则皆正朱，不分尊卑
+   ============================================================ */
+.colhead.mine{color:var(--red)}
+.colhead.his{color:var(--red2)}
+.colhead .tag{background:var(--red)}
+.colhead.his .tag{background:var(--red2)}
+
+/* ── 女王手谕：朱框装裱，字密行紧，如御笔落于笺上 ── */
+.fold{position:relative;border-top:2px solid var(--red);border-bottom:1px solid var(--line);
+  padding:16px 13px 13px;margin:0;background:rgba(194,58,43,.04)}
+.letter{margin:0;font-size:16.5px;line-height:1.95;
+  letter-spacing:0;text-indent:var(--indent);text-align:left;white-space:pre-wrap;word-break:break-word;
+  text-shadow:0 0 .6px rgba(42,32,24,.12)}
+.signrow{text-align:right;margin-top:7px;display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.signrow .sign{font-size:11.5px;color:var(--ink2);letter-spacing:.1em}
+
+/* ── 摄政王奏：形制与御笔全同，唯朱降一阶 ──
+   同为上线粗、下线细，同为内嵌淡底；上线淡朱，可批红而不僭正朱 */
+.zou{position:relative;border-top:2px solid var(--red2);border-bottom:1px solid var(--line);
+  padding:16px 13px 13px;margin:0;background:rgba(194,58,43,.04)}
+.card{position:relative;text-align:left;font-size:18.5px;line-height:2.1;letter-spacing:.28em;
+  padding:12px 26px 22px 0;margin:0;color:var(--ink);
+  text-shadow:0 0 .8px rgba(42,32,24,.16)}
+/* 缩进只加一次：加在 .tx 上，.card 自身不缩（否则 inline-block 会叠成四字） */
+.card .tx{text-indent:var(--indent)}
+.card+.card{border-top:1px dashed var(--line);margin-top:6px;padding-top:16px}
+.card .tx{display:inline-block}
+.card .tx span{opacity:0;animation:ink .5s forwards}
+@keyframes ink{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
+.card .seal{position:absolute;right:1px;bottom:1px}
+
+/* ── 缺奏启事：同装墨框，形制不坠 ── */
+.nozou{text-align:left;font-size:14.5px;letter-spacing:.28em;
+  color:var(--ink2);line-height:2.2;padding:6px 0 2px}
+
+/* ---------- 印章 ---------- */
+.seal{display:inline-flex;align-items:center;justify-content:center;text-indent:0;
+  writing-mode:vertical-rl;font-size:11px;line-height:1.05;letter-spacing:.06em;
+  color:#fff;background:var(--red);border-radius:2px;padding:5px 3px;min-width:22px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+  -webkit-mask-image:var(--grain);mask-image:var(--grain);
+  -webkit-mask-composite:source-over;mask-composite:add;opacity:.92}
+.seal.two{writing-mode:horizontal-tb}
+
+/* ---------- 传送中 ---------- */
+.tele{font-size:12.5px;color:var(--ink2);letter-spacing:.14em;margin:0 0 22px;text-align:left}
+.tele i{font-style:normal;animation:blink 1.1s infinite}
+.tele i:nth-child(2){animation-delay:.18s}.tele i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+
+/* ---------- 底栏 ---------- */
+.foot{flex:0 0 auto;padding:6px 12px calc(10px)}
+.foot .post{display:block;width:100%;margin:8px 0 6px;padding:9px 0;font:inherit;font-size:15px;
+  letter-spacing:.3em;text-indent:.3em;color:var(--red);background:transparent;
+  border:1px solid var(--red);border-radius:2px}
+.foot .post:active{background:rgba(194,58,43,.08)}
+.foot .edi{text-align:center;font-size:10.5px;color:var(--ink2);opacity:.7;letter-spacing:.14em}
+
+/* ---------- 浮层 ---------- */
+#mask{position:fixed;inset:0;background:rgba(42,32,24,.28);z-index:50}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--paper);
+  border-top:2px solid var(--red);padding:14px 16px calc(16px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.9,.3,1);max-height:78dvh;overflow:auto}
+#sheet.up{transform:translateY(0)}
+#sheet h2{margin:0 0 10px;font-size:14px;letter-spacing:.24em;color:var(--red);font-weight:600}
+#sheet textarea,#sheet input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:transparent;
+  border:1px solid var(--line);border-radius:2px;padding:10px;outline:none}
+#sheet textarea{min-height:120px;line-height:2.1;resize:none;
+  background-image:repeating-linear-gradient(transparent,transparent 33px,rgba(107,93,77,.16) 33px,rgba(107,93,77,.16) 34px)}
+#sheet .lab{font-size:12px;color:var(--ink2);letter-spacing:.14em;margin:12px 0 5px}
+#sheet .row{display:flex;gap:10px;margin-top:14px}
+#sheet .row button{flex:1;padding:10px 0;font:inherit;font-size:15px;letter-spacing:.24em;text-indent:.24em;
+  border-radius:2px;background:transparent}
+#sheet .ok{border:1px solid var(--red);color:var(--red)}
+#sheet .no{border:1px solid var(--line);color:var(--ink2)}
+
+/* ---------- 典章页 ---------- */
+.phead{position:relative;text-align:center;padding:14px 12px 6px;flex:0 0 auto}
+.phead .back{position:absolute;left:10px;top:12px;font-size:15px;color:var(--red);background:none;border:none;font:inherit}
+.phead .pright{position:absolute;right:10px;top:12px;font-size:13px;color:var(--ink2);background:none;border:none;font:inherit;letter-spacing:.1em}
+.phead h2{margin:0;font-size:17px;letter-spacing:.28em;text-indent:.28em;color:var(--ink);font-weight:600}
+.pbody{flex:1 1 auto;overflow-y:auto;padding:14px 18px 20px;scrollbar-width:none}
+.pbody.static{overflow:hidden;display:flex;flex-direction:column;padding-bottom:12px}
+#cardList{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;min-height:120px}
+#cardList::-webkit-scrollbar{display:none}
+.pbody::-webkit-scrollbar{display:none}
+.blk{margin:0 0 20px}
+.blk>.t{font-size:13px;letter-spacing:.22em;color:var(--red);margin-bottom:8px}
+.f{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.f label{font-size:13px;color:var(--ink2);letter-spacing:.1em;flex:0 0 76px}
+.f input{flex:1;font:inherit;font-size:15px;background:transparent;border:none;
+  border-bottom:1px solid var(--line);padding:6px 2px;color:var(--ink);outline:none}
+.f input:focus{border-bottom-color:var(--red)}
+.item{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.item .tx{flex:1;font-size:15px;line-height:1.7;word-break:break-word}
+.item .op{display:flex;gap:6px;flex:0 0 auto}
+.item .op button{font:inherit;font-size:12px;background:none;border:none;color:var(--ink2);padding:2px 4px;letter-spacing:.1em}
+.item .op button.del{color:var(--red)}
+.btnline{display:block;width:100%;margin:12px 0;padding:10px 0;font:inherit;font-size:14.5px;letter-spacing:.24em;
+  text-indent:.24em;background:transparent;border:1px solid var(--red);color:var(--red);border-radius:2px}
+.btnline.grey{border-color:var(--line);color:var(--ink2)}
+.seg{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.seg button{flex:1;font:inherit;font-size:13px;letter-spacing:.08em;padding:9px 0;background:transparent;
+  border:none;color:var(--ink2);border-right:1px solid var(--line)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--red);color:#fff}
+.tip{font-size:11.5px;color:var(--ink2);letter-spacing:.1em;line-height:1.8;opacity:.85}
+.search{position:relative;margin:0 0 10px}
+.search input{width:100%;font:inherit;font-size:14px;letter-spacing:.14em;color:var(--ink);background:transparent;
+  border:none;border-bottom:1px solid var(--line);padding:7px 26px 7px 2px;outline:none}
+.search input:focus{border-bottom-color:var(--red)}
+.search button{position:absolute;right:0;top:4px;font:inherit;font-size:18px;color:var(--ink2);
+  background:none;border:none;padding:0 6px;line-height:1}
+.tools{display:flex;gap:8px;margin-top:10px}
+.tools .tbtn{flex:1;font:inherit;font-size:12.5px;letter-spacing:.14em;padding:9px 0;
+  background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--ink2)}
+.tools .tbtn:active{background:rgba(42,32,24,.05)}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0 12px}
+.gcell{font:inherit;display:flex;align-items:center;justify-content:center;
+  padding:14px 0;background:transparent;border:1px solid var(--line);border-radius:2px;
+  color:var(--ink2);letter-spacing:.18em;font-size:15px}
+.gcell.on{border-color:var(--red);color:var(--red);background:rgba(194,58,43,.05)}
+.gcell.on i{opacity:.8}
+.pick{flex:0 0 auto;width:22px;height:22px;margin-top:2px;border:1px solid var(--line);border-radius:2px;
+  background:transparent;color:transparent;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+.pick.on{background:var(--red);border-color:var(--red);color:#fff}
+#bulkBar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;align-items:center;gap:10px;
+  background:var(--paper);border-top:2px solid var(--red);padding:9px 14px calc(9px + env(safe-area-inset-bottom))}
+#bulkBar button{font:inherit;font-size:13px;letter-spacing:.14em;background:transparent;
+  border:1px solid var(--line);border-radius:2px;padding:6px 12px;color:var(--ink2)}
+#bulkBar #bulkDel{color:var(--red);border-color:var(--red);margin-left:auto}
+#bulkBar span{font-size:12px;color:var(--ink2);letter-spacing:.1em}
+.pbody.hasbulk{padding-bottom:64px}
+.empty{text-align:center;font-size:13px;color:var(--ink2);letter-spacing:.18em;padding:26px 0}
+.linkbtn{display:inline-block;font:inherit;font-size:12.5px;color:var(--red);background:none;border:none;
+  padding:4px 0;letter-spacing:.1em;margin-top:6px}
+
+/* ---------- 休刊 ---------- */
+#boot{position:fixed;inset:0;z-index:200;background:var(--paper);display:flex;
+  align-items:center;justify-content:center;padding:32px;text-align:center}
+#boot .bx{max-width:320px}
+#boot h2{margin:0 0 14px;font-size:20px;letter-spacing:.3em;text-indent:.3em;color:var(--red);font-weight:600}
+#boot p{margin:0 0 10px;font-size:13.5px;line-height:2;color:var(--ink2);letter-spacing:.08em;text-align:left}
+</style>
+</head>
+<body>
+
+<!-- ============ 休刊启事（存储不可用） ============ -->
+<div id="boot" class="hide"><div class="bx">
+  <h2>停 笔 告 示</h2>
+  <p id="bootMsg">本报须在 https 或 http 环境下发行，方能启用私人存档（OPFS）。</p>
+  <p>当前以 <b>file://</b> 直接打开，浏览器不授予存储权限，故暂停付印。</p>
+  <p>可将本文件传至静态托管后用手机访问，或在手机上以本地服务器打开。</p>
+  <button class="btnline grey" id="bootDemo" style="margin-top:14px">仅预览版面（不存稿）</button>
+</div></div>
+
+<!-- ============ 主页 ============ -->
+<div id="app">
+  <div class="mast">
+    <div class="guo">摄 政 王 监 修</div>
+    <h1>南洲旧梦</h1>
+    <div class="sub" id="issueLine">第一卷</div>
+    <button class="set" id="btnSet">典章</button>
+  </div>
+  <div class="dline"></div>
+  <div id="stream"></div>
+  <div class="tline"></div>
+  <div class="foot">
+    <button class="post" id="btnPost">手 谕</button>
+    <div class="edi">南洲旧梦 · 中宫起居注</div>
+  </div>
+</div>
+
+<!-- ============ 典章页 ============ -->
+<section id="pgSet" class="hide">
+  <div class="phead">
+    <button class="back" id="setBack">←</button>
+    <h2>典 章</h2>
+  </div>
+  <div class="dline"></div>
+  <div class="pbody">
+    <div class="blk">
+      <div class="t">栏 目 署 名</div>
+      <div class="f"><label>你的栏目</label><input id="s_myCol"></div>
+      <div class="f"><label>你的名字</label><input id="s_myName"></div>
+      <div class="f"><label>祂的栏目</label><input id="s_hisCol"></div>
+      <div class="f"><label>祂的名字</label><input id="s_hisName"></div>
+      <div class="tip">栏头方印取栏目名末字（「女王手谕」→「谕」），改栏目名即改印；落款印章取名字前三字。</div>
+    </div>
+    <div class="blk">
+      <div class="t">手 谕 落 款</div>
+      <div class="seg" id="segSign">
+        <button data-v="both">署名＋印</button>
+        <button data-v="seal">只盖印</button>
+        <button data-v="none">全不要</button>
+      </div>
+      <div class="tip">落款一律用典章中所署之名，写手谕时无需另填。摄政王奏之印恒在。</div>
+    </div>
+    <div class="blk">
+      <div class="t">拜 匣</div>
+      <button class="btnline" id="btnCards">拜 匣 → <span id="cardCnt"></span></button>
+      <div class="tip">拜匣四格：奏对、花笺、行止、留声。祂的回奏取自奏对一格。皆无预设，须由你亲自添。</div>
+    </div>
+    <div class="blk">
+      <div class="t">卷 次</div>
+      <div class="f"><label>当前</label><input id="s_issue" type="number" min="1" step="1"></div>
+      <div class="tip">一日一卷。过子时换日，方启下一卷；同日重开不复涨。</div>
+    </div>
+    <div class="blk">
+      <div class="t">存 档</div>
+      <button class="btnline grey" id="btnExport">录 副</button>
+      <button class="btnline grey" id="btnImport">取 副</button>
+      <input type="file" id="fileIn" accept="application/json,.json" class="hide">
+      <div class="tip">存稿只落于本机浏览器私有目录（OPFS）。换域名、清站点数据或换设备即散佚，请自留副本。</div>
+    </div>
+    <div class="blk">
+      <button class="btnline grey" id="btnWipe">尽 焚 全 稿</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 拜匣页 ============ -->
+<section id="pgCards" class="hide">
+  <div class="phead">
+    <button class="back" id="cardsBack">←</button>
+    <h2>拜 匣</h2>
+    <button class="pright" id="cardsDone">择</button>
+  </div>
+  <div class="dline"></div>
+  <div class="pbody static">
+    <div class="grid4">
+      <button class="gcell" data-k="zoudui"><span>奏 对</span></button>
+      <button class="gcell" data-k="huajian"><span>花 笺</span></button>
+      <button class="gcell" data-k="xingzhi"><span>行 止</span></button>
+      <button class="gcell" data-k="liusheng"><span>留 声</span></button>
+    </div>
+    <div class="sub" id="cardsCount" style="font-size:11.5px;letter-spacing:.16em;color:var(--ink2);margin:2px 0 6px"></div>
+    <div class="search">
+      <input id="cardSearch" autocomplete="off">
+      <button id="cardSearchClr" class="hide">×</button>
+    </div>
+    <div id="cardList"></div>
+    <button class="btnline" id="btnAddCard">＋ 新 添</button>
+    <div class="tools">
+      <button class="tbtn" id="btnDedup">去 重</button>
+      <button class="tbtn" id="btnCardExport">录 副</button>
+      <button class="tbtn" id="btnCardImport">取 副</button>
+      <input type="file" id="cardFileIn" accept="application/json,.json,text/plain,.txt" class="hide">
+    </div>
+    <div class="tip" style="margin-top:14px" id="boxTip"></div>
+  </div>
+</section>
+
+<!-- ============ 批量栏（奏对页） ============ -->
+<div id="bulkBar" class="hide">
+  <button id="bulkAll">全 选</button>
+  <span id="bulkCnt">已选 〇</span>
+  <button id="bulkDel">焚 毁</button>
+</div>
+
+<!-- ============ 浮层 ============ -->
+<div id="mask" class="hide"></div>
+<div id="sheet">
+  <h2 id="shTitle">手 谕</h2>
+  <textarea id="shText"></textarea>
+  <div class="row">
+    <button class="no" id="shCancel">收 起</button>
+    <button class="ok" id="shOk">用 印</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   南洲旧梦 · 单文件版
+   存储：仅 OPFS（无 localStorage / 无 IndexedDB）
+   ============================================================ */
+
+/* ---------- 农历表（1900-2098，数据自权威历表生成） ---------- */
+var LUNAR = "0.13.8.4ia|ao.12.-1.1g2|ki.12.-1.2w5|ud.13.5.4ei|150.12.-1.18r|1eu.12.-1.23f|1op.13.4.47q|1zd.12.-1.12i|297.12.-1.28p|2j2.13.2.4lu|2tq.12.-1.1g2|33k.13.6.5d1|3e8.12.-1.279|3o2.12.-1.217|3xw.13.5.42z|48k.12.-1.j1|4ie.12.-1.12j|4s9.13.2.295|52x.12.-1.2p5|5cs.13.7.5ua|5ng.12.-1.2vm|5xa.12.-1.2lh|674.13.5.571|6hs.12.-1.21i|6rm.12.-1.ja|71g.13.4.4ad|7c5.12.-1.1ck|7lz.12.-1.2w9|7vu.13.2.61e|86i.12.-1.2vm|8gc.13.6.2li|8qz.12.-1.10r|90t.12.-1.21j|9ao.13.5.3py|9lc.12.-1.28q|9v7.12.-1.1ck|a51.13.3.2x5|afp.12.-1.1ft|apj.13.7.4gj|b07.12.-1.237|ba1.12.-1.10r|bjv.13.6.21n|buj.12.-1.23x|c4e.12.-1.12i|ce8.13.4.5ed|cox.12.-1.2as|cyr.12.-1.289|d8l.13.2.58z|dj9.12.-1.239|dt3.13.7.46l|e3r.12.-1.112|edl.12.-1.23x|eng.13.5.4a2|ey4.12.-1.14i|f7y.12.-1.2at|fht.13.3.5sa|fsh.12.-1.2mi|g2b.13.8.239|gcy.12.-1.23b|gmt.12.-1.11y|gwn.13.6.245|h7b.12.-1.251|hh6.12.-1.1ci|hr0.13.4.2w5|i1o.12.-1.2w5|ibj.12.-1.18q|ilc.13.3.2hj|iw0.12.-1.23f|j5v.13.7.47u|jgj.12.-1.12i|jqd.12.-1.295|k08.13.5.4lu|kaw.12.-1.28i|kkq.12.-1.279|kuk.13.4.4ej|l58.12.-1.217|lf2.13.8.42z|lpq.12.-1.j1|lzk.12.-1.14d|m9f.13.6.295|mk3.12.-1.2p5|mty.12.-1.2oi|n3s.13.4.5r9|neg.12.-1.2lh|noa.13.10.571|nyy.12.-1.21i|o8s.12.-1.ja|oim.13.6.14l|ota.12.-1.1cl|p35.12.-1.2w9|pd0.13.5.61e|pno.12.-1.2vm|pxi.12.-1.2li|q7c.13.3.21i|qhz.12.-1.21j|qru.13.8.446|r2i.12.-1.nu|rcc.12.-1.1cl|rm7.13.5.4i1|rwv.12.-1.1ft|s6p.12.-1.1ar|sgj.13.4.46j|sr7.12.-1.10r|t11.12.-1.21n|taw.13.2.47u|tlk.12.-1.12i|tve.13.7.5ed|u63.12.-1.2as|ufx.12.-1.289|upr.13.5.58z|v0f.12.-1.239|va9.12.-1.10t|vk3.13.4.23x|vur.12.-1.245|w4m.13.9.4a2|wfa.12.-1.15e|wp4.12.-1.2p1|wyz.13.6.5sa|x9n.12.-1.2mi|xjh.12.-1.2hh|xtb.13.4.46m|y3z.12.-1.11y|ydt.12.-1.245|yno.13.2.4aa|yyc.12.-1.1ci|z86.13.6.2w5|ziu.12.-1.1et|zso.12.-1.18r|102i.13.5.2hj|10d6.12.-1.2i3|10n1.12.-1.122|10wv.13.3.252|117j.12.-1.295|11he.13.11.4lu|11s2.12.-1.28i|121w.12.-1.279|12bq.13.6.56z|12me.12.-1.217|12w8.12.-1.x7|1362.13.5.123|13gq.12.-1.14d|13ql.12.-1.296|140g.13.2.5ea|14b4.12.-1.2oi|14ky.13.7.5r9|14vm.12.-1.2lh|155g.12.-1.21h|15fa.13.5.431|15py.12.-1.xi|15zs.12.-1.14l|169n.13.3.2p6|16kb.12.-1.2x5|16u6.13.8.61e|174u.12.-1.2vm|17eo.12.-1.2li|17oi.13.6.21i|17z5.12.-1.21j|1890.12.-1.11y|18iu.13.4.1cl|18ti.12.-1.1g5|193d.12.-1.1ft|19d7.13.3.2vn|19nv.12.-1.1ar|19xp.13.7.46j|1a8d.12.-1.10r|1ai7.12.-1.21n|1as2.13.5.47u|1b2q.12.-1.12i|1bck.12.-1.291|1bmf.13.4.4lm|1bx3.12.-1.28a|1c6x.13.8.591|1chl.12.-1.239|1crf.12.-1.10t|1d19.13.6.23x|1dbx.12.-1.245|1dls.12.-1.14a|1dvm.13.4.2at|1e6a.12.-1.2p1|1eg5.12.-1.2mi|1epz.13.3.5n9|1f0n.12.-1.2hi|1fah.13.7.4zy|1fl5.12.-1.11y|1fuz.12.-1.245|1g4u.13.5.4aa|1gfi.12.-1.1ci|1gpc.12.-1.2w5|1gz7.13.4.2tm|1h9u.12.-1.1aj|1hjo.13.8.2hj|1huc.12.-1.x7|1i46.12.-1.123|1ie1.13.6.252|1iop.12.-1.296|1iyk.12.-1.1g2|1j8e.13.4.4kl|1jj2.12.-1.285|1jsw.12.-1.22z|1k2q.13.2.42j";
+var _LT = null;
+function lunarTable(){
+  if(_LT) return _LT;
+  _LT = LUNAR.split("|").map(function(s){
+    var p = s.split(".");
+    return {ny:parseInt(p[0],36), n:+p[1], lp:+p[2], dm:parseInt(p[3],36)};
+  });
+  return _LT;
+}
+var CN1="〇一二三四五六七八九", CNMON=["正","二","三","四","五","六","七","八","九","十","冬","腊"];
+var GAN="甲乙丙丁戊己庚辛壬癸", ZHI="子丑寅卯辰巳午未申酉戌亥";
+function cnDay(d){
+  if(d==10) return "初十"; if(d==20) return "二十"; if(d==30) return "三十";
+  var a=["初","十","廿","三"][Math.floor(d/10)], b=CN1[d%10];
+  if(d%10===0) return (d==10?"初":(d==20?"二":"三"))+"十";
+  return a+b;
+}
+function cnNum(n){
+  if(n<10) return CN1[n];
+  if(n<20) return "十"+(n%10?CN1[n%10]:"");
+  if(n<100) return CN1[Math.floor(n/10)]+"十"+(n%10?CN1[n%10]:"");
+  if(n<1000) return CN1[Math.floor(n/100)]+"百"+(n%100?(n%100<10?"〇":"")+cnNum(n%100):"");
+  return cnNum(Math.floor(n/1000))+"千"+(n%1000?(n%1000<100?"〇":"")+cnNum(n%1000):"");
+}
+/* 公历 → 农历 {y,m,d,leap} */
+function toLunar(y,mo,d){
+  var T=lunarTable();
+  var off = Math.floor((Date.UTC(y,mo-1,d) - Date.UTC(1900,0,31))/86400000);
+  var idx = -1;
+  for(var i=0;i<T.length;i++){ if(off>=T[i].ny) idx=i; else break; }
+  if(idx<0) return null;
+  var e=T[idx], rest=off-e.ny, pos=-1, m=1, leap=false;
+  for(var k=0;k<e.n;k++){
+    var days = ((e.dm>>k)&1)?30:29;
+    if(rest<days){
+      pos=k; m = (e.lp<0) ? (k+1) : (k<e.lp ? k+1 : (k===e.lp ? e.lp : k));
+      leap = (k===e.lp); break;
+    }
+    rest-=days;
+  }
+  if(pos<0) return null;
+  return {y:1900+idx, m:m, d:rest+1, leap:leap};
+}
+function lunarText(dt){
+  var L=toLunar(dt.getFullYear(), dt.getMonth()+1, dt.getDate());
+  if(!L) return "";
+  var y=L.y, gy=GAN[(y-4)%10], gz=ZHI[(y-4)%12];
+  return gy+gz+"年"+(L.leap?"闰":"")+CNMON[L.m-1]+"月"+cnDay(L.d);
+}
+
+/* ---------- OPFS ---------- */
+var FS=null, DEMO=false;
+var F_STATE="state.json", F_CARDS="box.json", F_MSGS="messages.json";
+var ST={issue:1,lastDay:"",signMode:"seal",myCol:"女王手谕",myName:"夏雾凉",hisCol:"摄政王奏",hisName:"柏源"};
+/* 拜匣：四格 —— 奏对（祂所说）／花笺（贴纸）／行止（动作）／留声（歌曲） */
+var BOX={zoudui:[],huajian:[],xingzhi:[],liusheng:[]}, CUR="zoudui", MSGS=[];
+/* u = 量词：奏对论「则」、花笺论「幅」、行止论「举」、留声论「阕」 */
+var CELLS={
+  zoudui  :{n:"奏对", u:"则", ph:"祂所应之语", tip:"奏对即祂可回之语。空则此卷无奏，御前自陈缺奏之告。新增可一次多行，一行一则。"},
+  huajian :{n:"花笺", u:"幅", ph:"一幅小笺，题名或所绘", tip:"花笺即祂所寄之小幅精笺，可题诗句、可绘图影。新增可一次多行，一行一幅。"},
+  xingzhi :{n:"行止", u:"举", ph:"如：整了整袖口", tip:"行止即祂之一举一动，如「他垂目斟茶」。新增可一次多行，一行一举。"},
+  liusheng:{n:"留声", u:"阕", ph:"曲名，或一句歌词", tip:"留声即祂所寄之曲。可只记曲名，亦可记一句词。新增可一次多行，一行一阕。"}
+};
+function curList(){ return BOX[CUR]; }
+function totalCards(){ return BOX.zoudui.length+BOX.huajian.length+BOX.xingzhi.length+BOX.liusheng.length; }
+
+function bootFail(msg){
+  document.getElementById("bootMsg").textContent = msg || "本报须在 https 或 http 环境下发行，方能启用私人存档（OPFS）。";
+  document.getElementById("boot").classList.remove("hide");
+}
+async function initFS(){
+  if(!(navigator.storage && navigator.storage.getDirectory)){
+    bootFail("此浏览器不提供私有文件系统（OPFS），无法付印。");
+    return false;
+  }
+  try{ FS = await navigator.storage.getDirectory(); }
+  catch(e){
+    bootFail("浏览器拒绝授予私有文件系统权限。请改用 https 或 http 环境打开本页。");
+    return false;
+  }
+  return true;
+}
+async function fsRead(name){
+  try{
+    var h = await FS.getFileHandle(name);
+    var f = await h.getFile();
+    return JSON.parse(await f.text());
+  }catch(e){ return null; }
+}
+async function fsWrite(name,obj){
+  var h = await FS.getFileHandle(name,{create:true});
+  var w = await h.createWritable();
+  await w.write(JSON.stringify(obj));
+  await w.close();
+}
+async function fsDel(name){
+  try{ await FS.removeEntry(name); }catch(e){}
+}
+async function saveState(){ if(!DEMO) await fsWrite(F_STATE, ST); }
+async function saveCards(){ if(!DEMO) await fsWrite(F_CARDS, {v:2, box:BOX}); }
+async function saveMsgs(){ if(!DEMO) await fsWrite(F_MSGS, {msgs:MSGS}); }
+
+/* ---------- 载入 ---------- */
+async function load(){
+  var s = await fsRead(F_STATE);  if(s) ST = Object.assign(ST, s);
+  var c = await fsRead(F_CARDS);
+  if(c && c.box){ BOX = Object.assign(BOX, c.box); }
+  else if(c && c.cards){ BOX.zoudui = c.cards; }          // 旧版奏对迁入拜匣
+  ["zoudui","huajian","xingzhi","liusheng"].forEach(function(k){
+    if(!Array.isArray(BOX[k])) BOX[k]=[];
+  });
+  var m = await fsRead(F_MSGS);   if(m && m.msgs) MSGS = m.msgs;
+  // 一日一卷：换日方自增，同日重开不复涨
+  var today = dayKey(Date.now());
+  if(ST.lastDay !== today){
+    ST.issue = (ST.issue|0) + 1;
+    ST.lastDay = today;
+    await saveState();
+  }
+}
+
+/* ---------- 渲染 ---------- */
+var $ = function(id){ return document.getElementById(id); };
+var stream = $("stream");
+
+function sealEl(name, cls){
+  var t = (name||"").replace(/\s/g,"").slice(0,3) || "印";
+  var s = document.createElement("span");
+  s.className = "seal";
+  s.textContent = t;
+  if(cls) s.classList.add(cls);
+  return s;
+}
+function cardEl(text){
+  var d = document.createElement("div"); d.className="card";
+  var tx = document.createElement("span"); tx.className="tx";
+  var body = text;
+  for(var i=0;i<body.length;i++){
+    var sp=document.createElement("span"); sp.textContent=body[i];
+    sp.style.animationDelay=(i*45)+"ms"; tx.appendChild(sp);
+  }
+  d.appendChild(tx);
+  d.appendChild(sealEl(ST.hisName));
+  return d;
+}
+/* 栏头单字方印：取栏目名末字，如「女王手谕」→「谕」 */
+function tagOf(col){
+  var s=(col||"").replace(/\s/g,"");
+  return s ? s.slice(-1) : "报";
+}
+function lunarShort(ts){
+  var d=new Date(ts||Date.now());
+  var L=toLunar(d.getFullYear(), d.getMonth()+1, d.getDate());
+  return L ? ((L.leap?"闰":"")+CNMON[L.m-1]+"月"+cnDay(L.d)) : "";
+}
+/* 十二时辰 */
+var SHICHEN=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+function chenOf(h){
+  return SHICHEN[Math.floor(((h+1)%24)/2)] + "时";
+}
+/* 具体时刻：廿三时四十分 · 子时 */
+function cnMinute(m){
+  if(m===0) return "整";
+  if(m<10) return "〇"+CN1[m]+"分";
+  return cnNum(m)+"分";
+}
+function timeText(ts){
+  var d=new Date(ts||Date.now());
+  var h=d.getHours(), m=d.getMinutes();
+  return cnNum(h)+"时"+cnMinute(m)+" · "+chenOf(h);
+}
+/* 一日一卷的日键 */
+function dayKey(ts){
+  var d=new Date(ts||Date.now());
+  return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+}
+function headEl(kind, at){
+  var h=document.createElement("div");
+  h.className="colhead "+(kind==="me"?"mine":"his");
+  var tg=document.createElement("span"); tg.className="tag";
+  tg.textContent=tagOf(kind==="me"?ST.myCol:ST.hisCol);
+  h.appendChild(tg);
+  h.appendChild(document.createTextNode(kind==="me"?ST.myCol:ST.hisCol));
+  var b=document.createElement("span"); b.className="byline";
+  b.textContent="· "+(kind==="me"?ST.myName:ST.hisName);
+  h.appendChild(b);
+  // 摄政王摄行朝政，加「奉旨议政」衔章
+  if(kind!=="me"){
+    var rg=document.createElement("span"); rg.className="regent";
+    rg.textContent="奉旨议政";
+    h.appendChild(rg);
+  }
+  return h;
+}
+function entryEl(msg){
+  var e=document.createElement("div"); e.className="entry";
+  e.appendChild(headEl(msg.t, msg.at));
+  var dt=document.createElement("div"); dt.className="date";
+  dt.textContent=timeText(msg.at);
+  e.appendChild(dt);
+  if(msg.t==="me"){
+    // 御笔装裱：朱框
+    var f=document.createElement("div"); f.className="fold";
+    var p=document.createElement("p"); p.className="letter"; p.textContent=msg.text;
+    f.appendChild(p);
+    if(ST.signMode!=="none"){
+      var r=document.createElement("div"); r.className="signrow";
+      if(ST.signMode==="both"){
+        var sg=document.createElement("span"); sg.className="sign";
+        sg.textContent=msg.sign ? ("· "+msg.sign) : "";
+        r.appendChild(sg);
+      }
+      r.appendChild(sealEl(msg.sign||ST.myName));
+      f.appendChild(r);
+    }
+    e.appendChild(f);
+  }else if(msg.empty){
+    // 臣奏缺稿，仍装墨框，形制不坠
+    var z0=document.createElement("div"); z0.className="zou";
+    var q=document.createElement("p"); q.className="nozou";
+    q.textContent="此 卷 无 奏 。敬 请 添 置 奏 对 。";
+    z0.appendChild(q); e.appendChild(z0);
+    var lb=document.createElement("button"); lb.className="linkbtn";
+    lb.textContent="→ 去拜匣"; lb.onclick=function(){ go("pgCards"); renderCards(); };
+    e.appendChild(lb);
+  }else{
+    var z=document.createElement("div"); z.className="zou";
+    msg.cards.forEach(function(t){ z.appendChild(cardEl(t)); });
+    e.appendChild(z);
+  }
+  return e;
+}
+function teleEl(){
+  var d=document.createElement("div"); d.className="tele";
+  d.appendChild(document.createTextNode("电讯传送中"));
+  for(var i=0;i<3;i++){ var s=document.createElement("i"); s.textContent="·"; d.appendChild(s); }
+  return d;
+}
+function render(){
+  stream.innerHTML="";
+  var last=null;
+  MSGS.forEach(function(m){
+    var e=entryEl(m);
+    // 归属切换处加宽分隔，像报纸换栏
+    if(last && last!==m.t) e.classList.add("swap");
+    stream.appendChild(e);
+    last=m.t;
+  });
+  if(MSGS.length===0){
+    var h=document.createElement("div"); h.className="empty";
+    h.style.cssText="text-align:center;color:var(--ink2);font-size:13px;letter-spacing:.18em;padding:40px 0";
+    h.textContent="尚 无 手 谕 。请 拟 一 道 。";
+    stream.appendChild(h);
+  }
+  stream.scrollTop = stream.scrollHeight;
+  var dt=new Date();
+  $("issueLine").textContent = "第"+cnNum(ST.issue)+"卷 · "+lunarText(dt);
+
+}
+function scrollBottom(){ stream.scrollTop = stream.scrollHeight; }
+
+/* ---------- 抽卡 ---------- */
+var recent=[];
+function pickCards(){
+  if(BOX.zoudui.length===0) return [];
+  var pool = BOX.zoudui.map(function(c){return c.text;});
+  if(pool.length>=4){
+    var fresh = pool.filter(function(t){ return recent.indexOf(t)<0; });
+    if(fresh.length) pool = fresh;
+  }
+  var n = 1 + Math.floor(Math.random()*3);       // 1~3 张
+  n = Math.min(n, pool.length);
+  var out=[], bag=pool.slice();
+  for(var i=0;i<n;i++){
+    var k=Math.floor(Math.random()*bag.length);
+    out.push(bag.splice(k,1)[0]);
+  }
+  out.forEach(function(t){
+    recent.push(t); while(recent.length>3) recent.shift();
+  });
+  return out;
+}
+
+/* ---------- 手谕 → 回奏 ---------- */
+$("btnPost").onclick=function(){ openSheet("手谕", "", sendLetter, "谕"+ST.hisName+"知之"); };
+function sendLetter(text){
+  MSGS.push({t:"me", text:text, sign:ST.myName, at:Date.now()});
+  saveMsgs(); render(); closeSheet();
+  var t=teleEl(); stream.appendChild(t); scrollBottom();
+  setTimeout(function(){
+    t.remove();
+    var cs=pickCards();
+    MSGS.push(cs.length ? {t:"him", cards:cs, at:Date.now()} : {t:"him", empty:true, at:Date.now()});
+    saveMsgs(); render();
+  }, 1500);
+}
+
+/* ---------- 浮层 ---------- */
+var sheetMode=null, sheetMulti=false;
+function openSheet(title, val, cb, ph, multi, okText){
+  sheetMode=cb; sheetMulti=!!multi;
+  $("shTitle").textContent=title;
+  $("shText").placeholder = ph || "";
+  $("shText").value=val||"";
+  $("shOk").textContent = okText || (sheetMulti?"添 入":"用 印");
+  $("mask").classList.remove("hide"); $("sheet").classList.add("up");
+  setTimeout(function(){ $("shText").focus(); },300);
+}
+function closeSheet(){
+  $("mask").classList.add("hide"); $("sheet").classList.remove("up");
+  $("shText").blur(); sheetMode=null; sheetMulti=false;
+}
+$("shCancel").onclick=closeSheet;
+$("mask").onclick=closeSheet;
+$("shOk").onclick=function(){
+  var raw=$("shText").value, cb=sheetMode;
+  if(sheetMulti){
+    // 一行一则：去空行、去首尾空白
+    var lines=raw.split(/\r?\n/).map(function(x){return x.trim();}).filter(function(x){return x.length;});
+    if(!lines.length){ $("shText").focus(); return; }
+    closeSheet(); if(cb) cb(lines);
+  }else{
+    var t=raw.trim();
+    if(!t){ $("shText").focus(); return; }
+    closeSheet(); if(cb) cb(t);
+  }
+};
+
+/* ---------- 页面切换 ---------- */
+function go(id){
+  ["app","pgSet","pgCards"].forEach(function(p){ $(p).classList.toggle("hide", p!==id); });
+  if(id!=="pgCards"){ $("bulkBar").classList.add("hide"); EDITING=false; SEL={}; }
+}
+$("btnSet").onclick=function(){ fillSet(); go("pgSet"); };
+$("setBack").onclick=function(){ render(); go("app"); };
+$("cardsBack").onclick=function(){ EDITING=false; SEL={}; renderCards(); fillSet(); go("pgSet"); };
+$("btnCards").onclick=function(){ setCell("zoudui"); go("pgCards"); renderCards(); };
+$("btnAddCard").onclick=function(){
+  openSheet("添"+CELLS[CUR].n,"",function(lines){
+    lines.forEach(function(t){
+      curList().push({id:nid(), text:t});
+    });
+    saveCards(); renderCards(); fillSet();
+  }, CELLS[CUR].ph+"　（一行一"+CELLS[CUR].u+"，可多行）", true, "添 入");
+};
+function nid(){ return Date.now()+""+Math.floor(Math.random()*99999); }
+
+/* 拜匣：切格 */
+function setCell(k){
+  if(!CELLS[k]) return;
+  CUR=k; Q=""; SEL={}; EDITING=false;
+  $("cardSearch").value=""; $("cardSearchClr").classList.add("hide");
+  renderCards();
+}
+document.querySelectorAll(".gcell").forEach(function(b){
+  b.onclick=function(){ setCell(b.dataset.k); };
+});
+
+/* ---------- 典章 ---------- */
+function fillSet(){
+  $("s_myCol").value=ST.myCol; $("s_myName").value=ST.myName;
+  $("s_hisCol").value=ST.hisCol; $("s_hisName").value=ST.hisName;
+  $("s_issue").value=ST.issue;
+  $("cardCnt").textContent=totalCards()?("（共 "+cnNum(totalCards())+" 目）"):"（无）";
+  document.querySelectorAll("#segSign button").forEach(function(b){
+    b.classList.toggle("on", b.dataset.v===ST.signMode);
+  });
+}
+document.querySelectorAll("#segSign button").forEach(function(b){
+  b.onclick=async function(){ ST.signMode=b.dataset.v; await saveState(); fillSet(); render(); };
+});
+["s_myCol","s_myName","s_hisCol","s_hisName"].forEach(function(id){
+  $(id).addEventListener("change", async function(){
+    var k={s_myCol:"myCol",s_myName:"myName",s_hisCol:"hisCol",s_hisName:"hisName"}[id];
+    var v=$(id).value.trim(); if(!v){ $(id).value=ST[k]; return; }
+    ST[k]=v; await saveState(); fillSet();
+  });
+});
+$("s_issue").addEventListener("change", async function(){
+  var v=parseInt($("s_issue").value,10);
+  if(!v||v<1){ $("s_issue").value=ST.issue; return; }
+  ST.issue=v; await saveState();
+});
+
+/* ---------- 奏对列表：搜索 / 多选 / 增删 ---------- */
+var Q="", SEL={}, EDITING=false;
+function filtered(){
+  var q=Q.trim(), L=curList();
+  if(!q) return L;
+  return L.filter(function(c){ return c.text.indexOf(q)>=0; });
+}
+function renderCards(){
+  var box=$("cardList"); box.innerHTML="";
+  var C=CELLS[CUR], list=filtered();
+  // 四格高亮（计数不标于格上，见下方「现有 N + 量词」）
+  ["zoudui","huajian","xingzhi","liusheng"].forEach(function(k){
+    var b=document.querySelector('.gcell[data-k="'+k+'"]');
+    if(b) b.classList.toggle("on", k===CUR);
+  });
+  $("btnAddCard").textContent="＋ 新 添 "+C.n;
+  $("cardSearch").placeholder="寻 "+C.n;
+  $("boxTip").textContent=C.tip;
+  $("cardsCount").textContent = ("现有 "+cnNum(curList().length)+" "+C.u
+    + (Q.trim() ? (" · 得 "+cnNum(list.length)+" "+C.u) : "")
+    + (curList().length ? "" : (" · 敬请添置")));
+  if(list.length===0){
+    var d=document.createElement("div"); d.className="empty";
+    d.textContent = curList().length ? ("未寻得相符之"+C.n) : ("暂无"+C.n+" · 敬请添置");
+    box.appendChild(d);
+  }
+  list.forEach(function(c){
+    var it=document.createElement("div"); it.className="item";
+    var pk=null;
+    if(EDITING){
+      pk=document.createElement("button"); pk.className="pick"+(SEL[c.id]?" on":""); pk.textContent="✓";
+      pk.onclick=function(){ if(SEL[c.id]) delete SEL[c.id]; else SEL[c.id]=1; renderCards(); };
+    }
+    var tx=document.createElement("div"); tx.className="tx"; tx.textContent=c.text;
+    var op=document.createElement("div"); op.className="op";
+    var ed=document.createElement("button"); ed.textContent="改";
+    ed.onclick=function(){ openSheet("改"+CELLS[CUR].n, c.text, function(t){ c.text=t; saveCards(); renderCards(); }, CELLS[CUR].ph); };
+    var dl=document.createElement("button"); dl.className="del"; dl.textContent="删";
+    dl.onclick=function(){ if(confirm("焚去此"+CELLS[CUR].u+"？")){ BOX[CUR]=BOX[CUR].filter(function(x){return x.id!==c.id;}); saveCards(); renderCards(); fillSet(); } };
+    op.appendChild(ed); op.appendChild(dl);
+    if(pk) it.appendChild(pk);
+    it.appendChild(tx); it.appendChild(op); box.appendChild(it);
+  });
+  renderBulk();
+}
+function renderBulk(){
+  var ids=selIds(), n=ids.length;
+  $("bulkBar").classList.toggle("hide", !EDITING);
+  document.querySelector("#pgCards .pbody").classList.toggle("hasbulk", EDITING);
+  $("bulkCnt").textContent="已选 "+cnNum(n)+" "+CELLS[CUR].u;
+  $("bulkAll").textContent = (n>0 && n===filtered().length) ? "取 消" : "全 选";
+  $("cardsDone").textContent = EDITING ? "完" : "择";
+  $("bulkDel").disabled = (n===0);
+  $("bulkDel").style.opacity = n? "1" : ".4";
+}
+function selIds(){ return Object.keys(SEL).filter(function(k){return SEL[k];}); }
+
+/* 搜索 */
+$("cardSearch").addEventListener("input", function(){
+  Q=this.value;
+  $("cardSearchClr").classList.toggle("hide", !Q.length);
+  renderCards();
+});
+$("cardSearchClr").onclick=function(){
+  Q=""; $("cardSearch").value=""; this.classList.add("hide"); renderCards();
+};
+
+/* 批量：全选 / 焚毁 */
+$("bulkAll").onclick=function(){
+  var ids=selIds(), list=filtered();
+  if(ids.length===list.length){ SEL={}; }
+  else { list.forEach(function(c){ SEL[c.id]=1; }); }
+  renderCards();
+};
+$("bulkDel").onclick=async function(){
+  var ids=selIds(); if(!ids.length) return;
+  if(!confirm("焚去所选 "+cnNum(ids.length)+" "+CELLS[CUR].u+"？此举不可复原。")) return;
+  BOX[CUR]=BOX[CUR].filter(function(c){ return !SEL[c.id]; });
+  SEL={}; EDITING=false; await saveCards(); renderCards(); fillSet();
+};
+
+/* 去重：留先弃后（只作用于当前格） */
+$("btnDedup").onclick=async function(){
+  var L=curList(), nm=CELLS[CUR].n;
+  if(!L.length){ alert("暂无"+nm+"。"); return; }
+  var seen={}, keep=[], dup=0;
+  L.forEach(function(c){
+    var k=c.text.trim();
+    if(!k){ dup++; return; }
+    if(seen[k]){ dup++; return; }
+    seen[k]=1; keep.push(c);
+  });
+  if(!dup){ alert("无重复之"+nm+"，亦无空行。"); return; }
+  if(!confirm("共 "+cnNum(dup)+" "+CELLS[CUR].u+"重复或空行，留先弃后。是否焚去？")) return;
+  BOX[CUR]=keep; await saveCards(); renderCards(); fillSet();
+};
+
+/* 拜匣录副 / 取副 */
+$("btnCardExport").onclick=function(){
+  var data={v:2,type:"box",cell:CUR,at:Date.now(),cards:curList().map(function(c){return {text:c.text};})};
+  var blob=new Blob([JSON.stringify(data,null,1)],{type:"application/json"});
+  var a=document.createElement("a");
+  var d=new Date(), p=function(n){return (n<10?"0":"")+n;};
+  a.download="南洲旧梦-"+CELLS[CUR].n+"-"+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+".json";
+  a.href=URL.createObjectURL(blob); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },3000);
+};
+$("btnCardImport").onclick=function(){ $("cardFileIn").click(); };
+$("cardFileIn").addEventListener("change", async function(){
+  var f=this.files[0]; if(!f) return;
+  try{
+    var raw=await f.text(), lines=[];
+    if(/\.json$/i.test(f.name) || raw.trim()[0]==="{" || raw.trim()[0]==="["){
+      var d=JSON.parse(raw);
+      var arr = Array.isArray(d) ? d : (d.cards||[]);
+      lines = arr.map(function(x){ return (typeof x==="string") ? x : (x && x.text); })
+                 .filter(function(t){ return t && (""+t).trim(); })
+                 .map(function(t){ return (""+t).trim(); });
+    }else{
+      lines = raw.split(/\r?\n/).map(function(x){return x.trim();}).filter(function(x){return x.length;});
+    }
+    if(!lines.length){ alert("此副无可读之奏对。"); this.value=""; return; }
+    var have={}; curList().forEach(function(c){ have[c.text.trim()]=1; });
+    var fresh=lines.filter(function(t){ return !have[t]; });
+    var U=CELLS[CUR].u, msg="得 "+cnNum(lines.length)+" "+U+"，其中新 "+cnNum(fresh.length)+" "+U+"、重复 "+cnNum(lines.length-fresh.length)+" "+U+"。";
+    if(!fresh.length){ alert(msg+"无新增，未添。"); this.value=""; return; }
+    if(!confirm(msg+"是否添入"+CELLS[CUR].n+"新 "+cnNum(fresh.length)+" "+U+"？")){ this.value=""; return; }
+    fresh.forEach(function(t){ curList().push({id:nid(), text:t}); });
+    await saveCards(); renderCards(); fillSet();
+    alert("已添入 "+cnNum(fresh.length)+" "+U+"。");
+  }catch(e){ alert("此副无法辨读。"); }
+  this.value="";
+});
+
+/* 奏对页「完」：清选并返回 */
+$("cardsDone").onclick=function(){
+  EDITING=!EDITING;
+  if(!EDITING) SEL={};
+  renderCards();
+};
+
+/* ---------- 录副 / 取副 ---------- */
+$("btnExport").onclick=async function(){
+  var data={v:2,at:Date.now(),state:ST,box:BOX,cards:BOX.zoudui,msgs:MSGS};
+  var blob=new Blob([JSON.stringify(data,null,1)],{type:"application/json"});
+  var a=document.createElement("a");
+  var d=new Date(), p=function(n){return (n<10?"0":"")+n;};
+  a.download="南洲旧梦-录副-"+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+".json";
+  a.href=URL.createObjectURL(blob); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },3000);
+};
+$("btnImport").onclick=function(){ $("fileIn").click(); };
+$("fileIn").addEventListener("change", async function(){
+  var f=this.files[0]; if(!f) return;
+  try{
+    var d=JSON.parse(await f.text());
+    if(!d.state) throw 0;
+    ST=Object.assign(ST,d.state);
+    if(d.box){
+      ["zoudui","huajian","xingzhi","liusheng"].forEach(function(k){
+        BOX[k]=(d.box[k]||[]).map(function(x){
+          return (typeof x==="string") ? {id:nid(), text:x} : {id:x.id||nid(), text:x.text||""};
+        }).filter(function(c){ return c.text; });
+      });
+    }else{
+      BOX.zoudui=(d.cards||[]).map(function(x){
+        return (typeof x==="string") ? {id:nid(), text:x} : {id:x.id||nid(), text:x.text||""};
+      }).filter(function(c){ return c.text; });
+    }
+    MSGS=d.msgs||[];
+    await saveState(); await saveCards(); await saveMsgs();
+    fillSet(); render(); go("app");
+    alert("导入完毕。");
+  }catch(e){ alert("此稿无法辨读。"); }
+  this.value="";
+});
+$("btnWipe").onclick=async function(){
+  if(!confirm("尽焚全部稿件与拜匣？此举不可复原。")) return;
+  BOX={zoudui:[],huajian:[],xingzhi:[],liusheng:[]}; MSGS=[];
+  await fsDel(F_CARDS); await fsDel(F_MSGS);
+  ST.issue=1; await saveState(); fillSet(); render(); go("app");
+};
+
+/* ---------- 预览模式（无存储） ---------- */
+$("bootDemo").onclick=function(){
+  DEMO=true; $("boot").classList.add("hide"); render();
+};
+
+/* ---------- 启动 ---------- */
+(async function(){
+  var ok = await initFS();
+  if(!ok) return;
+  try{ await load(); }
+  catch(e){ bootFail("存档读取失败：" + (e && e.message ? e.message : e)); return; }
+  render(); fillSet();
+})();
+</script>
+</body>
+</html>

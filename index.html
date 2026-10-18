@@ -1,712 +1,728 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>南洲旧梦</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>南洲旧梦</title>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/localforage@1.10.0/dist/localforage.min.js"></script>
+    <script src="https://unpkg.com/@formkit/auto-animate@0.8.0/index.iife.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
 
-  :root {
-    --ink: #110e0a;
-    --ink-light: #1e1a14;
-    --gold: #c9a84c;
-    --gold-bright: #e0c068;
-    --gold-dim: #7a6830;
-    --gold-faint: rgba(201,168,76,.12);
-    --paper: #f0e6ce;
-    --paper-dim: #c8b896;
-    --navy: #1b2a3d;
-    --navy-light: #263d56;
-    --seal-red: #8b2500;
-    --seal-dark: #5a1000;
-  }
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bg: 'var(--color-bg)',
+                        surface: 'var(--color-surface)',
+                        text: 'var(--color-text)',
+                        muted: 'var(--color-muted)',
+                        border: 'var(--color-border)',
+                        bubbleSend: 'var(--color-bubble-send)',
+                        bubbleReceive: 'var(--color-bubble-receive)',
+                    }
+                }
+            }
+        }
+    </script>
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+    <style>
+        :root {
+            --color-bg: #f9f9f9;
+            --color-surface: #ffffff;
+            --color-text: #2a2a2a;
+            --color-muted: #9e9e9e;
+            --color-border: #f0f0f0;
+            --color-bubble-send: #f4f4f4;
+            --color-bubble-receive: #ffffff;
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-  body {
-    font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
-    background: var(--ink);
-    color: var(--paper);
-    height: 100vh;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
+        .dark {
+            --color-bg: #111111;
+            --color-surface: #181818;
+            --color-text: #eaeaea;
+            --color-muted: #737373;
+            --color-border: #2a2a2a;
+            --color-bubble-send: #242424;
+            --color-bubble-receive: #181818;
+        }
 
-  /* ========== 背景纹理 ========== */
-  .bg-texture {
-    position: fixed; top:0; left:0; right:0; bottom:0;
-    pointer-events: none; z-index: 0;
-    background:
-      /* 旧纸底色 */
-      linear-gradient(180deg, #1a1610 0%, var(--ink) 40%, #141018 100%);
-  }
-  .bg-texture::before {
-    content: "";
-    position: absolute; inset: 0;
-    background:
-      /* 海图网格暗纹 */
-      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,.018) 39px, rgba(201,168,76,.018) 40px),
-      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,.018) 39px, rgba(201,168,76,.018) 40px);
-  }
-  .bg-texture::after {
-    content: "";
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(201,168,76,.04), transparent 50%),
-      radial-gradient(ellipse at 70% 80%, rgba(27,42,61,.08), transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(139,37,0,.02), transparent 70%);
-    animation: glowPulse 8s ease-in-out infinite alternate;
-  }
-  @keyframes glowPulse {
-    0% { opacity: .6; }
-    100% { opacity: 1; }
-  }
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            margin: 0;
+            overflow: hidden;
+            overscroll-behavior-y: none;
+        }
 
-  /* ========== 页面容器 ========== */
-  .page {
-    display: none; height: 100vh; flex-direction: column;
-    position: relative; z-index: 1;
-  }
-  .page.active { display: flex; }
+        ::-webkit-scrollbar { width: 3px; background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
 
-  /* ========== 顶部栏 ========== */
-  .header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 16px; height: 52px; flex-shrink: 0;
-    background: linear-gradient(180deg, rgba(20,16,10,.97), rgba(20,16,10,.85));
-    border-bottom: 1px solid var(--gold-dim);
-    position: relative;
-  }
-  .header::after {
-    content: ""; position: absolute; bottom: -1px; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-  .header h1 {
-    font-size: 17px; font-weight: 400;
-    letter-spacing: 6px; color: var(--gold);
-    text-shadow: 0 0 12px rgba(201,168,76,.2);
-  }
-  .header-btn {
-    background: none;
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-    padding: 5px 14px;
-    font-size: 12px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all .2s;
-  }
-  .header-btn:active {
-    background: var(--gold);
-    color: var(--ink);
-    border-color: var(--gold);
-  }
+        .typing-dot {
+            display: inline-block; width: 4px; height: 4px;
+            border-radius: 50%; background-color: var(--color-muted);
+            animation: typing 1.4s infinite ease-in-out both; margin: 0 2px;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
 
-  /* ========== 聊天区 ========== */
-  .chat-area {
-    flex: 1; overflow-y: auto; padding: 16px 14px;
-    scroll-behavior: smooth;
-  }
-  .chat-area::-webkit-scrollbar { width: 3px; }
-  .chat-area::-webkit-scrollbar-track { background: transparent; }
-  .chat-area::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
 
-  /* 时间分隔 */
-  .time-divider {
-    text-align: center; margin: 20px 0;
-    font-size: 11px; color: var(--gold-dim);
-    letter-spacing: 3px;
-  }
-  .time-divider::before,
-  .time-divider::after {
-    content: "✦"; margin: 0 10px; font-size: 8px;
-    vertical-align: middle; opacity: .5;
-  }
+        .splash-enter-active, .splash-leave-active { transition: opacity 1.5s ease-in-out, transform 1.5s ease; }
+        .splash-enter-from, .splash-leave-to { opacity: 0; transform: scale(1.05); }
 
-  /* ========== 消息 ========== */
-  .msg {
-    margin-bottom: 18px;
-    animation: msgIn .6s cubic-bezier(.22,.68,.36,1);
-  }
-  @keyframes msgIn {
-    from { opacity: 0; transform: translateY(12px); filter: blur(2px); }
-    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
-  }
-
-  .msg .label {
-    font-size: 10px; color: var(--gold-dim);
-    margin-bottom: 5px; letter-spacing: 3px;
-  }
-  .msg.you .label { text-align: right; }
-
-  .msg .bubble {
-    display: inline-block;
-    max-width: 82%;
-    padding: 12px 16px;
-    line-height: 1.8;
-    font-size: 14.5px;
-    position: relative;
-    word-break: break-all;
-  }
-
-  /* 殿下（你）的消息 — 深色信笺 */
-  .msg.you .bubble {
-    background: linear-gradient(135deg, rgba(27,42,61,.55), rgba(27,42,61,.35));
-    border: 1px solid rgba(201,168,76,.18);
-    border-right: 2px solid var(--navy-light);
-    margin-left: auto;
-    display: block;
-    text-align: left;
-    box-shadow: -2px 2px 8px rgba(0,0,0,.3);
-  }
-
-  /* 柏源的消息 — 浅色信笺 */
-  .msg.him .bubble {
-    background: linear-gradient(135deg, rgba(240,230,206,.09), rgba(240,230,206,.04));
-    border: 1px solid rgba(201,168,76,.15);
-    border-left: 2px solid var(--gold);
-    box-shadow: 2px 2px 8px rgba(0,0,0,.25);
-  }
-  .msg.him .bubble::before {
-    content: "";
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      180deg, transparent, transparent 22px,
-      rgba(201,168,76,.03) 22px, rgba(201,168,76,.03) 23px
-    );
-    pointer-events: none;
-  }
-
-  /* 类型标签 */
-  .msg .type-tag {
-    display: inline-block;
-    font-size: 10px; color: var(--gold-dim);
-    border: 1px solid rgba(201,168,76,.25);
-    padding: 1px 6px;
-    margin-bottom: 5px;
-    letter-spacing: 1px;
-    background: rgba(201,168,76,.04);
-  }
-
-  /* ========== 空状态 ========== */
-  .empty-state {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 32px;
-  }
-  .empty-state .seal-icon {
-    font-size: 48px; margin-bottom: 16px;
-    opacity: .35;
-    animation: sealFloat 4s ease-in-out infinite;
-  }
-  @keyframes sealFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  .empty-state .title {
-    font-size: 17px; color: var(--gold);
-    margin-bottom: 10px; letter-spacing: 4px;
-  }
-  .empty-state .hint {
-    font-size: 13px; color: var(--gold-dim);
-    line-height: 2; letter-spacing: 1px;
-  }
-  .empty-state .go-btn {
-    margin-top: 24px;
-    padding: 10px 28px;
-    background: none;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    font-size: 13px;
-    letter-spacing: 3px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all .25s;
-  }
-  .empty-state .go-btn:active {
-    background: var(--gold);
-    color: var(--ink);
-  }
-
-  /* ========== 底部输入区 ========== */
-  .input-bar {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px 14px;
-    background: linear-gradient(0deg, rgba(17,14,10,.97), rgba(17,14,10,.8));
-    border-top: 1px solid var(--gold-dim);
-    flex-shrink: 0;
-    position: relative;
-  }
-  .input-bar::before {
-    content: ""; position: absolute; top: -1px; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-  .input-bar input {
-    flex: 1;
-    background: rgba(240,230,206,.05);
-    border: 1px solid rgba(201,168,76,.2);
-    color: var(--paper);
-    padding: 11px 14px;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    letter-spacing: 1px;
-    transition: border-color .2s;
-  }
-  .input-bar input:focus {
-    border-color: var(--gold);
-  }
-  .input-bar input::placeholder {
-    color: var(--gold-dim);
-    letter-spacing: 2px;
-  }
-
-  /* 火漆印章按钮 */
-  .seal-btn {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 35%, #a03010, var(--seal-red) 50%, var(--seal-dark));
-    border: 2px solid var(--gold);
-    color: var(--gold-bright);
-    font-size: 13px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    flex-shrink: 0;
-    font-family: inherit;
-    box-shadow:
-      0 2px 8px rgba(139,37,0,.4),
-      inset 0 1px 2px rgba(255,255,255,.1);
-    transition: all .15s;
-    position: relative;
-  }
-  .seal-btn:active {
-    transform: scale(.9);
-    box-shadow:
-      0 1px 4px rgba(139,37,0,.3),
-      inset 0 2px 4px rgba(0,0,0,.3);
-  }
-  .seal-btn::after {
-    content: "";
-    position: absolute; inset: 3px;
-    border-radius: 50%;
-    border: 1px solid rgba(201,168,76,.3);
-  }
-
-  /* ========== 信匣页 ========== */
-  .chest-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--gold-dim);
-    flex-shrink: 0;
-    background: rgba(20,16,10,.6);
-  }
-  .chest-tabs button {
-    flex: 1; padding: 12px 0;
-    background: none; border: none;
-    color: var(--gold-dim);
-    font-size: 13px; letter-spacing: 3px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    font-family: inherit;
-    transition: all .2s;
-  }
-  .chest-tabs button.active {
-    color: var(--gold);
-    border-bottom-color: var(--gold);
-    text-shadow: 0 0 8px rgba(201,168,76,.2);
-  }
-
-  .chest-list {
-    flex: 1; overflow-y: auto; padding: 12px 14px;
-  }
-  .chest-list::-webkit-scrollbar { width: 3px; }
-  .chest-list::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-
-  .chest-item {
-    background: rgba(240,230,206,.04);
-    border: 1px solid rgba(201,168,76,.1);
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    transition: background .2s;
-  }
-  .chest-item:active {
-    background: rgba(201,168,76,.06);
-  }
-  .chest-item .text {
-    font-size: 14px; line-height: 1.7;
-    flex: 1; word-break: break-all;
-    color: var(--paper-dim);
-  }
-  .chest-item .del {
-    background: none; border: none;
-    color: rgba(139,64,64,.6);
-    font-size: 14px;
-    cursor: pointer;
-    padding: 4px 8px;
-    font-family: inherit;
-    margin-left: 8px;
-  }
-  .chest-item .del:active { color: #c04040; }
-
-  .chest-empty {
-    text-align: center;
-    color: var(--gold-dim);
-    font-size: 13px;
-    padding: 48px 0;
-    letter-spacing: 2px;
-    opacity: .6;
-  }
-
-  /* ========== 添加页 ========== */
-  .add-page {
-    padding: 20px 16px;
-    flex: 1; overflow-y: auto;
-  }
-  .add-page label {
-    display: block;
-    font-size: 12px;
-    color: var(--gold-dim);
-    margin-bottom: 8px;
-    letter-spacing: 2px;
-  }
-  .add-page textarea,
-  .add-page input[type="text"] {
-    width: 100%;
-    background: rgba(240,230,206,.05);
-    border: 1px solid rgba(201,168,76,.2);
-    color: var(--paper);
-    padding: 12px 14px;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 20px;
-    resize: vertical;
-    letter-spacing: 1px;
-    line-height: 1.8;
-    transition: border-color .2s;
-  }
-  .add-page textarea:focus,
-  .add-page input:focus {
-    border-color: var(--gold);
-  }
-  .add-page textarea { min-height: 140px; }
-  .add-page textarea::placeholder,
-  .add-page input::placeholder {
-    color: var(--gold-dim);
-    letter-spacing: 2px;
-    opacity: .5;
-  }
-
-  .add-save {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    color: var(--ink);
-    border: none;
-    font-size: 14px;
-    letter-spacing: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 700;
-    transition: opacity .2s;
-  }
-  .add-save:active { opacity: .75; }
-
-  /* ========== 底部导航 ========== */
-  .bottom-nav {
-    display: flex;
-    border-top: 1px solid var(--gold-dim);
-    flex-shrink: 0;
-    background: rgba(20,16,10,.8);
-  }
-  .bottom-nav button {
-    flex: 1; padding: 12px 0;
-    background: none; border: none;
-    color: var(--gold-dim);
-    font-size: 12px; letter-spacing: 2px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color .2s;
-  }
-  .bottom-nav button:active { color: var(--gold); }
-
-  /* ========== 打字指示器 ========== */
-  .typing-indicator {
-    display: none;
-    margin-bottom: 18px;
-    padding: 0 4px;
-  }
-  .typing-indicator .dots {
-    display: inline-flex; gap: 4px;
-  }
-  .typing-indicator .dots span {
-    width: 6px; height: 6px;
-    background: var(--gold-dim);
-    border-radius: 50%;
-    animation: dotBounce 1.2s ease-in-out infinite;
-  }
-  .typing-indicator .dots span:nth-child(2) { animation-delay: .2s; }
-  .typing-indicator .dots span:nth-child(3) { animation-delay: .4s; }
-  @keyframes dotBounce {
-    0%, 80%, 100% { transform: scale(.6); opacity: .3;
-  .typing-indicator .dots span {
-    width: 6px; height: 6px;
-    background: var(--gold-dim);
-    border-radius: 50%;
-    animation: dotBounce 1.2s ease-in-out infinite;
-  }
-  .typing-indicator .dots span:nth-child(2) { animation-delay: .2s; }
-  .typing-indicator .dots span:nth-child(3) { animation-delay: .4s; }
-  @keyframes dotBounce {
-    0%, 80%, 100% { transform: scale(.6); opacity: .3; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-</style>
+        input, textarea, button { outline: none !important; box-shadow: none !important; }
+        .msg-bubble { line-height: 1.8; letter-spacing: 0.5px; word-break: break-word; }
+    </style>
+    <style id="custom-bubble-css"></style>
 </head>
 <body>
 
-<div class="bg-texture"></div>
+<div id="app" class="h-[100dvh] w-full flex justify-center items-center bg-bg selection:bg-text selection:text-bg relative"
+     :style="settings.bgImage ? { backgroundImage: `url(${settings.bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}">
+    
+    <transition name="splash">
+        <div v-if="showSplash" class="fixed inset-0 z-[100] bg-surface flex flex-col items-center justify-center">
+            <i data-lucide="feather" class="w-8 h-8 text-text/80 mb-6 stroke-[1]"></i>
+            <span class="text-xl tracking-[0.5em] font-light text-text/80 ml-2">静 语</span>
+        </div>
+    </transition>
 
-<!-- ===== 聊天页 ===== -->
-<div class="page active" id="pageChat">
-  <div class="header">
-    <button class="header-btn" onclick="showPage('chest')">信匣</button>
-    <h1>南洲旧梦</h1>
-    <div style="width:60px"></div>
-  </div>
-  <div class="chat-area" id="chatArea">
-    <div class="empty-state" id="emptyState">
-      <div class="seal-icon"></div>
-      <div class="title">信笺尚空</div>
-      <div class="hint">
-        殿下，尚未落笔。<br>
-        写下第一句话，或从信匣中取出一封旧信。
-      </div>
-      <button class="go-btn" onclick="showPage('add')">启 笔</button>
+    <div v-show="!showSplash" class="w-full md:max-w-3xl h-full flex flex-col bg-surface/90 backdrop-blur-lg relative md:shadow-2xl md:border-x border-border/50 transition-all duration-500">
+        
+        <header class="h-16 md:h-20 flex items-center justify-between px-6 md:px-8 z-10 shrink-0 relative">
+            <div class="absolute bottom-0 left-6 right-6 h-[1px] bg-border/80"></div>
+            
+            <div class="flex items-center gap-4 group cursor-pointer" @click="editProfile('them')">
+                <div v-if="settings.showAvatar" class="w-9 h-9 md:w-10 md:h-10 overflow-hidden bg-bg flex items-center justify-center text-muted transition-transform group-hover:scale-105 shadow-sm" :style="{ borderRadius: settings.avatarRadius + '%' }">
+                    <img v-if="profiles.them.avatar" :src="profiles.them.avatar" class="w-full h-full object-cover">
+                    <span v-else class="text-sm font-light">{{ profiles.them.name.charAt(0) }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base md:text-lg tracking-widest font-medium">{{ profiles.them.name }}</span>
+                    <span class="text-[10px] md:text-[11px] text-muted tracking-widest mt-0.5 opacity-0 transition-opacity" :class="{'opacity-100': isTyping}">正在输入...</span>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 md:gap-6 text-muted">
+                <button @click="toggleTheme" class="hover:text-text transition-colors"><i :data-lucide="settings.isDark ? 'sun' : 'moon'" class="w-4 h-4 md:w-4.5 md:h-4.5 stroke-[1.5]"></i></button>
+                <button @click="modals.replyManager = true" class="hover:text-text transition-colors"><i data-lucide="library" class="w-4 h-4 md:w-4.5 md:h-4.5 stroke-[1.5]"></i></button>
+                <button @click="modals.settings = true" class="hover:text-text transition-colors"><i data-lucide="sliders-horizontal" class="w-4 h-4 md:w-4.5 md:h-4.5 stroke-[1.5]"></i></button>
+            </div>
+        </header>
+
+        <main id="chat-container" class="flex-1 overflow-y-auto px-5 md:px-8 py-6 flex flex-col gap-6 md:gap-8 scroll-smooth pb-20">
+            
+            <div v-if="messages.length === 0" class="flex-1 flex flex-col items-center justify-center text-muted/40 tracking-widest text-sm space-y-4">
+                <i data-lucide="wind" class="w-6 h-6 stroke-[1]"></i>
+                <span>留 白</span>
+            </div>
+
+            <div ref="chatList" class="flex flex-col gap-6 md:gap-8">
+                <div v-for="(msg, index) in messages" :key="msg.id">
+                    
+                    <div v-if="shouldShowDate(index)" class="flex justify-center my-6 md:my-8">
+                        <span class="text-[10px] md:text-[11px] text-muted/50 tracking-[0.3em] uppercase">{{ formatDateSeparator(msg.timestamp) }}</span>
+                    </div>
+
+                    <div class="flex group" :class="msg.sender === 'me' ? 'justify-end' : 'justify-start'">
+                        <div class="flex max-w-[85%] md:max-w-[75%] gap-3" :class="msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'">
+                            
+                            <div v-if="settings.showAvatar" class="shrink-0 w-8 h-8 mt-1 md:mt-2 cursor-pointer" :class="{'opacity-0 pointer-events-none': !shouldShowAvatar(index)}" @click="editProfile(msg.sender)">
+                                <div class="w-full h-full overflow-hidden bg-bg flex items-center justify-center transition-transform hover:scale-105 shadow-sm" :style="{ borderRadius: settings.avatarRadius + '%' }">
+                                    <img v-if="profiles[msg.sender].avatar" :src="profiles[msg.sender].avatar" class="w-full h-full object-cover">
+                                    <span v-else class="text-xs text-muted">{{ profiles[msg.sender].name.charAt(0) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col relative" :class="msg.sender === 'me' ? 'items-end' : 'items-start'">
+                                <span v-if="settings.showNickname && shouldShowAvatar(index)" class="text-[10px] text-muted/60 mb-1 px-1 tracking-widest">
+                                    {{ profiles[msg.sender].name }}
+                                </span>
+
+                                <div class="msg-bubble px-4 md:px-5 py-2.5 md:py-3 rounded-2xl text-[14px] md:text-[15px] transition-all" 
+                                     :class="[
+                                        msg.sender === 'me' ? 'bg-bubbleSend text-text' : 'bg-surface border border-border text-text',
+                                        'bubble-custom-class'
+                                     ]">
+                                    <template v-if="msg.type === 'text'">{{ msg.content }}</template>
+                                    <template v-else-if="msg.type === 'image'">
+                                        <img :src="msg.content" class="max-w-[200px] md:max-w-[250px] rounded-lg cursor-pointer" @click="previewImg = msg.content">
+                                    </template>
+                                </div>
+                                
+                                <div class="text-[9px] md:text-[10px] text-muted/40 mt-1.5 flex items-center gap-1.5 tracking-wider px-1 font-sans">
+                                    <span>{{ formatTime(msg.timestamp) }}</span>
+                                    <template v-if="msg.sender === 'me'">
+                                        <i v-if="msg.status === 'read'" data-lucide="check-circle-2" class="w-3 h-3 text-text/40 stroke-[1.5]"></i>
+                                        <i v-else data-lucide="circle" class="w-3 h-3 stroke-[1.5]"></i>
+                                    </template>
+                                </div>
+                            </div>
+                            
+                            <div class="opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center" :class="msg.sender === 'me' ? 'mr-2' : 'ml-2'">
+                                <button @click="deleteMsg(msg.id)" class="text-muted/30 hover:text-red-900/60"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div v-if="isTyping" class="flex justify-start">
+                    <div class="flex gap-3">
+                        <div v-if="settings.showAvatar" class="w-8 h-8 overflow-hidden bg-bg flex items-center justify-center opacity-50 shadow-sm" :style="{ borderRadius: settings.avatarRadius + '%' }">
+                            <span class="text-xs text-muted">{{ profiles.them.name.charAt(0) }}</span>
+                        </div>
+                        <div class="px-5 py-3 bg-surface border border-border rounded-2xl flex items-center gap-1 h-[42px]">
+                            <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-surface/90 backdrop-blur-md shrink-0 px-4 md:px-8 py-4 relative z-10 pb-6 md:pb-4">
+            <div class="absolute top-0 left-4 md:left-8 right-4 md:right-8 h-[1px] bg-border/80"></div>
+            
+            <div class="flex gap-4 px-2 pb-2 text-muted/60">
+                <label class="cursor-pointer hover:text-text transition-colors">
+                    <i data-lucide="image" class="w-4 h-4 stroke-[1.5]"></i>
+                    <input type="file" accept="image/*" class="hidden" @change="handleImageUpload">
+                </label>
+            </div>
+
+            <div class="flex items-end gap-3">
+                <textarea v-model="inputText" @keydown.enter.prevent="sendMsg('me', 'text')" rows="1" 
+                          class="flex-1 bg-bg/50 hover:bg-bg focus:bg-bg rounded-xl px-4 py-2.5 text-[14px] md:text-[15px] resize-none max-h-32 placeholder-muted/50 leading-relaxed tracking-wide transition-colors border border-transparent focus:border-border"
+                          placeholder="书写..."></textarea>
+                
+                <div class="flex gap-2 md:gap-3 shrink-0 pb-1 text-muted/80">
+                    <button @click="triggerReply" class="p-2 hover:bg-border/50 rounded-xl transition-all duration-300" title="让对方说话">
+                        <i data-lucide="pen-tool" class="w-5 h-5 md:w-5.5 md:h-5.5 stroke-[1.5]"></i>
+                    </button>
+                    <button @click="sendMsg('me', 'text')" class="p-2 hover:bg-border/50 rounded-xl transition-all duration-300" :class="{'text-text': inputText.trim()}" title="发送">
+                        <i data-lucide="send" class="w-5 h-5 md:w-5.5 md:h-5.5 stroke-[1.5]"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
     </div>
-    <div class="typing-indicator" id="typingIndicator">
-      <div class="label" style="font-size:10px;color:var(--gold-dim);margin-bottom:5px;letter-spacing:3px">他正在回信</div>
-      <div class="dots"><span></span><span></span><span></span></div>
-    </div>
-  </div>
-  <div class="input-bar">
-    <input id="chatInput" placeholder="在此落笔…" onkeydown="if(event.key==='Enter')sendMsg()"/>
-    <button class="seal-btn" onclick="sendMsg()">寄</button>
-  </div>
-</div>
 
-<!-- ===== 信匣页 ===== -->
-<div class="page" id="pageChest">
-  <div class="header">
-    <button class="header-btn" onclick="showPage('chat')">返回</button>
-    <h1>信 匣</h1>
-    <button class="header-btn" onclick="showPage('add')">新信</button>
-  </div>
-  <div class="chest-tabs">
-    <button class="active" onclick="switchTab(this,'draft')">草稿</button>
-    <button onclick="switchTab(this,'preset')">预设</button>
-  </div>
-  <div class="chest-list" id="chestList"></div>
-  <div class="bottom-nav">
-    <button onclick="showPage('chat')">对 话</button>
-    <button onclick="showPage('add')">启 笔</button>
-  </div>
-</div>
+    <transition name="fade">
+        <div v-if="modals.settings" class="fixed inset-0 bg-bg/80 backdrop-blur-md z-50 flex justify-center items-center p-4 md:p-0">
+            <div class="bg-surface w-full max-w-md shadow-2xl md:border border-border/50 flex flex-col max-h-[85vh] rounded-2xl md:rounded-none overflow-hidden">
+                <div class="px-6 py-5 flex justify-between items-center relative bg-surface">
+                    <h2 class="text-[14px] tracking-[0.3em] font-medium">偏好</h2>
+                    <button @click="modals.settings = false" class="text-muted hover:text-text"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    <div class="absolute bottom-0 left-6 right-6 h-[1px] bg-border/80"></div>
+                </div>
+                <div class="px-6 py-6 overflow-y-auto flex flex-col gap-8 text-[13px] md:text-[14px]">
+                    
+                    <div class="space-y-3">
+                        <span class="text-[10px] text-muted/50 tracking-widest uppercase block mb-2">身份与显示</span>
+                        <div class="flex justify-between items-center bg-bg/50 px-4 py-3 cursor-pointer hover:bg-border/50 transition-colors rounded" @click="editProfile('me')">
+                            <span class="tracking-widest">我的资料</span>
+                            <span class="text-muted text-xs flex items-center gap-1">{{ profiles.me.name }} <i data-lucide="chevron-right" class="w-3 h-3"></i></span>
+                        </div>
+                        <div class="flex justify-between items-center bg-bg/50 px-4 py-3 cursor-pointer hover:bg-border/50 transition-colors rounded" @click="editProfile('them')">
+                            <span class="tracking-widest">对方资料</span>
+                            <span class="text-muted text-xs flex items-center gap-1">{{ profiles.them.name }} <i data-lucide="chevron-right" class="w-3 h-3"></i></span>
+                        </div>
+                        <div class="flex gap-4 pt-2">
+                            <label class="flex-1 flex justify-between items-center cursor-pointer group bg-bg/50 px-4 py-2 rounded">
+                                <span class="tracking-widest text-xs">头像</span>
+                                <input type="checkbox" v-model="settings.showAvatar" class="accent-text">
+                            </label>
+                            <label class="flex-1 flex justify-between items-center cursor-pointer group bg-bg/50 px-4 py-2 rounded">
+                                <span class="tracking-widest text-xs">昵称</span>
+                                <input type="checkbox" v-model="settings.showNickname" class="accent-text">
+                            </label>
+                        </div>
+                    </div>
 
-<!-- ===== 添加页 ===== -->
-<div class="page" id="pageAdd">
-  <div class="header">
-    <button class="header-btn" onclick="showPage('chat')">取消</button>
-    <h1>启 笔</h1>
-    <div style="width:60px"></div>
-  </div>
-  <div class="add-page">
-    <label>类型标签（可选）</label>
-    <input type="text" id="inputType" placeholder="如：日常、思念、问询…"/>
-    <label>信的内容</label>
-    <textarea id="inputContent" placeholder="写下你想对他说的话…"></textarea>
-    <button class="add-save" onclick="saveDraft()">封 存</button>
-  </div>
+                    <div class="space-y-4">
+                        <span class="text-[10px] text-muted/50 tracking-widest uppercase block mb-2">交互与行为</span>
+                        <label class="flex justify-between items-center cursor-pointer group">
+                            <span class="tracking-widest">消息音效</span>
+                            <input type="checkbox" v-model="settings.sound" class="accent-text w-4 h-4">
+                        </label>
+                        <div class="flex justify-between items-center">
+                            <span class="tracking-widest">自动回复延迟 (秒)</span>
+                            <div class="flex items-center gap-2 text-xs">
+                                <input type="number" v-model.number="settings.delayMin" min="0" class="w-12 bg-bg text-center py-1 outline-none border border-border">
+                                <span class="text-muted">-</span>
+                                <input type="number" v-model.number="settings.delayMax" min="1" class="w-12 bg-bg text-center py-1 outline-none border border-border">
+                            </div>
+                        </div>
+                        <label class="flex justify-between items-center cursor-pointer group pt-2">
+                            <span class="tracking-widest">允许对方主动发消息</span>
+                            <input type="checkbox" v-model="settings.activeMsg" class="accent-text w-4 h-4">
+                        </label>
+                        <div v-if="settings.activeMsg" class="flex justify-between items-center pl-4 border-l-2 border-border/50">
+                            <span class="tracking-widest text-xs text-muted">主动触发间隔 (秒)</span>
+                            <input type="number" v-model.number="settings.activeInterval" min="5" class="w-16 bg-bg text-center py-1 text-xs outline-none border border-border">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <span class="text-[10px] text-muted/50 tracking-widest uppercase block mb-2">外观定制</span>
+                        <div>
+                            <div class="flex justify-between text-xs mb-2">
+                                <span class="tracking-widest">头像圆角</span>
+                                <span class="text-muted">{{settings.avatarRadius}}%</span>
+                            </div>
+                            <input type="range" v-model="settings.avatarRadius" min="0" max="50" class="w-full accent-text h-1 bg-border appearance-none">
+                        </div>
+                        <div class="pt-2 flex flex-col gap-2">
+                            <span class="tracking-widest text-xs">背景图片</span>
+                            <input type="file" accept="image/*" @change="uploadBg" class="text-[10px] text-muted file:bg-bg file:border-none file:px-3 file:py-1 file:mr-2 cursor-pointer">
+                            <button v-if="settings.bgImage" @click="settings.bgImage=''" class="text-[10px] text-red-900/50 self-start">清除背景</button>
+                        </div>
+                        <div class="pt-2">
+                            <span class="tracking-widest text-xs block mb-2">自定义气泡 CSS</span>
+                            <textarea v-model="settings.customCSS" rows="2" class="w-full bg-bg border border-border px-3 py-2 text-[10px] font-mono resize-none" placeholder=".bubble-custom-class { }"></textarea>
+                            <button @click="applyCSS" class="text-[10px] tracking-widest text-text border border-border px-3 py-1 mt-2 hover:bg-border">应用</button>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 pb-2 flex justify-between border-t border-border/50">
+                        <button @click="exportChat" class="text-[11px] tracking-widest text-text border border-border px-4 py-1.5 hover:bg-border">导出记录</button>
+                        <button @click="clearChat" class="text-[11px] tracking-widest text-red-700/80 border border-red-900/10 px-4 py-1.5 hover:bg-red-900/5">清空所有</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+
+    <transition name="fade">
+        <div v-if="modals.replyManager" class="fixed inset-0 bg-bg/80 backdrop-blur-md z-50 flex justify-center items-center p-4 md:p-0">
+            <div class="bg-surface w-full max-w-3xl shadow-2xl md:border border-border/50 flex flex-col h-[85vh] rounded-2xl md:rounded-none overflow-hidden">
+                <div class="px-6 py-5 flex justify-between items-center relative shrink-0">
+                    <h2 class="text-[14px] tracking-[0.3em] font-medium">逻辑库</h2>
+                    <div class="flex gap-4 items-center">
+                        <button @click="exportReplies" class="text-[10px] tracking-widest border border-border px-2 py-1 hover:bg-border">导出</button>
+                        <label class="text-[10px] tracking-widest border border-border px-2 py-1 hover:bg-border cursor-pointer">
+                            导入 <input type="file" accept=".json" class="hidden" @change="importReplies">
+                        </label>
+                        <button @click="modals.replyManager = false" class="text-muted hover:text-text ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="absolute bottom-0 left-6 right-6 h-[1px] bg-border/80"></div>
+                </div>
+                
+                <div class="flex flex-1 overflow-hidden flex-col md:flex-row">
+                    <div class="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-border/50 p-4 flex flex-col gap-2 overflow-y-auto shrink-0 md:shrink h-1/3 md:h-full">
+                        <div v-for="group in replyGroups" :key="group.id" 
+                             @click="currentGroupId = group.id"
+                             class="px-4 py-2.5 rounded cursor-pointer transition-all text-xs tracking-wider flex justify-between group/item"
+                             :class="currentGroupId === group.id ? 'bg-bg text-text font-medium' : 'text-muted hover:bg-bg/50'">
+                            <span>{{ group.name }} ({{ group.replies.length }})</span>
+                            <button @click.stop="deleteGroup(group.id)" v-if="replyGroups.length>1" class="opacity-0 group-hover/item:opacity-100 text-red-900/50 hover:text-red-900"><i data-lucide="trash" class="w-3 h-3"></i></button>
+                        </div>
+                        <button @click="addGroup" class="text-[11px] text-muted tracking-widest mt-2 border border-dashed border-border py-2 text-center hover:bg-bg transition-colors">+ 新建分组</button>
+                    </div>
+                    
+                    <div class="flex-1 p-4 flex flex-col overflow-hidden bg-surface relative">
+                        <div class="flex gap-2 mb-4 shrink-0">
+                            <i data-lucide="search" class="w-4 h-4 text-muted absolute left-7 top-6 stroke-[1.5]"></i>
+                            <input type="text" v-model="searchQuery" placeholder="搜索此组内容..." class="w-full bg-bg/50 border border-transparent focus:border-border rounded px-9 py-2 text-[13px] outline-none transition-colors">
+                        </div>
+                        
+                        <div class="flex-1 overflow-y-auto space-y-1 pb-4 px-2" ref="replyList">
+                            <div v-for="(reply, idx) in filteredReplies" :key="idx" class="flex items-center group py-1.5 border-b border-border/30">
+                                <span class="text-[9px] text-muted/30 w-5 font-mono">{{ idx + 1 }}</span>
+                                <input type="text" v-model="reply.text" @change="saveData" class="flex-1 bg-transparent px-2 text-[13px] text-text outline-none border border-transparent focus:border-border/50 rounded transition-colors">
+                                <button @click="removeReply(reply)" class="text-muted/30 hover:text-red-900/50 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                            <div v-if="filteredReplies.length === 0" class="text-[11px] text-muted tracking-widest pt-8 text-center">空无一物</div>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-border/50 flex gap-2 shrink-0">
+                            <input type="text" v-model="newReplyText" @keydown.enter="addReply" placeholder="增加新回复..." class="flex-1 bg-bg border border-border rounded px-4 py-2 text-[13px] outline-none">
+                            <button @click="addReply" class="px-4 bg-text text-bg text-[11px] tracking-widest rounded hover:opacity-80 transition-opacity">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+
+    <transition name="fade">
+        <div v-if="previewImg" @click="previewImg=''" class="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm cursor-zoom-out">
+            <img :src="previewImg" class="max-w-full max-h-full object-contain">
+        </div>
+    </transition>
+
 </div>
 
 <script>
-const STORAGE_KEY = 'nanzhou_data_v2';
-let currentTab = 'draft';
-let data = loadData();
+const { createApp, ref, reactive, computed, watch, nextTick, onMounted } = Vue;
 
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return { drafts: [], presets: [], messages: [] };
-}
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+localforage.config({ name: 'JingYuApp', storeName: 'data_store' });
 
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  if (name === 'chat') {
-    document.getElementById('pageChat').classList.add('active');
-    renderChat();
-  } else if (name === 'chest') {
-    document.getElementById('pageChest').classList.add('active');
-    renderChest();
-  } else if (name === 'add') {
-    document.getElementById('pageAdd').classList.add('active');
-  }
-}
+createApp({
+    setup() {
+        const showSplash = ref(true);
+        const chatList = ref(null);
+        
+        const messages = ref([]);
+        const inputText = ref('');
+        const isTyping = ref(false);
+        const previewImg = ref('');
+        const activeTimer = ref(null);
+        
+        const profiles = reactive({
+            me: { name: '我', avatar: '' },
+            them: { name: '对方', avatar: '' }
+        });
 
-function switchTab(el, tab) {
-  currentTab = tab;
-  el.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderChest();
-}
+        const settings = reactive({
+            isDark: false, showAvatar: true, showNickname: false,
+            sound: true, delayMin: 1, delayMax: 3,
+            activeMsg: false, activeInterval: 30,
+            avatarRadius: 50, bgImage: '', customCSS: ''
+        });
 
-function renderChest() {
-  const list = document.getElementById('chestList');
-  const items = currentTab === 'draft' ? data.drafts : data.presets;
-  if (!items.length) {
-    list.innerHTML = '<div class="chest-empty">匣中空空，尚无存信</div>';
-    return;
-  }
-  list.innerHTML = items.map((it, i) => `
-    <div class="chest-item" onclick="useDraft(${i})">
-      <div class="text">${it.type ? '<span class="type-tag">'+esc(it.type)+'</span> ' : ''}${esc(it.content)}</div>
-      <button class="del" onclick="event.stopPropagation();delItem(${i})">✕</button>
-    </div>
-  `).join('');
-}
+        const modals = reactive({ settings: false, replyManager: false });
 
-function delItem(i) {
-  const arr = currentTab === 'draft' ? data.drafts : data.presets;
-  arr.splice(i, 1);
-  saveData();
-  renderChest();
-}
+        const generateEmojis = () => {
+            const emojis = "😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 😗 😙 😚 ☺️ 😶 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑 🤠 😈 👿 👹 👺 🤡 💩 👻 💀 👽 👾 🤖 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 🙈 🙉 🙊 💋 💌 💘 💝 💖 💗 💓 💞 💕 💟 ❣️ 💔 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 💯 💢 💥 💫 💦 💨 🕳️ 💣 💬 👁️‍🗨️ 🗨️ 🗯️ 思想 💤 👋 🤚 🖐️ ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ☝️ 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦿 🦵 🦶 👂 🦻 👃 🧠 🦷 骨 眼睛 👁️ 👅 👄".split(" ").filter(e=>e.trim());
+            return emojis.map(e => ({ text: e }));
+        };
+        const replyGroups = ref([
+            { id: 'g_custom', name: '我的回复', replies: [] },
+            { id: 'g_emoji', name: '表情库', replies: generateEmojis() }
+        ]);
+        const currentGroupId = ref('g_custom');
+        const searchQuery = ref('');
+        const newReplyText = ref('');
 
-function useDraft(i) {
-  const arr = currentTab === 'draft' ? data.drafts : data.presets;
-  const item = arr[i];
-  if (!item) return;
-  showPage('chat');
-  document.getElementById('chatInput').value = item.content;
-  sendMsg();
-}
+        let audioCtx;
+        const playSound = (type) => {
+            if (!settings.sound) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                
+                if (type === 'send') {
+                    osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                } else {
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.1);
+                }
+                
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {}
+        };
 
-function saveDraft() {
-  const content = document.getElementById('inputContent').value.trim();
-  const type = document.getElementById('inputType').value.trim();
-  if (!content) return;
-  data.drafts.unshift({ content, type, time: Date.now() });
-  saveData();
-  document.getElementById('inputContent').value = '';
-  document.getElementById('inputType').value = '';
-  showPage('chat');
-}
+        let saveTimeout;
+        const saveData = () => {
+            if(showSplash.value) return; 
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                const data = {
+                    messages: JSON.parse(JSON.stringify(messages.value)),
+                    profiles: JSON.parse(JSON.stringify(profiles)),
+                    settings: JSON.parse(JSON.stringify(settings)),
+                    replyGroups: JSON.parse(JSON.stringify(replyGroups.value))
+                };
+                await localforage.setItem('jingyu_data', data);
+            }, 500); 
+        };
 
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
+        watch([messages, profiles, settings, replyGroups], saveData, { deep: true });
 
-function sendMsg() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
+        const scrollToBottom = async () => {
+            await nextTick();
+            const container = document.getElementById('chat-container');
+            if (container) container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        };
 
-  const empty = document.getElementById('emptyState');
-  if (empty) empty.style.display = 'none';
+        const sendMsg = async (sender, type, content = null) => {
+            let txt = content;
+            if(type === 'text' && sender === 'me') {
+                if(!inputText.value.trim()) return;
+                txt = inputText.value.trim();
+                inputText.value = '';
+                const ta = document.querySelector('textarea');
+                if(ta) ta.style.height = 'auto';
+            }
+            if(!txt) return;
 
-  data.messages.push({ role: 'you', content: text, time: Date.now() });
-  saveData();
-  renderChat();
+            const msgId = Date.now().toString();
+            messages.value.push({
+                id: msgId, sender, type, content: txt, timestamp: Date.now(), status: 'sent'
+            });
+            playSound(sender);
+            scrollToBottom();
 
-  // 模拟他回信
-  const typing = document.getElementById('typingIndicator');
-  typing.style.display = 'block';
-  scrollBottom();
+            if (sender === 'me') {
+                setTimeout(() => {
+                    const m = messages.value.find(x => x.id === msgId);
+                    if(m) m.status = 'read';
+                }, Math.random() * 1500 + 1000);
+                
+                triggerAutoReply();
+            }
+        };
 
-  setTimeout(() => {
-    typing.style.display = 'none';
-    const reply = generateReply(text);
-    data.messages.push({ role: 'him', content: reply, time: Date.now() });
-    saveData();
-    renderChat();
-  }, 1200 + Math.random() * 1000);
-}
+        const triggerAutoReply = () => {
+            if (isTyping.value) return;
+            isTyping.value = true;
+            scrollToBottom();
+            
+            const delay = (Math.random() * (settings.delayMax - settings.delayMin) + settings.delayMin) * 1000;
+            
+            setTimeout(() => {
+                isTyping.value = false;
+                let text = "......";
+                const all = replyGroups.value.flatMap(g => g.replies);
+                if(all.length > 0) {
+                    text = all[Math.floor(Math.random() * all.length)].text;
+                }
+                sendMsg('them', 'text', text);
+            }, delay);
+        };
 
-function generateReply(text) {
-  const replies = [
-    "殿下，我在。",
-    "你说，我听着。",
-    "南洲的风今日很轻，适合说这些话。",
-    "嗯，我记下了。",
-    "殿下不必顾虑，尽管说。",
-    "……好。",
-    "我知道了，殿下。",
-    "你在，我便安心。",
-    "这话，我只对殿下说。",
-    "殿下今日，似乎有心事？"
-  ];
-  return replies[Math.floor(Math.random() * replies.length)];
-}
+        const triggerReply = () => {
+            if(inputText.value.trim()) {
+                sendMsg('me', 'text');
+            } else {
+                triggerAutoReply();
+            }
+        };
 
-function renderChat() {
-  const area = document.getElementById('chatArea');
-  const empty = document.getElementById('emptyState');
-  const typing = document.getElementById('typingIndicator');
+        const handleImageUpload = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    const MAX = 800;
+                    if(w>MAX) { h*=MAX/w; w=MAX; }
+                    canvas.width=w; canvas.height=h;
+                    canvas.getContext('2d').drawImage(img,0,0,w,h);
+                    sendMsg('me', 'image', canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        };
 
-  // 保留 typing 和 empty 元素，重建其他消息
-  const existing = area.querySelectorAll('.msg, .time-divider');
-  existing.forEach(el => el.remove());
+        const deleteMsg = id => messages.value = messages.value.filter(m => m.id !== id);
 
-  if (!data.messages.length) {
-    if (empty) empty.style.display = '';
-    return;
-  }
-  if (empty) empty.style.display = 'none';
+        const setupActiveMsg = () => {
+            clearInterval(activeTimer.value);
+            if(settings.activeMsg) {
+                activeTimer.value = setInterval(() => {
+                    triggerAutoReply();
+                }, (settings.activeInterval || 30) * 1000);
+            }
+        };
+        watch(() => settings.activeMsg, setupActiveMsg);
+        watch(() => settings.activeInterval, setupActiveMsg);
 
-  let lastDate = '';
-  data.messages.forEach(msg => {
-    const date = new Date(msg.time).toLocaleDateString('zh-CN');
-    if (date !== lastDate) {
-      lastDate = date;
-      const div = document.createElement('div');
-      div.className = 'time-divider';
-      div.textContent = date;
-      area.insertBefore(div, typing);
+        const shouldShowDate = i => {
+            if(i===0) return true;
+            const c = new Date(messages.value[i].timestamp);
+            const p = new Date(messages.value[i-1].timestamp);
+            return c.toDateString() !== p.toDateString();
+        };
+        const formatDateSeparator = ts => {
+            const d = new Date(ts), today = new Date();
+            const yest = new Date(today); yest.setDate(yest.getDate()-1);
+            if(d.toDateString() === today.toDateString()) return '今 日';
+            if(d.toDateString() === yest.toDateString()) return '昨 日';
+            return `${(d.getMonth()+1).toString().padStart(2,'0')} / ${d.getDate().toString().padStart(2,'0')}`;
+        };
+        const formatTime = ts => {
+            const d = new Date(ts);
+            return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
+        };
+        const shouldShowAvatar = i => {
+            if(i===0) return true;
+            const c = messages.value[i], p = messages.value[i-1];
+            if(c.sender !== p.sender) return true;
+            if(c.timestamp - p.timestamp > 60000) return true;
+            return false;
+        };
+
+        const toggleTheme = () => {
+            settings.isDark = !settings.isDark;
+            if(settings.isDark) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+        };
+        const applyCSS = () => {
+            const el = document.getElementById('custom-bubble-css');
+            if(el) el.innerHTML = settings.customCSS;
+        };
+
+        const editProfile = role => {
+            const n = prompt(`修改${role==='me'?'我的':'对方'}昵称：`, profiles[role].name);
+            if(n && n.trim()) profiles[role].name = n.trim().substring(0,12);
+            
+            if(confirm('是否上传新头像图片？\n(取消保留原样，确认后不选文件则重置为文字)')) {
+                const input = document.createElement('input');
+                input.type = 'file'; input.accept = 'image/*';
+                input.onchange = e => {
+                    const f = e.target.files[0];
+                    if(f) {
+                        const r = new FileReader();
+                        r.onload = ev => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const c = document.createElement('canvas');
+                                let w=img.width, h=img.height, MAX=200;
+                                if(w>MAX){h*=MAX/w; w=MAX;}
+                                c.width=w; c.height=h;
+                                c.getContext('2d').drawImage(img,0,0,w,h);
+                                profiles[role].avatar = c.toDataURL('image/jpeg', 0.8);
+                            };
+                            img.src = ev.target.result;
+                        };
+                        r.readAsDataURL(f);
+                    } else { profiles[role].avatar = ''; }
+                };
+                input.click();
+            }
+        };
+
+        const uploadBg = e => {
+            const f = e.target.files[0];
+            if(!f) return;
+            const r = new FileReader();
+            r.onload = ev => settings.bgImage = ev.target.result;
+            r.readAsDataURL(f);
+        };
+
+        const clearChat = () => {
+            if(confirm('将彻底清空聊天记录，确认吗？')) {
+                messages.value = []; modals.settings = false;
+            }
+        };
+        const exportChat = () => {
+            let str = "--- 聊天记录导出 ---\n\n";
+            messages.value.forEach(m => {
+                str += `[${new Date(m.timestamp).toLocaleString()}] ${profiles[m.sender].name}: ${m.type==='text'?m.content:'[图片]'}\n`;
+            });
+            const b = new Blob([str], {type:"text/plain;charset=utf-8"});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+            a.download = `Chat_${Date.now()}.txt`; a.click();
+        };
+
+        const currentGroup = computed(() => replyGroups.value.find(g => g.id === currentGroupId.value) || replyGroups.value[0]);
+        const filteredReplies = computed(() => {
+            if(!searchQuery.value) return currentGroup.value.replies;
+            return currentGroup.value.replies.filter(r => r.text.includes(searchQuery.value));
+        });
+
+        const addGroup = () => {
+            const n = prompt("输入新分组名称：");
+            if(n && n.trim()) {
+                const id = 'g_' + Date.now();
+                replyGroups.value.push({id, name: n.trim(), replies: []});
+                currentGroupId.value = id;
+            }
+        };
+        const deleteGroup = id => {
+            if(confirm('删除此组及其所有内容？')) {
+                replyGroups.value = replyGroups.value.filter(g => g.id !== id);
+                if(currentGroupId.value === id) currentGroupId.value = replyGroups.value[0].id;
+            }
+        };
+        const addReply = () => {
+            if(newReplyText.value.trim()) {
+                currentGroup.value.replies.push({ text: newReplyText.value.trim() });
+                newReplyText.value = ''; scrollToBottom();
+            }
+        };
+        const removeReply = reply => {
+            const idx = currentGroup.value.replies.indexOf(reply);
+            if(idx > -1) currentGroup.value.replies.splice(idx, 1);
+        };
+
+        const exportReplies = () => {
+            const b = new Blob([JSON.stringify(replyGroups.value)], {type:"application/json"});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+            a.download = "Replies.json"; a.click();
+        };
+        const importReplies = e => {
+            const f = e.target.files[0];
+            if(!f) return;
+            const r = new FileReader();
+            r.onload = ev => {
+                try {
+                    const parsed = JSON.parse(ev.target.result);
+                    if(Array.isArray(parsed)) {
+                        if(confirm('点击[确定]覆盖现有库，点击[取消]追加到现有库')) replyGroups.value = parsed;
+                        else replyGroups.value.push(...parsed);
+                        currentGroupId.value = replyGroups.value[0].id;
+                    }
+                } catch(err) { alert('文件格式有误'); }
+            };
+            r.readAsText(f); e.target.value='';
+        };
+
+        onMounted(async () => {
+            try {
+                const data = await localforage.getItem('jingyu_data');
+                if(data) {
+                    if(data.messages) messages.value = data.messages;
+                    if(data.profiles) Object.assign(profiles, data.profiles);
+                    if(data.settings) Object.assign(settings, data.settings);
+                    if(data.replyGroups) replyGroups.value = data.replyGroups;
+                }
+            } catch(e) {}
+
+            if(settings.isDark) document.documentElement.classList.add('dark');
+            applyCSS(); setupActiveMsg();
+            
+            const ta = document.querySelector('textarea');
+            if(ta) ta.addEventListener('input', function(){ this.style.height='auto'; this.style.height=this.scrollHeight+'px'; });
+
+            setTimeout(() => {
+                showSplash.value = false;
+                nextTick(() => {
+                    scrollToBottom();
+                    if(window.formkit && chatList.value) formkit.autoAnimate(chatList.value, {duration: 300});
+                });
+            }, 2000);
+        });
+
+        watch([messages, modals], () => nextTick(() => lucide.createIcons()), { deep: true });
+        onMounted(() => setTimeout(() => lucide.createIcons(), 100));
+
+        return {
+            showSplash, chatList, messages, inputText, isTyping, previewImg,
+            profiles, settings, modals, replyGroups, currentGroupId, searchQuery, newReplyText, filteredReplies,
+            sendMsg, triggerReply, handleImageUpload, deleteMsg,
+            shouldShowDate, formatDateSeparator, formatTime, shouldShowAvatar,
+            toggleTheme, applyCSS, editProfile, uploadBg, clearChat, exportChat,
+            addGroup, deleteGroup, addReply, removeReply, exportReplies, importReplies, saveData
+        };
     }
-    const el = document.createElement('div');
-    el.className = 'msg ' + (msg.role === 'you' ? 'you' : 'him');
-    const tag = msg.type ? `<div class="type-tag">${esc(msg.type)}</div>` : '';
-    el.innerHTML = `
-      <div class="label">${msg.role === 'you' ? '殿 下' : '柏 源'}</div>
-      ${tag}
-      <div class="bubble">${esc(msg.content)}</div>
-    `;
-    area.insertBefore(el, typing);
-  });
-  scrollBottom();
-}
-
-function scrollBottom() {
-  const area = document.getElementById('chatArea');
-  setTimeout(() => area.scrollTop = area.scrollHeight, 50);
-}
-
-// 初始化
-renderChat();
+}).mount('#app');
 </script>
 </body>
 </html>

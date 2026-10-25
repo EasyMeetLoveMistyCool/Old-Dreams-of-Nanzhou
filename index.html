@@ -6,7 +6,7 @@
 <title>南洲旧梦</title>
 <style>
   :root{
-    --paper:#efe7d6; --paper-2:#f7f1e3; --paper-3:#e7dcc6;
+    --paper:#efe7d6; --paper-2:#f7f1e3;
     --ink:#3a3428; --ink-soft:#6b6150; --line:#c9bda3;
     --seal:#a23b2a; --shadow:rgba(58,52,40,.18);
   }
@@ -31,7 +31,7 @@
   .letter.dream{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),#efe4cf;border-color:#b9ab8e;}
   .letter .meta{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;}
   .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
-  .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;}
+  .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
   .sign{text-align:right;font-size:10px;color:var(--ink-soft);letter-spacing:2px;margin-top:8px;}
   .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
@@ -55,17 +55,40 @@
   .panel-head b{font-size:13px;letter-spacing:2px;}
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
   .panel-body{padding:12px 14px 20px;overflow-y:auto;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
-  .card{width:66px;height:66px;border:1px solid var(--line);background:#fbf7ec;border-radius:3px;position:relative;flex-shrink:0;perspective:400px;cursor:pointer;}
-  .card-inner{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d;}
-  .card.flipped .card-inner{transform:rotateY(180deg);}
-  .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;overflow:hidden;border-radius:2px;}
-  .face .ch{font-size:24px;}
-  .face.back{transform:rotateY(180deg);background:#f1ead9;padding:4px;font-size:10px;color:var(--ink-soft);line-height:1.3;text-align:center;word-break:break-all;}
-  .back-edit{width:100%;height:100%;border:none;background:transparent;font-family:inherit;font-size:10px;color:var(--ink);text-align:center;resize:none;outline:none;padding:2px;}
-  .grid .del{position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:var(--seal);color:#fff;border:none;font-size:11px;line-height:18px;text-align:center;cursor:pointer;z-index:3;}
+
+  /* 长条字卡列表 */
+  .code-list{display:flex;flex-direction:column;gap:8px;}
+  .code-row{position:relative;}
+  .long-card{
+    width:100%;border:1px solid var(--line);background:#fbf7ec;border-radius:4px;
+    padding:8px 34px 8px 12px;text-align:left;cursor:pointer;font-family:inherit;
+    color:var(--ink);line-height:1.35;min-height:38px;
+    display:flex;align-items:center;
+  }
+  .long-card .txt{font-size:14px;white-space:pre-wrap;word-break:break-all;flex:1;text-align:center;}
+  .long-card:active{background:#f1ead9;}
+  .code-row .del{
+    position:absolute;right:4px;top:50%;transform:translateY(-50%);
+    width:20px;height:20px;border-radius:50%;background:var(--seal);color:#fff;
+    border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer;z-index:3;
+  }
+  /* 备注条 */
+  .back-bar{
+    margin-top:6px;border:1px dashed var(--line);background:#f4eedf;border-radius:4px;padding:6px 8px;
+    display:none;
+  }
+  .back-bar.open{display:block;}
+  .back-bar textarea{
+    width:100%;min-height:44px;border:none;background:transparent;resize:vertical;
+    font-family:inherit;font-size:12px;color:var(--ink-soft);outline:none;
+  }
+
+  /* 邮戳 */
+  .stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
   .sticker{width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;}
   .sticker img{width:100%;height:100%;object-fit:cover;display:block;}
+  .sticker .del{position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:var(--seal);color:#fff;border:none;font-size:11px;line-height:18px;text-align:center;cursor:pointer;z-index:3;}
+
   .empty-note{font-size:12px;color:var(--ink-soft);line-height:2;text-align:center;padding:18px 0;}
   .form{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
   .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
@@ -99,7 +122,7 @@
     <div class="hint"><span>发报</span><span id="stickerInfo">未盖邮戳</span></div>
     <div class="sticker-pick" id="stickerPick"></div>
     <div class="input-row">
-      <input id="msgInput" type="text" placeholder="写下要传的讯…" maxlength="80" />
+      <input id="msgInput" type="text" placeholder="写下要传的讯…" maxlength="120" />
       <button class="sendbtn" id="sendBtn">发报</button>
     </div>
   </div>
@@ -169,7 +192,6 @@ const clearImages = () => withStore('images','readwrite', s=> s.clear());
 
 const addMessage = m => withStore('messages','readwrite', s=> s.add(m));
 const allMessages = () => withStore('messages','readonly', s=> s.getAll()).then(a=>a.sort((x,y)=>x.createdAt-y.createdAt));
-const clearMessages = () => withStore('messages','readwrite', s=> s.clear());
 
 /* ========== 图片压缩 ========== */
 function compressImage(file, maxSide=800, quality=.8){
@@ -196,6 +218,7 @@ let codes = [], stamps = [], messages = [];
 let urlCache = {};
 let pickedStamp = null;
 let panelKind = 'code';
+let openBackId = null;
 
 const $ = id=>document.getElementById(id);
 const logEl = $('log');
@@ -244,7 +267,7 @@ function renderLog(){
       logEl.appendChild(div);
     }else{
       const lines = (m.lines||[]).map(lineIds=>{
-        const txt = lineIds.map(id=> codeMap[id] ? codeMap[id].char : '').join('');
+        const txt = lineIds.map(id=> codeMap[id] ? codeMap[id].char : '').join(' / ');
         return `<div class="telegram-line">${esc(txt)}</div>`;
       }).join('');
       const stampHTML = m.stampId && stampMap[m.stampId] && urlCache[stampMap[m.stampId].imageId]
@@ -277,6 +300,7 @@ function renderStickerPick(){
 /* ========== 抽屉 ========== */
 async function openPanel(kind){
   panelKind = kind;
+  openBackId = null;
   $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
   $('overlay').classList.add('open');
   await renderPanel();
@@ -286,25 +310,25 @@ function closePanel(){ $('overlay').classList.remove('open'); }
 async function renderPanel(){
   const body = $('panelBody');
   if(panelKind==='code'){
-    let gridHTML = codes.length===0
+    let listHTML = codes.length===0
       ? `<div class="empty-note">电码本空空的。<br>在下面录几码进去。</div>`
-      : `<div class="grid">${codes.map(c=>`
-          <div class="card" data-code="${c.id}">
-            <div class="card-inner">
-              <div class="face"><span class="ch">${esc(c.char||'？')}</span></div>
-              <div class="face back"><textarea class="back-edit" data-back="${c.id}" placeholder="备注">${esc(c.back||'')}</textarea></div>
-            </div>
+      : `<div class="code-list">${codes.map(c=>`
+          <div class="code-row">
+            <button class="long-card" data-code="${c.id}" type="button"><span class="txt">${esc(c.char||'')}</span></button>
             <button class="del" data-delcode="${c.id}">×</button>
+            <div class="back-bar ${openBackId===c.id?'open':''}" data-backbar="${c.id}">
+              <textarea data-back="${c.id}" placeholder="备注（只自己看，不参与回电）">${esc(c.back||'')}</textarea>
+            </div>
           </div>`).join('')}</div>`;
 
-    body.innerHTML = `${gridHTML}
+    body.innerHTML = `${listHTML}
       <div class="form">
-        <label>码字（正面）
-          <input type="text" id="fChar" placeholder="如：想" maxlength="4" />
+        <label>录入一条字卡
+          <input type="text" id="fChar" placeholder="一整句，如：今天也想你" maxlength="200" />
         </label>
         <button id="addCodeBtn">录电码</button>
-        <label>批量录入（一行一个码字）
-          <textarea id="fBatch" placeholder="想&#10;你&#10;了"></textarea>
+        <label>批量录入（一行一张字卡，整行保留）
+          <textarea id="fBatch" placeholder="今天也想你&#10;南洲的雨停了&#10;等我回来"></textarea>
         </label>
         <button id="batchCodeBtn">批量录入</button>
       </div>
@@ -327,15 +351,14 @@ async function renderPanel(){
     $('fileTxt').addEventListener('change', importCodeTxt);
     $('fileJson').addEventListener('change', importCodeJson);
 
-    body.querySelectorAll('.card[data-code]').forEach(card=>{
-      card.addEventListener('click', e=>{
-        if(e.target.closest('[data-delcode]')) return;
-        if(e.target.closest('textarea')) return;
-        card.classList.toggle('flipped');
+    body.querySelectorAll('.long-card[data-code]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = Number(btn.dataset.code);
+        openBackId = openBackId === id ? null : id;
+        renderPanel();
       });
     });
     body.querySelectorAll('[data-back]').forEach(ta=>{
-      ta.addEventListener('click', e=> e.stopPropagation());
       ta.addEventListener('change', async ()=>{
         const id = Number(ta.dataset.back);
         const cur = codes.find(c=>c.id===id);
@@ -349,15 +372,16 @@ async function renderPanel(){
       btn.addEventListener('click', async e=>{
         e.stopPropagation();
         const id = Number(btn.dataset.delcode);
-        if(!confirm('从电码本删去此码？')) return;
+        if(!confirm('从电码本删去此卡？')) return;
         await delCode(id);
+        if(openBackId===id) openBackId = null;
         await renderAll(); await renderPanel();
       });
     });
   }else{
     let gridHTML = stamps.length===0
       ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
-      : `<div class="grid">${stamps.map(s=>`
+      : `<div class="stamp-grid">${stamps.map(s=>`
           <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
     body.innerHTML = `${gridHTML}
       <div class="form">
@@ -389,22 +413,24 @@ async function renderPanel(){
   }
 }
 
-/* ========== 录码 ========== */
+/* ========== 录码（一行一张卡，整句不拆） ========== */
 async function onAddCode(){
   const ch = $('fChar').value.trim();
-  if(!ch){ toast('至少写一个码字'); return; }
+  if(!ch){ toast('写一句再录'); return; }
   await addCode({ char: ch, back: '', createdAt: Date.now() });
   $('fChar').value = '';
-  toast('已录入电码');
+  toast('已录入一条字卡');
   await renderAll(); await renderPanel();
 }
 async function onBatchCode(){
   const raw = $('fBatch').value;
-  const chars = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  if(!chars.length){ toast('没有可录入的码'); return; }
-  for(const ch of chars) await addCode({ char: ch, back: '', createdAt: Date.now() });
+  const lines = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  if(!lines.length){ toast('没有可录入的行'); return; }
+  for(const line of lines){
+    await addCode({ char: line, back: '', createdAt: Date.now() });
+  }
   $('fBatch').value = '';
-  toast(`已录入 ${chars.length} 码`);
+  toast(`已录入 ${lines.length} 条字卡`);
   await renderAll(); await renderPanel();
 }
 
@@ -426,7 +452,7 @@ async function delStamp(id){
   await delStampRow(id);
 }
 
-/* ========== 通用下载/编码 ========== */
+/* ========== 通用 ========== */
 function download(filename, content, type){
   const blob = new Blob([content], {type});
   const url = URL.createObjectURL(blob);
@@ -451,7 +477,7 @@ function base64ToBlob(b64, mime='image/webp'){
   return new Blob([arr], {type:mime});
 }
 
-/* ========== 电码本：TXT 导出/导入 ========== */
+/* ========== 电码本 TXT（一行一卡，整行保留） ========== */
 function exportCodeTxt(){
   const txt = codes.map(c=>c.char).join('\n');
   if(!txt){ toast('电码本为空'); return; }
@@ -462,24 +488,24 @@ async function importCodeTxt(e){
   const file = e.target.files[0]; e.target.value = '';
   if(!file) return;
   const text = await file.text();
-  const chars = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  if(!chars.length){ toast('文件里没有码'); return; }
+  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  if(!lines.length){ toast('文件里没有内容'); return; }
   const existing = new Set(codes.map(c=>c.char));
   let added = 0;
-  for(const ch of chars){
-    if(existing.has(ch)) continue;
-    await addCode({ char: ch, back: '', createdAt: Date.now() });
-    existing.add(ch); added++;
+  for(const line of lines){
+    if(existing.has(line)) continue;
+    await addCode({ char: line, back: '', createdAt: Date.now() });
+    existing.add(line); added++;
   }
-  toast(`导入完成，新增 ${added} 码`);
+  toast(`导入完成，新增 ${added} 条字卡`);
   await renderAll(); await renderPanel();
 }
 
-/* ========== 电码本：JSON 导出/导入 ========== */
+/* ========== 电码本 JSON ========== */
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
-    version: 1,
+    version: 2,
     exportedAt: Date.now(),
     codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
   };
@@ -498,7 +524,7 @@ async function importCodeJson(e){
   try{
     await clearCodes();
     for(const c of list){
-      const ch = (c.char || c.content || '').trim();
+      const ch = String(c.char ?? c.content ?? '').trim();
       if(!ch) continue;
       await addCode({ char: ch, back: c.back || '', createdAt: c.createdAt || Date.now() });
     }
@@ -510,7 +536,7 @@ async function importCodeJson(e){
   }
 }
 
-/* ========== 邮戳册：JSON 导出/导入 ========== */
+/* ========== 邮戳册 JSON ========== */
 async function exportStampJson(){
   if(!stamps.length){ toast('邮戳册为空'); return; }
   const arr = [];
@@ -608,7 +634,6 @@ $('stickerPick').addEventListener('click', e=>{
   renderStickerPick();
 });
 
-/* ========== 启动 ========== */
 renderAll().catch(err=>{
   console.error(err);
   document.getElementById('debug').textContent = '启动错误：' + ((err && err.message) || err);

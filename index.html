@@ -56,7 +56,6 @@
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
   .panel-body{padding:12px 14px 20px;overflow-y:auto;}
 
-  /* 长条字卡列表 */
   .code-list{display:flex;flex-direction:column;gap:8px;}
   .code-row{position:relative;}
   .long-card{
@@ -72,7 +71,6 @@
     width:20px;height:20px;border-radius:50%;background:var(--seal);color:#fff;
     border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer;z-index:3;
   }
-  /* 备注条 */
   .back-bar{
     margin-top:6px;border:1px dashed var(--line);background:#f4eedf;border-radius:4px;padding:6px 8px;
     display:none;
@@ -83,7 +81,6 @@
     font-family:inherit;font-size:12px;color:var(--ink-soft);outline:none;
   }
 
-  /* 邮戳 */
   .stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
   .sticker{width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;}
   .sticker img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -103,9 +100,8 @@
 </style>
 </head>
 <body>
-<div id="debug" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font-size:11px;padding:5px;word-break:break-all;">状态：脚本未执行</div>
 
-<div id="app" style="padding-top:26px;">
+<div id="app">
   <header>
     <div class="title">南洲旧梦<small>字卡传讯 · 电码与邮戳</small></div>
     <div class="drawers">
@@ -141,17 +137,17 @@
 <div class="toast" id="toast"></div>
 
 <script>
-document.getElementById('debug').textContent = '状态：脚本已执行';
+// 删除了调试黑条，加上了全局错误监控（只在报错时提示，平时看不见）
 window.onerror = function(msg, src, line){
-  document.getElementById('debug').textContent = '错误：' + msg + '（行 ' + line + '）';
+  toast('运行错误：' + msg);
 };
 
-/* ========== IndexedDB (换库名到 v4) ========== */
+/* ========== IndexedDB (换库名到 v5) ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
   return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat_v4', 1);
+    const req = indexedDB.open('dreamchat_v5', 1);
     req.onupgradeneeded = e=>{
       const d = e.target.result;
       if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
@@ -501,11 +497,11 @@ async function importCodeTxt(e){
   await renderAll(); await renderPanel();
 }
 
-/* ========== 电码本 JSON（暴力提取文本版） ========== */
+/* ========== 电码本 JSON（修复了拼写错误，并兼容各种格式） ========== */
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
-    version: 4,
+    version: 5,
     exportedAt: Date.now(),
     codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
   };
@@ -524,17 +520,14 @@ async function importCodeJson(e){
     let addedCount = 0;
     let extractedTexts = [];
 
-    // 尝试正常 JSON 解析
     let parsed = null;
     try {
       parsed = JSON.parse(rawText);
-    } catch(e) {
-      // 如果 JSON 解析失败，说明文件破损或有格式错误，直接走后面的正则暴力提取
-      console.log('JSON 解析失败，启动正则提取模式');
+    } catch(err) {
+      console.log('JSON 解析失败，尝试正则提取');
     }
 
     if (parsed) {
-      // 如果解析成功，找数组
       let list = null;
       if (Array.isArray(parsed)) list = parsed;
       else if (Array.isArray(parsed.codes)) list = parsed.codes;
@@ -553,18 +546,14 @@ async function importCodeJson(e){
       }
     } 
     
-    // 如果正常解析没拿到东西，直接暴力扫文本里的 "text": "xxx"
     if (extractedTexts.length === 0) {
       const regex = /"text"\s*:\s*"([^"]+)"/g;
       let match;
       while ((match = regex.exec(rawText)) !== null) {
-        if (match[1] && match[1].trim()) {
-          extractedTexts.push(match[1].trim());
-        }
+        if (match[1] && match[1].trim()) extractedTexts.push(match[1].trim());
       }
     }
 
-    // 开始录入
     const existing = new Set(codes.map(c=>c.char));
     for(const text of extractedTexts){
       if(existing.has(text)) continue;
@@ -573,15 +562,12 @@ async function importCodeJson(e){
       addedCount++;
     }
     
-    if (addedCount === 0) {
-      toast('未找到可导入的文字');
-    } else {
-      toast(`电码本已导入，共 ${addedCount} 条`);
-    }
+    if (addedCount === 0) toast('未找到可导入的文字');
+    else toast(`电码本已导入，共 ${addedCount} 条`);
+    
     await renderAll(); await renderPanel();
   }catch(err){
     toast('导入过程出错');
-    document.getElementById('debug').textContent = '导入错误：' + (err && err.message || err);
   }
 }
 
@@ -623,7 +609,6 @@ async function importStampJson(e){
     await renderAll(); await renderPanel();
   }catch(err){
     toast('导入失败');
-    document.getElementById('debug').textContent = '导入错误：' + (err && err.message || err);
   }
 }
 
@@ -685,7 +670,7 @@ $('stickerPick').addEventListener('click', e=>{
 
 renderAll().catch(err=>{
   console.error(err);
-  document.getElementById('debug').textContent = '启动错误：' + ((err && err.message) || err);
+  toast('启动错误：' + ((err && err.message) || err));
 });
 </script>
 </body>

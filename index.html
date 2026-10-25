@@ -146,12 +146,12 @@ window.onerror = function(msg, src, line){
   document.getElementById('debug').textContent = '错误：' + msg + '（行 ' + line + '）';
 };
 
-/* ========== IndexedDB (换库名到 v3 解决脏数据) ========== */
+/* ========== IndexedDB (换库名到 v4) ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
   return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat_v3', 1);
+    const req = indexedDB.open('dreamchat_v4', 1);
     req.onupgradeneeded = e=>{
       const d = e.target.result;
       if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
@@ -266,7 +266,6 @@ function renderLog(){
         ${stampHTML}`;
       logEl.appendChild(div);
     }else{
-      // 这里去掉了拼符号，直接拼接文字
       const lines = (m.lines||[]).map(lineIds=>{
         const txt = lineIds.map(id=> codeMap[id] ? codeMap[id].char : '').join('');
         return `<div class="telegram-line">${esc(txt)}</div>`;
@@ -340,7 +339,7 @@ async function renderPanel(){
         <button id="impJson">导入 JSON</button>
       </div>
       <input type="file" id="fileTxt" accept=".txt,text/plain" style="display:none" />
-      <input type="file" id="fileJson" accept=".json,application/json" style="display:none" />
+      <input type="file" id="fileJson" accept=".json,application/json,text/plain" style="display:none" />
     `;
 
     $('addCodeBtn').addEventListener('click', onAddCode);
@@ -502,11 +501,11 @@ async function importCodeTxt(e){
   await renderAll(); await renderPanel();
 }
 
-/* ========== 电码本 JSON（修复了导入解析问题） ========== */
+/* ========== 电码本 JSON（暴力提取文本版） ========== */
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
-    version: 3,
+    version: 4,
     exportedAt: Date.now(),
     codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
   };
@@ -516,52 +515,69 @@ function exportCodeJson(){
 async function importCodeJson(e){
   const file = e.target.files[0]; e.target.value = '';
   if(!file) return;
-  let data;
-  try{ 
-    const rawText = await file.text();
-    // 尝试解析为 JSON 对象或数组
-    data = JSON.parse(rawText);
-  }catch(err){ 
-    toast('JSON 解析失败，请确认文件内容'); 
-    return; 
-  }
-  
-  let list = null;
-  // 兼容各种 JSON 结构
-  if (Array.isArray(data)) {
-    list = data;
-  } else if (Array.isArray(data.codes)) {
-    list = data.codes;
-  } else if (Array.isArray(data.data)) {
-    list = data.data;
-  }
-
-  if(!list){ toast('文件里没有找到字卡数据'); return; }
+  const rawText = await file.text();
+  if(!rawText.trim()){ toast('文件是空的'); return; }
   if(!confirm('导入将覆盖现有电码本，继续？')) return;
   
   try{
     await clearCodes();
     let addedCount = 0;
+    let extractedTexts = [];
+
+    // 尝试正常 JSON 解析
+    let parsed = null;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch(e) {
+      // 如果 JSON 解析失败，说明文件破损或有格式错误，直接走后面的正则暴力提取
+      console.log('JSON 解析失败，启动正则提取模式');
+    }
+
+    if (parsed) {
+      // 如果解析成功，找数组
+      let list = null;
+      if (Array.isArray(parsed)) list = parsed;
+      else if (Array.isArray(parsed.codes)) list = parsed.codes;
+      else if (Array.isArray(parsed.data)) list = parsed.data;
+      
+      if (list) {
+        for (const c of list) {
+          let text = '';
+          if (typeof c === 'string') text = c.trim();
+          else if (c && typeof c === 'object') text = String(c.char || c.content || c.text || '').trim();
+          
+          if (text && text !== '[object Object]' && text !== '}' && !text.includes('"id":') && !text.includes('"at":')) {
+            extractedTexts.push(text);
+          }
+        }
+      }
+    } 
     
-    for(const c of list){
-      let text = '';
-      // 完美兼容你的截图中以 "text" 为字段名的格式
-      if (typeof c === 'string') {
-        text = c.trim();
-      } else if (c && typeof c === 'object') {
-        text = String(c.char || c.content || c.text || '').trim();
+    // 如果正常解析没拿到东西，直接暴力扫文本里的 "text": "xxx"
+    if (extractedTexts.length === 0) {
+      const regex = /"text"\s*:\s*"([^"]+)"/g;
+      let match;
+      while ((match = regex.exec(rawText)) !== null) {
+        if (match[1] && match[1].trim()) {
+          extractedTexts.push(match[1].trim());
+        }
       }
-      
-      // 过滤掉无意义的符号，比如 "id": "xxx",
-      if (!text || text === '[object Object]' || text === '}' || text.includes('"id":') || text.includes('"at":')) {
-        continue;
-      }
-      
-      await addCode({ char: text, back: c.back || '', createdAt: c.at || c.createdAt || Date.now() });
+    }
+
+    // 开始录入
+    const existing = new Set(codes.map(c=>c.char));
+    for(const text of extractedTexts){
+      if(existing.has(text)) continue;
+      await addCode({ char: text, back: '', createdAt: Date.now() });
+      existing.add(text);
       addedCount++;
     }
     
-    toast(`电码本已导入，共 ${addedCount} 条`);
+    if (addedCount === 0) {
+      toast('未找到可导入的文字');
+    } else {
+      toast(`电码本已导入，共 ${addedCount} 条`);
+    }
     await renderAll(); await renderPanel();
   }catch(err){
     toast('导入过程出错');

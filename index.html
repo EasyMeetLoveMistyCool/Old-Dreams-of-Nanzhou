@@ -32,8 +32,7 @@
   .letter .meta{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;}
   .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
   .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
-  .sign{text-align:right;font-size:10px;color:var(--ink-soft);letter-spacing:2px;margin-top:8px;}
-  .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
+  .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
   .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
   .sendbar{border-top:1px dashed var(--line);padding:10px 14px 16px;background:linear-gradient(180deg,transparent,#e6dcc8);}
@@ -137,12 +136,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// 删除了调试黑条，加上了全局错误监控（只在报错时提示，平时看不见）
-window.onerror = function(msg, src, line){
-  toast('运行错误：' + msg);
-};
+window.onerror = function(msg){ toast('运行错误：' + msg); };
 
-/* ========== IndexedDB (换库名到 v5) ========== */
+/* ========== IndexedDB ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
@@ -258,7 +254,7 @@ function renderLog(){
         ? `<img class="stamp" src="${urlCache[stampMap[m.stampId].imageId]}" alt="">` : '';
       div.innerHTML = `<div class="meta"><span>发报 NO.${String(no).padStart(3,'0')}</span><span>${fmtTime(m.createdAt)}</span></div>
         <div class="telegram-text">${esc(m.text||'')}</div>
-        ${stampHTML || '<div class="sign">── 发报 ──</div>'}
+        <div class="seal">我</div>
         ${stampHTML}`;
       logEl.appendChild(div);
     }else{
@@ -497,7 +493,7 @@ async function importCodeTxt(e){
   await renderAll(); await renderPanel();
 }
 
-/* ========== 电码本 JSON（修复了拼写错误，并兼容各种格式） ========== */
+/* ========== 电码本 JSON ========== */
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
@@ -630,7 +626,7 @@ async function send(){
     logEl.scrollTop = logEl.scrollHeight;
     await new Promise(r=>setTimeout(r,650));
 
-    const lineCount = 1 + Math.floor(Math.random()*3);
+    const lineCount = 1 + Math.floor(Math.random()*3); // 1~3句
     const lines = [];
     for(let i=0;i<lineCount;i++){
       const n = Math.min(1 + Math.floor(Math.random()*3), codes.length);

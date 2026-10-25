@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>梦角字卡传讯 · 电码传讯</title>
+<title>南洲旧梦</title>
 <style>
   :root{
     --paper:#efe7d6; --paper-2:#f7f1e3; --paper-3:#e7dcc6;
@@ -16,131 +16,73 @@
     margin:0; background:var(--paper); color:var(--ink);
     font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
     background-image:linear-gradient(180deg,#f2ebdc,#e9dfcc);
-    background-size:100% 100%;
   }
   #app{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
-  /* 顶部 */
-  header{
-    padding:14px 16px 10px; border-bottom:1px dashed var(--line);
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-  }
+  header{padding:14px 16px 10px;border-bottom:1px dashed var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .title{font-size:16px;letter-spacing:2px;font-weight:700;}
   .title small{display:block;font-size:10px;color:var(--ink-soft);letter-spacing:1px;font-weight:400;}
   .drawers{margin-left:auto;display:flex;gap:8px;}
-  .drawer-btn{
-    border:1px solid var(--line); background:var(--paper-2); color:var(--ink);
-    padding:7px 10px; border-radius:4px; font-family:inherit; font-size:12px; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; line-height:1.25;
-  }
+  .drawer-btn{border:1px solid var(--line);background:var(--paper-2);color:var(--ink);padding:7px 10px;border-radius:4px;font-family:inherit;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;}
   .drawer-btn b{font-size:11px;font-weight:700;}
   .drawer-btn span{font-size:10px;color:var(--ink-soft);}
-  /* 传讯记录 */
   .log{flex:1;padding:16px 14px 8px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;}
   .empty{color:var(--ink-soft);font-size:12px;text-align:center;margin-top:36px;line-height:1.9;}
-  /* 电报纸 */
-  .letter{
-    position:relative; border:1px solid var(--line); padding:12px 12px 10px;
-    background:
-      repeating-linear-gradient(180deg, transparent 0 27px, rgba(58,52,40,.07) 27px 28px),
-      var(--paper-2);
-    box-shadow:2px 3px 0 var(--shadow);
-  }
-  .letter.dream{
-    background:
-      repeating-linear-gradient(180deg, transparent 0 27px, rgba(58,52,40,.07) 27px 28px),
-      #efe4cf;
-    border-color:#b9ab8e;
-  }
+  .letter{position:relative;border:1px solid var(--line);padding:12px 12px 10px;background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),var(--paper-2);box-shadow:2px 3px 0 var(--shadow);}
+  .letter.dream{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),#efe4cf;border-color:#b9ab8e;}
   .letter .meta{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;}
   .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
   .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;}
   .sign{text-align:right;font-size:10px;color:var(--ink-soft);letter-spacing:2px;margin-top:8px;}
-  .seal{
-    position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);
-    color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font-size:9px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;
-  }
-  .stamp{
-    position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;
-    border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);
-  }
+  .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
+  .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
   .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
-  /* 发报区 */
   .sendbar{border-top:1px dashed var(--line);padding:10px 14px 16px;background:linear-gradient(180deg,transparent,#e6dcc8);}
   .sendbar .hint{font-size:10px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;}
   .sticker-pick{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;min-height:34px;align-items:center;}
-  .sticker-pick .st{
-    width:30px;height:30px;border:1px solid var(--line);border-radius:3px;overflow:hidden;flex-shrink:0;cursor:pointer;background:#fbf7ec;
-    display:flex;align-items:center;justify-content:center;
-  }
+  .sticker-pick .st{width:30px;height:30px;border:1px solid var(--line);border-radius:3px;overflow:hidden;flex-shrink:0;cursor:pointer;background:#fbf7ec;display:flex;align-items:center;justify-content:center;}
   .sticker-pick .st img{width:100%;height:100%;object-fit:cover;}
   .sticker-pick .st.sel{border-color:var(--seal);box-shadow:0 0 0 1px var(--seal) inset;}
   .sticker-pick .none{font-size:11px;color:var(--ink-soft);}
   .input-row{display:flex;gap:8px;margin-top:6px;}
-  .input-row input{
-    flex:1;padding:10px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
-    font-family:inherit;font-size:14px;border-radius:3px;
-  }
-  .sendbtn{
-    padding:10px 16px;border:1px solid var(--ink);background:var(--ink);
-    color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;white-space:nowrap;
-  }
+  .input-row input{flex:1;padding:10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:14px;border-radius:3px;}
+  .sendbtn{padding:10px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;white-space:nowrap;}
   .sendbtn:disabled{background:transparent;color:var(--ink-soft);border-color:var(--line);cursor:default;}
-  /* 抽屉 */
   .overlay{position:fixed;inset:0;background:rgba(58,52,40,.35);display:none;align-items:flex-end;z-index:20;}
   .overlay.open{display:flex;}
-  .panel{
-    width:100%;max-width:640px;margin:0 auto;max-height:82vh;background:var(--paper-2);
-    border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;
-    animation:slideUp .22s ease;
-  }
+  .panel{width:100%;max-width:640px;margin:0 auto;max-height:84vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
   @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
   .panel-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
   .panel-head b{font-size:13px;letter-spacing:2px;}
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
   .panel-body{padding:12px 14px 20px;overflow-y:auto;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
-  /* 字卡 */
-  .card{
-    width:66px;height:66px;border:1px solid var(--line);background:#fbf7ec;
-    border-radius:3px;position:relative;flex-shrink:0;perspective:400px;cursor:pointer;
-  }
+  .card{width:66px;height:66px;border:1px solid var(--line);background:#fbf7ec;border-radius:3px;position:relative;flex-shrink:0;perspective:400px;cursor:pointer;}
   .card-inner{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d;}
   .card.flipped .card-inner{transform:rotateY(180deg);}
-  .face{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    backface-visibility:hidden;overflow:hidden;border-radius:2px;
-  }
+  .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;overflow:hidden;border-radius:2px;}
   .face .ch{font-size:24px;}
-  .face.back{
-    transform:rotateY(180deg);background:#f1ead9;padding:4px;font-size:10px;color:var(--ink-soft);
-    line-height:1.3;text-align:center;word-break:break-all;
-  }
-  .grid .del{
-    position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;
-    background:var(--seal);color:#fff;border:none;font-size:11px;line-height:18px;text-align:center;cursor:pointer;z-index:3;
-  }
-  /* 贴纸 */
-  .sticker{
-    width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;
-  }
+  .face.back{transform:rotateY(180deg);background:#f1ead9;padding:4px;font-size:10px;color:var(--ink-soft);line-height:1.3;text-align:center;word-break:break-all;}
+  .back-edit{width:100%;height:100%;border:none;background:transparent;font-family:inherit;font-size:10px;color:var(--ink);text-align:center;resize:none;outline:none;padding:2px;}
+  .grid .del{position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:var(--seal);color:#fff;border:none;font-size:11px;line-height:18px;text-align:center;cursor:pointer;z-index:3;}
+  .sticker{width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;}
   .sticker img{width:100%;height:100%;object-fit:cover;display:block;}
-  .grid .del.s2{right:-6px;top:-6px;position:absolute;}
   .empty-note{font-size:12px;color:var(--ink-soft);line-height:2;text-align:center;padding:18px 0;}
-  .form{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+  .form{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
   .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
-  .form input[type=text]{
-    padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
-    font-family:inherit;font-size:13px;border-radius:3px;
-  }
+  .form input[type=text],.form textarea{padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:13px;border-radius:3px;}
+  .form textarea{min-height:80px;resize:vertical;}
   .form input[type=file]{font-size:11px;color:var(--ink-soft);}
   .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
+  .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  .io-row button{padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;}
   .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
   .toast.show{opacity:1;}
 </style>
 </head>
 <body>
-<div id="app">
+<div id="debug" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font-size:11px;padding:5px;word-break:break-all;">状态：脚本未执行</div>
+
+<div id="app" style="padding-top:26px;">
   <header>
     <div class="title">梦角字卡传讯<small>DREAM · TELEGRAM</small></div>
     <div class="drawers">
@@ -163,11 +105,10 @@
   </div>
 </div>
 
-<!-- 抽屉 -->
 <div class="overlay" id="overlay">
   <div class="panel">
     <div class="panel-head">
-      <b id="panelTitle">电码本</b>
+      <b id="panelTitle">梦角的电码本</b>
       <button class="close" id="closePanel">×</button>
     </div>
     <div class="panel-body" id="panelBody"></div>
@@ -177,7 +118,12 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ========== IndexedDB ========== */
+document.getElementById('debug').textContent = '状态：脚本已执行';
+window.onerror = function(msg, src, line){
+  document.getElementById('debug').textContent = '错误：' + msg + '（行 ' + line + '）';
+};
+
+/* ========== IndexedDB（事务内同步发请求） ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
@@ -194,26 +140,36 @@ function db(){
     req.onerror = ()=> rej(req.error);
   });
 }
-function tx(store, mode){ return db().then(d=> d.transaction(store, mode).objectStore(store)); }
-function reqP(r){ return new Promise((res,rej)=>{ r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
-
-async function addCode(c){ const s=await tx('codes','readwrite'); return reqP(s.add(c)); }
-async function allCodes(){ const s=await tx('codes','readonly'); return reqP(s.getAll()); }
-async function delCode(id){ const s=await tx('codes','readwrite'); return reqP(s.delete(id)); }
-
-async function addStamp(s0){ const s=await tx('stamps','readwrite'); return reqP(s.add(s0)); }
-async function allStamps(){ const s=await tx('stamps','readonly'); return reqP(s.getAll()); }
-async function delStamp(id){
-  const s=await tx('stamps','readonly'); const st=await reqP(s.get(id));
-  if(st && st.imageId){ const im=await tx('images','readwrite'); await reqP(im.delete(st.imageId)); }
-  const s2=await tx('stamps','readwrite'); return reqP(s2.delete(id));
+function withStore(store, mode, fn){
+  return db().then(d=> new Promise((res, rej)=>{
+    let t;
+    try{ t = d.transaction(store, mode); }catch(e){ rej(e); return; }
+    const s = t.objectStore(store);
+    let out;
+    try{ out = fn(s); }catch(e){ rej(e); return; }
+    t.oncomplete = ()=> res(out && out.result !== undefined ? out.result : out);
+    t.onerror = ()=> rej(t.error);
+    t.onabort = ()=> rej(t.error);
+  }));
 }
+const addCode = c => withStore('codes','readwrite', s=> s.add(c));
+const allCodes = () => withStore('codes','readonly', s=> s.getAll());
+const putCode = c => withStore('codes','readwrite', s=> s.put(c));
+const delCode = id => withStore('codes','readwrite', s=> s.delete(id));
+const clearCodes = () => withStore('codes','readwrite', s=> s.clear());
 
-async function saveImage(blob){ const s=await tx('images','readwrite'); return reqP(s.add({blob})); }
-async function getImage(id){ const s=await tx('images','readonly'); return reqP(s.get(id)); }
+const addStamp = st => withStore('stamps','readwrite', s=> s.add(st));
+const allStamps = () => withStore('stamps','readonly', s=> s.getAll());
+const delStampRow = id => withStore('stamps','readwrite', s=> s.delete(id));
+const clearStamps = () => withStore('stamps','readwrite', s=> s.clear());
 
-async function addMessage(m){ const s=await tx('messages','readwrite'); return reqP(s.add(m)); }
-async function allMessages(){ const s=await tx('messages','readonly'); const a=await reqP(s.getAll()); return a.sort((x,y)=>x.createdAt-y.createdAt); }
+const saveImage = blob => withStore('images','readwrite', s=> s.add({blob}));
+const getImage = id => withStore('images','readonly', s=> s.get(id));
+const clearImages = () => withStore('images','readwrite', s=> s.clear());
+
+const addMessage = m => withStore('messages','readwrite', s=> s.add(m));
+const allMessages = () => withStore('messages','readonly', s=> s.getAll()).then(a=>a.sort((x,y)=>x.createdAt-y.createdAt));
+const clearMessages = () => withStore('messages','readwrite', s=> s.clear());
 
 /* ========== 图片压缩 ========== */
 function compressImage(file, maxSide=800, quality=.8){
@@ -236,12 +192,10 @@ function compressImage(file, maxSide=800, quality=.8){
 }
 
 /* ========== 状态 ========== */
-let codes = [];      // 电码（字卡）
-let stamps = [];     // 邮戳（贴纸）
-let messages = [];
-let urlCache = {};   // imageId -> objectURL
-let pickedStamp = null; // 本次发报选中的邮戳 id
-let panelKind = 'code'; // code | stamp
+let codes = [], stamps = [], messages = [];
+let urlCache = {};
+let pickedStamp = null;
+let panelKind = 'code';
 
 const $ = id=>document.getElementById(id);
 const logEl = $('log');
@@ -251,10 +205,7 @@ function toast(msg){
   clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 1500);
 }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function fmtTime(ts){
-  const d = new Date(ts); const p = n=>String(n).padStart(2,'0');
-  return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-}
+function fmtTime(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
 async function ensureUrl(imageId){
   if(!imageId || urlCache[imageId]) return urlCache[imageId] || null;
   const rec = await getImage(imageId);
@@ -268,13 +219,10 @@ async function renderAll(){
   stamps = await allStamps();
   messages = await allMessages();
   for(const st of stamps){ if(st.imageId) await ensureUrl(st.imageId); }
-  renderCounts();
-  renderLog();
-  renderStickerPick();
-}
-function renderCounts(){
   $('cntCode').textContent = codes.length + ' 码';
   $('cntStamp').textContent = stamps.length + ' 枚';
+  renderLog();
+  renderStickerPick();
 }
 function renderLog(){
   logEl.querySelectorAll('.letter,.incoming').forEach(n=>n.remove());
@@ -291,7 +239,7 @@ function renderLog(){
         ? `<img class="stamp" src="${urlCache[stampMap[m.stampId].imageId]}" alt="">` : '';
       div.innerHTML = `<div class="meta"><span>发报 NO.${String(no).padStart(3,'0')}</span><span>${fmtTime(m.createdAt)}</span></div>
         <div class="telegram-text">${esc(m.text||'')}</div>
-        ${stampHTML ? '' : '<div class="sign">── 发报 ──</div>'}
+        ${stampHTML || '<div class="sign">── 发报 ──</div>'}
         ${stampHTML}`;
       logEl.appendChild(div);
     }else{
@@ -329,7 +277,7 @@ function renderStickerPick(){
 /* ========== 抽屉 ========== */
 async function openPanel(kind){
   panelKind = kind;
-  $('panelTitle').textContent = kind==='code' ? '电码本' : '邮戳册';
+  $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
   $('overlay').classList.add('open');
   await renderPanel();
 }
@@ -338,37 +286,63 @@ function closePanel(){ $('overlay').classList.remove('open'); }
 async function renderPanel(){
   const body = $('panelBody');
   if(panelKind==='code'){
-    const list = codes;
-    let gridHTML = '';
-    if(list.length===0){
-      gridHTML = `<div class="empty-note" id="gridEmpty">电码本空空的。<br>在下面录几码进去。</div>`;
-    }else{
-      gridHTML = `<div class="grid">${list.map(c=>{
-        const back = c.back ? esc(c.back) : '（无备注）';
-        return `<div class="card" data-code="${c.id}">
-          <div class="card-inner">
-            <div class="face"><span class="ch">${esc(c.char||'？')}</span></div>
-            <div class="face back">${back}</div>
-          </div>
-          <button class="del" data-delcode="${c.id}">×</button>
-        </div>`;
-      }).join('')}</div>`;
-    }
+    let gridHTML = codes.length===0
+      ? `<div class="empty-note">电码本空空的。<br>在下面录几码进去。</div>`
+      : `<div class="grid">${codes.map(c=>`
+          <div class="card" data-code="${c.id}">
+            <div class="card-inner">
+              <div class="face"><span class="ch">${esc(c.char||'？')}</span></div>
+              <div class="face back"><textarea class="back-edit" data-back="${c.id}" placeholder="备注">${esc(c.back||'')}</textarea></div>
+            </div>
+            <button class="del" data-delcode="${c.id}">×</button>
+          </div>`).join('')}</div>`;
+
     body.innerHTML = `${gridHTML}
       <div class="form">
         <label>码字（正面）
           <input type="text" id="fChar" placeholder="如：想" maxlength="4" />
         </label>
-        <label>背面备注（可选）
-          <input type="text" id="fBack" placeholder="记下这码的来处/含义" maxlength="40" />
-        </label>
         <button id="addCodeBtn">录电码</button>
-      </div>`;
+        <label>批量录入（一行一个码字）
+          <textarea id="fBatch" placeholder="想&#10;你&#10;了"></textarea>
+        </label>
+        <button id="batchCodeBtn">批量录入</button>
+      </div>
+      <div class="io-row">
+        <button id="expTxt">导出 TXT</button>
+        <button id="expJson">导出 JSON</button>
+        <button id="impTxt">导入 TXT</button>
+        <button id="impJson">导入 JSON</button>
+      </div>
+      <input type="file" id="fileTxt" accept=".txt,text/plain" style="display:none" />
+      <input type="file" id="fileJson" accept=".json,application/json" style="display:none" />
+    `;
+
     $('addCodeBtn').addEventListener('click', onAddCode);
+    $('batchCodeBtn').addEventListener('click', onBatchCode);
+    $('expTxt').addEventListener('click', exportTxt);
+    $('expJson').addEventListener('click', exportJson);
+    $('impTxt').addEventListener('click', ()=> $('fileTxt').click());
+    $('impJson').addEventListener('click', ()=> $('fileJson').click());
+    $('fileTxt').addEventListener('change', importTxt);
+    $('fileJson').addEventListener('change', importJson);
+
     body.querySelectorAll('.card[data-code]').forEach(card=>{
       card.addEventListener('click', e=>{
         if(e.target.closest('[data-delcode]')) return;
+        if(e.target.closest('textarea')) return;
         card.classList.toggle('flipped');
+      });
+    });
+    body.querySelectorAll('[data-back]').forEach(ta=>{
+      ta.addEventListener('click', e=> e.stopPropagation());
+      ta.addEventListener('change', async ()=>{
+        const id = Number(ta.dataset.back);
+        const cur = codes.find(c=>c.id===id);
+        if(!cur) return;
+        cur.back = ta.value.trim();
+        await putCode(cur);
+        toast('备注已存');
       });
     });
     body.querySelectorAll('[data-delcode]').forEach(btn=>{
@@ -381,16 +355,10 @@ async function renderPanel(){
       });
     });
   }else{
-    const list = stamps;
-    let gridHTML = '';
-    if(list.length===0){
-      gridHTML = `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`;
-    }else{
-      gridHTML = `<div class="grid">${list.map(s=>{
-        const url = urlCache[s.imageId] || '';
-        return `<div class="sticker"><img src="${url}" alt=""><button class="del s2" data-delstamp="${s.id}">×</button></div>`;
-      }).join('')}</div>`;
-    }
+    let gridHTML = stamps.length===0
+      ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
+      : `<div class="grid">${stamps.map(s=>`
+          <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
     body.innerHTML = `${gridHTML}
       <div class="form">
         <label>邮戳图片（会自动压缩）
@@ -412,16 +380,26 @@ async function renderPanel(){
   }
 }
 
-/* ========== 录电码 / 收邮戳 ========== */
+/* ========== 录码 ========== */
 async function onAddCode(){
   const ch = $('fChar').value.trim();
-  const back = $('fBack').value.trim();
   if(!ch){ toast('至少写一个码字'); return; }
-  await addCode({ char: ch, back, createdAt: Date.now() });
-  $('fChar').value=''; $('fBack').value='';
+  await addCode({ char: ch, back: '', createdAt: Date.now() });
+  $('fChar').value = '';
   toast('已录入电码');
   await renderAll(); await renderPanel();
 }
+async function onBatchCode(){
+  const raw = $('fBatch').value;
+  const chars = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  if(!chars.length){ toast('没有可录入的码'); return; }
+  for(const ch of chars) await addCode({ char: ch, back: '', createdAt: Date.now() });
+  $('fBatch').value = '';
+  toast(`已录入 ${chars.length} 码`);
+  await renderAll(); await renderPanel();
+}
+
+/* ========== 邮戳 ========== */
 async function onAddStamp(){
   const file = $('fStamp').files[0];
   if(!file){ toast('选一张邮戳图'); return; }
@@ -429,12 +407,119 @@ async function onAddStamp(){
   try{ blob = await compressImage(file); }catch(e){ toast('图片处理失败'); return; }
   const imageId = await saveImage(blob);
   await addStamp({ imageId, createdAt: Date.now() });
-  $('fStamp').value='';
+  $('fStamp').value = '';
   toast('已收邮戳');
   await renderAll(); await renderPanel();
 }
+async function delStamp(id){
+  const st = stamps.find(s=>s.id===id);
+  if(st && st.imageId) await withStore('images','readwrite', s=> s.delete(st.imageId));
+  await delStampRow(id);
+}
 
-/* ========== 发报 & 梦角查电码回电 ========== */
+/* ========== 导出 ========== */
+function download(filename, content, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function dateStr(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
+
+function exportTxt(){
+  const txt = codes.map(c=>c.char).join('\n');
+  if(!txt){ toast('电码本为空'); return; }
+  download(`电码本-${dateStr()}.txt`, txt, 'text/plain;charset=utf-8');
+  toast('已导出 TXT');
+}
+async function exportJson(){
+  const stampData = [];
+  for(const st of stamps){
+    const rec = await getImage(st.imageId);
+    let b64 = '';
+    if(rec && rec.blob){
+      b64 = await blobToBase64(rec.blob);
+    }
+    stampData.push({ id: st.id, createdAt: st.createdAt, imageBase64: b64 });
+  }
+  const data = {
+    version: 1,
+    exportedAt: Date.now(),
+    codes: codes.map(c=>({ id:c.id, char:c.char, back:c.back||'', createdAt:c.createdAt })),
+    stamps: stampData,
+    messages: messages
+  };
+  download(`梦角传讯-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
+  toast('已导出 JSON');
+}
+function blobToBase64(blob){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = ()=> res(String(r.result).split(',')[1] || '');
+    r.onerror = ()=> rej(r.error);
+    r.readAsDataURL(blob);
+  });
+}
+function base64ToBlob(b64, mime='image/webp'){
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], {type:mime});
+}
+
+/* ========== 导入 ========== */
+async function importTxt(e){
+  const file = e.target.files[0]; e.target.value = '';
+  if(!file) return;
+  const text = await file.text();
+  const chars = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  if(!chars.length){ toast('文件里没有码'); return; }
+  const existing = new Set(codes.map(c=>c.char));
+  let added = 0;
+  for(const ch of chars){
+    if(existing.has(ch)) continue;
+    await addCode({ char: ch, back: '', createdAt: Date.now() });
+    existing.add(ch); added++;
+  }
+  toast(`导入完成，新增 ${added} 码`);
+  await renderAll(); await renderPanel();
+}
+async function importJson(e){
+  const file = e.target.files[0]; e.target.value = '';
+  if(!file) return;
+  let data;
+  try{ data = JSON.parse(await file.text()); }catch(err){ toast('JSON 解析失败'); return; }
+  if(!confirm('导入将覆盖现有电码本、邮戳册和传讯记录，继续？')) return;
+  try{
+    await clearCodes(); await clearStamps(); await clearImages(); await clearMessages();
+    for(const c of (data.codes||[])){
+      await addCode({ char: c.char, back: c.back||'', createdAt: c.createdAt||Date.now() });
+    }
+    for(const st of (data.stamps||[])){
+      let imageId = null;
+      if(st.imageBase64){
+        try{
+          const blob = base64ToBlob(st.imageBase64);
+          imageId = await saveImage(blob);
+        }catch(err){ imageId = null; }
+      }
+      if(imageId) await addStamp({ imageId, createdAt: st.createdAt||Date.now() });
+    }
+    for(const m of (data.messages||[])){
+      await addMessage(m);
+    }
+    urlCache = {};
+    toast('导入完成');
+    await renderAll(); await renderPanel();
+  }catch(err){
+    toast('导入失败');
+    document.getElementById('debug').textContent = '导入错误：' + (err && err.message || err);
+  }
+}
+
+/* ========== 发报 & 回电 ========== */
 async function send(){
   const input = $('msgInput');
   const text = input.value.trim();
@@ -452,10 +537,10 @@ async function send(){
     logEl.scrollTop = logEl.scrollHeight;
     await new Promise(r=>setTimeout(r,650));
 
-    const lineCount = 1 + Math.floor(Math.random()*3); // 1~3 行
+    const lineCount = 1 + Math.floor(Math.random()*3);
     const lines = [];
     for(let i=0;i<lineCount;i++){
-      const n = Math.min(1 + Math.floor(Math.random()*3), codes.length); // 每行 1~3 张
+      const n = Math.min(1 + Math.floor(Math.random()*3), codes.length);
       const pool = [...codes];
       const line = [];
       for(let k=0;k<n && pool.length;k++){
@@ -464,7 +549,6 @@ async function send(){
       }
       lines.push(line);
     }
-    // 40% 概率盖邮戳
     let stampId = null;
     if(stamps.length && Math.random() < 0.4){
       stampId = stamps[Math.floor(Math.random()*stamps.length)].id;
@@ -492,7 +576,10 @@ $('stickerPick').addEventListener('click', e=>{
 });
 
 /* ========== 启动 ========== */
-renderAll().catch(err=>{ console.error(err); toast('本地存储初始化失败'); });
+renderAll().catch(err=>{
+  console.error(err);
+  document.getElementById('debug').textContent = '启动错误：' + ((err && err.message) || err);
+});
 </script>
 </body>
 </html>

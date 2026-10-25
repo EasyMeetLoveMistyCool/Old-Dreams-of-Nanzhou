@@ -84,7 +84,7 @@
 
 <div id="app" style="padding-top:26px;">
   <header>
-    <div class="title">梦角字卡传讯<small>DREAM · TELEGRAM</small></div>
+    <div class="title">南洲旧梦<small>字卡传讯 · 电码与邮戳</small></div>
     <div class="drawers">
       <button class="drawer-btn" id="openCode"><b>电码本</b><span id="cntCode">0 码</span></button>
       <button class="drawer-btn" id="openStamp"><b>邮戳册</b><span id="cntStamp">0 枚</span></button>
@@ -123,12 +123,12 @@ window.onerror = function(msg, src, line){
   document.getElementById('debug').textContent = '错误：' + msg + '（行 ' + line + '）';
 };
 
-/* ========== IndexedDB（事务内同步发请求） ========== */
+/* ========== IndexedDB ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
   return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat', 1);
+    const req = indexedDB.open('dreamchat_v2', 1);
     req.onupgradeneeded = e=>{
       const d = e.target.result;
       if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
@@ -320,12 +320,12 @@ async function renderPanel(){
 
     $('addCodeBtn').addEventListener('click', onAddCode);
     $('batchCodeBtn').addEventListener('click', onBatchCode);
-    $('expTxt').addEventListener('click', exportTxt);
-    $('expJson').addEventListener('click', exportJson);
+    $('expTxt').addEventListener('click', exportCodeTxt);
+    $('expJson').addEventListener('click', exportCodeJson);
     $('impTxt').addEventListener('click', ()=> $('fileTxt').click());
     $('impJson').addEventListener('click', ()=> $('fileJson').click());
-    $('fileTxt').addEventListener('change', importTxt);
-    $('fileJson').addEventListener('change', importJson);
+    $('fileTxt').addEventListener('change', importCodeTxt);
+    $('fileJson').addEventListener('change', importCodeJson);
 
     body.querySelectorAll('.card[data-code]').forEach(card=>{
       card.addEventListener('click', e=>{
@@ -365,8 +365,17 @@ async function renderPanel(){
           <input type="file" id="fStamp" accept="image/*" />
         </label>
         <button id="addStampBtn">收邮戳</button>
-      </div>`;
+      </div>
+      <div class="io-row">
+        <button id="expStampJson">导出 JSON</button>
+        <button id="impStampJson">导入 JSON</button>
+      </div>
+      <input type="file" id="fileStampJson" accept=".json,application/json" style="display:none" />
+    `;
     $('addStampBtn').addEventListener('click', onAddStamp);
+    $('expStampJson').addEventListener('click', exportStampJson);
+    $('impStampJson').addEventListener('click', ()=> $('fileStampJson').click());
+    $('fileStampJson').addEventListener('change', importStampJson);
     body.querySelectorAll('[data-delstamp]').forEach(btn=>{
       btn.addEventListener('click', async e=>{
         e.stopPropagation();
@@ -417,7 +426,7 @@ async function delStamp(id){
   await delStampRow(id);
 }
 
-/* ========== 导出 ========== */
+/* ========== 通用下载/编码 ========== */
 function download(filename, content, type){
   const blob = new Blob([content], {type});
   const url = URL.createObjectURL(blob);
@@ -427,33 +436,6 @@ function download(filename, content, type){
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
 function dateStr(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
-
-function exportTxt(){
-  const txt = codes.map(c=>c.char).join('\n');
-  if(!txt){ toast('电码本为空'); return; }
-  download(`电码本-${dateStr()}.txt`, txt, 'text/plain;charset=utf-8');
-  toast('已导出 TXT');
-}
-async function exportJson(){
-  const stampData = [];
-  for(const st of stamps){
-    const rec = await getImage(st.imageId);
-    let b64 = '';
-    if(rec && rec.blob){
-      b64 = await blobToBase64(rec.blob);
-    }
-    stampData.push({ id: st.id, createdAt: st.createdAt, imageBase64: b64 });
-  }
-  const data = {
-    version: 1,
-    exportedAt: Date.now(),
-    codes: codes.map(c=>({ id:c.id, char:c.char, back:c.back||'', createdAt:c.createdAt })),
-    stamps: stampData,
-    messages: messages
-  };
-  download(`梦角传讯-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
-  toast('已导出 JSON');
-}
 function blobToBase64(blob){
   return new Promise((res, rej)=>{
     const r = new FileReader();
@@ -469,8 +451,14 @@ function base64ToBlob(b64, mime='image/webp'){
   return new Blob([arr], {type:mime});
 }
 
-/* ========== 导入 ========== */
-async function importTxt(e){
+/* ========== 电码本：TXT 导出/导入 ========== */
+function exportCodeTxt(){
+  const txt = codes.map(c=>c.char).join('\n');
+  if(!txt){ toast('电码本为空'); return; }
+  download(`南洲旧梦-电码本-${dateStr()}.txt`, txt, 'text/plain;charset=utf-8');
+  toast('已导出 TXT');
+}
+async function importCodeTxt(e){
   const file = e.target.files[0]; e.target.value = '';
   if(!file) return;
   const text = await file.text();
@@ -486,32 +474,77 @@ async function importTxt(e){
   toast(`导入完成，新增 ${added} 码`);
   await renderAll(); await renderPanel();
 }
-async function importJson(e){
+
+/* ========== 电码本：JSON 导出/导入 ========== */
+function exportCodeJson(){
+  const data = {
+    type: 'nanchou-codes',
+    version: 1,
+    exportedAt: Date.now(),
+    codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
+  };
+  download(`南洲旧梦-电码本-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
+  toast('已导出 JSON');
+}
+async function importCodeJson(e){
   const file = e.target.files[0]; e.target.value = '';
   if(!file) return;
   let data;
   try{ data = JSON.parse(await file.text()); }catch(err){ toast('JSON 解析失败'); return; }
-  if(!confirm('导入将覆盖现有电码本、邮戳册和传讯记录，继续？')) return;
+  if(data.type && data.type !== 'nanchou-codes'){ toast('不是电码本的备份文件'); return; }
+  const list = Array.isArray(data.codes) ? data.codes : (Array.isArray(data) ? data : null);
+  if(!list){ toast('文件里没有电码本数据'); return; }
+  if(!confirm('导入将覆盖现有电码本，继续？')) return;
   try{
-    await clearCodes(); await clearStamps(); await clearImages(); await clearMessages();
-    for(const c of (data.codes||[])){
-      await addCode({ char: c.char, back: c.back||'', createdAt: c.createdAt||Date.now() });
+    await clearCodes();
+    for(const c of list){
+      const ch = (c.char || c.content || '').trim();
+      if(!ch) continue;
+      await addCode({ char: ch, back: c.back || '', createdAt: c.createdAt || Date.now() });
     }
-    for(const st of (data.stamps||[])){
-      let imageId = null;
-      if(st.imageBase64){
-        try{
-          const blob = base64ToBlob(st.imageBase64);
-          imageId = await saveImage(blob);
-        }catch(err){ imageId = null; }
-      }
-      if(imageId) await addStamp({ imageId, createdAt: st.createdAt||Date.now() });
-    }
-    for(const m of (data.messages||[])){
-      await addMessage(m);
-    }
+    toast('电码本已导入');
+    await renderAll(); await renderPanel();
+  }catch(err){
+    toast('导入失败');
+    document.getElementById('debug').textContent = '导入错误：' + (err && err.message || err);
+  }
+}
+
+/* ========== 邮戳册：JSON 导出/导入 ========== */
+async function exportStampJson(){
+  if(!stamps.length){ toast('邮戳册为空'); return; }
+  const arr = [];
+  for(const st of stamps){
+    const rec = await getImage(st.imageId);
+    let b64 = '';
+    if(rec && rec.blob) b64 = await blobToBase64(rec.blob);
+    arr.push({ imageBase64: b64, createdAt: st.createdAt });
+  }
+  const data = { type: 'nanchou-stamps', version: 1, exportedAt: Date.now(), stamps: arr };
+  download(`南洲旧梦-邮戳册-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
+  toast('已导出 JSON');
+}
+async function importStampJson(e){
+  const file = e.target.files[0]; e.target.value = '';
+  if(!file) return;
+  let data;
+  try{ data = JSON.parse(await file.text()); }catch(err){ toast('JSON 解析失败'); return; }
+  if(data.type && data.type !== 'nanchou-stamps'){ toast('不是邮戳册的备份文件'); return; }
+  const list = Array.isArray(data.stamps) ? data.stamps : (Array.isArray(data) ? data : null);
+  if(!list){ toast('文件里没有邮戳数据'); return; }
+  if(!confirm('导入将覆盖现有邮戳册，继续？')) return;
+  try{
+    await clearStamps(); await clearImages();
     urlCache = {};
-    toast('导入完成');
+    for(const st of list){
+      if(!st.imageBase64) continue;
+      let blob;
+      try{ blob = base64ToBlob(st.imageBase64); }catch(err){ continue; }
+      const imageId = await saveImage(blob);
+      await addStamp({ imageId, createdAt: st.createdAt || Date.now() });
+    }
+    pickedStamp = null;
+    toast('邮戳册已导入');
     await renderAll(); await renderPanel();
   }catch(err){
     toast('导入失败');

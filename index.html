@@ -19,7 +19,7 @@
   /* ========== 主题变量 ========== */
   :root {
     --bg-color: #f0f2f5; --topbar-border: #e4e6eb;
-    --bubble-me: #d6ecff; --bubble-them: #ffffff;
+    --bubble-me: #d6ecff; --bubble-them: rgba(255,255,255,0.85);
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
     --input-bg: rgba(128,128,128,0.15); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
     --pinned-bg: rgba(255, 245, 246, 0.9);
@@ -35,25 +35,25 @@
   
   body.theme-cyber { 
     --bg-color: #000000; --topbar-border: #222;
-    --bubble-me: #003366; --bubble-them: #1a1a1a;
+    --bubble-me: rgba(0, 51, 102, 0.85); --bubble-them: rgba(26, 26, 26, 0.85);
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
     --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-space { 
     --bg-color: #0b1320; --topbar-border: #1a2639;
-    --bubble-me: #1e3a5f; --bubble-them: #1a2639;
+    --bubble-me: rgba(30, 58, 95, 0.85); --bubble-them: rgba(26, 38, 57, 0.85);
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
     --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-nightpurple { 
     --bg-color: #150e1c; --topbar-border: #2b1d36;
-    --bubble-me: #442266; --bubble-them: #2b1d36;
+    --bubble-me: rgba(68, 34, 102, 0.85); --bubble-them: rgba(43, 29, 54, 0.85);
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
     --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-pureblack { 
     --bg-color: #000000; --topbar-border: #1a1a1a;
-    --bubble-me: #333333; --bubble-them: #111111;
+    --bubble-me: rgba(51, 51, 51, 0.85); --bubble-them: rgba(17, 17, 17, 0.85);
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
     --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
@@ -63,8 +63,6 @@
 
   /* ========== 页面容器 ========== */
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
-  
-  /* 页面层级 */
   .page-list { z-index: 1; pointer-events: auto; } 
   .page-create, .page-sub, .page-settings { z-index: 2; transform:translateX(100%); pointer-events: auto; }
   .page-chat { z-index: 3; transform:translateX(100%); pointer-events: auto; }
@@ -84,8 +82,7 @@
     width:40px; height:40px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     font-size:22px; color:var(--text-secondary); cursor:pointer;
-    background:transparent; border:none; flex: 0 0 40px;
-    z-index: 20;
+    background:transparent; border:none; flex: 0 0 40px; z-index: 20;
   }
   .icon-btn:active { background:rgba(128,128,128,0.15); }
   
@@ -111,9 +108,7 @@
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row {
     display:flex; align-items:center; gap:12px; padding:12px 14px; 
-    background: transparent;
-    cursor:pointer;
-    border-bottom:1px solid var(--topbar-border); user-select: none;
+    background: transparent; cursor:pointer; border-bottom:1px solid var(--topbar-border); user-select: none;
   }
   .chat-row:active { background:rgba(128,128,128,0.1); }
   .chat-row.pinned { background: var(--pinned-bg); }
@@ -139,157 +134,131 @@
   /* ========== 聊天页专属逻辑 ========== */
   .page-chat { background-size: cover; background-position: center; }
   .chat-bg-mask { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-  
   .page-chat .topbar { background: transparent !important; border-bottom: none; z-index: 10; }
 
-  .messages-wrap {
-    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2;
-  }
-  .messages {
-    padding: 10px 14px 6px; display: flex; flex-direction: column; min-height: 100%;
-  }
+  .messages-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2; }
+  .messages { padding: 10px 14px 20px; display: flex; flex-direction: column; min-height: 100%; }
   
   .date-divider {
     align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px;
-    margin:10px 0; font-weight:500;
+    margin:16px 0; font-weight:500;
   }
   body.theme-cyber .date-divider, body.theme-space .date-divider, body.theme-nightpurple .date-divider, body.theme-pureblack .date-divider { background:rgba(255,255,255,.15); }
 
-  .msg-row { display:flex; margin:2px 0; align-items:flex-end; gap:6px; }
-  .msg-row.me { justify-content:flex-end; flex-direction:row-reverse; }
-  .msg-row.them { justify-content:flex-start; }
-  .msg-row.grouped { margin-top:2px; }
-  .msg-row:not(.grouped) { margin-top:8px; }
-
-  .msg-avatar {
-    width:28px; height:28px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover;
-    display:flex; align-items:center; justify-content:center; font-size:12px; flex:0 0 28px; margin-bottom:2px;
+  /* ========== 核心：居中悬停信笺（带呼吸间隔） ========== */
+  .msg-group {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 24px; /* 【核心强调】：大卡片之间的超大间距，拉开呼吸感 */
+    width: 100%;
+    animation: fadeIn 0.4s ease forwards;
   }
-  .msg-row.grouped .msg-avatar { visibility:hidden; }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-avatar-top {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; margin-bottom: 8px; object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
 
   .bubble {
-    max-width:75%; padding:6px 10px; border-radius:12px; position:relative; font-size:15px; line-height:1.4;
-    word-break:break-word; box-shadow:0 1px 3px rgba(0,0,0,.15); transition: background .3s;
+    max-width: 85%; padding: 16px 20px; border-radius: 16px; position: relative; font-size: 15px; line-height: 1.6;
+    word-break: break-word; text-align: center; /* 文本居中 */
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column; gap: 8px; /* 内部句子的间距 */
   }
-  .msg-row.me .bubble { background:var(--bubble-me); color:var(--text-color); border-bottom-right-radius:4px; }
-  .msg-row.them .bubble { background:var(--bubble-them); color:var(--text-color); border-bottom-left-radius:4px; }
 
-  .msg-row:not(.grouped) .bubble::after { content:''; position:absolute; bottom:0; width:0; height:0; border-style:solid; }
-  .msg-row.me:not(.grouped) .bubble::after { right:-6px; border-width:0 0 10px 10px; border-color:transparent transparent var(--bubble-me) transparent; }
-  .msg-row.them:not(.grouped) .bubble::after { left:-6px; border-width:0 10px 10px 0; border-color:transparent var(--bubble-them) transparent transparent; }
+  /* 祂的信笺 */
+  .msg-group.them .bubble { background: var(--bubble-them); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
+  /* 我的信笺 */
+  .msg-group.me .bubble { background: var(--bubble-me); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
 
-  .bubble .card-line { display:block; margin-bottom:2px; }
-  .bubble .sticker-img { display:block; max-width:160px; max-height:160px; border-radius:8px; margin-top:4px; }
-  .bubble .meta { float:right; font-size:11px; color:var(--time-color); margin:8px 0 -2px 8px; line-height:1; }
-  .bubble::after { content:''; display:block; clear:both; }
+  /* 内部句子浮现动效 */
+  .card-line { 
+    display:block; 
+    opacity: 0; transform: translateY(5px);
+    animation: cardIn 0.5s ease forwards;
+  }
+  @keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* 贴纸气泡 */
+  .bubble.sticker-bubble { padding: 0; background: transparent; box-shadow: none; border: none; margin-top: 10px; gap: 0; }
+  .bubble .sticker-img { display:block; max-width:160px; max-height:160px; border-radius:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 0 auto; }
+
+  .msg-time-center { font-size: 11px; color: var(--time-color); margin-top: 6px; text-align: right; width: 100%; }
 
   /* ========== 聊天页输入区 ========== */
   .composer {
-    flex:0 0 auto;
-    padding:8px 10px; padding-bottom:calc(8px + env(safe-area-inset-bottom));
-    display:flex; align-items:center; gap:8px; z-index: 10;
-    background: transparent; border-top: none;
+    flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
+    display:flex; align-items:flex-end; gap:8px; z-index: 10; background: transparent; border-top: none;
   }
   
-  .pending-sticker-box { display: none !important; }
-
-  .composer input {
-    flex:1; min-width:0; height:42px; border-radius:21px; border:none; 
-    background: rgba(128,128,128,0.2); 
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    padding:0 16px; font-size:15px; color:var(--text-color); outline:none; transition: background .3s;
+  .composer textarea {
+    flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; 
+    background: rgba(128,128,128,0.2); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; transition: background .3s;
+    resize: none; line-height: 1.4;
   }
-  .composer input::placeholder { color:var(--text-secondary); }
+  .composer textarea::placeholder { color:var(--text-secondary); }
   
   .send-btn {
-    width:42px; height:42px; border-radius:50%; 
-    background: var(--primary); color:#fff; border:none;
-    display:flex; align-items:center; justify-content:center; flex:0 0 42px; 
-    cursor:pointer; transition: opacity .2s, background .3s; 
-    opacity: 0.9;
+    width:44px; height:44px; border-radius:50%; background: var(--primary); color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; flex:0 0 44px; cursor:pointer; transition: opacity .2s, background .3s; opacity: 0.9;
   }
   .send-btn:disabled { background: rgba(128,128,128,0.2); color:var(--text-secondary); opacity: 0.5; }
-  .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
+  .send-btn svg { width:22px; height:22px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 表单与邮电所 ========== */
+  /* ========== 邮电所 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
-  .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
-  .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
-  .avatar-upload {
-    width:80px; height:80px; border-radius:50%; background:var(--input-bg); color:var(--text-secondary);
-    display:flex; align-items:center; justify-content:center; font-size:32px; cursor:pointer; overflow:hidden;
-    margin-bottom:16px; border:2px solid var(--topbar-border); background-size:cover; background-position:center;
-  }
-  .form-input {
-    width:100%; height:48px; border-radius:8px; background:var(--input-bg); border:1px solid var(--topbar-border);
-    padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
-  }
-  .form-input:focus { border-color:var(--primary); }
-  
-  .btn-primary {
-    width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
-    font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
-  }
-  .btn-primary:active { opacity:0.8; }
-
-  .bg-upload-box {
-    width:100%; height:120px; border-radius:8px; background:var(--input-bg);
-    border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center;
-    color:var(--text-secondary); font-size:14px; cursor:pointer; overflow:hidden;
-    background-size:cover; background-position:center; margin-bottom:15px;
-  }
-  .slider-container { width:100%; display:flex; align-items:center; gap:10px; padding:0 10px; }
-  .slider-container input[type=range] { flex:1; }
-
   .tab-bar { display:flex; background:transparent; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
-  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:rgba(128,128,128,0.1); border-radius:8px; margin-bottom:8px; }
-  .list-item-text { flex:1; font-size:15px; }
 
-  /* ========== 佈景页面 ========== */
-  .settings-section { background:rgba(128,128,128,0.1); border-radius:10px; padding:15px; margin-bottom:20px; }
-  .settings-title { font-size:15px; font-weight:600; color:var(--text-color); margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; }
-  .theme-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
-  .theme-card {
-    height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center;
-    font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.1);
-    border:2px solid transparent; transition:all .2s;
-  }
-  .theme-card:active { transform:scale(0.95); }
-  .theme-card.active { border-color:var(--text-color); }
+  .add-box { display: flex; flex-direction: column; background: var(--input-bg); border-radius: 8px; padding: 12px; margin-bottom: 20px; }
+  .add-textarea { width:100%; height:100px; border:none; background:transparent; color:var(--text-color); font-size:15px; outline:none; resize:none; line-height:1.5; }
+  .add-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-light); padding-top:10px; margin-top:10px; }
+  .add-count { font-size:13px; color:var(--text-secondary); }
+  .btn-add { background:var(--primary); color:#fff; border:none; padding:6px 16px; border-radius:6px; font-size:14px; cursor:pointer; }
 
-  /* ========== 菜单与弹窗 ========== */
-  .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
-  .menu-mask.show { display:block; }
-  .menu { position:absolute; top:56px; right:10px; background:var(--bg-color); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; border: 1px solid var(--topbar-border); }
-  .menu-item { padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer; white-space:nowrap; }
-  .menu-item:active { background:var(--input-bg); }
-  .menu-item.danger { color:#e53935; }
+  .search-box { margin-bottom: 15px; }
+  .search-input { width:100%; height:40px; border-radius:8px; background:var(--input-bg); border:none; padding:0 14px; font-size:14px; color:var(--text-color); outline:none; }
 
-  .action-sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px; }
-  .action-sheet-mask.show { display:flex; }
-  .action-sheet { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
-  .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer; }
-  .action-item:active { background:var(--input-bg); }
-  .action-item.danger { color:#e53935; }
+  .toolbar { display:flex; justify-content:space-around; padding:10px 0; margin-bottom:10px; }
+  .tool-btn { background:transparent; border:none; color:var(--text-color); font-size:14px; font-weight:500; cursor:pointer; padding:5px 10px; }
+  .tool-btn:active { opacity:0.7; }
 
+  .card-list-header { font-size:13px; color:var(--text-secondary); margin-bottom:10px; padding-left:5px; }
+  .card-item { display:flex; justify-content:space-between; align-items:flex-start; background:var(--input-bg); border-radius:8px; padding:12px 14px; margin-bottom:12px; gap:10px; }
+  .card-text { flex:1; font-size:15px; line-height:1.4; word-break:break-word; padding-top:2px; }
+  .card-actions { display:flex; flex-direction:column; gap:8px; flex:0 0 auto; }
+  .btn-edit, .btn-del { background:transparent; border:none; font-size:13px; cursor:pointer; padding:2px; }
+  .btn-edit { color:var(--primary); }
+  .btn-del { color:#e53935; }
+
+  /* ========== 通用弹窗 ========== */
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
-  .dialog-content { padding:16px; font-size:14px; color:var(--text-secondary); text-align:center; line-height:1.5; }
+  .dialog-content { padding:20px; font-size:15px; color:var(--text-color); text-align:center; }
+  .dialog-input { width:100%; height:40px; border-radius:6px; border:1px solid var(--topbar-border); padding:0 10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); }
   .dialog-footer { display:flex; border-top:1px solid var(--border-light); }
   .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; cursor:pointer; border:none; background:transparent; color:var(--primary); }
   .dialog-btn:active { background:var(--input-bg); }
   .dialog-btn.cancel { color:var(--text-secondary); border-right:1px solid var(--border-light); }
   .dialog-btn.danger { color:#e53935; }
 
-  .toast {
-    position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff;
-    font-size:13px; padding:8px 16px; border-radius:16px; z-index:300; opacity:0; transition:opacity .2s; pointer-events:none;
-  }
+  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:300; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
+
 </style>
 </head>
 <body class="theme-sky">
@@ -305,7 +274,7 @@
     <button class="fab" id="newChatBtn">＋</button>
   </div>
 
-  <!-- 2. 新建/编辑页 -->
+  <!-- 2. 新建页 (基础逻辑省略，原样保留) -->
   <div class="page page-create" id="pageCreate">
     <div class="topbar">
       <button class="icon-btn" id="cancelCreateBtn">←</button>
@@ -313,43 +282,29 @@
       <div style="width:40px;"></div>
     </div>
     <div class="create-scroll">
-      <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱"></div>
+      <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;"></div>
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-      <div class="form-group">
-        <div class="form-label">祂的資料</div>
-        <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
+      <div class="form-group" style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:500;">祂的資料</div>
+        <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()" style="width:80px;height:80px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">祂</div>
         <input type="file" id="theirFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputTheirName" placeholder="名字">
-        <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱">
-        <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名">
+        <input type="text" class="form-input" id="inputTheirName" placeholder="名字" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+        <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+        <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
       </div>
-      <div class="form-group">
-        <div class="form-label">我的資料</div>
-        <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
+      <div class="form-group" style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:500;">我的資料</div>
+        <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()" style="width:80px;height:80px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">我</div>
         <input type="file" id="myFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputMyName" placeholder="名字">
-        <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱">
-        <input type="text" class="form-input" id="inputMySign" placeholder="簽名">
+        <input type="text" class="form-input" id="inputMyName" placeholder="名字" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+        <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+        <input type="text" class="form-input" id="inputMySign" placeholder="簽名" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
       </div>
-      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-      <div class="form-group">
-        <div class="form-label">聊天背景 (可選)</div>
-        <div class="bg-upload-box" id="bgUploadBox" onclick="document.getElementById('bgFile').click()">
-          <span id="bgUploadText">點擊上傳背景圖</span>
-        </div>
-        <input type="file" id="bgFile" accept="image/*" style="display:none">
-        <div class="slider-container" id="bgMaskContainer" style="display:none;">
-          <span style="font-size:12px; color:var(--text-secondary);">遮罩</span>
-          <input type="range" id="bgMaskSlider" min="0" max="90" value="60">
-          <span id="bgMaskValue" style="font-size:12px; color:var(--text-secondary); width:30px; text-align:right;">60%</span>
-        </div>
-      </div>
-      <button class="btn-primary" id="saveChatBtn">完成</button>
-      <div style="height:20px;"></div>
+      <button class="btn-primary" id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;cursor:pointer;margin-top:10px;">完成</button>
     </div>
   </div>
 
-  <!-- 3. 聊天页 -->
+  <!-- 3. 聊天页 (核心更新) -->
   <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
@@ -368,8 +323,6 @@
     <div class="messages-wrap" id="messagesWrap">
       <div class="messages" id="messages"></div>
     </div>
-    
-    <div class="pending-sticker-box"></div>
 
     <div class="composer">
       <button class="icon-btn" id="smallFuncBtn">
@@ -377,7 +330,7 @@
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
         </svg>
       </button>
-      <input type="text" id="msgInput" placeholder="輸入訊息…" autocomplete="off">
+      <textarea id="msgInput" placeholder="輸入訊息… (換行即為下一句)" rows="1"></textarea>
       <button class="icon-btn" id="stickerBtn" style="font-size:20px;color:var(--text-secondary);">🔗</button>
       <button class="send-btn" id="sendBtn" disabled>
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -385,7 +338,7 @@
     </div>
   </div>
 
-  <!-- 4. 佈景 页面 -->
+  <!-- 4. 佈景 (原样保留) -->
   <div class="page page-settings" id="pageSettings">
     <div class="topbar">
       <button class="icon-btn" id="backSettingsBtn">←</button>
@@ -393,42 +346,34 @@
       <div style="width:40px;"></div>
     </div>
     <div class="create-scroll" style="padding:15px;">
-      
-      <div class="settings-section">
-        <div class="settings-title">主頁背景</div>
-        <div class="bg-upload-box" id="mainBgUploadBox" onclick="document.getElementById('mainBgFile').click()">
+      <div class="settings-section" style="background:rgba(128,128,128,0.1);border-radius:10px;padding:15px;margin-bottom:20px;">
+        <div class="settings-title" style="font-size:15px;font-weight:600;color:var(--text-color);margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主頁背景</div>
+        <div class="bg-upload-box" id="mainBgUploadBox" onclick="document.getElementById('mainBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;">
           <span id="mainBgText">點擊上傳主頁背景</span>
         </div>
         <input type="file" id="mainBgFile" accept="image/*" style="display:none">
-        <div class="slider-container" id="mainBgMaskContainer" style="display:none;">
-          <span style="font-size:12px; color:var(--text-secondary);">遮罩</span>
-          <input type="range" id="mainBgMaskSlider" min="0" max="90" value="20">
-          <span id="mainBgMaskValue" style="font-size:12px; color:var(--text-secondary); width:30px; text-align:right;">20%</span>
+      </div>
+      <div class="settings-section" style="background:rgba(128,128,128,0.1);border-radius:10px;padding:15px;margin-bottom:20px;">
+        <div class="settings-title" style="font-size:15px;font-weight:600;color:var(--text-color);margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主題顏色</div>
+        <div class="theme-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;">
+          <div class="theme-card" data-theme="theme-sky" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#e6ebee;color:#000;">天空藍</div>
+          <div class="theme-card" data-theme="theme-forest" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#e8efe9;color:#000;">森林綠</div>
+          <div class="theme-card" data-theme="theme-sunset" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#fdf5eb;color:#000;">日落橘</div>
+          <div class="theme-card" data-theme="theme-twilight" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#e0e0e0;color:#000;">暮光灰</div>
+          <div class="theme-card" data-theme="theme-crabapple" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#fcf2f3;color:#000;">海棠紅</div>
+          <div class="theme-card" data-theme="theme-rain" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#eef4f4;color:#000;">煙雨青</div>
+          <div class="theme-card" data-theme="theme-paper" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#f5f1e6;color:#000;">舊報紙</div>
+          <div class="theme-card" data-theme="theme-ink" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#f4f4f4;color:#000;">水墨</div>
+          <div class="theme-card" data-theme="theme-cyber" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#000;color:#fff;">賽博黑</div>
+          <div class="theme-card" data-theme="theme-space" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#0b1320;color:#fff;">深空</div>
+          <div class="theme-card" data-theme="theme-nightpurple" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#150e1c;color:#fff;">暗夜紫</div>
+          <div class="theme-card" data-theme="theme-pureblack" style="height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;cursor:pointer;background:#000;color:#aaa;">純黑</div>
         </div>
       </div>
-
-      <div class="settings-section">
-        <div class="settings-title">主題顏色</div>
-        <div class="theme-grid">
-          <div class="theme-card" data-theme="theme-sky" style="background:#e6ebee; color:#000;">天空藍</div>
-          <div class="theme-card" data-theme="theme-forest" style="background:#e8efe9; color:#000;">森林綠</div>
-          <div class="theme-card" data-theme="theme-sunset" style="background:#fdf5eb; color:#000;">日落橘</div>
-          <div class="theme-card" data-theme="theme-twilight" style="background:#e0e0e0; color:#000;">暮光灰</div>
-          <div class="theme-card" data-theme="theme-crabapple" style="background:#fcf2f3; color:#000;">海棠紅</div>
-          <div class="theme-card" data-theme="theme-rain" style="background:#eef4f4; color:#000;">煙雨青</div>
-          <div class="theme-card" data-theme="theme-paper" style="background:#f5f1e6; color:#000;">舊報紙</div>
-          <div class="theme-card" data-theme="theme-ink" style="background:#f4f4f4; color:#000;">水墨</div>
-          <div class="theme-card" data-theme="theme-cyber" style="background:#000; color:#fff;">賽博黑</div>
-          <div class="theme-card" data-theme="theme-space" style="background:#0b1320; color:#fff;">深空</div>
-          <div class="theme-card" data-theme="theme-nightpurple" style="background:#150e1c; color:#fff;">暗夜紫</div>
-          <div class="theme-card" data-theme="theme-pureblack" style="background:#000; color:#aaa;">純黑</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- 5. 郵電所 -->
+  <!-- 5. 郵電所 (核心更新) -->
   <div class="page page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
@@ -444,14 +389,40 @@
     </div>
     
     <div class="create-scroll" style="padding: 15px;">
-      <div id="tabContentCards">
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-          <input type="text" class="form-input" id="newCardInput" placeholder="輸入新的電文..." style="margin-bottom:0; text-align:left;">
-          <button class="btn-primary" id="addCardBtn" style="width:80px; margin-top:0;">新增</button>
-        </div>
-        <div id="cardList"></div>
-      </div>
       
+      <!-- 常訊 / 撩撥 子标签 -->
+      <div style="display:flex; margin-bottom:15px; border-bottom:1px solid var(--border-light);">
+        <div class="sub-tab active" data-subtab="normal" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">常訊</div>
+        <div class="sub-tab" data-subtab="flirt" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; color:var(--text-secondary);">撩撥</div>
+      </div>
+
+      <!-- 添加大输入框 -->
+      <div class="add-box">
+        <textarea class="add-textarea" id="newCardsInput" placeholder="寫下新的電文...（支援換行，一行即一份）"></textarea>
+        <div class="add-footer">
+          <span class="add-count" id="draftCount">待定稿：0 份</span>
+          <button class="btn-add" id="btnAddCards">定稿</button>
+        </div>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="search-box">
+        <input type="text" class="search-input" id="searchCardsInput" placeholder="尋檢電文...">
+      </div>
+
+      <!-- 工具栏 -->
+      <div class="toolbar">
+        <button class="tool-btn" id="btnImport">收報</button>
+        <button class="tool-btn" id="btnExport">發報</button>
+        <button class="tool-btn" id="btnDeduplicate">清冗</button>
+        <button class="tool-btn" id="btnBatchDelete" style="color:#e53935;">焚毀</button>
+      </div>
+
+      <!-- 字卡列表 -->
+      <div class="card-list-header" id="cardListHeader">常訊：共 0 份</div>
+      <div id="cardListContainer"></div>
+
+      <!-- 印花、暗语、留声占位 -->
       <div id="tabContentOthers" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
         該區域功能待開發...
       </div>
@@ -461,43 +432,36 @@
 
 <!-- 弹窗区 -->
 <div class="menu-mask" id="menuMask">
-  <div class="menu" id="menuPanel">
-    <div class="menu-item" data-act="postoffice">郵電所</div>
-    <div class="menu-item" data-act="letters">郵局</div>
-    <div class="menu-item" data-act="messages">簡訊</div>
-    <div class="menu-item" data-act="settings">佈景</div>
-    <div class="menu-item" data-act="export">存檔</div>
-    <div class="menu-item danger" data-act="clear">焚稿</div>
-    <div class="menu-item" data-act="about">南洲誌</div>
+  <div class="menu" id="menuPanel" style="position:absolute; top:56px; right:10px; background:var(--bg-color); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; border: 1px solid var(--topbar-border);">
+    <div class="menu-item" data-act="postoffice" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">郵電所</div>
+    <div class="menu-item" data-act="letters" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">郵局</div>
+    <div class="menu-item" data-act="messages" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">簡訊</div>
+    <div class="menu-item" data-act="settings" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">佈景</div>
+    <div class="menu-item" data-act="export" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">存檔</div>
+    <div class="menu-item danger" data-act="clear" style="padding:12px 18px; font-size:15px; color:#e53935; cursor:pointer;">焚稿</div>
+    <div class="menu-item" data-act="about" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">南洲誌</div>
   </div>
 </div>
 
-<div class="action-sheet-mask" id="actionSheetMask">
-  <div class="action-sheet">
-    <div class="action-item" id="actPin">釘選</div>
-    <div class="action-item" id="actEdit">編輯</div>
-    <div class="action-item" id="actClear">焚稿</div>
-    <div class="action-item danger" id="actDelete">焚毀</div>
-    <div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div>
+<div class="action-sheet-mask" id="actionSheetMask" style="position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px;">
+  <div class="action-sheet" style="background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2);">
+    <div class="action-item" id="actPin" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">釘選</div>
+    <div class="action-item" id="actEdit" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">編輯</div>
+    <div class="action-item" id="actClear" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">焚稿</div>
+    <div class="action-item danger" id="actDelete" style="padding:14px 20px; font-size:16px; text-align:center; color:#e53935; border-bottom:1px solid var(--border-light); cursor:pointer;">焚毀</div>
+    <div class="action-item" style="padding:14px 20px; font-size:16px; text-align:center; color:var(--text-secondary); cursor:pointer;" id="actCancel">取消</div>
   </div>
 </div>
 
-<div class="dialog-mask" id="confirmDialogMask">
+<div class="dialog-mask" id="dialogMask">
   <div class="dialog">
-    <div class="dialog-title" id="confirmTitle">提示</div>
-    <div class="dialog-content" id="confirmText"></div>
+    <div class="dialog-title" id="dialogTitle">提示</div>
+    <div class="dialog-content" id="dialogText"></div>
+    <input type="text" class="dialog-input" id="dialogInput" style="display:none; margin-bottom:10px;">
     <div class="dialog-footer">
-      <button class="dialog-btn cancel" id="confirmCancelBtn">取消</button>
-      <button class="dialog-btn danger" id="confirmOkBtn">確定</button>
+      <button class="dialog-btn cancel" id="dialogCancelBtn">取消</button>
+      <button class="dialog-btn danger" id="dialogOkBtn" style="color:var(--primary);">確定</button>
     </div>
-  </div>
-</div>
-
-<div class="dialog-mask" id="stickerDialogMask">
-  <div class="dialog">
-    <div class="dialog-title">選擇貼紙</div>
-    <div class="dialog-list" id="stickerList" style="display:flex;flex-wrap:wrap;padding:10px;justify-content:center;gap:10px;"></div>
-    <div class="dialog-item" id="closeStickerDialog" style="color:var(--primary)">取消</div>
   </div>
 </div>
 
@@ -515,7 +479,10 @@ function toast(msg){
   toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800);
 }
 
-/* ============ 核心：主题与页面独立背景逻辑 ============ */
+/* ============ 预设 Emoji 库 ============ */
+const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
+
+/* ============ 主题与页面独立背景 ============ */
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
@@ -527,7 +494,6 @@ function applyThemeAndBg() {
     card.classList.toggle('active', card.dataset.theme === savedTheme);
   });
 
-  // 那些需要铺背景的二级页面
   const bgPages = ['#pageList', '#pageCreate', '#pageSettings', '#pagePostOffice'];
   const appEl = $('#app');
 
@@ -536,22 +502,15 @@ function applyThemeAndBg() {
     const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
     const bgStyle = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
     
-    // 给每个页面单独设置背景，保证它们相互独立，绝对不穿透
     bgPages.forEach(sel => {
       const el = document.querySelector(sel);
-      if(el) {
-        el.style.background = bgStyle;
-        el.style.backgroundColor = 'transparent';
-      }
+      if(el) { el.style.background = bgStyle; el.style.backgroundColor = 'transparent'; }
     });
-    appEl.style.background = 'var(--bg-color)'; // 最底层用纯色
+    appEl.style.background = 'var(--bg-color)'; 
   } else {
-    // 没设置背景图时
     bgPages.forEach(sel => {
       const el = document.querySelector(sel);
-      if(el) {
-        el.style.background = 'var(--bg-color)';
-      }
+      if(el) { el.style.background = 'var(--bg-color)'; }
     });
     appEl.style.background = 'var(--bg-color)';
   }
@@ -592,7 +551,10 @@ function openDB(){
         const s = d.createObjectStore('messages', { keyPath:'id' });
         s.createIndex('chatId', 'chatId', { unique:false });
       }
-      if(!d.objectStoreNames.contains('cards')) d.createObjectStore('cards', { keyPath:'id' });
+      if(!d.objectStoreNames.contains('cards')) {
+        const s = d.createObjectStore('cards', { keyPath:'id' });
+        s.createIndex('category', 'category', { unique:false });
+      }
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -620,21 +582,25 @@ let isEditingChatId = null;
 let longPressTimer = null;
 let activeChatForMenu = null;
 
+// 電文管理状态
+let currentSubTab = 'normal'; // 'normal' | 'flirt'
+let currentSearchQuery = '';
+let isBatchDeleteMode = false;
+let selectedCardIds = new Set();
+
 /* ============ 初始化 ============ */
 async function init(){
   await openDB();
   await loadChats();
   renderChatList();
   bindEvents();
-  renderCards();
   applyThemeAndBg();
   if (globalBgImage) {
     $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
     $('#mainBgText').textContent = '';
-    $('#mainBgMaskContainer').style.display = 'flex';
-    $('#mainBgMaskSlider').value = globalBgMask;
-    $('#mainBgMaskValue').textContent = globalBgMask + '%';
   }
+  // 默认加载 電文-常訊
+  loadAndRenderCards();
 }
 
 async function loadChats(){
@@ -746,16 +712,13 @@ async function openChat(id){
   const chatPage = $('#pageChat');
   const bgMask = $('#chatBgMask');
   
-  // 聊天室页面的背景优先级：聊天室专属背景 > 全局背景 > 默认底色
   if(c.chatBgImage) {
     chatPage.style.backgroundImage = `url(${c.chatBgImage})`;
     chatPage.style.backgroundColor = 'transparent';
-    
     let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
     const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
   } else if(globalBgImage) {
-    // 没传背景，用全局背景
     chatPage.style.backgroundImage = `url(${globalBgImage})`;
     chatPage.style.backgroundColor = 'transparent';
     const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
@@ -776,54 +739,78 @@ async function openChat(id){
   $('#pageChat').classList.add('show');
 }
 
+/* ============ 居中大卡片渲染 & 发报机浮现特效 ============ */
 function renderMessages(){
   const box = $('#messages');
   box.innerHTML = '';
   let lastDate = '';
-  let prevSender = null;
   
   const c = chats.find(x=>x.id===currentChatId);
   
-  for(const m of currentMessages){
+  for(let i = 0; i < currentMessages.length; i++){
+    const m = currentMessages[i];
     const dstr = fmtDate(m.time);
+    
+    // 日期分隔线
     if(dstr !== lastDate){
       const div = document.createElement('div');
       div.className = 'date-divider';
       div.textContent = dstr;
       box.appendChild(div);
       lastDate = dstr;
-      prevSender = null;
     }
-    const row = document.createElement('div');
-    const senderClass = m.sender === 'me' ? 'me' : 'them';
-    row.className = 'msg-row ' + senderClass;
-    if(prevSender === m.sender) row.classList.add('grouped');
-
+    
+    const isMe = m.sender === 'me';
+    const groupBox = document.createElement('div');
+    groupBox.className = 'msg-group ' + (isMe ? 'me' : 'them');
+    
     let avatarHtml = '';
-    if(m.sender === 'them') {
-      if(c.theirAvatar) avatarHtml = `<img src="${c.theirAvatar}" class="msg-avatar">`;
-      else avatarHtml = `<div class="msg-avatar">${(c.theirNick || c.theirName || '祂').charAt(0)}</div>`;
+    if (isMe) {
+      if(c.myAvatar) avatarHtml = `<img src="${c.myAvatar}" class="msg-avatar-top">`;
+      else avatarHtml = `<div class="msg-avatar-top" style="background:#999">${(c.myNick || c.myName || '我').charAt(0)}</div>`;
     } else {
-      if(c.myAvatar) avatarHtml = `<img src="${c.myAvatar}" class="msg-avatar">`;
-      else avatarHtml = `<div class="msg-avatar" style="background:#999">${(c.myNick || c.myName || '我').charAt(0)}</div>`;
+      if(c.theirAvatar) avatarHtml = `<img src="${c.theirAvatar}" class="msg-avatar-top">`;
+      else avatarHtml = `<div class="msg-avatar-top">${(c.theirNick || c.theirName || '祂').charAt(0)}</div>`;
     }
-
+    groupBox.innerHTML = avatarHtml;
+    
+    // 大卡片
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-
-    let html = '';
-    if(m.cards && m.cards.length){
-      html += m.cards.map(c=>`<span class="card-line">${escapeHtml(c)}</span>`).join('');
-    }
-    if(m.text) html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
-    if(m.stickerData) html += `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
-    html += `<span class="meta">${fmtTime(m.time)}</span>`;
     
-    bubble.innerHTML = html;
-    row.innerHTML = avatarHtml;
-    row.appendChild(bubble);
-    box.appendChild(row);
-    prevSender = m.sender;
+    if(m.type === 'sticker' && m.stickerData) {
+      bubble.classList.add('sticker-bubble');
+      bubble.innerHTML = `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
+    } else {
+      let linesHtml = '';
+      if(m.cards && m.cards.length > 0){
+        m.cards.forEach((cardText, idx) => {
+          // 计算延迟动画时间
+          const delay = idx * (3 + Math.random() * 2); // 3~5秒
+          linesHtml += `<span class="card-line" style="animation-delay: ${delay}s">${escapeHtml(cardText)}</span>`;
+        });
+      } else if(m.text) {
+        linesHtml += `<span class="card-line" style="animation-delay: 0s">${escapeHtml(m.text)}</span>`;
+      }
+      
+      const timeHtml = `<span class="msg-time-center" style="animation-delay: ${(m.cards ? m.cards.length : 1) * 3.5}s">${fmtTime(m.time)}</span>`;
+      
+      // 如果是历史记录，直接取消延迟动画，瞬间显示
+      if (i < currentMessages.length - 1) {
+         bubble.innerHTML = (m.cards && m.cards.length > 0 ? m.cards.map(t=>`<span class="card-line" style="animation:none;opacity:1;transform:none;">${escapeHtml(t)}</span>`).join('') : `<span class="card-line" style="animation:none;opacity:1;transform:none;">${escapeHtml(m.text)}</span>`)
+          + `<span class="msg-time-center" style="animation:none;opacity:1;">${fmtTime(m.time)}</span>`;
+      } else {
+         bubble.innerHTML = linesHtml + timeHtml;
+      }
+    }
+    
+    groupBox.appendChild(bubble);
+    box.appendChild(groupBox);
+    
+    // 如果是新出现的回复，确保滚动到最底下
+    if (i === currentMessages.length - 1) {
+      setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
+    }
   }
   box.scrollTop = box.scrollHeight;
 }
@@ -833,11 +820,9 @@ function updateSendBtnState() {
   const text = $('#msgInput').value.trim();
   const btn = $('#sendBtn');
   if(text || pendingStickerData) {
-    btn.disabled = false;
-    btn.style.opacity = '0.9';
+    btn.disabled = false; btn.style.opacity = '0.9';
   } else {
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
+    btn.disabled = true; btn.style.opacity = '0.5';
   }
 }
 
@@ -847,13 +832,16 @@ async function sendMyMessage(){
   if(!text && !pendingStickerData) return;
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
 
+  // 按换行拆分文字
+  const lines = text ? text.split('\n').filter(l => l.trim() !== '') : [];
+
   const msg = {
     id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
     chatId: currentChatId,
     sender: 'me',
-    type: 'text',
-    text: text,
-    cards: [],
+    type: 'cards',
+    text: '',
+    cards: lines,
     stickerData: pendingStickerData,
     time: Date.now()
   };
@@ -862,11 +850,12 @@ async function sendMyMessage(){
   currentMessages.push(msg);
   
   input.value = '';
+  input.style.height = '44px'; // 重置高度
   pendingStickerData = null;
   updateSendBtnState();
   renderMessages();
   await touchChat(currentChatId);
-  setTimeout(replyFromThem, 600);
+  setTimeout(replyFromThem, 8000 + Math.random() * 7000); // 等待 8~15 秒后回复
 }
 
 async function touchChat(id){
@@ -877,6 +866,7 @@ async function touchChat(id){
   await loadChats();
 }
 
+/* ============ 祂的回复机制 ============ */
 async function replyFromThem(){
   if(!currentChatId) return;
   
@@ -886,17 +876,26 @@ async function replyFromThem(){
     return;
   }
   
-  const n = 3 + Math.floor(Math.random()*3); 
+  const n = 3 + Math.floor(Math.random()*3); // 3~5 张
   const picked = [];
   const pool = [...cards];
+  
   for(let i=0;i<n && pool.length;i++){
     const idx = Math.floor(Math.random()*pool.length);
-    picked.push(pool.splice(idx,1)[0].text);
+    let cardText = pool.splice(idx,1)[0].text;
+    
+    // 15% 概率加 Emoji
+    if (Math.random() < 0.15) {
+      const emoji = EMOJI_POOL[Math.floor(Math.random() * EMOJI_POOL.length)];
+      cardText = (Math.random() < 0.5) ? (emoji + cardText) : (cardText + emoji);
+    }
+    picked.push(cardText);
   }
 
+  // 10% 概率带贴纸
   let stickerData = null;
   const stickers = await reqToPromise(tx('stickers').getAll());
-  if(stickers.length && Math.random() < 0.4){
+  if(stickers.length && Math.random() < 0.1){
     const s = stickers[Math.floor(Math.random()*stickers.length)];
     stickerData = s.data;
   }
@@ -918,52 +917,246 @@ async function replyFromThem(){
   await touchChat(currentChatId);
 }
 
-/* ============ 彈窗 ============ */
-function showConfirm(title, text, okText, isDanger, onOk) {
-  $('#confirmTitle').textContent = title;
-  $('#confirmText').textContent = text;
-  const okBtn = $('#confirmOkBtn');
+/* ============ 弹窗工具 ============ */
+let dialogCallback = null;
+function showCustomDialog(title, text, showInput, okText, onOk) {
+  $('#dialogTitle').textContent = title;
+  $('#dialogText').textContent = text;
+  $('#dialogInput').style.display = showInput ? 'block' : 'none';
+  if(showInput) $('#dialogInput').value = '';
+  
+  const okBtn = $('#dialogOkBtn');
   okBtn.textContent = okText;
-  okBtn.className = 'dialog-btn ' + (isDanger ? 'danger' : '');
-  $('#confirmDialogMask').classList.add('show');
+  
+  $('#dialogMask').classList.add('show');
   
   const newOkBtn = okBtn.cloneNode(true);
   okBtn.parentNode.replaceChild(newOkBtn, okBtn);
   newOkBtn.onclick = () => {
-    $('#confirmDialogMask').classList.remove('show');
-    if(onOk) onOk();
+    $('#dialogMask').classList.remove('show');
+    if(onOk) onOk($('#dialogInput').value);
   };
 }
 
 /* ============ 郵電所：電文管理 ============ */
-async function renderCards() {
-  const cards = await reqToPromise(tx('cards').getAll());
-  const list = $('#cardList');
-  if(!cards.length){
-    list.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無電文</div>';
+async function loadAndRenderCards() {
+  const allCards = await reqToPromise(tx('cards').getAll());
+  
+  // 过滤分类
+  let filtered = allCards.filter(c => (c.category || 'normal') === currentSubTab);
+  
+  // 过滤搜索
+  if(currentSearchQuery) {
+    filtered = filtered.filter(c => c.text.includes(currentSearchQuery));
+  }
+
+  // 排序：最新的在上面
+  filtered.sort((a,b) => b.createdAt - a.createdAt);
+
+  // 渲染头部数量
+  const catName = currentSubTab === 'normal' ? '常訊' : '撩撥';
+  $('#cardListHeader').textContent = `${catName}：共 ${filtered.length} 份`;
+
+  // 渲染列表
+  const container = $('#cardListContainer');
+  container.innerHTML = '';
+  
+  if(!filtered.length) {
+    container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無電文</div>';
     return;
   }
-  list.innerHTML = '';
-  cards.reverse().forEach(c => {
+
+  filtered.forEach(c => {
     const div = document.createElement('div');
-    div.className = 'list-item-row';
+    div.className = 'card-item';
+    
+    let checkboxHtml = '';
+    if (isBatchDeleteMode) {
+      checkboxHtml = `<input type="checkbox" style="margin-right:10px; width:18px; height:18px; accent-color:#e53935;" ${selectedCardIds.has(c.id) ? 'checked' : ''} onchange="toggleSelectCard('${c.id}')">`;
+    }
+
     div.innerHTML = `
-      <span class="list-item-text">${escapeHtml(c.text)}</span>
-      <span style="color:#e53935; cursor:pointer; font-size:14px; padding:5px;" onclick="deleteCard('${c.id}')">刪除</span>
+      <div style="display:flex; align-items:flex-start; flex:1;">
+        ${checkboxHtml}
+        <div class="card-text">${escapeHtml(c.text)}</div>
+      </div>
+      <div class="card-actions" style="display:${isBatchDeleteMode ? 'none' : 'flex'}">
+        <button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button>
+        <button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button>
+      </div>
     `;
-    list.appendChild(div);
+    container.appendChild(div);
   });
+
+  // 如果处于批量删除模式，在列表底部加个确认按钮
+  if (isBatchDeleteMode) {
+    const btnConfirm = document.createElement('button');
+    btnConfirm.textContent = `確認焚毀 (${selectedCardIds.size})`;
+    btnConfirm.style.cssText = 'width:100%; height:44px; background:#e53935; color:#fff; border:none; border-radius:8px; margin-top:15px; font-size:15px; cursor:pointer;';
+    btnConfirm.onclick = async () => {
+      if(selectedCardIds.size === 0) return;
+      for (const id of selectedCardIds) {
+        await reqToPromise(tx('cards', 'readwrite').delete(id));
+      }
+      toast('已焚毀所選電文');
+      isBatchDeleteMode = false;
+      selectedCardIds.clear();
+      loadAndRenderCards();
+    };
+    container.appendChild(btnConfirm);
+  }
 }
 
-async function deleteCard(id) {
-  await reqToPromise(tx('cards','readwrite').delete(id));
-  renderCards();
-  toast('電文已刪除');
-}
+window.toggleSelectCard = function(id) {
+  if(selectedCardIds.has(id)) selectedCardIds.delete(id);
+  else selectedCardIds.add(id);
+  loadAndRenderCards();
+};
+
+window.editCard = function(id, oldText) {
+  showCustomDialog('校對電文', '請修改下方內容', true, '保存', async (newText) => {
+    newText = newText.trim();
+    if(!newText || newText === oldText) return;
+    
+    // 查重
+    const all = await reqToPromise(tx('cards').getAll());
+    if(all.find(c => c.text === newText && c.id !== id)) {
+      toast('校對失敗：內容與現有電文重複！');
+      return;
+    }
+    
+    const target = all.find(c => c.id === id);
+    if(target) {
+      target.text = newText;
+      await reqToPromise(tx('cards', 'readwrite').put(target));
+      toast('已保存修改');
+      loadAndRenderCards();
+    }
+  });
+  $('#dialogInput').value = oldText;
+};
+
+window.deleteSingleCard = function(id) {
+  showCustomDialog('作廢確認', '確定要作廢這份電文嗎？', false, '作廢', async () => {
+    await reqToPromise(tx('cards', 'readwrite').delete(id));
+    toast('已作廢');
+    loadAndRenderCards();
+  });
+};
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
-  // --- 新建/编辑 ---
+  // --- 邮电所 UI 切换 ---
+  document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if(tab.dataset.tab === 'cards') {
+        $('#tabContentCards').style.display = 'block';
+        $('#tabContentOthers').style.display = 'none';
+        loadAndRenderCards();
+      } else {
+        $('#tabContentCards').style.display = 'none';
+        $('#tabContentOthers').style.display = 'block';
+      }
+    };
+  });
+
+  document.querySelectorAll('.sub-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.sub-tab').forEach(t => {
+        t.classList.remove('active');
+        t.style.color = 'var(--text-secondary)';
+        t.style.borderBottom = 'none';
+        t.style.fontWeight = 'normal';
+      });
+      tab.classList.add('active');
+      tab.style.color = 'var(--primary)';
+      tab.style.borderBottom = '2px solid var(--primary)';
+      tab.style.fontWeight = '600';
+      
+      currentSubTab = tab.dataset.subtab;
+      currentSearchQuery = '';
+      $('#searchCardsInput').value = '';
+      isBatchDeleteMode = false;
+      selectedCardIds.clear();
+      loadAndRenderCards();
+    };
+  });
+
+  $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
+
+  // --- 電文工具栏 ---
+  $('#newCardsInput').addEventListener('input', (e) => {
+    const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
+    $('#draftCount').textContent = `待定稿：${lines.length} 份`;
+  });
+
+  $('#btnAddCards').onclick = async () => {
+    const text = $('#newCardsInput').value.trim();
+    if(!text) return;
+    
+    const lines = text.split('\n').filter(l => l.trim() !== '');
+    if(!lines.length) return;
+
+    const all = await reqToPromise(tx('cards').getAll());
+    let added = 0; let duplicate = 0;
+
+    for(let line of lines) {
+      line = line.trim();
+      if(all.find(c => c.text === line)) {
+        duplicate++; continue;
+      }
+      const newCard = { id: 'c_'+Date.now()+Math.random(), text: line, category: currentSubTab, createdAt: Date.now() };
+      await reqToPromise(tx('cards', 'readwrite').add(newCard));
+      all.push(newCard); // 防止本次输入框内自己重复
+      added++;
+    }
+
+    $('#newCardsInput').value = '';
+    $('#draftCount').textContent = '待定稿：0 份';
+    toast(`成功定稿 ${added} 份` + (duplicate ? `，略過 ${duplicate} 份重複` : ''));
+    loadAndRenderCards();
+  };
+
+  $('#searchCardsInput').oninput = (e) => {
+    currentSearchQuery = e.target.value.trim();
+    loadAndRenderCards();
+  };
+
+  $('#btnBatchDelete').onclick = () => {
+    isBatchDeleteMode = !isBatchDeleteMode;
+    selectedCardIds.clear();
+    loadAndRenderCards();
+  };
+
+  $('#btnDeduplicate').onclick = async () => {
+    const all = await reqToPromise(tx('cards').getAll());
+    const filtered = all.filter(c => (c.category || 'normal') === currentSubTab);
+    const seen = new Set();
+    let dups = [];
+    
+    filtered.forEach(c => {
+      if(seen.has(c.text)) dups.push(c.id);
+      else seen.add(c.text);
+    });
+
+    if(!dups.length) { toast('未發現重複項'); return; }
+
+    showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => {
+      for(const id of dups) {
+        await reqToPromise(tx('cards', 'readwrite').delete(id));
+      }
+      toast('已清理重複項');
+      loadAndRenderCards();
+    });
+  };
+
+  // 导入导出（这里留口子，点击先弹提示，下次写具体文件流）
+  $('#btnImport').onclick = () => toast('收報：文件導入準備中...');
+  $('#btnExport').onclick = () => toast('發報：文件導出準備中...');
+
+  // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null;
     $('#createPageTitle').textContent = '建立新對話';
@@ -974,45 +1167,16 @@ function bindEvents(){
     $('#inputMyName').value = '';
     $('#inputMyNick').value = '';
     $('#inputMySign').value = '';
-    
     $('#theirAvatar').style.backgroundImage = '';
     $('#theirAvatar').textContent = '祂';
     $('#myAvatar').style.backgroundImage = '';
     $('#myAvatar').textContent = '我';
-    
-    $('#bgUploadBox').style.backgroundImage = '';
-    $('#bgUploadText').textContent = '點擊上傳背景圖';
-    $('#bgMaskContainer').style.display = 'none';
-    $('#bgMaskSlider').value = 60;
-    $('#bgMaskValue').textContent = '60%';
-    
-    tempTheirAvatar = null; tempMyAvatar = null; tempBgImage = null; tempBgMask = 60;
-    
+    tempTheirAvatar = null; tempMyAvatar = null;
     $('#pageCreate').classList.add('show');
   };
-
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
-  
-  $('#theirFile').onchange = e => {
-    if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; });
-  };
-  $('#myFile').onchange = e => {
-    if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; });
-  };
-  $('#bgFile').onchange = e => {
-    if(e.target.files[0]) {
-      fileToBase64(e.target.files[0], b => {
-        tempBgImage = b;
-        $('#bgUploadBox').style.backgroundImage = `url(${b})`;
-        $('#bgUploadText').textContent = '';
-        $('#bgMaskContainer').style.display = 'flex';
-      });
-    }
-  };
-  $('#bgMaskSlider').oninput = e => {
-    tempBgMask = e.target.value;
-    $('#bgMaskValue').textContent = tempBgMask + '%';
-  };
+  $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; }); };
+  $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
 
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim();
@@ -1025,134 +1189,30 @@ function bindEvents(){
     
     if(!roomName) { toast('請輸入聊天室名稱'); return; }
     
-    if (isEditingChatId) {
-      const c = chats.find(x=>x.id===isEditingChatId);
-      if(c) {
-        c.roomName = roomName; c.theirName = theirName; c.theirNick = theirNick; c.theirSign = theirSign;
-        c.myName = myName; c.myNick = myNick; c.mySign = mySign;
-        if (tempTheirAvatar !== null) c.theirAvatar = tempTheirAvatar;
-        if (tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
-        if (tempBgImage !== null) {
-          c.chatBgImage = tempBgImage;
-          c.chatBgMask = tempBgMask;
-        }
-        await reqToPromise(tx('chats','readwrite').put(c));
-        toast('資料已更新');
-      }
-    } else {
-      const c = {
-        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-        roomName, theirName, theirNick, theirSign, myName, myNick, mySign,
-        theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, 
-        chatBgImage: tempBgImage, chatBgMask: tempBgMask,
-        isPinned: false, createdAt: Date.now(), updatedAt: Date.now()
-      };
-      await reqToPromise(tx('chats','readwrite').add(c));
-      toast('已建立新對話');
-    }
+    const c = {
+      id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      roomName, theirName, theirNick, theirSign, myName, myNick, mySign,
+      theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, 
+      isPinned: false, createdAt: Date.now(), updatedAt: Date.now()
+    };
+    await reqToPromise(tx('chats','readwrite').add(c));
+    toast('已建立新對話');
     await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
-  // --- 聊天页返回 ---
+  // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
   
+  // 多行输入自适应高度
+  $('#msgInput').addEventListener('input', function() {
+    this.style.height = '44px';
+    this.style.height = (this.scrollHeight) + 'px';
+    updateSendBtnState();
+  });
+
   $('#sendBtn').onclick = sendMyMessage;
-  $('#msgInput').addEventListener('input', updateSendBtnState);
-  $('#msgInput').addEventListener('keydown', e=>{ if(e.key === 'Enter' && !e.isComposing) sendMyMessage(); });
-  $('#callBtn').onclick = ()=> toast('通話功能尚未開放');
   
-  // --- 长按菜单 ---
-  const actionMask = $('#actionSheetMask');
-  function closeActionSheet(){ actionMask.classList.remove('show'); }
-  
-  window.openActionSheet = function() {
-    if(!activeChatForMenu) return;
-    $('#actPin').textContent = activeChatForMenu.isPinned ? '取消釘選' : '釘選';
-    actionMask.classList.add('show');
-  };
-  $('#actCancel').onclick = closeActionSheet;
-  actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
-
-  $('#actPin').onclick = async () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    activeChatForMenu.isPinned = !activeChatForMenu.isPinned;
-    await reqToPromise(tx('chats','readwrite').put(activeChatForMenu));
-    await loadChats(); renderChatList();
-    toast(activeChatForMenu.isPinned ? '已釘選' : '已取消釘選');
-  };
-
-  $('#actEdit').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    isEditingChatId = activeChatForMenu.id;
-    $('#createPageTitle').textContent = '編輯資料';
-    $('#inputRoomName').value = activeChatForMenu.roomName || '';
-    $('#inputTheirName').value = activeChatForMenu.theirName || '';
-    $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
-    $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
-    $('#inputMyName').value = activeChatForMenu.myName || '';
-    $('#inputMyNick').value = activeChatForMenu.myNick || '';
-    $('#inputMySign').value = activeChatForMenu.mySign || '';
-    
-    tempTheirAvatar = null; tempMyAvatar = null; tempBgImage = null; tempBgMask = activeChatForMenu.chatBgMask || 60;
-    
-    const theirAvEl = $('#theirAvatar');
-    if(activeChatForMenu.theirAvatar) { theirAvEl.style.backgroundImage = `url(${activeChatForMenu.theirAvatar})`; theirAvEl.textContent = ''; } else { theirAvEl.style.backgroundImage = ''; theirAvEl.textContent = '祂'; }
-    const myAvEl = $('#myAvatar');
-    if(activeChatForMenu.myAvatar) { myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`; myAvEl.textContent = ''; } else { myAvEl.style.backgroundImage = ''; myAvEl.textContent = '我'; }
-    
-    if(activeChatForMenu.chatBgImage) {
-      $('#bgUploadBox').style.backgroundImage = `url(${activeChatForMenu.chatBgImage})`;
-      $('#bgUploadText').textContent = '';
-      $('#bgMaskContainer').style.display = 'flex';
-      $('#bgMaskSlider').value = tempBgMask;
-      $('#bgMaskValue').textContent = tempBgMask + '%';
-    } else {
-      $('#bgUploadBox').style.backgroundImage = '';
-      $('#bgUploadText').textContent = '點擊上傳背景圖';
-      $('#bgMaskContainer').style.display = 'none';
-    }
-    
-    $('#pageCreate').classList.add('show');
-  };
-
-  $('#actClear').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    showConfirm('焚稿', '確定要焚毀該聊天記錄嗎？', '確定', false, async () => {
-      const msgs = await getMessages(activeChatForMenu.id);
-      for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id));
-      await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀');
-    });
-  };
-
-  $('#actDelete').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    showConfirm('焚毀', '確定要焚毀此會話嗎？', '焚毀', true, async () => {
-      const msgs = await getMessages(activeChatForMenu.id);
-      for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id));
-      await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id));
-      await loadChats(); renderChatList(); toast('會話已焚毀');
-    });
-  };
-
-  $('#confirmCancelBtn').onclick = () => $('#confirmDialogMask').classList.remove('show');
-
-  // --- 贴纸选择器 ---
-  $('#stickerBtn').onclick = async ()=>{
-    const stickers = await reqToPromise(tx('stickers').getAll());
-    const list = $('#stickerList');
-    if(!stickers.length) { toast('郵電所中尚無印花'); return; }
-    list.innerHTML = '';
-    stickers.forEach(s => {
-      const img = document.createElement('img');
-      img.src = s.data; img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;';
-      img.onclick = () => { pendingStickerData = s.data; updateSendBtnState(); $('#stickerDialogMask').classList.remove('show'); };
-      list.appendChild(img);
-    });
-    $('#stickerDialogMask').classList.add('show');
-  };
-  $('#closeStickerDialog').onclick = ()=> $('#stickerDialogMask').classList.remove('show');
-  
-  // --- 全局菜单 ---
+  // --- 侧边菜单 ---
   const mask = $('#menuMask');
   function openMenu(){ mask.classList.add('show'); }
   function closeMenu(){ mask.classList.remove('show'); }
@@ -1162,43 +1222,23 @@ function bindEvents(){
     const act = e.target.dataset.act;
     if(!act) return;
     closeMenu();
-    handleMenu(act);
-  };
-
-  // --- 邮电所页面 ---
-  $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
-
-  document.querySelectorAll('.tab-item').forEach(tab => {
-    tab.onclick = () => {
-      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      if(tab.dataset.tab === 'cards') {
-        $('#tabContentCards').style.display = 'block';
-        $('#tabContentOthers').style.display = 'none';
-      } else {
-        $('#tabContentCards').style.display = 'none';
-        $('#tabContentOthers').style.display = 'block';
-      }
-    };
-  });
-
-  $('#addCardBtn').onclick = async () => {
-    const text = $('#newCardInput').value.trim();
-    if(!text) return;
-    const card = { id: 'card_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), text };
-    await reqToPromise(tx('cards', 'readwrite').add(card));
-    $('#newCardInput').value = '';
-    renderCards();
-    toast('電文已新增');
+    if(act === 'postoffice') {
+       $('#pagePostOffice').classList.add('show');
+       loadAndRenderCards();
+    }
+    else if(act === 'settings') $('#pageSettings').classList.add('show');
+    else if(act === 'export') toast('存檔：匯出備份（待實作）');
+    else if(act === 'clear') toast('焚稿：清空數據（待實作）');
+    else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
+    else if(act === 'letters') toast('郵局：功能籌備中...');
+    else if(act === 'messages') toast('簡訊：功能籌備中...');
   };
 
   // --- 佈景页面 ---
   $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
-  
   document.querySelectorAll('.theme-card').forEach(card => {
     card.onclick = () => setTheme(card.dataset.theme);
   });
-
   $('#mainBgFile').onchange = e => {
     if(e.target.files[0]) {
       fileToBase64(e.target.files[0], b => {
@@ -1207,28 +1247,12 @@ function bindEvents(){
         applyThemeAndBg();
         $('#mainBgUploadBox').style.backgroundImage = `url(${b})`;
         $('#mainBgText').textContent = '';
-        $('#mainBgMaskContainer').style.display = 'flex';
       });
     }
   };
-  $('#mainBgMaskSlider').oninput = e => {
-    globalBgMask = e.target.value;
-    localStorage.setItem('nz_main_bg_mask', globalBgMask);
-    $('#mainBgMaskValue').textContent = globalBgMask + '%';
-    applyThemeAndBg();
-  };
-}
 
-window.deleteCard = deleteCard;
-
-function handleMenu(act){
-  if(act === 'postoffice') $('#pagePostOffice').classList.add('show');
-  else if(act === 'settings') $('#pageSettings').classList.add('show');
-  else if(act === 'export') toast('存檔：匯出備份（待實作）');
-  else if(act === 'clear') toast('焚稿：清空數據（待實作）');
-  else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
-  else if(act === 'letters') toast('郵局：功能籌備中...');
-  else if(act === 'messages') toast('簡訊：功能籌備中...');
+  // 弹窗取消
+  $('#dialogCancelBtn').onclick = () => $('#dialogMask').classList.remove('show');
 }
 
 /* ============ 启动 ============ */

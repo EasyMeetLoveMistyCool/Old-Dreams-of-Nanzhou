@@ -20,6 +20,8 @@
   :root {
     --bg-color: #f0f2f5; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: rgba(255,255,255,0.85);
+    --bubble-action-me: rgba(255, 230, 235, 0.9); /* 绯红信笺底色 */
+    --bubble-action-them: rgba(255, 235, 240, 0.85);
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
     --input-bg: rgba(128,128,128,0.15); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
     --pinned-bg: rgba(255, 245, 246, 0.9);
@@ -36,24 +38,28 @@
   body.theme-cyber { 
     --bg-color: #000000; --topbar-border: #222;
     --bubble-me: rgba(0, 51, 102, 0.85); --bubble-them: rgba(26, 26, 26, 0.85);
+    --bubble-action-me: rgba(80, 30, 40, 0.85); --bubble-action-them: rgba(60, 20, 30, 0.85);
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
     --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-space { 
     --bg-color: #0b1320; --topbar-border: #1a2639;
     --bubble-me: rgba(30, 58, 95, 0.85); --bubble-them: rgba(26, 38, 57, 0.85);
+    --bubble-action-me: rgba(70, 30, 45, 0.85); --bubble-action-them: rgba(50, 20, 35, 0.85);
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
     --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-nightpurple { 
     --bg-color: #150e1c; --topbar-border: #2b1d36;
     --bubble-me: rgba(68, 34, 102, 0.85); --bubble-them: rgba(43, 29, 54, 0.85);
+    --bubble-action-me: rgba(80, 40, 60, 0.85); --bubble-action-them: rgba(60, 25, 45, 0.85);
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
     --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-pureblack { 
     --bg-color: #000000; --topbar-border: #1a1a1a;
     --bubble-me: rgba(51, 51, 51, 0.85); --bubble-them: rgba(17, 17, 17, 0.85);
+    --bubble-action-me: rgba(60, 40, 40, 0.85); --bubble-action-them: rgba(40, 25, 25, 0.85);
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
     --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
@@ -176,6 +182,10 @@
   .msg-group.them .bubble { background: var(--bubble-them); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
   .msg-group.me .bubble { background: var(--bubble-me); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
 
+  /* 动作专属绯红信笺 */
+  .msg-group.them .bubble.action-bubble { background: var(--bubble-action-them); border: 1px solid rgba(255, 150, 150, 0.3); }
+  .msg-group.me .bubble.action-bubble { background: var(--bubble-action-me); border: 1px solid rgba(255, 150, 150, 0.3); }
+
   .card-line { 
     display:block; opacity: 0; transform: translateY(5px);
     animation: cardIn 0.5s ease forwards;
@@ -260,7 +270,6 @@
   .stamp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .stamp-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--input-bg); position: relative; }
   .stamp-item img { width: 100%; height: 100%; object-fit: cover; }
-  
   .stamp-checkbox {
     position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; z-index: 2; accent-color: #e53935;
     display: none;
@@ -307,6 +316,16 @@
   .sticker-panel-close { position:absolute; right:15px; top:12px; font-size:16px; color:var(--text-secondary); cursor:pointer; }
   .sticker-panel-content { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
   .sticker-panel-content img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; cursor:pointer; }
+
+  /* ⚡ 面板 */
+  .flash-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:250; align-items:center; justify-content:center; }
+  .flash-panel-mask.show { display:flex; }
+  .flash-panel { background:var(--bg-color); width:80%; max-width:300px; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; animation: zoomIn 0.2s ease; }
+  @keyframes zoomIn { from { transform: scale(0.9); opacity:0; } to { transform: scale(1); opacity:1; } }
+  .flash-panel-header { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); font-size:16px; font-weight:600; color:var(--text-color); }
+  .flash-grid { display:grid; grid-template-columns: 1fr 1fr; gap:1px; background:var(--border-light); }
+  .flash-item { background:var(--bg-color); padding:20px 0; text-align:center; font-size:16px; font-weight:500; color:var(--primary); cursor:pointer; }
+  .flash-item:active { background:var(--input-bg); }
 
   .toast {
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff;
@@ -512,8 +531,47 @@
         <div class="stamp-grid" id="stampGrid"></div>
       </div>
 
+      <!-- 暗語模块 -->
+      <div id="tabContentActions" style="display:none;">
+        <div style="display:flex; margin-bottom:15px; border-bottom:1px solid var(--border-light);">
+          <div class="sub-tab action-sub-tab active" data-subtab="to_them" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">予祂</div>
+          <div class="sub-tab action-sub-tab" data-subtab="to_me" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; color:var(--text-secondary);">予我</div>
+        </div>
+
+        <div class="add-box">
+          <textarea class="add-textarea" id="newActionsInput" placeholder="寫下動作..."></textarea>
+          <div class="add-footer">
+            <span class="add-count" id="actionDraftCount">待定稿：0 份</span>
+            <button class="btn-add" id="btnAddActions">留痕</button>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <input type="text" class="search-input" id="searchActionsInput" placeholder="尋跡...">
+        </div>
+
+        <div class="toolbar" id="actionNormalToolbar">
+          <button class="tool-btn" id="btnActionImport">納影</button>
+          <button class="tool-btn" id="btnActionExport">投映</button>
+          <button class="tool-btn" id="btnActionDeduplicate">清影</button>
+          <button class="tool-btn" id="btnActionBatchDelete" style="color:#e53935;">抹除</button>
+        </div>
+
+        <div class="batch-toolbar" id="actionBatchToolbar" style="display:none;">
+          <span class="batch-info" id="actionBatchCount">已選 0 份</span>
+          <div style="display:flex; gap:15px;">
+            <button class="batch-btn" id="btnActionSelectAll">全選</button>
+            <button class="batch-btn danger" id="btnActionConfirmDelete">確認抹除</button>
+            <button class="batch-btn" id="btnActionCancelDelete" style="color:var(--text-secondary);">取消</button>
+          </div>
+        </div>
+
+        <div class="card-list-header" id="actionListHeader">予祂：共 0 份</div>
+        <div id="actionListContainer"></div>
+      </div>
+
       <!-- 暗语、留声占位 -->
-      <div id="tabContentOthers" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
+      <div id="tabContentMusic" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
         該區域功能待開發...
       </div>
     </div>
@@ -576,6 +634,21 @@
       <span class="sticker-panel-close" id="closeStickerPanel">✕</span>
     </div>
     <div class="sticker-panel-content" id="stickerPanelContent"></div>
+  </div>
+</div>
+
+<!-- ⚡ 闪电互动面板 -->
+<div class="flash-panel-mask" id="flashPanelMask">
+  <div class="flash-panel">
+    <div class="flash-panel-header">互動</div>
+    <div class="flash-grid">
+      <div class="flash-item" id="flashAction">予祂</div>
+      <div class="flash-item" id="flashPhoto">攝錄</div>
+      <div class="flash-item" id="flashAlbum">舊簿</div>
+      <div class="flash-item" id="flashAsk">投問</div>
+      <div class="flash-item" id="flashAccompany">相伴</div>
+      <div class="flash-item" id="flashMusic" style="color:var(--text-secondary);">留聲</div>
+    </div>
   </div>
 </div>
 
@@ -652,7 +725,7 @@ function fileToBase64(file, callback) {
 
 /* ============ IndexedDB ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 4; 
+const DB_VER = 5; // 升个版本，确保动作表建立
 let db = null;
 
 function openDB(){
@@ -670,6 +743,11 @@ function openDB(){
         s.createIndex('category', 'category', { unique:false });
       }
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
+      // 新增动作表
+      if(!d.objectStoreNames.contains('actions')) {
+        const s = d.createObjectStore('actions', { keyPath:'id' });
+        s.createIndex('category', 'category', { unique:false });
+      }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -698,6 +776,12 @@ let currentSubTab = 'normal';
 let currentSearchQuery = '';
 let isBatchDeleteMode = false;
 let selectedCardIds = new Set();
+
+let currentActionSubTab = 'to_them'; 
+let currentActionSearchQuery = '';
+let isActionBatchDeleteMode = false;
+let selectedActionIds = new Set();
+
 let isStampBatchMode = false;
 let selectedStampIds = new Set();
 
@@ -714,6 +798,7 @@ async function init(){
   }
   loadAndRenderCards();
   loadAndRenderStamps();
+  loadAndRenderActions();
 }
 
 async function loadChats(){
@@ -894,6 +979,7 @@ function renderMessages(forceScrollBottom = false){
     
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
+    if(m.type === 'action') bubble.classList.add('action-bubble');
     
     let linesHtml = '';
     const isLatest = (i === currentMessages.length - 1);
@@ -1002,7 +1088,7 @@ async function replyFromThem(){
     return;
   }
   
-  const n = 1 + Math.floor(Math.random()*5); 
+  const n = 1 + Math.floor(Math.random()*3); 
   const picked = [];
   const pool = [...cards];
   
@@ -1039,6 +1125,29 @@ async function replyFromThem(){
   currentMessages.push(msg);
   renderMessages(false);
   await touchChat(currentChatId);
+
+  // 15% 概率触发独立动作卡片
+  if (Math.random() < 0.15) {
+    const allActions = await reqToPromise(tx('actions').getAll());
+    const toMeActions = allActions.filter(a => a.category === 'to_me');
+    if(toMeActions.length) {
+      const a = toMeActions[Math.floor(Math.random()*toMeActions.length)];
+      const actionMsg = {
+        id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+        chatId: currentChatId,
+        sender: 'them',
+        type: 'action',
+        text: '',
+        cards: [a.text],
+        stickerData: null,
+        time: Date.now()
+      };
+      await reqToPromise(tx('messages','readwrite').add(actionMsg));
+      currentMessages.push(actionMsg);
+      renderMessages(false);
+      await touchChat(currentChatId);
+    }
+  }
 }
 
 /* ============ 弹窗工具 ============ */
@@ -1064,13 +1173,8 @@ function showCustomDialog(title, text, showInput, okText, onOk) {
 /* ============ 郵電所：電文管理 ============ */
 async function loadAndRenderCards() {
   const allCards = await reqToPromise(tx('cards').getAll());
-  
   let filtered = allCards.filter(c => (c.category || 'normal') === currentSubTab);
-  
-  if(currentSearchQuery) {
-    filtered = filtered.filter(c => c.text.includes(currentSearchQuery));
-  }
-
+  if(currentSearchQuery) filtered = filtered.filter(c => c.text.includes(currentSearchQuery));
   filtered.sort((a,b) => b.createdAt - a.createdAt);
 
   const catName = currentSubTab === 'normal' ? '常訊' : '撩撥';
@@ -1078,7 +1182,6 @@ async function loadAndRenderCards() {
 
   const container = $('#cardListContainer');
   container.innerHTML = '';
-  
   if(!filtered.length) {
     container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無電文</div>';
     return;
@@ -1178,7 +1281,6 @@ async function loadAndRenderStamps() {
 
     div.innerHTML = `${checkHtml}<img src="${s.data}" alt="印花">`;
     
-    // 只有在非批量模式下，才允许长按删除
     if (!isStampBatchMode) {
       let pressTimer;
       div.addEventListener('touchstart', () => {
@@ -1193,7 +1295,6 @@ async function loadAndRenderStamps() {
       div.addEventListener('touchend', () => clearTimeout(pressTimer));
       div.addEventListener('touchmove', () => clearTimeout(pressTimer));
     } else {
-      // 批量模式下点击整个图片打勾
       div.onclick = () => toggleSelectStamp(s.id);
     }
 
@@ -1216,6 +1317,94 @@ window.toggleSelectStamp = function(id) {
   loadAndRenderStamps();
 };
 
+/* ============ 郵電所：暗語管理 ============ */
+async function loadAndRenderActions() {
+  const allActions = await reqToPromise(tx('actions').getAll());
+  let filtered = allActions.filter(c => (c.category || 'to_them') === currentActionSubTab);
+  
+  if(currentActionSearchQuery) filtered = filtered.filter(c => c.text.includes(currentActionSearchQuery));
+  filtered.sort((a,b) => b.createdAt - a.createdAt);
+
+  const catName = currentActionSubTab === 'to_them' ? '予祂' : '予我';
+  $('#actionListHeader').textContent = `${catName}：共 ${filtered.length} 份`;
+
+  const container = $('#actionListContainer');
+  container.innerHTML = '';
+  
+  if(!filtered.length) {
+    container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無暗語</div>';
+    return;
+  }
+
+  filtered.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'card-item';
+    
+    let checkboxHtml = '';
+    if (isActionBatchDeleteMode) {
+      checkboxHtml = `<input type="checkbox" style="margin-right:10px; width:18px; height:18px; accent-color:#e53935;" ${selectedActionIds.has(c.id) ? 'checked' : ''} onchange="toggleSelectAction('${c.id}')">`;
+    }
+
+    div.innerHTML = `
+      <div style="display:flex; align-items:flex-start; flex:1;">
+        ${checkboxHtml}
+        <div class="card-text">${escapeHtml(c.text)}</div>
+      </div>
+      <div class="card-actions" style="display:${isActionBatchDeleteMode ? 'none' : 'flex'}">
+        <button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button>
+        <button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  if (isActionBatchDeleteMode) {
+    $('#actionNormalToolbar').style.display = 'none';
+    $('#actionBatchToolbar').style.display = 'flex';
+    $('#actionBatchCount').textContent = `已選 ${selectedActionIds.size} 份`;
+  } else {
+    $('#actionNormalToolbar').style.display = 'flex';
+    $('#actionBatchToolbar').style.display = 'none';
+  }
+}
+
+window.toggleSelectAction = function(id) {
+  if(selectedActionIds.has(id)) selectedActionIds.delete(id);
+  else selectedActionIds.add(id);
+  loadAndRenderActions();
+};
+
+window.editAction = function(id, oldText) {
+  showCustomDialog('校對暗語', '請修改下方內容', true, '保存', async (newText) => {
+    newText = newText.trim();
+    if(!newText || newText === oldText) return;
+    
+    const all = await reqToPromise(tx('actions').getAll());
+    if(all.find(c => c.text === newText && c.id !== id)) {
+      toast('校對失敗：內容與現有暗語重複！');
+      return;
+    }
+    
+    const target = all.find(c => c.id === id);
+    if(target) {
+      target.text = newText;
+      await reqToPromise(tx('actions', 'readwrite').put(target));
+      toast('已保存修改');
+      loadAndRenderActions();
+    }
+  });
+  $('#dialogInput').value = oldText;
+};
+
+window.deleteSingleAction = function(id) {
+  showCustomDialog('作廢確認', '確定要作廢這條暗語嗎？', false, '作廢', async () => {
+    await reqToPromise(tx('actions', 'readwrite').delete(id));
+    toast('已作廢');
+    loadAndRenderActions();
+  });
+};
+
+
 /* ============ 事件绑定 ============ */
 function bindEvents(){
   // --- 邮电所标签切换 ---
@@ -1225,7 +1414,8 @@ function bindEvents(){
       tab.classList.add('active');
       $('#tabContentCards').style.display = 'none';
       $('#tabContentStickers').style.display = 'none';
-      $('#tabContentOthers').style.display = 'none';
+      $('#tabContentActions').style.display = 'none';
+      $('#tabContentMusic').style.display = 'none';
 
       if(tab.dataset.tab === 'cards') {
         $('#tabContentCards').style.display = 'block';
@@ -1233,15 +1423,19 @@ function bindEvents(){
       } else if(tab.dataset.tab === 'stickers') {
         $('#tabContentStickers').style.display = 'block';
         loadAndRenderStamps();
+      } else if(tab.dataset.tab === 'actions') {
+        $('#tabContentActions').style.display = 'block';
+        loadAndRenderActions();
       } else {
-        $('#tabContentOthers').style.display = 'block';
+        $('#tabContentMusic').style.display = 'block';
       }
     };
   });
 
   document.querySelectorAll('.sub-tab').forEach(tab => {
+    if(tab.classList.contains('action-sub-tab')) return;
     tab.onclick = () => {
-      document.querySelectorAll('.sub-tab').forEach(t => {
+      document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => {
         t.classList.remove('active');
         t.style.color = 'var(--text-secondary)';
         t.style.borderBottom = 'none';
@@ -1268,6 +1462,28 @@ function bindEvents(){
     };
   });
 
+  document.querySelectorAll('.action-sub-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.action-sub-tab').forEach(t => {
+        t.classList.remove('active');
+        t.style.color = 'var(--text-secondary)';
+        t.style.borderBottom = 'none';
+        t.style.fontWeight = 'normal';
+      });
+      tab.classList.add('active');
+      tab.style.color = 'var(--primary)';
+      tab.style.borderBottom = '2px solid var(--primary)';
+      tab.style.fontWeight = '600';
+      
+      currentActionSubTab = tab.dataset.subtab;
+      currentActionSearchQuery = '';
+      $('#searchActionsInput').value = '';
+      isActionBatchDeleteMode = false;
+      selectedActionIds.clear();
+      loadAndRenderActions();
+    };
+  });
+
   $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
 
   // --- 電文工具栏 ---
@@ -1279,7 +1495,6 @@ function bindEvents(){
   $('#btnAddCards').onclick = async () => {
     const text = $('#newCardsInput').value.trim();
     if(!text) return;
-    
     const lines = text.split('\n').filter(l => l.trim() !== '');
     if(!lines.length) return;
 
@@ -1288,9 +1503,7 @@ function bindEvents(){
 
     for(let line of lines) {
       line = line.trim();
-      if(all.find(c => c.text === line)) {
-        duplicate++; continue;
-      }
+      if(all.find(c => c.text === line)) { duplicate++; continue; }
       const newCard = { id: 'c_'+Date.now()+Math.random(), text: line, category: currentSubTab, createdAt: Date.now() };
       await reqToPromise(tx('cards', 'readwrite').add(newCard));
       all.push(newCard);
@@ -1303,115 +1516,61 @@ function bindEvents(){
     loadAndRenderCards();
   };
 
-  $('#searchCardsInput').oninput = (e) => {
-    currentSearchQuery = e.target.value.trim();
-    loadAndRenderCards();
-  };
-
-  $('#btnBatchDelete').onclick = () => {
-    isBatchDeleteMode = true;
-    selectedCardIds.clear();
-    loadAndRenderCards();
-  };
-
+  $('#searchCardsInput').oninput = (e) => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
+  $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
   $('#btnSelectAll').onclick = () => {
     const checkboxes = document.querySelectorAll('#cardListContainer input[type="checkbox"]');
-    if(selectedCardIds.size === checkboxes.length && checkboxes.length > 0) {
-      selectedCardIds.clear();
-    } else {
-      checkboxes.forEach(cb => {
-        selectedCardIds.add(cb.getAttribute('onchange').split("'")[1]);
-      });
-    }
+    if(selectedCardIds.size === checkboxes.length && checkboxes.length > 0) selectedCardIds.clear();
+    else checkboxes.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1]));
     loadAndRenderCards();
   };
-
   $('#btnConfirmDelete').onclick = () => {
     if(selectedCardIds.size === 0) return;
     showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => {
-      for(const id of selectedCardIds) {
-        await reqToPromise(tx('cards', 'readwrite').delete(id));
-      }
+      for(const id of selectedCardIds) await reqToPromise(tx('cards', 'readwrite').delete(id));
       toast('已焚毀所選電文');
-      isBatchDeleteMode = false;
-      selectedCardIds.clear();
-      loadAndRenderCards();
+      isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards();
     });
   };
-
-  $('#btnCancelDelete').onclick = () => {
-    isBatchDeleteMode = false;
-    selectedCardIds.clear();
-    loadAndRenderCards();
-  };
+  $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
 
   $('#btnDeduplicate').onclick = async () => {
     const all = await reqToPromise(tx('cards').getAll());
     const filtered = all.filter(c => (c.category || 'normal') === currentSubTab);
-    const seen = new Set();
-    let dups = [];
-    
-    filtered.forEach(c => {
-      if(seen.has(c.text)) dups.push(c.id);
-      else seen.add(c.text);
-    });
-
+    const seen = new Set(); let dups = [];
+    filtered.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); });
     if(!dups.length) { toast('未發現重複項'); return; }
-
     showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => {
-      for(const id of dups) {
-        await reqToPromise(tx('cards', 'readwrite').delete(id));
-      }
-      toast('已清理重複項');
-      loadAndRenderCards();
+      for(const id of dups) await reqToPromise(tx('cards', 'readwrite').delete(id));
+      toast('已清理重複項'); loadAndRenderCards();
     });
   };
 
-  // 電文导入导出
   $('#btnImport').onclick = () => {
     let fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json,.txt';
+    fileInput.type = 'file'; fileInput.accept = '.json,.txt';
     fileInput.onchange = e => {
-      const file = e.target.files[0];
-      if(!file) return;
+      const file = e.target.files[0]; if(!file) return;
       const reader = new FileReader();
       reader.onload = async (event) => {
-        const content = event.target.result;
-        let newCards = [];
-        let added = 0, duplicate = 0;
+        let newCards = []; let added = 0, duplicate = 0;
         const all = await reqToPromise(tx('cards').getAll());
-
         try {
           if (file.name.endsWith('.json')) {
-            const data = JSON.parse(content);
-            if (Array.isArray(data)) {
-              data.forEach(item => {
-                if (item.text) newCards.push({ text: item.text, category: item.category || currentSubTab });
-              });
-            }
+            const data = JSON.parse(event.target.result);
+            if (Array.isArray(data)) data.forEach(item => { if (item.text) newCards.push({ text: item.text, category: item.category || currentSubTab }); });
           } else {
-            const lines = content.split('\n');
-            lines.forEach(line => {
-              if(line.trim()) newCards.push({ text: line.trim(), category: currentSubTab });
-            });
+            const lines = event.target.result.split('\n');
+            lines.forEach(line => { if(line.trim()) newCards.push({ text: line.trim(), category: currentSubTab }); });
           }
-        } catch (err) {
-          toast('收報失敗：文件格式錯誤');
-          return;
-        }
-
+        } catch (err) { toast('收報失敗：文件格式錯誤'); return; }
         for (let card of newCards) {
-          if (all.find(c => c.text === card.text)) {
-            duplicate++;
-          } else {
-            const newCard = { id: 'c_'+Date.now()+Math.random(), text: card.text, category: card.category, createdAt: Date.now() };
-            await reqToPromise(tx('cards', 'readwrite').add(newCard));
-            all.push(newCard);
+          if (all.find(c => c.text === card.text)) duplicate++;
+          else {
+            await reqToPromise(tx('cards', 'readwrite').add({ id: 'c_'+Date.now()+Math.random(), text: card.text, category: card.category, createdAt: Date.now() }));
             added++;
           }
         }
-
         toast(`收報完成：導入 ${added} 份` + (duplicate ? `，略過 ${duplicate} 份重複` : ''));
         loadAndRenderCards();
       };
@@ -1423,212 +1582,237 @@ function bindEvents(){
   $('#btnExport').onclick = async () => {
     const all = await reqToPromise(tx('cards').getAll());
     const filtered = all.filter(c => (c.category || 'normal') === currentSubTab);
-    
     if(!filtered.length) { toast('暫無電文可發報'); return; }
-
-    $('#dialogTitle').textContent = '發報';
-    $('#dialogText').textContent = '請選擇發報格式：';
+    $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：';
     $('#dialogInput').style.display = 'none';
-    
-    const footer = $('#dialogFooter');
-    footer.innerHTML = `
+    $('#dialogFooter').innerHTML = `
       <button class="dialog-btn" id="btnExportJson" style="color:var(--primary); border-right:1px solid var(--border-light);">JSON (完整)</button>
       <button class="dialog-btn" id="btnExportTxt" style="color:var(--primary); border-right:1px solid var(--border-light);">TXT (純文字)</button>
       <button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary); flex:0.5;">取消</button>
     `;
-
     $('#dialogMask').classList.add('show');
-
     $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show');
-    
     $('#btnExportJson').onclick = () => {
       $('#dialogMask').classList.remove('show');
       const exportData = filtered.map(c => ({ text: c.text, category: c.category }));
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `電文_${currentSubTab}_${Date.now()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      toast('已發報 (JSON)');
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `電文_${currentSubTab}.json`; a.click();
+      URL.revokeObjectURL(url); toast('已發報 (JSON)');
     };
-
     $('#btnExportTxt').onclick = () => {
       $('#dialogMask').classList.remove('show');
       const textData = filtered.map(c => c.text).join('\n');
       const blob = new Blob([textData], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `電文_${currentSubTab}_${Date.now()}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-      toast('已發報 (TXT)');
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `電文_${currentSubTab}.txt`; a.click();
+      URL.revokeObjectURL(url); toast('已發報 (TXT)');
     };
   };
 
   // --- 印花操作 ---
-  $('#stampUploadBox').onclick = () => {
-    $('#stampFileInput').click();
-  };
-
+  $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
   $('#stampFileInput').onchange = async (e) => {
-    const files = Array.from(e.target.files);
-    if(!files.length) return;
-
+    const files = Array.from(e.target.files); if(!files.length) return;
     $('#progressDialogMask').classList.add('show');
     let progress = 0;
     const progressTimer = setInterval(() => {
-      progress += Math.random() * 15;
-      if(progress >= 100) progress = 100;
-      
+      progress += Math.random() * 15; if(progress >= 100) progress = 100;
       $('#progressBarFill').style.width = progress + '%';
       $('#progressText').textContent = `正在沖印... ${Math.floor(progress)}%`;
-
       if(progress === 100) {
         clearInterval(progressTimer);
         setTimeout(async () => {
           for (let file of files) {
             await new Promise(resolve => {
               fileToBase64(file, async (base64) => {
-                const sticker = { id: 's_'+Date.now()+Math.random(), data: base64, createdAt: Date.now() };
-                await reqToPromise(tx('stickers', 'readwrite').add(sticker));
+                await reqToPromise(tx('stickers', 'readwrite').add({ id: 's_'+Date.now()+Math.random(), data: base64, createdAt: Date.now() }));
                 resolve();
               });
             });
           }
-          $('#progressDialogMask').classList.remove('show');
-          $('#progressBarFill').style.width = '0%';
-          $('#stampFileInput').value = ''; 
-          loadAndRenderStamps();
-          toast('沖印完成，已添加印花');
+          $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width = '0%';
+          $('#stampFileInput').value = ''; loadAndRenderStamps(); toast('沖印完成，已添加印花');
         }, 500);
       }
     }, 100);
   };
 
-  // 印花工具栏 - 入畫（导入）
   $('#btnStampImport').onclick = () => {
-    let fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
+    let fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = '.json';
     fileInput.onchange = e => {
-      const file = e.target.files[0];
-      if(!file) return;
+      const file = e.target.files[0]; if(!file) return;
       const reader = new FileReader();
       reader.onload = async (event) => {
         try {
           const data = JSON.parse(event.target.result);
           if(Array.isArray(data)) {
             for (let item of data) {
-              if(item.data) {
-                const sticker = { id: 's_'+Date.now()+Math.random(), data: item.data, createdAt: Date.now() };
-                await reqToPromise(tx('stickers', 'readwrite').add(sticker));
-              }
+              if(item.data) await reqToPromise(tx('stickers', 'readwrite').add({ id: 's_'+Date.now()+Math.random(), data: item.data, createdAt: Date.now() }));
             }
-            toast('入畫完成');
-            loadAndRenderStamps();
+            toast('入畫完成'); loadAndRenderStamps();
           }
-        } catch (err) {
-          toast('入畫失敗：文件格式錯誤');
-        }
+        } catch (err) { toast('入畫失敗：文件格式錯誤'); }
       };
       reader.readAsText(file);
     };
     fileInput.click();
   };
 
-  // 印花工具栏 - 出畫（导出）
   $('#btnStampExport').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     if(!stickers.length) { toast('暫無印花可出畫'); return; }
-    
     const exportData = stickers.map(s => ({ data: s.data }));
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `印花_${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('已出畫 (JSON)');
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `印花.json`; a.click();
+    URL.revokeObjectURL(url); toast('已出畫 (JSON)');
   };
 
-  // 印花工具栏 - 清冗（去重）
   $('#btnStampDeduplicate').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
-    const seen = new Set();
-    let dups = [];
-    
-    stickers.forEach(s => {
-      if(seen.has(s.data)) dups.push(s.id);
-      else seen.add(s.data);
-    });
-
+    const seen = new Set(); let dups = [];
+    stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); });
     if(!dups.length) { toast('未發現重複印花'); return; }
-
     showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否一併銷毀？`, false, '確認銷毀', async () => {
-      for(const id of dups) {
-        await reqToPromise(tx('stickers', 'readwrite').delete(id));
-      }
-      toast('已清理重複項');
-      loadAndRenderStamps();
+      for(const id of dups) await reqToPromise(tx('stickers', 'readwrite').delete(id));
+      toast('已清理重複項'); loadAndRenderStamps();
     });
   };
 
-  // 印花工具栏 - 焚毀（批量删除）
-  $('#btnStampBatchDelete').onclick = () => {
-    isStampBatchMode = true;
-    selectedStampIds.clear();
-    loadAndRenderStamps();
-  };
-
+  $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
   $('#btnStampSelectAll').onclick = () => {
     const checkboxes = document.querySelectorAll('#stampGrid input[type="checkbox"]');
-    if(selectedStampIds.size === checkboxes.length && checkboxes.length > 0) {
-      selectedStampIds.clear();
-    } else {
-      checkboxes.forEach(cb => {
-        selectedStampIds.add(cb.getAttribute('onchange').split("'")[1]);
-      });
-    }
+    if(selectedStampIds.size === checkboxes.length && checkboxes.length > 0) selectedStampIds.clear();
+    else checkboxes.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1]));
     loadAndRenderStamps();
   };
-
   $('#btnStampConfirmDelete').onclick = () => {
     if(selectedStampIds.size === 0) return;
     showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedStampIds.size} 張印花嗎？`, false, '焚毀', async () => {
-      for(const id of selectedStampIds) {
-        await reqToPromise(tx('stickers', 'readwrite').delete(id));
-      }
-      toast('已焚毀所選印花');
-      isStampBatchMode = false;
-      selectedStampIds.clear();
-      loadAndRenderStamps();
+      for(const id of selectedStampIds) await reqToPromise(tx('stickers', 'readwrite').delete(id));
+      toast('已焚毀所選印花'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps();
+    });
+  };
+  $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
+
+  // --- 暗語操作 ---
+  $('#newActionsInput').addEventListener('input', (e) => {
+    const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
+    $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`;
+  });
+  $('#btnAddActions').onclick = async () => {
+    const text = $('#newActionsInput').value.trim(); if(!text) return;
+    const lines = text.split('\n').filter(l => l.trim() !== ''); if(!lines.length) return;
+    const all = await reqToPromise(tx('actions').getAll());
+    let added = 0; let duplicate = 0;
+    for(let line of lines) {
+      line = line.trim();
+      if(all.find(c => c.text === line)) { duplicate++; continue; }
+      await reqToPromise(tx('actions', 'readwrite').add({ id: 'a_'+Date.now()+Math.random(), text: line, category: currentActionSubTab, createdAt: Date.now() }));
+      all.push({ text: line }); added++;
+    }
+    $('#newActionsInput').value = ''; $('#actionDraftCount').textContent = '待定稿：0 份';
+    toast(`成功留痕 ${added} 份` + (duplicate ? `，略過 ${duplicate} 份重複` : ''));
+    loadAndRenderActions();
+  };
+
+  $('#searchActionsInput').oninput = (e) => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
+  $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
+  $('#btnActionSelectAll').onclick = () => {
+    const checkboxes = document.querySelectorAll('#actionListContainer input[type="checkbox"]');
+    if(selectedActionIds.size === checkboxes.length && checkboxes.length > 0) selectedActionIds.clear();
+    else checkboxes.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1]));
+    loadAndRenderActions();
+  };
+  $('#btnActionConfirmDelete').onclick = () => {
+    if(selectedActionIds.size === 0) return;
+    showCustomDialog('抹除確認', `確定要抹除這 ${selectedActionIds.size} 條暗語嗎？`, false, '抹除', async () => {
+      for(const id of selectedActionIds) await reqToPromise(tx('actions', 'readwrite').delete(id));
+      toast('已抹除所選暗語'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions();
+    });
+  };
+  $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
+
+  $('#btnActionDeduplicate').onclick = async () => {
+    const all = await reqToPromise(tx('actions').getAll());
+    const filtered = all.filter(c => (c.category || 'to_them') === currentActionSubTab);
+    const seen = new Set(); let dups = [];
+    filtered.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); });
+    if(!dups.length) { toast('未發現重複項'); return; }
+    showCustomDialog('清影', `發現 ${dups.length} 條重複暗語，是否一併抹除？`, false, '確認抹除', async () => {
+      for(const id of dups) await reqToPromise(tx('actions', 'readwrite').delete(id));
+      toast('已清理重複項'); loadAndRenderActions();
     });
   };
 
-  $('#btnStampCancelDelete').onclick = () => {
-    isStampBatchMode = false;
-    selectedStampIds.clear();
-    loadAndRenderStamps();
+  $('#btnActionImport').onclick = () => {
+    let fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = '.json,.txt';
+    fileInput.onchange = e => {
+      const file = e.target.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        let newActions = []; let added = 0, duplicate = 0;
+        const all = await reqToPromise(tx('actions').getAll());
+        try {
+          if (file.name.endsWith('.json')) {
+            const data = JSON.parse(event.target.result);
+            if (Array.isArray(data)) data.forEach(item => { if (item.text) newActions.push({ text: item.text, category: item.category || currentActionSubTab }); });
+          } else {
+            event.target.result.split('\n').forEach(line => { if(line.trim()) newActions.push({ text: line.trim(), category: currentActionSubTab }); });
+          }
+        } catch (err) { toast('納影失敗：文件格式錯誤'); return; }
+        for (let act of newActions) {
+          if (all.find(c => c.text === act.text)) duplicate++;
+          else {
+            await reqToPromise(tx('actions', 'readwrite').add({ id: 'a_'+Date.now()+Math.random(), text: act.text, category: act.category, createdAt: Date.now() }));
+            added++;
+          }
+        }
+        toast(`納影完成：導入 ${added} 份` + (duplicate ? `，略過 ${duplicate} 份重複` : ''));
+        loadAndRenderActions();
+      };
+      reader.readAsText(file);
+    };
+    fileInput.click();
   };
 
-  // --- 聊天贴纸选择 ---
+  $('#btnActionExport').onclick = async () => {
+    const all = await reqToPromise(tx('actions').getAll());
+    const filtered = all.filter(c => (c.category || 'to_them') === currentActionSubTab);
+    if(!filtered.length) { toast('暫無暗語可投映'); return; }
+    $('#dialogTitle').textContent = '投映'; $('#dialogText').textContent = '請選擇投映格式：';
+    $('#dialogInput').style.display = 'none';
+    $('#dialogFooter').innerHTML = `
+      <button class="dialog-btn" id="btnExportJson" style="color:var(--primary); border-right:1px solid var(--border-light);">JSON (完整)</button>
+      <button class="dialog-btn" id="btnExportTxt" style="color:var(--primary); border-right:1px solid var(--border-light);">TXT (純文字)</button>
+      <button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary); flex:0.5;">取消</button>
+    `;
+    $('#dialogMask').classList.add('show');
+    $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show');
+    $('#btnExportJson').onclick = () => {
+      $('#dialogMask').classList.remove('show');
+      const exportData = filtered.map(c => ({ text: c.text, category: c.category }));
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `暗語_${currentActionSubTab}.json`; a.click();
+      URL.revokeObjectURL(url); toast('已投映 (JSON)');
+    };
+    $('#btnExportTxt').onclick = () => {
+      $('#dialogMask').classList.remove('show');
+      const textData = filtered.map(c => c.text).join('\n');
+      const blob = new Blob([textData], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `暗語_${currentActionSubTab}.txt`; a.click();
+      URL.revokeObjectURL(url); toast('已投映 (TXT)');
+    };
+  };
+
+  // --- 聊天交互 ---
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
-    const content = $('#stickerPanelContent');
-    if(!stickers.length) { toast('郵電所中尚無印花'); return; }
+    const content = $('#stickerPanelContent'); if(!stickers.length) { toast('郵電所中尚無印花'); return; }
     content.innerHTML = '';
     stickers.forEach(s => {
-      const img = document.createElement('img');
-      img.src = s.data;
+      const img = document.createElement('img'); img.src = s.data;
       img.onclick = () => {
-        pendingStickerData = s.data;
-        $('#pendingStickerImg').src = s.data;
-        $('#pendingStickerPreview').classList.add('show');
-        $('#stickerPanelMask').classList.remove('show');
+        pendingStickerData = s.data; $('#pendingStickerImg').src = s.data;
+        $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show');
         updateSendBtnState();
       };
       content.appendChild(img);
@@ -1636,23 +1820,54 @@ function bindEvents(){
     $('#stickerPanelMask').classList.add('show');
   };
   $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
-  $('#stickerPanelMask').onclick = (e) => { if(e.target === $('#stickerPanelMask')) $('#stickerPanelMask').classList.remove('show'); };
+  
+  // ⚡ 闪电面板
+  $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
+  $('#flashPanelMask').onclick = (e) => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
+  
+  // 面板选项
+  $('#flashAction').onclick = async () => {
+    $('#flashPanelMask').classList.remove('show');
+    const allActions = await reqToPromise(tx('actions').getAll());
+    const toThem = allActions.filter(a => a.category === 'to_them');
+    if(!toThem.length) { toast('尚未留痕任何對祂的動作'); return; }
+    
+    // 用极简的弹出框让用户选
+    const content = $('#stickerPanelContent');
+    content.innerHTML = '';
+    toThem.forEach(a => {
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:15px; text-align:center; border-bottom:1px solid rgba(0,0,0,0.1); cursor:pointer; font-size:15px; background:var(--bg-color);';
+      div.textContent = a.text;
+      div.onclick = async () => {
+        $('#stickerPanelMask').classList.remove('show');
+        const msg = { id: 'm_'+Date.now(), chatId: currentChatId, sender: 'me', type: 'action', text: '', cards: [a.text], stickerData: null, time: Date.now() };
+        await reqToPromise(tx('messages','readwrite').add(msg));
+        currentMessages.push(msg);
+        renderMessages(false);
+        await touchChat(currentChatId);
+      };
+      content.appendChild(div);
+    });
+    $('.sticker-panel-header').innerHTML = '予祂 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
+    $('#stickerPanelMask').classList.add('show');
+    $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
+  };
+
+  // 占位提示
+  const soon = ['攝錄','舊簿','投問','相伴','留聲'];
+  soon.forEach(t => {
+    const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':t==='相伴'?'Accompany':'Music'));
+    if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
+  });
 
   // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
-    isEditingChatId = null;
-    $('#createPageTitle').textContent = '建立新對話';
-    $('#inputRoomName').value = '';
-    $('#inputTheirName').value = '';
-    $('#inputTheirNick').value = '';
-    $('#inputTheirSign').value = '';
-    $('#inputMyName').value = '';
-    $('#inputMyNick').value = '';
-    $('#inputMySign').value = '';
-    $('#theirAvatar').style.backgroundImage = '';
-    $('#theirAvatar').textContent = '祂';
-    $('#myAvatar').style.backgroundImage = '';
-    $('#myAvatar').textContent = '我';
+    isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
+    $('#inputRoomName').value = ''; $('#inputTheirName').value = ''; $('#inputTheirNick').value = ''; $('#inputTheirSign').value = '';
+    $('#inputMyName').value = ''; $('#inputMyNick').value = ''; $('#inputMySign').value = '';
+    $('#theirAvatar').style.backgroundImage = ''; $('#theirAvatar').textContent = '祂';
+    $('#myAvatar').style.backgroundImage = ''; $('#myAvatar').textContent = '我';
     tempTheirAvatar = null; tempMyAvatar = null;
     $('#pageCreate').classList.add('show');
   };
@@ -1661,36 +1876,22 @@ function bindEvents(){
   $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
 
   $('#saveChatBtn').onclick = async ()=>{
-    const roomName = $('#inputRoomName').value.trim();
-    const theirName = $('#inputTheirName').value.trim();
-    const theirNick = $('#inputTheirNick').value.trim();
-    const theirSign = $('#inputTheirSign').value.trim();
-    const myName = $('#inputMyName').value.trim();
-    const myNick = $('#inputMyNick').value.trim();
-    const mySign = $('#inputMySign').value.trim();
-    
+    const roomName = $('#inputRoomName').value.trim(); const theirName = $('#inputTheirName').value.trim();
+    const theirNick = $('#inputTheirNick').value.trim(); const theirSign = $('#inputTheirSign').value.trim();
+    const myName = $('#inputMyName').value.trim(); const myNick = $('#inputMyNick').value.trim(); const mySign = $('#inputMySign').value.trim();
     if(!roomName) { toast('請輸入聊天室名稱'); return; }
-    
-    const c = {
-      id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-      roomName, theirName, theirNick, theirSign, myName, myNick, mySign,
-      theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, 
-      isPinned: false, createdAt: Date.now(), updatedAt: Date.now()
-    };
+    const c = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, isPinned: false, createdAt: Date.now(), updatedAt: Date.now() };
     await reqToPromise(tx('chats','readwrite').add(c));
-    toast('已建立新對話');
-    await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
+    toast('已建立新對話'); await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
   // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
-  
   $('#msgInput').addEventListener('input', function() {
     this.style.height = '44px';
     this.style.height = (this.scrollHeight) + 'px';
     updateSendBtnState();
   });
-
   $('#sendBtn').onclick = sendMyMessage;
   
   // --- 全局菜单 ---
@@ -1700,13 +1901,8 @@ function bindEvents(){
   $('#menuBtnList').onclick = openMenu;
   mask.onclick = e=>{ if(e.target === mask) closeMenu(); };
   $('#menuPanel').onclick = e=>{
-    const act = e.target.dataset.act;
-    if(!act) return;
-    closeMenu();
-    if(act === 'postoffice') {
-       $('#pagePostOffice').classList.add('show');
-       loadAndRenderCards();
-    }
+    const act = e.target.dataset.act; if(!act) return; closeMenu();
+    if(act === 'postoffice') { $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
     else if(act === 'settings') $('#pageSettings').classList.add('show');
     else if(act === 'export') toast('存檔：匯出備份（待實作）');
     else if(act === 'clear') toast('焚稿：清空數據（待實作）');
@@ -1717,23 +1913,18 @@ function bindEvents(){
 
   // --- 佈景页面 ---
   $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
-  document.querySelectorAll('.theme-card').forEach(card => {
-    card.onclick = () => setTheme(card.dataset.theme);
-  });
+  document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
   $('#mainBgFile').onchange = e => {
     if(e.target.files[0]) {
       fileToBase64(e.target.files[0], b => {
-        globalBgImage = b;
-        localStorage.setItem('nz_main_bg', b);
-        applyThemeAndBg();
-        $('#mainBgUploadBox').style.backgroundImage = `url(${b})`;
-        $('#mainBgText').textContent = '';
+        globalBgImage = b; localStorage.setItem('nz_main_bg', b);
+        applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage = `url(${b})`; $('#mainBgText').textContent = '';
       });
     }
   };
 
-  // 所有遮罩点空白取消
-  const allMasks = ['#dialogMask', '#progressDialogMask', '#menuMask', '#actionSheetMask', '#stickerPanelMask'];
+  // 遮罩点空白取消
+  const allMasks = ['#dialogMask', '#progressDialogMask', '#menuMask', '#actionSheetMask', '#stickerPanelMask', '#flashPanelMask'];
   allMasks.forEach(id => {
     const el = document.querySelector(id);
     if(el) {

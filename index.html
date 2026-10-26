@@ -715,6 +715,8 @@
   </div>
 </div>
 
+<input type="file" id="stampFileInput" accept="image/*" multiple style="display:none">
+
 <!-- 悬浮音乐播放器 -->
 <div class="music-player-float" id="musicPlayerFloat">
   <div class="music-disc" id="musicDiscFloat"></div>
@@ -2035,32 +2037,36 @@ function bindEvents(){
   };
 
   // --- 印花操作 ---
-  $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
-  $('#stampFileInput').onchange = async (e) => {
-    const files = Array.from(e.target.files); if(!files.length) return;
-    $('#progressDialogMask').classList.add('show');
-    let progress = 0;
-    const progressTimer = setInterval(() => {
-      progress += Math.random() * 15; if(progress >= 100) progress = 100;
-      $('#progressBarFill').style.width = progress + '%';
-      $('#progressText').textContent = `正在沖印... ${Math.floor(progress)}%`;
-      if(progress === 100) {
-        clearInterval(progressTimer);
-        setTimeout(async () => {
-          for (let file of files) {
-            await new Promise(resolve => {
-              fileToBase64(file, async (base64) => {
-                await reqToPromise(tx('stickers', 'readwrite').add({ id: 's_'+Date.now()+Math.random(), data: base64, createdAt: Date.now() }));
-                resolve();
+  if($('#stampUploadBox')) {
+    $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
+  }
+  if($('#stampFileInput')) {
+    $('#stampFileInput').onchange = async (e) => {
+      const files = Array.from(e.target.files); if(!files.length) return;
+      $('#progressDialogMask').classList.add('show');
+      let progress = 0;
+      const progressTimer = setInterval(() => {
+        progress += Math.random() * 15; if(progress >= 100) progress = 100;
+        $('#progressBarFill').style.width = progress + '%';
+        $('#progressText').textContent = `正在沖印... ${Math.floor(progress)}%`;
+        if(progress === 100) {
+          clearInterval(progressTimer);
+          setTimeout(async () => {
+            for (let file of files) {
+              await new Promise(resolve => {
+                fileToBase64(file, async (base64) => {
+                  await reqToPromise(tx('stickers', 'readwrite').add({ id: 's_'+Date.now()+Math.random(), data: base64, createdAt: Date.now() }));
+                  resolve();
+                });
               });
-            });
-          }
-          $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width = '0%';
-          $('#stampFileInput').value = ''; loadAndRenderStamps(); toast('沖印完成，已添加印花');
-        }, 500);
-      }
-    }, 100);
-  };
+            }
+            $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width = '0%';
+            $('#stampFileInput').value = ''; loadAndRenderStamps(); toast('沖印完成，已添加印花');
+          }, 500);
+        }
+      }, 100);
+    };
+  }
 
   $('#btnStampImport').onclick = () => {
     let fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = '.json';
@@ -2383,14 +2389,12 @@ function bindEvents(){
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
-  // 占位提示
   const soon = ['攝錄','舊簿','投問','相伴'];
   soon.forEach(t => {
     const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':'Accompany'));
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
 
-  // --- 音乐播放器操作 ---
   $('#btnPlayPause').onclick = () => {
     if (audioPlayer.paused) {
       audioPlayer.play();
@@ -2418,7 +2422,6 @@ function bindEvents(){
     }
   };
 
-  // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
     $('#inputRoomName').value = ''; $('#inputTheirName').value = ''; $('#inputTheirNick').value = ''; $('#inputTheirSign').value = '';
@@ -2460,7 +2463,6 @@ function bindEvents(){
   });
   $('#sendBtn').onclick = sendMyMessage;
   
-  // --- 全局菜单 ---
   const mask = $('#menuMask');
   function openMenu(){ mask.classList.add('show'); }
   function closeMenu(){ mask.classList.remove('show'); }

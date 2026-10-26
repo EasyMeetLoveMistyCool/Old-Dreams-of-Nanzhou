@@ -2,990 +2,379 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>南洲舊夢</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f0e8;color:#1a1a1a;font-family:"Courier New","Noto Serif TC",monospace;height:100vh;overflow:hidden}
 
-body {
-  font-family: "Courier New", "Noto Serif TC", monospace;
-  background: #1a120b;
-  color: #ede8d5;
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
-}
+.top{position:fixed;top:0;left:0;right:0;z-index:100;background:#f5f0e8;border-bottom:1px solid #c9a84c;padding-top:12px}
+.top h1{text-align:center;font-size:15px;letter-spacing:10px;color:#c9a84c;font-weight:normal;padding-bottom:6px}
+.top .info{display:flex;justify-content:space-between;padding:0 20px 4px;font-size:9px;color:#8b7d6b}
+.top .line{flex:1;text-align:center;color:#c9a84c;opacity:.3}
+.top .tabs{display:flex;justify-content:center;gap:24px;padding-bottom:8px}
+.top .tabs span{color:#8b7d6b;font-size:12px;letter-spacing:2px;cursor:pointer;padding:2px 0}
+.top .tabs span.active{color:#c9a84c;border-bottom:1px solid #c9a84c}
 
-.top-bar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  background: #1a120b;
-  border-bottom: 1px solid #c9a84c;
-}
+.list{position:fixed;top:88px;bottom:56px;left:0;right:0;overflow-y:auto;padding:14px 5%;-webkit-overflow-scrolling:touch}
 
-.top-title {
-  text-align: center;
-  padding: 12px 0 8px;
-  font-size: 18px;
-  letter-spacing: 8px;
-  color: #c9a84c;
-}
+.msg{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;margin-bottom:14px;padding:12px;font-size:13px;line-height:1.9}
+.msg .label{font-size:10px;font-weight:bold;border-bottom:1px solid #1a1a1a;padding-bottom:4px;margin-bottom:8px;display:flex;justify-content:space-between}
+.msg .stamp{text-align:right;margin-top:8px;border-top:1px solid #1a1a1a;padding-top:6px}
+.msg .stamp img{max-width:60px;max-height:60px;display:block;margin-left:auto;border:1px solid #1a1a1a}
+.msg .time{text-align:right;font-size:9px;color:#6b6258;margin-top:6px}
 
-.top-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 16px 8px;
-  font-size: 11px;
-  color: #6b6258;
-}
+.item{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;margin-bottom:10px;padding:10px;font-size:13px;line-height:1.7}
+.item .item-head{display:flex;justify-content:space-between;font-size:10px;color:#6b6258;border-bottom:1px solid #1a1a1a;padding-bottom:3px;margin-bottom:6px}
+.item .item-actions{display:flex;gap:12px;margin-top:6px;border-top:1px solid #1a1a1a;padding-top:4px}
+.item .item-actions span{font-size:10px;color:#c9a84c;cursor:pointer}
 
-.top-info .center-line {
-  flex: 1;
-  text-align: center;
-  color: #c9a84c;
-  opacity: 0.5;
-}
+.btn-row{position:fixed;bottom:0;left:0;right:0;display:flex;flex-wrap:wrap;border-top:1px solid #c9a84c;background:#f5f0e8}
+.btn-row button{flex:1 0 33.33%;max-width:33.33%;border:none;border-right:1px solid rgba(201,168,76,.3);border-bottom:1px solid rgba(201,168,76,.3);background:none;color:#1a1a1a;font-family:inherit;font-size:11px;padding:12px 2px;cursor:pointer;letter-spacing:1px}
+.btn-row button:active{background:rgba(201,168,76,.15)}
 
-.top-links {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  padding-bottom: 8px;
-}
+.input-row{position:fixed;bottom:0;left:0;right:0;display:flex;padding:10px 5%;border-top:1px solid #c9a84c;background:#f5f0e8}
+.input-row input{flex:1;background:transparent;border:none;border-bottom:1px solid #c9a84c;color:#1a1a1a;font-family:inherit;font-size:14px;padding:4px 0;outline:none}
+.input-row button{background:none;border:none;color:#c9a84c;font-family:inherit;font-size:13px;padding:4px 10px;cursor:pointer;letter-spacing:1px}
 
-.top-links span {
-  color: #c9a84c;
-  cursor: pointer;
-  font-size: 12px;
-  letter-spacing: 2px;
-}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,18,11,.5);z-index:200;justify-content:center;align-items:center}
+.modal.show{display:flex}
+.modal-box{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;width:92%;max-height:85vh;overflow-y:auto;padding:16px}
+.modal-box h3{text-align:center;margin:0 0 12px;font-size:14px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;letter-spacing:4px}
+.modal-box textarea{width:100%;min-height:200px;background:transparent;border:1px solid #1a1a1a;color:#1a1a1a;font-family:inherit;font-size:14px;line-height:1.8;padding:8px;outline:none;resize:vertical}
+.modal-box input[type=text]{width:100%;padding:8px;border:1px solid #1a1a1a;background:transparent;color:#1a1a1a;font-family:inherit;font-size:14px;outline:none;margin-bottom:8px}
+.modal-box input[type=file]{width:100%;font-size:11px;margin-bottom:8px}
+.modal-btns{display:flex;gap:8px;margin-top:12px}
+.modal-btns button{flex:1;padding:10px;border:1px solid #1a1a1a;background:transparent;color:#1a1a1a;font-family:inherit;font-size:12px;cursor:pointer;letter-spacing:2px}
+.modal-btns button.primary{background:#1a1a1a;color:#c9a84c;border-color:#1a1a1a}
 
-.top-links span:active { opacity: 0.6; }
-
-.scroll-area {
-  position: fixed;
-  top: 78px;
-  bottom: 56px;
-  left: 0; right: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 4%;
-}
-
-.input-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 100;
-  background: #1a120b;
-  border-top: 1px solid #c9a84c;
-  padding: 10px 4%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.input-bar input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #c9a84c;
-  color: #ede8d5;
-  font-family: inherit;
-  font-size: 14px;
-  padding: 6px 0;
-  outline: none;
-}
-
-.input-bar input::placeholder { color: #6b6258; }
-
-.input-bar .send-btn {
-  color: #c9a84c;
-  font-size: 13px;
-  cursor: pointer;
-  white-space: nowrap;
-  background: none;
-  border: none;
-  font-family: inherit;
-  padding: 4px 6px;
-}
-
-.input-bar .send-btn:active { opacity: 0.6; }
-
-.telegram {
-  background: #ede8d5;
-  color: #1a1a1a;
-  border: 2px solid #1a1a1a;
-  margin-bottom: 16px;
-  width: 100%;
-}
-
-.telegram-header {
-  border-bottom: 1px solid #1a1a1a;
-  padding: 6px 10px;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-}
-
-.telegram-body {
-  padding: 10px;
-  font-size: 14px;
-  line-height: 1.8;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-.telegram-sep {
-  border: none;
-  border-top: 1px solid #1a1a1a;
-  margin: 6px 0;
-}
-
-.telegram-stamp {
-  margin: 8px 0 4px;
-  text-align: center;
-}
-
-.telegram-stamp img {
-  max-width: 100%;
-  max-height: 200px;
-  border: 1px solid #1a1a1a;
-  display: block;
-  margin: 0 auto;
-}
-
-.telegram-footer {
-  border-top: 1px solid #1a1a1a;
-  padding: 4px 10px;
-  text-align: right;
-  font-size: 11px;
-  color: #6b6258;
-}
-
-.page { display: none; }
-.page.active { display: block; }
-
-.list-item {
-  background: #ede8d5;
-  color: #1a1a1a;
-  border: 1px solid #1a1a1a;
-  margin-bottom: 8px;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.list-item:active { opacity: 0.7; }
-
-.list-item .item-no {
-  font-size: 11px;
-  color: #6b6258;
-  margin-bottom: 4px;
-}
-
-.list-item .item-preview {
-  font-size: 14px;
-  line-height: 1.6;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.stamp-item {
-  display: inline-block;
-  width: calc(33.33% - 6px);
-  margin: 3px;
-  text-align: center;
-  vertical-align: top;
-}
-
-.stamp-item img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: 1px solid #1a1a1a;
-}
-
-.stamp-item .stamp-no {
-  font-size: 10px;
-  color: #6b6258;
-  margin-top: 2px;
-}
-
-.btn-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 100;
-  background: #1a120b;
-  border-top: 1px solid #c9a84c;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.btn-bar button {
-  flex: 1;
-  background: none;
-  border: none;
-  border-right: 1px solid rgba(201,168,76,0.3);
-  border-bottom: 1px solid rgba(201,168,76,0.3);
-  color: #c9a84c;
-  font-family: inherit;
-  font-size: 12px;
-  padding: 10px 4px;
-  cursor: pointer;
-}
-
-.btn-bar button:nth-child(3n) { border-right: none; }
-.btn-bar button:active { background: rgba(201,168,76,0.15); }
-
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 200;
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-overlay.active { display: flex; }
-
-.modal {
-  background: #ede8d5;
-  color: #1a1a1a;
-  border: 2px solid #1a1a1a;
-  width: 92%;
-  max-height: 80vh;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.modal h3 {
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 16px;
-  border-bottom: 1px solid #1a1a1a;
-  padding-bottom: 8px;
-}
-
-.modal textarea {
-  width: 100%;
-  min-height: 200px;
-  background: transparent;
-  border: 1px solid #1a1a1a;
-  color: #1a1a1a;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.8;
-  padding: 8px;
-  outline: none;
-  resize: vertical;
-}
-
-.modal .modal-stats {
-  text-align: center;
-  font-size: 12px;
-  color: #6b6258;
-  margin: 8px 0;
-}
-
-.modal .modal-btns {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.modal .modal-btns button {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #1a1a1a;
-  background: transparent;
-  font-family: inherit;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.modal .modal-btns .confirm-btn {
-  background: #1a1a1a;
-  color: #ede8d5;
-}
-
-.confirm-modal {
-  background: #ede8d5;
-  color: #1a1a1a;
-  border: 2px solid #1a1a1a;
-  width: 80%;
-  padding: 20px;
-  text-align: center;
-}
-
-.confirm-modal p { margin-bottom: 16px; font-size: 14px; }
-
-.confirm-modal .confirm-btns {
-  display: flex;
-  gap: 12px;
-}
-
-.confirm-modal .confirm-btns button {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #1a1a1a;
-  background: transparent;
-  font-family: inherit;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.confirm-modal .confirm-btns .danger { background: #1a1a1a; color: #ede8d5; }
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #6b6258;
-  font-size: 14px;
-  line-height: 2;
-}
-
-.hidden { display: none !important; }
-
-.attach-preview {
-  position: absolute;
-  bottom: 50px;
-  right: 4%;
-}
-
-.attach-preview img {
-  max-width: 50px;
-  max-height: 50px;
-  border: 1px solid #c9a84c;
-}
-
-.attach-preview .remove-attach {
-  color: #c9a84c;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 4px;
-  vertical-align: top;
-}
-
-.select-checkbox {
-  display: inline-block;
-  width: 18px; height: 18px;
-  border: 1px solid #1a1a1a;
-  margin-right: 6px;
-  vertical-align: middle;
-  text-align: center;
-  line-height: 16px;
-  font-size: 12px;
-}
-
-.select-checkbox.checked::after { content: "✓"; }
+.empty{text-align:center;color:#8b7d6b;padding:40px 0;font-size:12px;line-height:2}
+#status{position:fixed;top:92px;left:50%;transform:translateX(-50%);font-size:10px;padding:4px 12px;background:#c9a84c;color:#1a1a1a;display:none;z-index:999;letter-spacing:1px}
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <div class="top-title" id="topTitle">南 洲 舊 夢</div>
-  <div class="top-info">
-    <span>發 · 此端</span>
-    <span class="center-line">───────</span>
-    <span>收 · 舊夢</span>
-  </div>
-  <div class="top-links">
-    <span id="btnCodebook">電碼本</span>
-    <span id="btnStampbook">郵戳冊</span>
+<div class="top">
+  <h1>南 洲 舊 夢</h1>
+  <div class="info"><span>發 · 此端</span><span class="line">─────</span><span>收 · 舊夢</span></div>
+  <div class="tabs">
+    <span class="active" onclick="switchTab('chat')">來電</span>
+    <span onclick="switchTab('code')">電碼本</span>
+    <span onclick="switchTab('stamp')">郵戳冊</span>
   </div>
 </div>
 
-<div class="page active" id="pageChat">
-  <div class="scroll-area" id="chatArea">
-    <div class="empty-state" id="chatEmpty">
-      ∅ 尚無消息<br>落筆發出第一封電報
-    </div>
-  </div>
+<div id="status"></div>
+<div class="list" id="list"></div>
+
+<!-- 聊天页输入区 -->
+<div class="input-row" id="inputRow">
+  <input id="inputRowInput" placeholder="落筆...">
+  <button onclick="sendMsg()">發報 ▸</button>
 </div>
 
-<div class="page" id="pageCodebook">
-  <div class="scroll-area" id="codebookArea">
-    <div class="empty-state" id="codebookEmpty" style="display:none;">
-      ∅ 電碼本尚無一字<br>落筆寫下第一封電文吧
-    </div>
-    <div id="codebookList"></div>
-  </div>
-  <div class="btn-bar" id="codebookBtns">
-    <button onclick="showSearch()">翻查</button>
-    <button onclick="showWrite()">落筆</button>
-    <button onclick="dedup('codebook')">剔重</button>
-    <button onclick="importFile('codebook')">謄入</button>
-    <button onclick="exportFile('codebook')">抄出</button>
-    <button onclick="toggleSelect('codebook')">焚毀</button>
-  </div>
-</div>
+<!-- 底部按钮区（仅电码本/邮戳册使用） -->
+<div class="btn-row" id="btnRow"></div>
 
-<div class="page" id="pageStampbook">
-  <div class="scroll-area" id="stampbookArea">
-    <div class="empty-state" id="stampbookEmpty" style="display:none;">
-      ∅ 郵戳冊尚無印記<br>去附上第一枚郵戳吧
-    </div>
-    <div id="stampbookList" style="display:flex;flex-wrap:wrap;"></div>
-  </div>
-  <div class="btn-bar" id="stampbookBtns">
-    <button onclick="attachStamp()">附郵戳</button>
-    <button onclick="dedup('stamp')">剔重</button>
-    <button onclick="importFile('stamp')">謄入</button>
-    <button onclick="exportFile('stamp')">抄出</button>
-    <button onclick="toggleSelect('stamp')">焚毀</button>
-    <button disabled style="opacity:0.3">────</button>
-  </div>
-</div>
-
-<div class="input-bar" id="inputBar">
-  <input type="text" id="msgInput" placeholder="落筆...">
-  <button class="send-btn" onclick="attachMyStamp()">附郵戳 ▸</button>
-  <button class="send-btn" onclick="sendMsg()">發報 ▸</button>
-</div>
-<div class="attach-preview hidden" id="myAttachPreview"></div>
-
-<div class="modal-overlay" id="writeModal">
-  <div class="modal">
-    <h3>落 筆</h3>
-    <div style="font-size:11px;color:#6b6258;text-align:center;margin-bottom:8px;">一句一行，換行即分隔</div>
-    <textarea id="writeInput" placeholder="星星很多的時候我總想起你&#10;記得去年也是這樣的夜&#10;別貪涼"></textarea>
-    <div class="modal-stats" id="writeStats">共 0 句</div>
+<!-- 落筆彈窗 -->
+<div class="modal" id="writeModal">
+  <div class="modal-box">
+    <h3>† 落筆</h3>
+    <textarea id="writeInput" placeholder="每行一句，換行即分隔&#10;封存後自動拆為多條電文"></textarea>
     <div class="modal-btns">
-      <button onclick="closeWrite()">取消</button>
-      <button class="confirm-btn" onclick="saveWrite()">封存</button>
+      <button onclick="closeModal('writeModal')">取消</button>
+      <button class="primary" onclick="sealText()">封存</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="searchModal">
-  <div class="modal">
-    <h3>翻 查</h3>
-    <input type="text" id="searchInput" placeholder="輸入關鍵詞..." style="width:100%;padding:8px;border:1px solid #1a1a1a;background:transparent;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;" oninput="doSearch()">
-    <div id="searchResults" style="margin-top:12px;"></div>
+<!-- 修訂彈窗 -->
+<div class="modal" id="editModal">
+  <div class="modal-box">
+    <h3>† 修訂</h3>
+    <input type="text" id="editInput">
     <div class="modal-btns">
-      <button onclick="closeSearch()">返回</button>
+      <button onclick="closeModal('editModal')">取消</button>
+      <button class="primary" onclick="saveEdit()">存檔</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="confirmModal">
-  <div class="confirm-modal">
-    <p id="confirmText">確認？</p>
-    <div class="confirm-btns">
-      <button onclick="closeConfirm()">取消</button>
-      <button class="danger" id="confirmBtn">確認</button>
+<!-- 謄入彈窗 -->
+<div class="modal" id="importModal">
+  <div class="modal-box">
+    <h3>† 謄入</h3>
+    <input type="file" id="importFile" accept=".txt,.json">
+    <div class="modal-btns">
+      <button onclick="closeModal('importModal')">取消</button>
+      <button class="primary" onclick="doImport()">確認</button>
     </div>
   </div>
 </div>
 
-<input type="file" id="fileInput" class="hidden" accept=".txt,.json">
-<input type="file" id="stampInput" class="hidden" accept="image/*" multiple>
-<input type="file" id="singleStampInput" class="hidden" accept="image/*">
+<!-- 附郵戳彈窗 -->
+<div class="modal" id="stampModal">
+  <div class="modal-box">
+    <h3>† 附郵戳</h3>
+    <input type="file" id="stampFile" accept="image/jpeg,image/png" multiple>
+    <div class="modal-btns">
+      <button onclick="closeModal('stampModal')">取消</button>
+      <button class="primary" onclick="doStampAdd()">封存</button>
+    </div>
+  </div>
+</div>
 
 <script>
-// ===== IndexedDB =====
-const DB_NAME = '南洲舊夢';
-const DB_VERSION = 1;
-let db = null;
+var db=null,currentTab='chat',editId=null,editType='';
+var chatMsgs=[],codeList=[],stampList=[];
 
-const req = indexedDB.open(DB_NAME, DB_VERSION);
-req.onerror = function(e) {
-  console.error('數據庫打開失敗', e);
-};
-req.onsuccess = function(e) {
-  db = e.target.result;
-  initLoad();
-};
-req.onupgradeneeded = function(e) {
-  db = e.target.result;
-  if (!db.objectStoreNames.contains('messages')) {
-    db.createObjectStore('messages', { keyPath: 'id', autoIncrement: true });
-  }
-  if (!db.objectStoreNames.contains('codebook')) {
-    db.createObjectStore('codebook', { keyPath: 'id', autoIncrement: true });
-  }
-  if (!db.objectStoreNames.contains('stampbook')) {
-    db.createObjectStore('stampbook', { keyPath: 'id', autoIncrement: true });
-  }
+function $(id){return document.getElementById(id)}
+function showStatus(m){var el=$('status');el.textContent=m;el.style.display='block';setTimeout(function(){el.style.display='none'},1800)}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML}
+function fmtTime(d){return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+' · '+(d.getMonth()+1)+'.'+d.getDate()}
+
+// DB
+var req=indexedDB.open('南洲舊夢',2);
+req.onerror=function(){showStatus('數據庫錯誤')};
+req.onsuccess=function(e){db=e.target.result;showStatus('就緒');loadAll()};
+req.onupgradeneeded=function(e){
+  db=e.target.result;
+  if(!db.objectStoreNames.contains('messages')) db.createObjectStore('messages',{keyPath:'id',autoIncrement:true});
+  if(!db.objectStoreNames.contains('codes')) db.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
+  if(!db.objectStoreNames.contains('stamps')) db.createObjectStore('stamps',{keyPath:'id',autoIncrement:true});
 };
 
-// ===== 全局狀態 =====
-let currentPage = 'chat';
-let codebookData = [];
-let stampbookData = [];
-let messages = [];
-let myAttachedStamp = null;
-let selectMode = false;
-let selectedItems = new Set();
-let editingId = null;
+function tx(store,mode){return db.transaction(store,mode).objectStore(store)}
+function loadAll(){loadChat();loadCodes();loadStamps();render()}
 
-// ===== 頁面切換 =====
-document.getElementById('btnCodebook').addEventListener('click', function() { switchPage('codebook'); });
-document.getElementById('btnStampbook').addEventListener('click', function() { switchPage('stampbook'); });
-document.getElementById('msgInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') sendMsg(); });
+function loadChat(){var r=tx('messages','readonly').getAll();r.onsuccess=function(){chatMsgs=r.result||[];if(currentTab==='chat')render()}}
+function loadCodes(){var r=tx('codes','readonly').getAll();r.onsuccess=function(){codeList=r.result||[];if(currentTab==='code')render()}}
+function loadStamps(){var r=tx('stamps','readonly').getAll();r.onsuccess=function(){stampList=r.result||[];if(currentTab==='stamp')render()}}
 
-function switchPage(page) {
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.getElementById('inputBar').style.display = (page === 'chat') ? 'flex' : 'none';
-  document.getElementById('myAttachPreview').classList.add('hidden');
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tabs span').forEach(function(s,i){s.className=i===({'chat':0,'code':1,'stamp':2}[t])?'active':''});
+  render()
+}
 
-  if (page === 'chat') {
-    document.getElementById('pageChat').classList.add('active');
-    document.getElementById('topTitle').textContent = '南 洲 舊 夢';
-  } else if (page === 'codebook') {
-    document.getElementById('pageCodebook').classList.add('active');
-    document.getElementById('topTitle').textContent = '電 碼 本';
-    if (db) { loadCodebook(); } else { showCodebookEmpty(); }
-  } else if (page === 'stampbook') {
-    document.getElementById('pageStampbook').classList.add('active');
-    document.getElementById('topTitle').textContent = '郵 戳 冊';
-    if (db) { loadStampbook(); } else { showStampbookEmpty(); }
+function render(){
+  var list=$('list'),btns=$('btnRow');
+  list.innerHTML='';btns.innerHTML='';
+  if(currentTab==='chat'){
+    $('inputRow').style.display='flex';
+    renderChat(list);
+    $('list').style.bottom='56px';
+  } else {
+    $('inputRow').style.display='none';
+    if(currentTab==='code') renderCode(list);
+    else if(currentTab==='stamp') renderStamp(list);
+    renderBtns(btns);
+    $('list').style.bottom='104px';
   }
 }
 
-function showCodebookEmpty() {
-  document.getElementById('codebookEmpty').style.display = 'block';
-  document.getElementById('codebookList').innerHTML = '';
-}
-function showStampbookEmpty() {
-  document.getElementById('stampbookEmpty').style.display = 'block';
-  document.getElementById('stampbookList').innerHTML = '';
-}
-
-// ===== 初始化 =====
-function initLoad() {
-  loadMessages();
-  loadCodebook();
-  loadStampbook();
+function renderChat(list){
+  if(!chatMsgs.length){list.innerHTML='<div class="empty">∅ 尚無來電<br>落筆發報，靜候回音</div>';return}
+  chatMsgs.sort(function(a,b){return b.id-a.id}).forEach(function(m){
+    var d=document.createElement('div');d.className='msg';
+    var stampHtml=m.stamp?'<div class="stamp"><img src="'+m.stamp+'"></div>':'';
+    d.innerHTML='<div class="label"><span>† 來電 № '+('000'+m.id).slice(-4)+'</span><span>'+esc(m.sender||'舊夢')+'</span></div><div>'+esc(m.text)+'</div>'+stampHtml+'<div class="time">'+m.time+'</div>';
+    list.appendChild(d)
+  })
 }
 
-// ===== 消息 =====
-function loadMessages() {
-  if (!db) return;
-  var tx = db.transaction('messages', 'readonly');
-  var store = tx.objectStore('messages');
-  var r = store.getAll();
-  r.onsuccess = function() {
-    messages = r.result.sort(function(a,b) { return a.id - b.id; });
-    renderMessages();
-  };
+function buildCodeItem(c){
+  var d=document.createElement('div');d.className='item';
+  d.innerHTML='<div class="item-head"><span>№ '+('000'+c.id).slice(-4)+'</span><span>'+c.time+'</span></div><div>'+esc(c.text)+'</div><div class="item-actions"><span onclick="editItem(\'code\','+c.id+',\''+esc(c.text)+'\')">修訂</span><span onclick="deleteItem(\'code\','+c.id+')">焚毀</span></div>';
+  return d
+}
+function renderCode(list){
+  if(!codeList.length){list.innerHTML='<div class="empty">∅ 電碼本空空如也</div>';return}
+  codeList.forEach(function(c){list.appendChild(buildCodeItem(c))})
+}
+function renderStamp(list){
+  if(!stampList.length){list.innerHTML='<div class="empty">∅ 郵戳冊尚無收藏</div>';return}
+  stampList.forEach(function(s){
+    var d=document.createElement('div');d.className='item';
+    d.innerHTML='<div class="item-head"><span>№ '+('000'+s.id).slice(-4)+'</span><span>'+s.time+'</span></div><div style="text-align:center;padding:6px 0"><img src="'+s.data+'" style="max-width:80px;max-height:80px;border:1px solid #1a1a1a"></div><div class="item-actions"><span onclick="editItem(\'stamp\','+s.id+',\''+esc(s.note||'')+'\')">修訂</span><span onclick="deleteItem(\'stamp\','+s.id+')">焚毀</span></div>';
+    list.appendChild(d)
+  })
 }
 
-function renderMessages() {
-  var area = document.getElementById('chatArea');
-  var empty = document.getElementById('chatEmpty');
-  area.innerHTML = '';
-  if (messages.length === 0) { area.appendChild(empty); empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  for (var i = 0; i < messages.length; i++) {
-    var m = messages[i];
-    var div = document.createElement('div');
-    div.className = 'telegram';
-    if (m.type === 'sent') {
-      div.innerHTML = '<div class="telegram-header"><span>† 發報 · № ' + String(m.id).padStart(4,'0') + '</span></div><div class="telegram-body">' + escapeHtml(m.text) + '</div>' + (m.stamp ? '<div class="telegram-stamp"><img src="' + m.stamp + '"></div>' : '') + '<div class="telegram-footer">' + m.time + '</div>';
-    } else {
-      var bodyHtml = '';
-      for (var j = 0; j < m.texts.length; j++) {
-        if (j > 0) bodyHtml += '<hr class="telegram-sep">';
-        bodyHtml += escapeHtml(m.texts[j]);
-      }
-      div.innerHTML = '<div class="telegram-header"><span>‡ 來電 · № ' + String(m.id).padStart(4,'0') + '</span></div><div class="telegram-body">' + bodyHtml + '</div>' + (m.stamp ? '<div class="telegram-stamp"><img src="' + m.stamp + '"></div>' : '') + '<div class="telegram-footer">' + m.time + '</div>';
-    }
-    area.appendChild(div);
+function renderBtns(btns){
+  if(currentTab==='code'){
+    btns.innerHTML=
+      '<button onclick="searchCode()">翻查</button>'+
+      '<button onclick="openModal(\'writeModal\')">落筆</button>'+
+      '<button onclick="dedup(\'code\')">剔重</button>'+
+      '<button onclick="openModal(\'importModal\')">謄入</button>'+
+      '<button onclick="exportData(\'code\')">抄出</button>'+
+      '<button onclick="clearAll(\'code\')">焚毀</button>';
   }
-  area.scrollTop = area.scrollHeight;
+  else if(currentTab==='stamp'){
+    btns.innerHTML=
+      '<button onclick="openModal(\'stampModal\')">附郵戳</button>'+
+      '<button onclick="dedup(\'stamp\')">剔重</button>'+
+      '<button onclick="openModal(\'importModal\')">謄入</button>'+
+      '<button onclick="exportData(\'stamp\')">抄出</button>'+
+      '<button onclick="clearAll(\'stamp\')">焚毀</button>'+
+      '<button style="visibility:hidden">占位</button>';
+  }
 }
 
-function sendMsg() {
-  var input = document.getElementById('msgInput');
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = '';
+function sendMsg(){
+  if(!db){showStatus('數據庫未就緒');return}
+  var input=$('inputRowInput');
+  var text=input.value.trim();
+  if(!text){showStatus('無內容');return}
+  input.value='';
+  var now=new Date(),time=fmtTime(now);
+  var tx2=db.transaction('messages','readwrite'),store=tx2.objectStore('messages');
+  store.add({text:text,time:time,date:now.toISOString(),sender:'此端'});
+  tx2.oncomplete=function(){
+    showStatus('已發出，等候回電...');
+    setTimeout(function(){genReply(text)},1500+Math.random()*1000)
+  }
+}
 
-  var now = new Date();
-  var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ' · ' + (now.getMonth()+1) + '.' + now.getDate();
+function genReply(origText){
+  if(!codeList.length){showStatus('電碼本空，無法回電');return}
+  var count=1+Math.floor(Math.random()*3),replies=[];
+  for(var i=0;i<count;i++){replies.push(codeList[Math.floor(Math.random()*codeList.length)].text)}
+  var replyText=replies.join('　　');
+  var stampData=stampList.length?stampList[Math.floor(Math.random()*stampList.length)].data:null;
+  var now=new Date(),time=fmtTime(now);
+  var tx2=db.transaction('messages','readwrite'),store=tx2.objectStore('messages');
+  store.add({text:replyText,time:time,date:now.toISOString(),sender:'舊夢',stamp:stampData});
+  tx2.oncomplete=function(){loadChat()}
+}
 
-  var sent = { type: 'sent', text: text, stamp: myAttachedStamp, time: time, date: now.toISOString() };
+function sealText(){
+  var text=$('writeInput').value.trim();
+  if(!text){showStatus('無內容');return}
+  var lines=text.split('\n').map(function(l){return l.trim()}).filter(function(l){return l});
+  if(!lines.length){showStatus('無有效內容');return}
+  var now=new Date(),time=fmtTime(now);
+  var t=db.transaction('codes','readwrite'),store=t.objectStore('codes');
+  lines.forEach(function(l){store.add({text:l,time:time,date:now.toISOString()})});
+  t.oncomplete=function(){showStatus('封存 '+lines.length+' 條');$('writeInput').value='';closeModal('writeModal');loadCodes()}
+}
 
-  if (!db) { alert('數據庫未就緒'); return; }
-  var tx = db.transaction('messages', 'readwrite');
-  var store = tx.objectStore('messages');
-  store.add(sent);
-  tx.oncomplete = function() {
-    myAttachedStamp = null;
-    document.getElementById('myAttachPreview').classList.add('hidden');
-    document.getElementById('myAttachPreview').innerHTML = '';
-    loadMessages();
-    var delay = 1500 + Math.random() * 1000;
-    setTimeout(function() { generateReply(); }, delay);
+function doImport(){
+  var file=$('importFile').files[0];
+  if(!file){showStatus('未選文件');return}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      var list=Array.isArray(data)?data:data.list||data.codes||data.texts||[];
+      if(!list.length&&typeof data==='string'){list=data.split('\n').map(function(l){return l.trim()}).filter(function(l){return l})}
+      if(!list.length){showStatus('格式錯誤');return}
+      var now=new Date(),time=fmtTime(now),t=db.transaction('codes','readwrite'),store=t.objectStore('codes');
+      list.forEach(function(item){var txt=typeof item==='string'?item:item.text||item.content||'';if(txt)store.add({text:txt,time:time,date:now.toISOString()})});
+      t.oncomplete=function(){showStatus('導入 '+list.length+' 條');closeModal('importModal');loadCodes()}
+    }catch(err){showStatus('解析失敗')}
   };
+  reader.readAsText(file)
 }
 
-function attachMyStamp() {
-  document.getElementById('singleStampInput').click();
+function doStampAdd(){
+  var files=$('stampFile').files;
+  if(!files.length){showStatus('未選圖片');return}
+  var loaded=0,total=files.length;
+  for(var i=0;i<files.length;i++){
+    (function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        var now=new Date(),time=fmtTime(now);
+        var t=db.transaction('stamps','readwrite'),store=t.objectStore('stamps');
+        store.add({data:e.target.result,time:time,date:now.toISOString(),note:file.name});
+        t.oncomplete=function(){loaded++;if(loaded>=total){showStatus('附戳 '+loaded+' 張');closeModal('stampModal');loadStamps()}}
+      };
+      reader.readAsDataURL(file)
+    })(files[i])
+  }
 }
 
-document.getElementById('singleStampInput').addEventListener('change', function(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    myAttachedStamp = ev.target.result;
-    var preview = document.getElementById('myAttachPreview');
-    preview.innerHTML = '<img src="' + myAttachedStamp + '"><span class="remove-attach" onclick="removeMyStamp()">×</span>';
-    preview.classList.remove('hidden');
-  };
-  reader.readAsDataURL(file);
+function editItem(type,id,curVal){
+  editType=type;editId=id;$('editInput').value=curVal||'';
+  openModal('editModal')
+}
+function saveEdit(){
+  var val=$('editInput').value.trim();
+  if(!val){showStatus('無內容');return}
+  var t=db.transaction(editType==='code'?'codes':'stamps','readwrite');
+  var store=t.objectStore(editType==='code'?'codes':'stamps');
+  var getReq=store.get(editId);
+  getReq.onsuccess=function(){
+    var obj=getReq.result;
+    if(editType==='code') obj.text=val;else obj.note=val;
+    store.put(obj);
+    t.oncomplete=function(){showStatus('已修訂');closeModal('editModal');editId=null;loadCodes();loadStamps()}
+  }
+}
+
+function deleteItem(type,id){
+  if(!confirm('確認焚毀？'))return;
+  var t=db.transaction(type==='code'?'codes':'stamps','readwrite');
+  var store=t.objectStore(type==='code'?'codes':'stamps');
+  store.delete(id);
+  t.oncomplete=function(){showStatus('已焚毀');loadCodes();loadStamps()}
+}
+
+function clearAll(type){
+  if(!confirm('確認焚毀整冊？此操作不可復原'))return;
+  var storeName=type==='code'?'codes':'stamps';
+  var t=db.transaction(storeName,'readwrite');
+  t.objectStore(storeName).clear();
+  t.oncomplete=function(){showStatus('已焚毀整冊');loadCodes();loadStamps()}
+}
+
+function dedup(type){
+  var list=type==='code'?codeList:stampList;
+  var seen={},dups=[];
+  list.forEach(function(item){var key=type==='code'?item.text:item.data;if(seen[key])dups.push(item.id);else seen[key]=true});
+  if(!dups.length){showStatus('無重複');return}
+  var t=db.transaction(type==='code'?'codes':'stamps','readwrite');
+  var store=t.objectStore(type==='code'?'codes':'stamps');
+  dups.forEach(function(id){store.delete(id)});
+  t.oncomplete=function(){showStatus('剔重 '+dups.length+' 條');loadCodes();loadStamps()}
+}
+
+function exportData(type){
+  var list=type==='code'?codeList:stampList;
+  if(!list.length){showStatus('無數據');return}
+  if(type==='code'){
+    var text=list.map(function(c){return c.text}).join('\n');
+    var blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='電碼本.txt';a.click()
+  } else {
+    var json=JSON.stringify(list.map(function(s){return{id:s.id,note:s.note,data:s.data}}),null,2);
+    var blob=new Blob([json],{type:'application/json;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='郵戳冊.json';a.click()
+  }
+  showStatus('已抄出')
+}
+
+function searchCode(){
+  var q=prompt('輸入關鍵字：');
+  if(!q)return;
+  var r=codeList.filter(function(c){return c.text.indexOf(q)>-1});
+  if(!r.length){showStatus('無結果');return}
+  var list=$('list');list.innerHTML='';
+  r.forEach(function(c){list.appendChild(buildCodeItem(c))});
+  showStatus('翻得 '+r.length+' 條')
+}
+
+function openModal(id){$(''+id).classList.add('show')}
+function closeModal(id){$(''+id).classList.remove('show')}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&$('inputRowInput')===document.activeElement){sendMsg()}
 });
 
-function removeMyStamp() {
-  myAttachedStamp = null;
-  document.getElementById('myAttachPreview').classList.add('hidden');
-  document.getElementById('myAttachPreview').innerHTML = '';
-}
-
-function generateReply() {
-  if (codebookData.length === 0) {
-    showEmptyReply();
-    return;
-  }
-
-  var count = Math.min(Math.floor(Math.random() * 3) + 1, codebookData.length);
-  var shuffled = codebookData.slice().sort(function() { return Math.random() - 0.5; });
-  var selected = [];
-  for (var i = 0; i < count; i++) { selected.push(shuffled[i].text); }
-
-  var stamp = null;
-  if (stampbookData.length > 0) {
-    var rnd = Math.floor(Math.random() * stampbookData.length);
-    stamp = stampbookData[rnd].data;
-  }
-
-  var now = new Date();
-  var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ' · ' + (now.getMonth()+1) + '.' + now.getDate();
-
-  var reply = { type: 'received', texts: selected, stamp: stamp, time: time, date: now.toISOString() };
-
-  var tx = db.transaction('messages', 'readwrite');
-  var store = tx.objectStore('messages');
-  store.add(reply);
-  tx.oncomplete = function() { loadMessages(); };
-}
-
-function showEmptyReply() {
-  var now = new Date();
-  var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ' · ' + (now.getMonth()+1) + '.' + now.getDate();
-  var reply = { type: 'received', texts: ['∅ 電碼本尚無一字', '∅ 郵戳冊尚無印記', '去寫下第一封電文吧'], stamp: null, time: time, date: now.toISOString() };
-  var tx = db.transaction('messages', 'readwrite');
-  var store = tx.objectStore('messages');
-  store.add(reply);
-  tx.oncomplete = function() { loadMessages(); };
-}
-
-// ===== 電碼本 =====
-function loadCodebook() {
-  if (!db) return;
-  var tx = db.transaction('codebook', 'readonly');
-  var store = tx.objectStore('codebook');
-  var r = store.getAll();
-  r.onsuccess = function() {
-    codebookData = r.result.sort(function(a,b) { return a.id - b.id; });
-    renderCodebook();
-  };
-}
-
-function renderCodebook() {
-  var list = document.getElementById('codebookList');
-  var empty = document.getElementById('codebookEmpty');
-  list.innerHTML = '';
-
-  if (codebookData.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-
-  for (var i = 0; i < codebookData.length; i++) {
-    var item = codebookData[i];
-    var div = document.createElement('div');
-    div.className = 'list-item';
-    div.innerHTML = '<div class="item-no">№ ' + String(item.id).padStart(4,'0') + '</div><div class="item-preview">' + escapeHtml(item.text) + '</div>';
-    div.onclick = (function(id) { return function() { editItem(id); }; })(item.id);
-    list.appendChild(div);
-  }
-}
-
-function showWrite() {
-  editingId = null;
-  document.getElementById('writeInput').value = '';
-  updateWriteStats();
-  document.getElementById('writeModal').classList.add('active');
-}
-
-function closeWrite() {
-  document.getElementById('writeModal').classList.remove('active');
-  editingId = null;
-}
-
-function updateWriteStats() {
-  var text = document.getElementById('writeInput').value;
-  var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
-  document.getElementById('writeStats').textContent = '共 ' + lines.length + ' 句';
-}
-
-document.getElementById('writeInput').addEventListener('input', updateWriteStats);
-
-function saveWrite() {
-  var text = document.getElementById('writeInput').value;
-  var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
-  if (lines.length === 0) { closeWrite(); return; }
-
-  if (!db) { alert('數據庫未就緒'); return; }
-  var tx = db.transaction('codebook', 'readwrite');
-  var store = tx.objectStore('codebook');
-  for (var i = 0; i < lines.length; i++) {
-    store.add({ text: lines[i], date: new Date().toISOString() });
-  }
-  tx.oncomplete = function() {
-    closeWrite();
-    loadCodebook();
-  };
-}
-
-function editItem(id) {
-  var item = null;
-  for (var i = 0; i < codebookData.length; i++) {
-    if (codebookData[i].id === id) { item = codebookData[i]; break; }
-  }
-  if (!item) return;
-  editingId = id;
-  document.getElementById('writeInput').value = item.text;
-  updateWriteStats();
-  document.getElementById('writeModal').classList.add('active');
-}
-
-// ===== 郵戳冊 =====
-function loadStampbook() {
-  if (!db) return;
-  var tx = db.transaction('stampbook', 'readonly');
-  var store = tx.objectStore('stampbook');
-  var r = store.getAll();
-  r.onsuccess = function() {
-    stampbookData = r.result.sort(function(a,b) { return a.id - b.id; });
-    renderStampbook();
-  };
-}
-
-function renderStampbook() {
-  var list = document.getElementById('stampbookList');
-  var empty = document.getElementById('stampbookEmpty');
-  list.innerHTML = '';
-
-  if (stampbookData.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-
-  for (var i = 0; i < stampbookData.length; i++) {
-    var item = stampbookData[i];
-    var div = document.createElement('div');
-    div.className = 'stamp-item';
-    div.innerHTML = '<img src="' + item.data + '"><div class="stamp-no">№ ' + String(item.id).padStart(4,'0') + '</div>';
-    list.appendChild(div);
-  }
-}
-
-function attachStamp() {
-  document.getElementById('stampInput').click();
-}
-
-document.getElementById('stampInput').addEventListener('change', function(e) {
-  var files = Array.from(e.target.files);
-  if (files.length === 0) return;
-  if (!db) { alert('數據庫未就緒'); return; }
-  var loaded = 0;
-  for (var i = 0; i < files.length; i++) {
-    (function(file) {
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        var tx = db.transaction('stampbook', 'readwrite');
-        var store = tx.objectStore('stampbook');
-        store.add({ data: ev.target.result, date: new Date().toISOString() });
-        tx.oncomplete = function() {
-          loaded++;
-          if (loaded === files.length) { loadStampbook(); }
-        };
-      };
-      reader.readAsDataURL(file);
-    })(files[i]);
-  }
-});
-
-// ===== 翻查 =====
-function showSearch() {
-  document.getElementById('searchModal').classList.add('active');
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchResults').innerHTML = '';
-}
-
-function closeSearch() {
-  document.getElementById('searchModal').classList.remove('active');
-}
-
-function doSearch() {
-  var keyword = document.getElementById('searchInput').value.trim();
-  var results = document.getElementById('searchResults');
-  if (!keyword) { results.innerHTML = ''; return; }
-
-  var matched = [];
-  for (var i = 0; i < codebookData.length; i++) {
-    if (codebookData[i].text.indexOf(keyword) !== -1) { matched.push(codebookData[i]); }
-  }
-
-  if (matched.length === 0) {
-    results.innerHTML = '<div style="text-align:center;color:#6b6258;padding:20px;">∅ 無匹配</div>';
-    return;
-  }
-
-  var html = '';
-  for (var j = 0; j < matched.length; j++) {
-    html += '<div class="list-item" onclick="editItem(' + matched[j].id + ')"><div class="item-no">№ ' + String(matched[j].id).padStart(4,'0') + '</div><div class="item-preview">' + escapeHtml(matched[j].text) + '</div></div>';
-  }
-  results.innerHTML = html;
-}
-
-// ===== 剔重 =====
-function dedup(type) {
-  if (!db) return;
-  var data = (type === 'codebook') ? codebookData : stampbookData;
-  var seen = {};
-  var duplicates = [];
-
-  for (var i = 0; i < data.length; i++) {
-    var key = (type === 'codebook') ? data[i].text : data[i].data;
-    if (seen[key]) {
-      duplicates.push(data[i].id);
-    } else {
-      seen[key] = true;
-    }
-  }
-
-  if (duplicates.length === 0) {
-    alert('∅ 無重複項');
-    return;
-  }
-
-  showConfirm('發現 ' + duplicates.length + ' 項重複，確認焚毀？', function() {
-    var storeName = (type === 'codebook') ? 'codebook' : 'stampbook';
-    var tx = db.transaction(storeName, 'readwrite');
-    var store = tx.objectStore(storeName);
-    for (var j = 0; j < duplicates.length; j++) { store.delete(duplicates[j]); }
-    tx.oncomplete = function() {
-      if (type === 'codebook') loadCodebook();
-      else loadStampbook();
-    };
-  });
-}
-
-// ===== 謄入 =====
-function importFile(type) {
-  if (!db) { alert('數據庫未就緒'); return; }
-  if (type === 'codebook') {
-    document.getElementById('fileInput').onchange = function(e) {
-      var file = e.target.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        var texts = [];
-        if (file.name.endsWith('.json')) {
-          try { texts = JSON.parse(ev.target.result); } catch(err) { alert('JSON格式錯誤'); return; }
-        } else {
-          texts = ev.target.result.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
-        }
-        var tx = db.transaction('codebook', 'readwrite');
-        var store = tx.objectStore('codebook');
-        for (var i = 0; i < texts.length; i++) { store.add({ text: texts[i], date: new Date().toISOString() }); }
-        tx.oncomplete = function() { loadCodebook(); alert('謄入成功，共 ' + texts.length + ' 條'); };
-      };
-      reader.readAsText(file);
-    };
-    document.getElementById('fileInput').click();
-  } else {
-    attachStamp();
-  }
-}
-
-// ===== 抄出 =====
-function exportFile(type) {
-  if (type === 'codebook') {
-    var texts = [];
-    for (var i = 0; i < codebookData.length; i++) { texts.push(codebookData[i].text); }
-    var blob = new Blob([JSON.stringify(texts, null, 2)], { type: 'application/json;charset=utf-8' });
-    downloadFile(blob, '電碼本_' + dateStr() + '.json');
-    alert('抄出成功');
-  } else {
-    for (var j = 0; j < stampbookData.length; j++) {
-      var blob2 = dataURItoBlob(stampbookData[j].data);
-      downloadFile(blob2, '郵戳_' + String(j+1).padStart(3,'0') + '.jpg');
-    }
-    alert('抄出成功，共 ' + stampbookData.length + ' 枚');
-  }
-}
-
-function downloadFile(blob, filename) {
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
-}
-
-function dataURItoBlob(dataURI) {
-  var byteString = atob(dataURI.split(',')[1]);
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-  for (var i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-  return new Blob([ab], { type: mimeString });
-}
-
-function dateStr() {
-  var d = new Date();
-  return d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
-}
-
-// ===== 焚毀 =====
-function toggleSelect(type) {
-  selectMode = !selectMode;
-  selectedItems.clear();
-  if (type === 'codebook') renderCodebook();
-  else renderStampbook();
-}
-
-// ===== 確認彈窗 =====
-function showConfirm(text, onConfirm) {
-  document.getElementById('confirmText').textContent = text;
-  document.getElementById('confirmBtn').onclick = function() { closeConfirm(); onConfirm(); };
-  document.getElementById('confirmModal').classList.add('active');
-}
-
-function closeConfirm() {
-  document.getElementById('confirmModal').classList.remove('active');
-}
-
-// ===== 工具 =====
-function escapeHtml(text) {
-  var div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// 初始化頁面
-switchPage('chat');
+if(db){loadAll()}else{var wait=setInterval(function(){if(db){clearInterval(wait);loadAll()}else if(Date.now()-start>5000){clearInterval(wait);showStatus('數據庫連接超時')}},200)}
+var start=Date.now();
 </script>
 </body>
 </html>

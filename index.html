@@ -2287,6 +2287,7 @@ function bindEvents(){
     });
   };
 
+  // --- 聊天交互 ---
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent'); if(!stickers.length) { toast('郵電所中尚無印花'); return; }
@@ -2308,9 +2309,11 @@ function bindEvents(){
     $('#stickerPanelMask').classList.add('show');
   };
   
+  // ⚡ 闪电面板
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
   $('#flashPanelMask').onclick = (e) => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
   
+  // 面板选项
   $('#flashAction').onclick = async () => {
     $('#flashPanelMask').classList.remove('show');
     const allActions = await reqToPromise(tx('actions').getAll());
@@ -2380,12 +2383,14 @@ function bindEvents(){
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
+  // 占位提示
   const soon = ['攝錄','舊簿','投問','相伴'];
   soon.forEach(t => {
     const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':'Accompany'));
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
 
+  // --- 音乐播放器操作 ---
   $('#btnPlayPause').onclick = () => {
     if (audioPlayer.paused) {
       audioPlayer.play();
@@ -2413,6 +2418,7 @@ function bindEvents(){
     }
   };
 
+  // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
     $('#inputRoomName').value = ''; $('#inputTheirName').value = ''; $('#inputTheirNick').value = ''; $('#inputTheirSign').value = '';
@@ -2424,9 +2430,16 @@ function bindEvents(){
     $('#pageCreate').classList.add('show');
   };
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
-  $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; }); };
-  $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
-  $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage = `url(${b})`; $('#musicCoverUpload').textContent=''; }); };
+  
+  if($('#theirFile')) {
+    $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; }); };
+  }
+  if($('#myFile')) {
+    $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
+  }
+  if($('#musicCoverFile')) {
+    $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage = `url(${b})`; $('#musicCoverUpload').textContent=''; }); };
+  }
 
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim(); const theirName = $('#inputTheirName').value.trim();
@@ -2438,6 +2451,7 @@ function bindEvents(){
     toast('已建立新對話'); await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
+  // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
   $('#msgInput').addEventListener('input', function() {
     this.style.height = '44px';
@@ -2446,6 +2460,7 @@ function bindEvents(){
   });
   $('#sendBtn').onclick = sendMyMessage;
   
+  // --- 全局菜单 ---
   const mask = $('#menuMask');
   function openMenu(){ mask.classList.add('show'); }
   function closeMenu(){ mask.classList.remove('show'); }
@@ -2462,17 +2477,22 @@ function bindEvents(){
     else if(act === 'messages') toast('簡訊：功能籌備中...');
   };
 
+  // --- 佈景页面 ---
   $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
   document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
-  $('#mainBgFile').onchange = e => {
-    if(e.target.files[0]) {
-      fileToBase64(e.target.files[0], b => {
-        globalBgImage = b; localStorage.setItem('nz_main_bg', b);
-        applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage = `url(${b})`; $('#mainBgText').textContent = '';
-      });
-    }
-  };
+  
+  if($('#mainBgFile')) {
+    $('#mainBgFile').onchange = e => {
+      if(e.target.files[0]) {
+        fileToBase64(e.target.files[0], b => {
+          globalBgImage = b; localStorage.setItem('nz_main_bg', b);
+          applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage = `url(${b})`; $('#mainBgText').textContent = '';
+        });
+      }
+    };
+  }
 
+  // 遮罩点空白取消
   const allMasks = ['#dialogMask', '#progressDialogMask', '#menuMask', '#actionSheetMask', '#stickerPanelMask', '#flashPanelMask'];
   allMasks.forEach(id => {
     const el = document.querySelector(id);

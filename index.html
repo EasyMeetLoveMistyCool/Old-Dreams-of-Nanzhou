@@ -1,728 +1,1014 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>南洲旧梦</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>南洲舊夢</title>
 <style>
-  :root{
-    --paper:#efe7d6; --paper-2:#f7f1e3;
-    --ink:#3a3428; --ink-soft:#6b6150; --line:#c9bda3;
-    --seal:#a23b2a; --shadow:rgba(58,52,40,.18);
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  
-  html,body{
-    height:100%; margin:0; overflow:hidden; 
-    background:var(--paper); color:var(--ink);
-    font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
-    background-image:linear-gradient(180deg,#f2ebdc,#e9dfcc);
-  }
-  #app{max-width:640px;margin:0 auto;height:100%;display:flex;flex-direction:column;}
-  
-  header{
-    flex-shrink:0; padding:14px 16px 10px; border-bottom:1px dashed var(--line);
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--paper);
-    position:relative; z-index:5;
-  }
-  .title{font-size:16px;letter-spacing:2px;font-weight:700;}
-  .title small{display:block;font-size:10px;color:var(--ink-soft);letter-spacing:1px;font-weight:400;}
-  .drawers{margin-left:auto;display:flex;gap:8px;}
-  .drawer-btn{border:1px solid var(--line);background:var(--paper-2);color:var(--ink);padding:7px 10px;border-radius:4px;font-family:inherit;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;}
-  .drawer-btn b{font-size:11px;font-weight:700;}
-  .drawer-btn span{font-size:10px;color:var(--ink-soft);}
-  
-  .log{
-    flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
-    padding:16px 14px; display:flex; flex-direction:column; gap:18px;
-  }
-  .empty{color:var(--ink-soft);font-size:12px;text-align:center;margin-top:36px;line-height:1.9;}
-  .letter{position:relative;border:1px solid var(--line);padding:12px 12px 10px;background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),var(--paper-2);box-shadow:2px 3px 0 var(--shadow);}
-  .letter.dream{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),#efe4cf;border-color:#b9ab8e;}
-  .letter .meta{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;}
-  .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;min-height:28px;}
-  .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
-  .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
-  .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
-  .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
-  
-  .sendbar{
-    flex-shrink:0; border-top:1px dashed var(--line); padding:10px 14px 16px;
-    background:linear-gradient(180deg,transparent,#e6dcc8); position:relative; z-index:5;
-  }
-  .sendbar .hint{font-size:10px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;}
-  .sticker-pick{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;min-height:34px;align-items:center;}
-  .sticker-pick .st{width:30px;height:30px;border:1px solid var(--line);border-radius:3px;overflow:hidden;flex-shrink:0;cursor:pointer;background:#fbf7ec;display:flex;align-items:center;justify-content:center;}
-  .sticker-pick .st img{width:100%;height:100%;object-fit:cover;}
-  .sticker-pick .st.sel{border-color:var(--seal);box-shadow:0 0 0 1px var(--seal) inset;}
-  .sticker-pick .none{font-size:11px;color:var(--ink-soft);}
-  .input-row{display:flex;gap:8px;margin-top:6px;}
-  .input-row input{flex:1;padding:10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:14px;border-radius:3px;}
-  .sendbtn{padding:10px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;white-space:nowrap;}
-  .sendbtn:disabled{background:transparent;color:var(--ink-soft);border-color:var(--line);cursor:default;}
-  
-  .overlay{position:fixed;inset:0;background:rgba(58,52,40,.35);display:none;align-items:flex-end;z-index:20;}
-  .overlay.open{display:flex;}
-  .panel{width:100%;max-width:640px;margin:0 auto;height:85vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
-  @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
-  .panel-head{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
-  .panel-head b{font-size:13px;letter-spacing:2px;}
-  .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
-  .panel-body{padding:12px 14px 20px;overflow-y:auto;flex:1;}
-  .panel-footer {
-    flex-shrink: 0; padding: 10px 14px; background: var(--paper-2);
-    border-top: 1px dashed var(--line); padding-bottom: max(10px, env(safe-area-inset-bottom));
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .code-list{display:flex;flex-direction:column;gap:8px;}
-  .code-row{position:relative;}
-  .long-card{
-    width:100%;border:1px solid var(--line);background:#fbf7ec;border-radius:4px;
-    padding:8px 34px 8px 12px;text-align:left;cursor:pointer;font-family:inherit;
-    color:var(--ink);line-height:1.35;min-height:38px;display:flex;align-items:center;
-  }
-  .long-card .txt{font-size:14px;white-space:pre-wrap;word-break:break-all;flex:1;text-align:center;}
-  .long-card:active{background:#f1ead9;}
-  .code-row .del{
-    position:absolute;right:4px;top:50%;transform:translateY(-50%);
-    width:20px;height:20px;border-radius:50%;background:var(--seal);color:#fff;
-    border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer;z-index:3;
-  }
-  .back-bar{margin-top:6px;border:1px dashed var(--line);background:#f4eedf;border-radius:4px;padding:6px 8px;display:none;}
-  .back-bar.open{display:block;}
-  .back-bar textarea{width:100%;min-height:44px;border:none;background:transparent;resize:vertical;font-family:inherit;font-size:12px;color:var(--ink-soft);outline:none;}
+body {
+  font-family: "Courier New", "Noto Serif TC", monospace;
+  background: #1a120b;
+  color: #ede8d5;
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+}
 
-  .stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
-  .sticker{width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;}
-  .sticker img{width:100%;height:100%;object-fit:cover;display:block;}
-  .sticker .del{position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:var(--seal);color:#fff;border:none;font-size:11px;line-height:18px;text-align:center;cursor:pointer;z-index:3;}
+/* ===== 頂部 ===== */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: #1a120b;
+  border-bottom: 1px solid #c9a84c;
+}
 
-  .empty-note{font-size:12px;color:var(--ink-soft);line-height:2;text-align:center;padding:18px 0;}
-  .form{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
-  .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
-  .form input[type=text],.form textarea{padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:13px;border-radius:3px;}
-  .form textarea{min-height:60px;resize:vertical;}
-  .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
-  
-  .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-  .io-btn-wrap { position: relative; overflow: hidden; }
-  .io-btn{
-    width:100%; padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
-    font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .io-btn:active{background:#f1ead9;}
-  /* 完美隐藏原生文件框，覆盖在按钮上 */
-  .io-btn-wrap input[type=file] {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size:0;
-  }
+.top-title {
+  text-align: center;
+  padding: 12px 0 8px;
+  font-size: 18px;
+  letter-spacing: 8px;
+  color: #c9a84c;
+}
 
-  .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
-  .toast.show{opacity:1;}
+.top-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px 8px;
+  font-size: 11px;
+  color: #6b6258;
+}
+
+.top-info .center-line {
+  flex: 1;
+  text-align: center;
+  color: #c9a84c;
+  opacity: 0.5;
+}
+
+.top-links {
+  display: flex;
+  gap: 12px;
+}
+
+.top-links span {
+  color: #c9a84c;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.top-links span:active { opacity: 0.6; }
+
+/* ===== 滾動區域 ===== */
+.scroll-area {
+  position: fixed;
+  top: 78px;
+  bottom: 56px;
+  left: 0; right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 4%;
+}
+
+/* ===== 底部輸入區 ===== */
+.input-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  background: #1a120b;
+  border-top: 1px solid #c9a84c;
+  padding: 10px 4%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #c9a84c;
+  color: #ede8d5;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px 0;
+  outline: none;
+}
+
+.input-bar input::placeholder { color: #6b6258; }
+
+.input-bar .send-btn {
+  color: #c9a84c;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+.input-bar .send-btn:active { opacity: 0.6; }
+
+/* ===== 電報單 ===== */
+.telegram {
+  background: #ede8d5;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.telegram-header {
+  border-bottom: 1px solid #1a1a1a;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+.telegram-body {
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.telegram-sep {
+  border: none;
+  border-top: 1px solid #1a1a1a;
+  margin: 6px 0;
+}
+
+.telegram-stamp {
+  margin: 8px 0 4px;
+  text-align: center;
+}
+
+.telegram-stamp img {
+  max-width: 100%;
+  max-height: 200px;
+  border: 1px solid #1a1a1a;
+  display: block;
+  margin: 0 auto;
+}
+
+.telegram-footer {
+  border-top: 1px solid #1a1a1a;
+  padding: 4px 10px;
+  text-align: right;
+  font-size: 11px;
+  color: #6b6258;
+}
+
+/* ===== 頁面切換 ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== 電碼本 / 郵戳冊 列表 ===== */
+.list-item {
+  background: #ede8d5;
+  color: #1a1a1a;
+  border: 1px solid #1a1a1a;
+  margin-bottom: 8px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.list-item:active { opacity: 0.7; }
+
+.list-item .item-no {
+  font-size: 11px;
+  color: #6b6258;
+  margin-bottom: 4px;
+}
+
+.list-item .item-preview {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 郵戳項 */
+.stamp-item {
+  display: inline-block;
+  width: calc(33.33% - 6px);
+  margin: 3px;
+  text-align: center;
+}
+
+.stamp-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid #1a1a1a;
+}
+
+.stamp-item .stamp-no {
+  font-size: 10px;
+  color: #6b6258;
+  margin-top: 2px;
+}
+
+/* ===== 底部按鈕區 ===== */
+.btn-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  background: #1a120b;
+  border-top: 1px solid #c9a84c;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.btn-bar button {
+  flex: 1;
+  background: none;
+  border: none;
+  border-right: 1px solid rgba(201,168,76,0.3);
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  color: #c9a84c;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 10px 4px;
+  cursor: pointer;
+}
+
+.btn-bar button:nth-child(3n) { border-right: none; }
+.btn-bar button:active { background: rgba(201,168,76,0.15); }
+
+/* ===== 彈窗 ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: #ede8d5;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  width: 92%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.modal h3 {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 8px;
+}
+
+.modal textarea {
+  width: 100%;
+  min-height: 200px;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.8;
+  padding: 8px;
+  outline: none;
+  resize: vertical;
+}
+
+.modal .modal-stats {
+  text-align: center;
+  font-size: 12px;
+  color: #6b6258;
+  margin: 8px 0;
+}
+
+.modal .modal-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.modal .modal-btns button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #1a1a1a;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal .modal-btns .confirm-btn {
+  background: #1a1a1a;
+  color: #ede8d5;
+}
+
+/* 確認彈窗 */
+.confirm-modal {
+  background: #ede8d5;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  width: 80%;
+  padding: 20px;
+  text-align: center;
+}
+
+.confirm-modal p { margin-bottom: 16px; font-size: 14px; }
+
+.confirm-modal .confirm-btns {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-modal .confirm-btns button {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #1a1a1a;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.confirm-modal .confirm-btns .danger { background: #1a1a1a; color: #ede8d5; }
+
+/* 空狀態 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b6258;
+  font-size: 14px;
+  line-height: 2;
+}
+
+/* 選擇模式 */
+.select-checkbox {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 1px solid #1a1a1a;
+  margin-right: 8px;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+}
+
+.select-checkbox.checked::after { content: "✓"; }
+
+/* 隱藏 */
+.hidden { display: none !important; }
+
+/* 附郵戳預覽 */
+.attach-preview {
+  margin-top: 6px;
+  text-align: right;
+}
+
+.attach-preview img {
+  max-width: 60px;
+  max-height: 60px;
+  border: 1px solid #c9a84c;
+}
+
+.attach-preview .remove-attach {
+  color: #c9a84c;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 6px;
+}
 </style>
 </head>
 <body>
 
-<div id="app">
-  <header>
-    <div class="title">南洲旧梦<small>字卡传讯 · 电码与邮戳</small></div>
-    <div class="drawers">
-      <button class="drawer-btn" id="openCode"><b>电码本</b><span id="cntCode">0 码</span></button>
-      <button class="drawer-btn" id="openStamp"><b>邮戳册</b><span id="cntStamp">0 枚</span></button>
-    </div>
-  </header>
-
-  <div class="log" id="log">
-    <div class="empty" id="logEmpty">尚无传讯。<br>先到「电码本」录几码，再向梦角发报。</div>
+<!-- ===== 頂部 ===== -->
+<div class="top-bar">
+  <div class="top-title" id="topTitle">南 洲 舊 夢</div>
+  <div class="top-info">
+    <span>發 · 此端</span>
+    <span class="center-line">───────</span>
+    <span>收 · 舊夢</span>
   </div>
+  <div class="top-links" id="topLinks">
+    <span onclick="switchPage('codebook')">電碼本</span>
+    <span onclick="switchPage('stampbook')">郵戳冊</span>
+  </div>
+</div>
 
-  <div class="sendbar">
-    <div class="hint"><span>发报</span><span id="stickerInfo">未盖邮戳</span></div>
-    <div class="sticker-pick" id="stickerPick"></div>
-    <div class="input-row">
-      <input id="msgInput" type="text" placeholder="写下要传的讯…" maxlength="120" />
-      <button class="sendbtn" id="sendBtn">发报</button>
+<!-- ===== 消息流頁面 ===== -->
+<div class="page active" id="pageChat">
+  <div class="scroll-area" id="chatArea">
+    <div class="empty-state" id="chatEmpty">
+      ∅ 尚無消息<br>落筆發出第一封電報
     </div>
   </div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="panel">
-    <div class="panel-head">
-      <b id="panelTitle">梦角的电码本</b>
-      <button class="close" id="closePanel">×</button>
+<!-- ===== 電碼本頁面 ===== -->
+<div class="page" id="pageCodebook">
+  <div class="scroll-area" id="codebookArea">
+    <div class="empty-state" id="codebookEmpty" style="display:none;">
+      ∅ 電碼本尚無一字<br>落筆寫下第一封電文吧
     </div>
-    <div class="panel-body" id="panelBody"></div>
-    <div class="panel-footer" id="panelFooter"></div>
+    <div id="codebookList"></div>
+  </div>
+  <div class="btn-bar" id="codebookBtns">
+    <button onclick="showSearch()">翻查</button>
+    <button onclick="showWrite()">落筆</button>
+    <button onclick="dedup('codebook')">剔重</button>
+    <button onclick="importFile('codebook')">謄入</button>
+    <button onclick="exportFile('codebook')">抄出</button>
+    <button onclick="toggleSelect('codebook')">焚毀</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ===== 郵戳冊頁面 ===== -->
+<div class="page" id="pageStampbook">
+  <div class="scroll-area" id="stampbookArea">
+    <div class="empty-state" id="stampbookEmpty" style="display:none;">
+      ∅ 郵戳冊尚無印記<br>去附上第一枚郵戳吧
+    </div>
+    <div id="stampbookList" style="display:flex;flex-wrap:wrap;"></div>
+  </div>
+  <div class="btn-bar" id="stampbookBtns">
+    <button onclick="attachStamp()">附郵戳</button>
+    <button onclick="dedup('stamp')">剔重</button>
+    <button onclick="importFile('stamp')">謄入</button>
+    <button onclick="exportFile('stamp')">抄出</button>
+    <button onclick="toggleSelect('stamp')">焚毀</button>
+    <button disabled style="opacity:0.3">────</button>
+  </div>
+</div>
+
+<!-- ===== 底部輸入區（消息頁用） ===== -->
+<div class="input-bar" id="inputBar">
+  <input type="text" id="msgInput" placeholder="落筆..." onkeydown="if(event.key==='Enter')sendMsg()">
+  <button class="send-btn" onclick="attachMyStamp()">附郵戳 ▸</button>
+  <button class="send-btn" onclick="sendMsg()">發報 ▸</button>
+  <div id="myAttachPreview" class="attach-preview hidden"></div>
+</div>
+
+<!-- ===== 落筆彈窗 ===== -->
+<div class="modal-overlay" id="writeModal">
+  <div class="modal">
+    <h3>落 筆</h3>
+    <div style="font-size:11px;color:#6b6258;text-align:center;margin-bottom:8px;">一句一行，換行即分隔</div>
+    <textarea id="writeInput" placeholder="星星很多的時候我總想起你
+記得去年也是這樣的夜
+別貪涼"></textarea>
+    <div class="modal-stats" id="writeStats">共 0 句</div>
+    <div class="modal-btns">
+      <button onclick="closeWrite()">取消</button>
+      <button class="confirm-btn" onclick="saveWrite()">封存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 翻查彈窗 ===== -->
+<div class="modal-overlay" id="searchModal">
+  <div class="modal">
+    <h3>翻 查</h3>
+    <input type="text" id="searchInput" placeholder="輸入關鍵詞..." style="width:100%;padding:8px;border:1px solid #1a1a1a;background:transparent;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;" oninput="doSearch()">
+    <div id="searchResults" style="margin-top:12px;"></div>
+    <div class="modal-btns">
+      <button onclick="closeSearch()">返回</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 確認彈窗 ===== -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-modal">
+    <p id="confirmText">確認？</p>
+    <div class="confirm-btns">
+      <button onclick="closeConfirm()">取消</button>
+      <button class="danger" id="confirmBtn">確認</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 文件輸入（隱藏） ===== -->
+<input type="file" id="fileInput" class="hidden" onchange="handleFile(event)">
+<input type="file" id="stampInput" class="hidden" accept="image/*" multiple onchange="handleStamps(event)">
+<input type="file" id="singleStampInput" class="hidden" accept="image/*" onchange="handleSingleStamp(event)">
 
 <script>
-window.onerror = function(msg){ toast('运行错误：' + msg); };
+// ===== IndexedDB =====
+const DB_NAME = '南洲舊夢';
+const DB_VERSION = 1;
+let db;
 
-/* ========== IndexedDB ========== */
-let _db = null;
-function db(){
-  if(_db) return Promise.resolve(_db);
-  return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat_v7', 1); // 升到 v7，清空一切脏数据
-    req.onupgradeneeded = e=>{
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
-      if(!d.objectStoreNames.contains('stamps')) d.createObjectStore('stamps',{keyPath:'id',autoIncrement:true});
-      if(!d.objectStoreNames.contains('images')) d.createObjectStore('images',{keyPath:'id',autoIncrement:true});
-      if(!d.objectStoreNames.contains('messages')) d.createObjectStore('messages',{keyPath:'id',autoIncrement:true});
-    };
-    req.onsuccess = e=>{ _db = e.target.result; res(_db); };
-    req.onerror = ()=> rej(req.error);
-  });
-}
-function withStore(store, mode, fn){
-  return db().then(d=> new Promise((res, rej)=>{
-    let t;
-    try{ t = d.transaction(store, mode); }catch(e){ rej(e); return; }
-    const s = t.objectStore(store);
-    let out;
-    try{ out = fn(s); }catch(e){ rej(e); return; }
-    t.oncomplete = ()=> res(out && out.result !== undefined ? out.result : out);
-    t.onerror = ()=> rej(t.error);
-    t.onabort = ()=> rej(t.error);
-  }));
-}
-const addCode = c => withStore('codes','readwrite', s=> s.add(c));
-const allCodes = () => withStore('codes','readonly', s=> s.getAll());
-const putCode = c => withStore('codes','readwrite', s=> s.put(c));
-const delCode = id => withStore('codes','readwrite', s=> s.delete(id));
-const clearCodes = () => withStore('codes','readwrite', s=> s.clear());
-
-const addStamp = st => withStore('stamps','readwrite', s=> s.add(st));
-const allStamps = () => withStore('stamps','readonly', s=> s.getAll());
-const delStampRow = id => withStore('stamps','readwrite', s=> s.delete(id));
-const clearStamps = () => withStore('stamps','readwrite', s=> s.clear());
-
-const saveImage = blob => withStore('images','readwrite', s=> s.add({blob}));
-const getImage = id => withStore('images','readonly', s=> s.get(id));
-const clearImages = () => withStore('images','readwrite', s=> s.clear());
-
-const addMessage = m => withStore('messages','readwrite', s=> s.add(m));
-const allMessages = () => withStore('messages','readonly', s=> s.getAll()).then(a=>a.sort((x,y)=>x.createdAt-y.createdAt));
-
-/* ========== 图片压缩 ========== */
-function compressImage(file, maxSide=800, quality=.8){
-  return new Promise((res, rej)=>{
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = ()=>{
-      URL.revokeObjectURL(url);
-      let {width:w, height:h} = img;
-      const scale = Math.min(1, maxSide/Math.max(w,h));
-      w = Math.round(w*scale); h = Math.round(h*scale);
-      const cv = document.createElement('canvas');
-      cv.width = w; cv.height = h;
-      cv.getContext('2d').drawImage(img,0,0,w,h);
-      cv.toBlob(b=> b?res(b):rej(new Error('compress fail')), 'image/webp', quality);
-    };
-    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('load fail')); };
-    img.src = url;
-  });
-}
-
-/* ========== 状态 ========== */
-let codes = [], stamps = [], messages = [];
-let urlCache = {};
-let pickedStamp = null;
-let panelKind = 'code';
-let openBackId = null;
-
-const $ = id=>document.getElementById(id);
-const logEl = $('log');
-
-function toast(msg){
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 1500);
-}
-function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function fmtTime(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
-async function ensureUrl(imageId){
-  if(!imageId || urlCache[imageId]) return urlCache[imageId] || null;
-  const rec = await getImage(imageId);
-  if(rec && rec.blob) urlCache[imageId] = URL.createObjectURL(rec.blob);
-  return urlCache[imageId] || null;
-}
-
-/* ========== 渲染 ========== */
-async function renderAll(){
-  codes = await allCodes();
-  stamps = await allStamps();
-  messages = await allMessages();
-  for(const st of stamps){ if(st.imageId) await ensureUrl(st.imageId); }
-  $('cntCode').textContent = codes.length + ' 码';
-  $('cntStamp').textContent = stamps.length + ' 枚';
-  renderLog();
-  renderStickerPick();
-}
-function renderLog(){
-  logEl.querySelectorAll('.letter,.incoming').forEach(n=>n.remove());
-  $('logEmpty').style.display = messages.length ? 'none' : 'block';
-  const codeMap = Object.fromEntries(codes.map(c=>[c.id,c]));
-  const stampMap = Object.fromEntries(stamps.map(s=>[s.id,s]));
-  let no = 0;
-  for(const m of messages){
-    if(m.sender==='me'){
-      no++;
-      const div = document.createElement('div');
-      div.className = 'letter me';
-      const stampHTML = m.stampId && stampMap[m.stampId] && urlCache[stampMap[m.stampId].imageId]
-        ? `<img class="stamp" src="${urlCache[stampMap[m.stampId].imageId]}" alt="">` : '';
-      div.innerHTML = `<div class="meta"><span>发报 NO.${String(no).padStart(3,'0')}</span><span>${fmtTime(m.createdAt)}</span></div>
-        <div class="telegram-text">${esc(m.text||'')}</div>
-        <div class="seal">我</div>
-        ${stampHTML}`;
-      logEl.appendChild(div);
-    }else{
-      const lines = (m.lines||[]).map(lineIds=>{
-        const txt = lineIds.map(id=> codeMap[id] ? codeMap[id].char : '').join('');
-        return `<div class="telegram-line">${esc(txt)}</div>`;
-      }).join('');
-      const stampHTML = m.stampId && stampMap[m.stampId] && urlCache[stampMap[m.stampId].imageId]
-        ? `<img class="stamp" src="${urlCache[stampMap[m.stampId].imageId]}" alt="">` : '';
-      const div = document.createElement('div');
-      div.className = 'letter dream';
-      div.innerHTML = `<div class="meta"><span>回电</span><span>${fmtTime(m.createdAt)}</span></div>
-        ${lines}
-        <div class="seal">梦角</div>
-        ${stampHTML}`;
-      logEl.appendChild(div);
-    }
+const request = indexedDB.open(DB_NAME, DB_VERSION);
+request.onerror = () => alert('數據庫打開失敗');
+request.onsuccess = (e) => { db = e.target.result; initLoad(); };
+request.onupgradeneeded = (e) => {
+  db = e.target.result;
+  if (!db.objectStoreNames.contains('messages')) {
+    db.createObjectStore('messages', { keyPath 'id', autoIncrement: true });
   }
-  logEl.scrollTop = logEl.scrollHeight;
+  if (!db.objectStoreNames.contains('codebook')) {
+    db.createObjectStore('codebook', { keyPath: 'id', autoIncrement: true });
+  }
+  if (!db.objectStoreNames.contains('stampbook')) {
+    db.createObjectStore('stampbook', { keyPath: 'id', autoIncrement: true });
+  }
+};
+
+// ===== 全局狀態 =====
+let currentPage = 'chat';
+let codebookData = [];
+let stampbookData = [];
+let messages = [];
+let myAttachedStamp = null; // 本次發報附的郵戳
+let selectMode = false;
+let selectedItems = new Set();
+let searchMode = false;
+let editingId = null; // 修訂中的電文id
+
+// ===== 頁面切換 =====
+function switchPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('inputBar').style.display = page === 'chat' ? 'flex' : 'none';
+  
+  if (page === 'chat') {
+    document.getElementById('pageChat').classList.add('active');
+    document.getElementById('topTitle').textContent = '南 洲 舊 夢';
+  } else if (page === 'codebook') {
+    document.getElementById('pageCodebook').classList.add('active');
+    document.getElementById('topTitle').textContent = '電 碼 本';
+    loadCodebook();
+  } else if (page === 'stampbook') {
+    document.getElementById('pageStampbook').classList.add('active');
+    document.getElementById('topTitle').textContent = '郵 戳 冊';
+    loadStampbook();
+  }
 }
-function renderStickerPick(){
-  const el = $('stickerPick');
-  if(stamps.length===0){
-    el.innerHTML = `<div class="none">邮戳册空，无法盖戳</div>`;
-    $('stickerInfo').textContent = '未盖邮戳';
+
+// ===== 初始化載入 =====
+function initLoad() {
+  loadMessages();
+  loadCodebook();
+  loadStampbook();
+}
+
+// ===== 消息 =====
+function loadMessages() {
+  const tx = db.transaction('messages', 'readonly');
+  const store = tx.objectStore('messages');
+  const req = store.getAll();
+  req.onsuccess = () => {
+    messages = req.result.sort((a,b) => a.id - b.id);
+    renderMessages();
+  };
+}
+
+function renderMessages() {
+  const area = document.getElementById('chatArea');
+  const empty = document.getElementById('chatEmpty');
+  area.innerHTML = '';
+  if (messages.length === 0) { area.appendChild(empty); empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  messages.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'telegram';
+    if (m.type === 'sent') {
+      div.innerHTML = `
+        <div class="telegram-header"><span>† 發報 · № ${String(m.id).padStart(4,'0')}</span></div>
+        <div class="telegram-body">${escapeHtml(m.text)}</div>
+        ${m.stamp ? `<div class="telegram-stamp"><img src="${m.stamp}"></div>` : ''}
+        <div class="telegram-footer">${m.time}</div>
+      `;
+    } else {
+      div.innerHTML = `
+        <div class="telegram-header"><span>‡ 來電 · № ${String(m.id).padStart(4,'0')}</span></div>
+        <div class="telegram-body">${m.texts.map((t,i) => `${i>0?'<hr class="telegram-sep">':''}${escapeHtml(t)}`).join('')}</div>
+        ${m.stamp ? `<div class="telegram-stamp"><img src="${m.stamp}"></div>` : ''}
+        <div class="telegram-footer">${m.time}</div>
+      `;
+    }
+    area.appendChild(div);
+  });
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendMsg() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} · ${now.getMonth()+1}.${now.getDate()}`;
+  
+  // 存發報
+  const sent = { type: 'sent', text, stamp: myAttachedStamp, time, date: now.toISOString() };
+  addToStore('messages', sent);
+  
+  // 清空附郵戳
+  myAttachedStamp = null;
+  document.getElementById('myAttachPreview').classList.add('hidden');
+  document.getElementById('myAttachPreview').innerHTML = '';
+  
+  // 重新載入
+  loadMessages();
+  
+  // 延遲回覆
+  const delay = 1500 + Math.random() * 1000;
+  setTimeout(() => generateReply(), delay);
+}
+
+function attachMyStamp() {
+  document.getElementById('singleStampInput').click();
+}
+
+function handleSingleStamp(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    myAttachedStamp = ev.target.result;
+    const preview = document.getElementById('myAttachPreview');
+    preview.innerHTML = `<img src="${myAttachedStamp}"><span class="remove-attach" onclick="removeMyStamp()">×</span>`;
+    preview.classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeMyStamp() {
+  myAttachedStamp = null;
+  document.getElementById('myAttachPreview').classList.add('hidden');
+  document.getElementById('myAttachPreview').innerHTML = '';
+}
+
+function generateReply() {
+  // 抽電文
+  if (codebookData.length === 0) {
+    showEmptyReply();
     return;
   }
-  el.innerHTML = stamps.map(s=>{
-    const url = urlCache[s.imageId] || '';
-    return `<div class="st ${pickedStamp===s.id?'sel':''}" data-st="${s.id}"><img src="${url}" alt=""></div>`;
-  }).join('');
-  $('stickerInfo').textContent = pickedStamp ? '已选 1 枚邮戳' : '未盖邮戳';
-}
-
-/* ========== 抽屉 ========== */
-async function openPanel(kind){
-  panelKind = kind;
-  openBackId = null;
-  $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
-  $('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  await renderPanel();
-}
-function closePanel(){ 
-  $('overlay').classList.remove('open'); 
-  document.body.style.overflow = ''; 
-}
-
-async function renderPanel(){
-  const body = $('panelBody');
-  const footer = $('panelFooter');
   
-  if(panelKind==='code'){
-    let listHTML = codes.length===0
-      ? `<div class="empty-note">电码本空空的。<br>在下面录几码进去。</div>`
-      : `<div class="code-list">${codes.map(c=>`
-          <div class="code-row">
-            <button class="long-card" data-code="${c.id}" type="button"><span class="txt">${esc(c.char||'')}</span></button>
-            <button class="del" data-delcode="${c.id}">×</button>
-            <div class="back-bar ${openBackId===c.id?'open':''}" data-backbar="${c.id}">
-              <textarea data-back="${c.id}" placeholder="备注（只自己看，不参与回电）">${esc(c.back||'')}</textarea>
-            </div>
-          </div>`).join('')}</div>`;
-
-    body.innerHTML = `${listHTML}
-      <div class="form" style="margin-top:20px;">
-        <label>录入一条字卡
-          <input type="text" id="fChar" placeholder="一整句，如：今天也想你" maxlength="200" />
-        </label>
-        <button id="addCodeBtn">录电码</button>
-        <label>批量录入（一行一张字卡）
-          <textarea id="fBatch" placeholder="今天也想你&#10;南洲的雨停了&#10;等我回来"></textarea>
-        </label>
-        <button id="batchCodeBtn">批量录入</button>
-      </div>
-    `;
-
-    footer.innerHTML = `
-      <div class="io-row">
-        <button class="io-btn" id="expTxt">导出 TXT</button>
-        <button class="io-btn" id="expJson">导出 JSON</button>
-      </div>
-      <div class="io-row" style="margin-bottom:0;">
-        <div class="io-btn-wrap">
-          <button class="io-btn">导入 TXT</button>
-          <input type="file" id="fileTxt" accept=".txt,text/plain" />
-        </div>
-        <div class="io-btn-wrap">
-          <button class="io-btn">导入 JSON</button>
-          <input type="file" id="fileJson" accept=".json,application/json,text/plain" />
-        </div>
-      </div>
-    `;
-
-    $('addCodeBtn').addEventListener('click', onAddCode);
-    $('batchCodeBtn').addEventListener('click', onBatchCode);
-    $('expTxt').addEventListener('click', exportCodeTxt);
-    $('expJson').addEventListener('click', exportCodeJson);
-    $('fileTxt').addEventListener('change', importCodeTxt);
-    $('fileJson').addEventListener('change', importCodeJson);
-
-    body.querySelectorAll('.long-card[data-code]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = Number(btn.dataset.code);
-        openBackId = openBackId === id ? null : id;
-        renderPanel();
-      });
-    });
-    body.querySelectorAll('[data-back]').forEach(ta=>{
-      ta.addEventListener('change', async ()=>{
-        const id = Number(ta.dataset.back);
-        const cur = codes.find(c=>c.id===id);
-        if(!cur) return;
-        cur.back = ta.value.trim();
-        await putCode(cur);
-        toast('备注已存');
-      });
-    });
-    body.querySelectorAll('[data-delcode]').forEach(btn=>{
-      btn.addEventListener('click', async e=>{
-        e.stopPropagation();
-        const id = Number(btn.dataset.delcode);
-        if(!confirm('从电码本删去此卡？')) return;
-        await delCode(id);
-        if(openBackId===id) openBackId = null;
-        await renderAll(); await renderPanel();
-      });
-    });
-  }else{
-    let gridHTML = stamps.length===0
-      ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
-      : `<div class="stamp-grid">${stamps.map(s=>`
-          <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
-    
-    body.innerHTML = `${gridHTML}
-      <div class="form" style="margin-top:20px;">
-        <label>收邮戳图片（会自动压缩）
-          <div class="io-btn-wrap" style="margin-top:4px;">
-            <button class="io-btn">选择图片</button>
-            <input type="file" id="fStamp" accept="image/*" />
-          </div>
-        </label>
-        <button id="addStampBtn">确认收邮戳</button>
-      </div>
-    `;
-
-    footer.innerHTML = `
-      <div class="io-row" style="margin-bottom:0;">
-        <button class="io-btn" id="expStampJson">导出 JSON</button>
-        <div class="io-btn-wrap">
-          <button class="io-btn">导入 JSON</button>
-          <input type="file" id="fileStampJson" accept=".json,application/json" />
-        </div>
-      </div>
-    `;
-
-    $('addStampBtn').addEventListener('click', onAddStamp);
-    $('expStampJson').addEventListener('click', exportStampJson);
-    $('fileStampJson').addEventListener('change', importStampJson);
-    
-    body.querySelectorAll('[data-delstamp]').forEach(btn=>{
-      btn.addEventListener('click', async e=>{
-        e.stopPropagation();
-        const id = Number(btn.dataset.delstamp);
-        if(!confirm('从邮戳册删去此戳？')) return;
-        await delStamp(id);
-        if(pickedStamp===id) pickedStamp = null;
-        await renderAll(); await renderPanel();
-      });
-    });
+  const count = Math.min(Math.floor(Math.random() * 3) + 1, codebookData.length);
+  const shuffled = [...codebookData].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, count).map(c => c.text);
+  
+  // 抽郵戳
+  let stamp = null;
+  if (stampbookData.length > 0) {
+    const rnd = Math.floor(Math.random() * stampbookData.length);
+    stamp = stampbookData[rnd].data;
   }
+  
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} · ${now.getMonth()+1}.${now.getDate()}`;
+  
+  const reply = { type: 'received', texts: selected, stamp, time, date: now.toISOString() };
+  addToStore('messages', reply);
+  loadMessages();
 }
 
-/* ========== 录码 ========== */
-async function onAddCode(){
-  const ch = $('fChar').value.trim();
-  if(!ch){ toast('写一句再录'); return; }
-  await addCode({ char: ch, back: '', createdAt: Date.now() });
-  $('fChar').value = '';
-  toast('已录入一条字卡');
-  await renderAll(); await renderPanel();
-}
-async function onBatchCode(){
-  const raw = $('fBatch').value;
-  const lines = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  if(!lines.length){ toast('没有可录入的行'); return; }
-  for(const line of lines){
-    await addCode({ char: line, back: '', createdAt: Date.now() });
-  }
-  $('fBatch').value = '';
-  toast(`已录入 ${lines.length} 条字卡`);
-  await renderAll(); await renderPanel();
+function showEmptyReply() {
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} · ${now.getMonth()+1}.${now.getDate()}`;
+  const reply = { type: 'received', texts: ['∅ 電碼本尚無一字', '∅ 郵戳冊尚無印記', '去寫下第一封電文吧'], stamp: null, time, date: now.toISOString() };
+  addToStore('messages', reply);
+  loadMessages();
 }
 
-/* ========== 邮戳 ========== */
-async function onAddStamp(){
-  const file = $('fStamp').files[0];
-  if(!file){ toast('先点击上面的选择图片'); return; }
-  let blob;
-  try{ blob = await compressImage(file); }catch(e){ toast('图片处理失败'); return; }
-  const imageId = await saveImage(blob);
-  await addStamp({ imageId, createdAt: Date.now() });
-  $('fStamp').value = '';
-  toast('已收邮戳');
-  await renderAll(); await renderPanel();
-}
-async function delStamp(id){
-  const st = stamps.find(s=>s.id===id);
-  if(st && st.imageId) await withStore('images','readwrite', s=> s.delete(st.imageId));
-  await delStampRow(id);
+// ===== 電碼本 =====
+function loadCodebook() {
+  const tx = db.transaction('codebook', 'readonly');
+  const store = tx.objectStore('codebook');
+  const req = store.getAll();
+  req.onsuccess = () => {
+    codebookData = req.result.sort((a,b) => a.id - b.id);
+    renderCodebook();
+  };
 }
 
-/* ========== 通用 ========== */
-function download(filename, content, type){
-  const blob = new Blob([content], {type});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-}
-function dateStr(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
-function blobToBase64(blob){
-  return new Promise((res, rej)=>{
-    const r = new FileReader();
-    r.onload = ()=> res(String(r.result).split(',')[1] || '');
-    r.onerror = ()=> rej(r.error);
-    r.readAsDataURL(blob);
+function renderCodebook() {
+  const list = document.getElementById('codebookList');
+  const empty = document.getElementById('codebookEmpty');
+  list.innerHTML = '';
+  
+  if (codebookData.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  
+  codebookData.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      ${selectMode ? `<span class="select-checkbox ${selectedItems.has(item.id)?'checked':''}" onclick="toggleItem(${item.id})"></span>` : ''}
+      <div class="item-no">№ ${String(item.id).padStart(4,'0')}</div>
+      <div class="item-preview">${escapeHtml(item.text)}</div>
+    `;
+    if (!selectMode) {
+      div.onclick = () => editItem(item);
+      div.ontouchstart = () => longPressTimer = setTimeout(() => confirmDelete('codebook', item.id), 600);
+      div.ontouchend = () => clearTimeout(longPressTimer);
+    } else {
+      div.onclick = () => toggleItem(item.id);
+    }
+    list.appendChild(div);
   });
 }
-function base64ToBlob(b64, mime='image/webp'){
-  const bin = atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
-  return new Blob([arr], {type:mime});
+
+function showWrite(id) {
+  editingId = id || null;
+  document.getElementById('writeInput').value = id ? codebookData.find(c=>c.id===id).text : '';
+  updateWriteStats();
+  document.getElementById('writeModal').classList.add('active');
 }
 
-/* ========== 电码本 TXT ========== */
-function exportCodeTxt(){
-  const txt = codes.map(c=>c.char).join('\n');
-  if(!txt){ toast('电码本为空'); return; }
-  download(`南洲旧梦-电码本-${dateStr()}.txt`, txt, 'text/plain;charset=utf-8');
-  toast('已导出 TXT');
+function closeWrite() { document.getElementById('writeModal').classList.remove('active'); editingId = null; }
+
+function updateWriteStats() {
+  const text = document.getElementById('writeInput').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  document.getElementById('writeStats').textContent = `共 ${lines.length} 句`;
 }
-async function importCodeTxt(e){
-  const file = e.target.files[0]; e.target.value = '';
-  if(!file) return;
-  const text = await file.text();
-  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  if(!lines.length){ toast('文件里没有内容'); return; }
-  const existing = new Set(codes.map(c=>c.char));
-  let added = 0;
-  for(const line of lines){
-    if(existing.has(line)) continue;
-    await addCode({ char: line, back: '', createdAt: Date.now() });
-    existing.add(line); added++;
+
+document.getElementById('writeInput').addEventListener('input', updateWriteStats);
+
+function saveWrite() {
+  const text = document.getElementById('writeInput').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  if (lines.length === 0) { closeWrite(); return; }
+  
+  if (editingId) {
+    // 修訂：替換為新內容（一行或多行）
+    const tx = db.transaction('codebook', 'readwrite');
+    const store = tx.objectStore('codebook');
+    const getReq = store.get(editingId);
+    getReq.onsuccess = () => {
+      const old = getReq.result;
+      // 刪除舊的
+      store.delete(editingId);
+      // 寫入新的（每行一條）
+      lines.forEach(line => store.add({ text: line, date: new Date().toISOString() }));
+      tx.oncomplete = () => { closeWrite(); loadCodebook(); };
+    };
+  } else {
+    // 封存：每行一條
+    const tx = db.transaction('codebook', 'readwrite');
+    const store = tx.objectStore('codebook');
+    lines.forEach(line => store.add({ text: line, date: new Date().toISOString() }));
+    tx.oncomplete = () => { closeWrite(); loadCodebook(); };
   }
-  toast(`导入完成，新增 ${added} 条字卡`);
-  await renderAll(); await renderPanel();
 }
 
-/* ========== 电码本 JSON ========== */
-function exportCodeJson(){
-  const data = {
-    type: 'nanchou-codes',
-    version: 7,
-    exportedAt: Date.now(),
-    codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
+function editItem(item) { showWrite(item.id); }
+
+let longPressTimer;
+function confirmDelete(type, id) {
+  showConfirm('確認焚毀此電文？', () => {
+    deleteFromStore(type === 'codebook' ? 'codebook' : 'stampbook', id);
+    if (type === 'codebook') loadCodebook();
+    else loadStampbook();
+  });
+}
+
+// ===== 郵戳冊 =====
+function loadStampbook() {
+  const tx = db.transaction('stampbook', 'readonly');
+  const store = tx.objectStore('stampbook');
+  const req = store.getAll();
+  req.onsuccess = () => {
+    stampbookData = req.result.sort((a,b) => a.id - b.id);
+    renderStampbook();
   };
-  download(`南洲旧梦-电码本-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
-  toast('已导出 JSON');
 }
-async function importCodeJson(e){
-  const file = e.target.files[0]; e.target.value = '';
-  if(!file) return;
-  const rawText = await file.text();
-  if(!rawText.trim()){ toast('文件是空的'); return; }
-  if(!confirm('导入将覆盖现有电码本，继续？')) return;
+
+function renderStampbook() {
+  const list = document.getElementById('stampbookList');
+  const empty = document.getElementById('stampbookEmpty');
+  list.innerHTML = '';
   
-  try{
-    await clearCodes();
-    let addedCount = 0;
-    let extractedTexts = [];
+  if (stampbookData.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  
+  stampbookData.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'stamp-item';
+    div.innerHTML = `
+      ${selectMode ? `<span class="select-checkbox ${selectedItems.has(item.id)?'checked':''}" style="position:absolute;"></span>` : ''}
+      <img src="${item.data}" onclick="${selectMode ? `toggleItem(${item.id})` : `viewStamp(${item.id})`}">
+      <div class="stamp-no">№ ${String(item.id).padStart(4,'0')}</div>
+    `;
+    if (!selectMode) {
+      div.ontouchstart = () => longPressTimer = setTimeout(() => confirmDelete('stamp', item.id), 600);
+      div.ontouchend = () => clearTimeout(longPressTimer);
+    }
+    list.appendChild(div);
+  });
+}
 
-    let parsed = null;
-    try {
-      parsed = JSON.parse(rawText);
-    } catch(err) {}
+function attachStamp() { document.getElementById('stampInput').click(); }
 
-    if (parsed) {
-      let list = null;
-      if (Array.isArray(parsed)) list = parsed;
-      else if (Array.isArray(parsed.codes)) list = parsed.codes;
-      else if (Array.isArray(parsed.data)) list = parsed.data;
-      
-      if (list) {
-        for (const c of list) {
-          let text = '';
-          if (typeof c === 'string') text = c.trim();
-          else if (c && typeof c === 'object') text = String(c.char || c.content || c.text || '').trim();
-          
-          if (text && text !== '[object Object]' && text !== '}' && !text.includes('"id":') && !text.includes('"at":')) {
-            extractedTexts.push(text);
-          }
+function handleStamps(e) {
+  const files = Array.from(e.target.files);
+  if (files.length === 0) return;
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      addToStore('stampbook', { data: ev.target.result, date: new Date().toISOString() });
+      loaded++;
+      if (loaded === files.length) { loadStampbook(); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function viewStamp(id) {
+  const item = stampbookData.find(s=>s.id===id);
+  if (!item) return;
+  showConfirm('替換郵戳？', () => { document.getElementById('singleStampInput').click(); });
+}
+
+// ===== 翻查 =====
+function showSearch() {
+  document.getElementById('searchModal').classList.add('active');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '';
+}
+
+function closeSearch() { document.getElementById('searchModal').classList.remove('active'); }
+
+function doSearch() {
+  const keyword = document.getElementById('searchInput').value.trim();
+  const results = document.getElementById('searchResults');
+  if (!keyword) { results.innerHTML = ''; return; }
+  
+  const matched = codebookData.filter(c => c.text.includes(keyword));
+  results.innerHTML = matched.map(m => `
+    <div class="list-item" onclick="editItem(${JSON.stringify(m).replace(/"/g,'&quot;')})">
+      <div class="item-no">№ ${String(m.id).padStart(4,'0')}</div>
+      <div class="item-preview">${escapeHtml(m.text)}</div>
+    </div>
+  `).join('') || '<div style="text-align:center;color:#6b6258;padding:20px;">∅ 無匹配</div>';
+}
+
+// ===== 剔重 =====
+function dedup(type) {
+  const storeName = type === 'codebook' ? 'codebook' : 'stampbook';
+  const data = type === 'codebook' ? codebookData : stampbookData;
+  
+  // 找重複
+  const seen = new Map();
+  const duplicates = [];
+  data.forEach(item => {
+    const key = type === 'codebook' ? item.text : item.data;
+    if (seen.has(key)) {
+      duplicates.push(item.id);
+    } else {
+      seen.set(key, item.id);
+    }
+  });
+  
+  if (duplicates.length === 0) { showConfirm('∅ 無重複項', () => {}); return; }
+  
+  showConfirm(`發現 ${duplicates.length} 項重複，確認焚毀？`, () => {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    duplicates.forEach(id => store.delete(id));
+    tx.oncomplete = () => {
+      if (type === 'codebook') loadCodebook();
+      else loadStampbook();
+    };
+  });
+}
+
+// ===== 謄入/抄出 =====
+function importFile(type) {
+  if (type === 'codebook') {
+    document.getElementById('fileInput').accept = '.txt,.json';
+    document.getElementById('fileInput').onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        let texts = [];
+        if (file.name.endsWith('.json')) {
+          try { texts = JSON.parse(ev.target.result).map(t => typeof t === 'string' ? t : t.text); }
+          catch { alert('JSON格式錯誤'); return; }
+        } else {
+          texts = ev.target.result.split('\n').map(l=>l.trim()).filter(l=>l);
         }
-      }
-    } 
-    
-    if (extractedTexts.length === 0) {
-      const regex = /"text"\s*:\s*"([^"]+)"/g;
-      let match;
-      while ((match = regex.exec(rawText)) !== null) {
-        if (match[1] && match[1].trim()) extractedTexts.push(match[1].trim());
-      }
-    }
-
-    const existing = new Set(codes.map(c=>c.char));
-    for(const text of extractedTexts){
-      if(existing.has(text)) continue;
-      await addCode({ char: text, back: '', createdAt: Date.now() });
-      existing.add(text);
-      addedCount++;
-    }
-    
-    if (addedCount === 0) toast('未找到可导入的文字');
-    else toast(`电码本已导入，共 ${addedCount} 条`);
-    
-    await renderAll(); await renderPanel();
-  }catch(err){
-    toast('导入过程出错');
+        const tx = db.transaction('codebook', 'readwrite');
+        const store = tx.objectStore('codebook');
+        texts.forEach(t => store.add({ text: t, date: new Date().toISOString() }));
+        tx.oncomplete = () => { loadCodebook(); alert(`謄入成功，共 ${texts.length} 條`); };
+      };
+      reader.readAsText(file);
+    };
+    document.getElementById('fileInput').click();
+  } else {
+    // 郵戳冊批量選圖
+    document.getElementById('stampInput').click();
   }
 }
 
-/* ========== 邮戳册 JSON ========== */
-async function exportStampJson(){
-  if(!stamps.length){ toast('邮戳册为空'); return; }
-  const arr = [];
-  for(const st of stamps){
-    const rec = await getImage(st.imageId);
-    let b64 = '';
-    if(rec && rec.blob) b64 = await blobToBase64(rec.blob);
-    arr.push({ imageBase64: b64, createdAt: st.createdAt });
-  }
-  const data = { type: 'nanchou-stamps', version: 1, exportedAt: Date.now(), stamps: arr };
-  download(`南洲旧梦-邮戳册-${dateStr()}.json`, JSON.stringify(data, null, 2), 'application/json');
-  toast('已导出 JSON');
-}
-async function importStampJson(e){
-  const file = e.target.files[0]; e.target.value = '';
-  if(!file) return;
-  let data;
-  try{ data = JSON.parse(await file.text()); }catch(err){ toast('JSON 解析失败'); return; }
-  if(data.type && data.type !== 'nanchou-stamps'){ toast('不是邮戳册的备份文件'); return; }
-  const list = Array.isArray(data.stamps) ? data.stamps : (Array.isArray(data) ? data : null);
-  if(!list){ toast('文件里没有邮戳数据'); return; }
-  if(!confirm('导入将覆盖现有邮戳册，继续？')) return;
-  
-  try{
-    toast('正在处理图片，请稍候...');
-    await new Promise(r => setTimeout(r, 100)); 
-    
-    await clearStamps(); await clearImages();
-    urlCache = {};
-    let added = 0;
-    for(const st of list){
-      if(!st.imageBase64) continue;
-      let blob;
-      try{ blob = base64ToBlob(st.imageBase64); }catch(err){ continue; }
-      
-      // 修复：把数据正确存入 images 表并获取 imageId
-      const imageId = await saveImage(blob);
-      await addStamp({ imageId, createdAt: st.createdAt || Date.now() });
-      
-      added++;
-      if (added % 5 === 0) await new Promise(r => setTimeout(r, 10));
-    }
-    pickedStamp = null;
-    toast('邮戳册已导入');
-    await renderAll(); await renderPanel();
-  }catch(err){
-    toast('导入失败');
+function exportFile(type) {
+  if (type === 'codebook') {
+    const data = codebookData.map(c => c.text);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    downloadFile(blob, `電碼本_${dateStr()}.json`);
+    alert('抄出成功');
+  } else {
+    // 郵戳冊逐張下載（瀏覽器限制只能逐個或打包）
+    stampbookData.forEach((s, i) => {
+      const blob = dataURItoBlob(s.data);
+      downloadFile(blob, `郵戳_${String(i+1).padStart(3,'0')}.jpg`);
+    });
+    alert(`抄出成功，共 ${stampbookData.length} 枚`);
   }
 }
 
-/* ========== 发报 & 回电 ========== */
-async function send(){
-  const input = $('msgInput');
-  const text = input.value.trim();
-  if(!text){ toast('写下要传的讯'); return; }
-  await addMessage({ sender:'me', text, stampId: pickedStamp, createdAt: Date.now() });
-  input.value = '';
-  pickedStamp = null;
-  renderStickerPick();
-
-  if(codes.length > 0){
-    const inc = document.createElement('div');
-    inc.className = 'incoming';
-    inc.textContent = '滴滴滴…收到回电';
-    logEl.appendChild(inc);
-    logEl.scrollTop = logEl.scrollHeight;
-    await new Promise(r=>setTimeout(r,650));
-
-    const lineCount = 1 + Math.floor(Math.random()*3); // 1~3句
-    const lines = [];
-    for(let i=0;i<lineCount;i++){
-      const n = Math.min(1 + Math.floor(Math.random()*3), codes.length);
-      const pool = [...codes];
-      const line = [];
-      for(let k=0;k<n && pool.length;k++){
-        const idx = Math.floor(Math.random()*pool.length);
-        line.push(pool.splice(idx,1)[0].id);
-      }
-      lines.push(line);
-    }
-    let stampId = null;
-    if(stamps.length && Math.random() < 0.4){
-      stampId = stamps[Math.floor(Math.random()*stamps.length)].id;
-    }
-    await addMessage({ sender:'dream', lines, stampId, createdAt: Date.now() });
-  }else{
-    toast('电码本空，梦角查不到码');
-  }
-  await renderAll();
+function downloadFile(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
-/* ========== 事件 ========== */
-$('openCode').addEventListener('click', ()=>openPanel('code'));
-$('openStamp').addEventListener('click', ()=>openPanel('stamp'));
-$('closePanel').addEventListener('click', closePanel);
-$('overlay').addEventListener('click', e=>{ if(e.target===$('overlay')) closePanel(); });
-$('sendBtn').addEventListener('click', send);
-$('msgInput').addEventListener('keydown', e=>{ if(e.key==='Enter') send(); });
-$('stickerPick').addEventListener('click', e=>{
-  const st = e.target.closest('[data-st]');
-  if(!st) return;
-  const id = Number(st.dataset.st);
-  pickedStamp = pickedStamp === id ? null : id;
-  renderStickerPick();
-});
+function dataURItoBlob(dataURI) {
+  const byteString = atob(dataURI.split(',')[1]);
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+  return new Blob([ab], { type: mimeString });
+}
 
-renderAll().catch(err=>{
-  console.error(err);
-  toast('启动错误：' + ((err && err.message) || err));
-});
+function dateStr() { const d = new Date(); return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`; }
+
+// ===== 焚毀（批量選擇） =====
+function toggleSelect(type) {
+  selectMode = !selectMode;
+  selectedItems.clear();
+  if (type === 'codebook') renderCodebook();
+  else renderStampbook();
+}
+
+function toggleItem(id) {
+  if (selectedItems.has(id)) selectedItems.delete(id);
+  else selectedItems.add(id);
+  if (currentPage === 'codebook') renderCodebook();
+  else renderStampbook();
+}
+
+// ===== 確認彈窗 =====
+function showConfirm(text, onConfirm) {
+  document.getElementById('confirmText').textContent = text;
+  document.getElementById('confirmBtn').onclick = () => { closeConfirm(); onConfirm(); };
+  document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('active'); }
+
+// ===== 工具 =====
+function addToStore(storeName, data) {
+  return new Promise((resolve) => {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    store.add(data);
+    tx.oncomplete = resolve;
+  });
+}
+
+function deleteFromStore(storeName, id) {
+  return new Promise((resolve) => {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    store.delete(id);
+    tx.oncomplete = resolve;
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// 初始化
+switchPage('chat');
 </script>
 </body>
 </html>

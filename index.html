@@ -30,8 +30,6 @@
     --primary: #3390ec;
     --border-light: #f0f2f5;
     --pinned-bg: #fff5f6;
-    --chat-bg: var(--bg-color); /* 聊天背景底色 */
-    --mask-color: rgba(255,255,255, 0.6); /* 默认遮罩色，浅色主题为白 */
   }
   body.theme-blue { --bubble-me: #d6ecff; }
   body.theme-purple { --bubble-me: #e8def8; }
@@ -49,8 +47,6 @@
     --primary: #64b5f6;
     --border-light: #101921;
     --pinned-bg: #2b1f24;
-    --chat-bg: var(--bg-color);
-    --mask-color: rgba(0,0,0, 0.6); /* 深色主题遮罩为黑 */
   }
   body.theme-darkblue {
     --bg-color: #17212b;
@@ -65,8 +61,6 @@
     --primary: #64b5f6;
     --border-light: #121a22;
     --pinned-bg: #2b1f24;
-    --chat-bg: var(--bg-color);
-    --mask-color: rgba(0,0,0, 0.6);
   }
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
@@ -145,21 +139,31 @@
     box-shadow:0 4px 12px rgba(51,144,236,.4); cursor:pointer; z-index:5; border:none;
   }
 
-  /* ========== 聊天页 ========== */
-  .chat-bg-wrap {
-    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative;
-    background-color: var(--bg-color);
+  /* ========== 聊天页 (背景全覆盖) ========== */
+  .page-chat {
     background-size: cover; background-position: center;
   }
-  /* 遮罩层 */
-  .chat-bg-mask {
-    position: absolute; inset: 0; background-color: var(--mask-color); pointer-events: none; z-index: 1;
+  /* 独立遮罩层，绝对定位盖住全屏 */
+  .page-chat .chat-bg-mask {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  }
+  /* 聊天内容的滚动区 */
+  .messages-wrap {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2;
   }
   .messages {
-    position: relative; z-index: 2;
-    padding:10px 14px 6px; display:flex; flex-direction:column; min-height: 100%;
+    padding: 10px 14px 6px; display: flex; flex-direction: column; min-height: 100%;
   }
-  
+  /* 聊天页的顶栏和输入栏设为半透明 */
+  .page-chat .topbar { background: var(--topbar-bg); z-index: 10; opacity: 0.95; }
+  .page-chat .composer { background: var(--topbar-bg); z-index: 10; opacity: 0.95; }
+  /* 深色主题加磨砂 */
+  body.theme-dark .page-chat .topbar, body.theme-darkblue .page-chat .topbar,
+  body.theme-dark .page-chat .composer, body.theme-darkblue .page-chat .composer {
+    background: rgba(23, 33, 43, 0.85);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+
   .date-divider {
     align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px;
     margin:10px 0; font-weight:500;
@@ -196,7 +200,7 @@
 
   /* ========== 输入区 ========== */
   .composer {
-    flex:0 0 auto; background:var(--topbar-bg); border-top:1px solid var(--topbar-border);
+    flex:0 0 auto; border-top:1px solid var(--topbar-border);
     padding:6px 8px; padding-bottom:calc(6px + env(safe-area-inset-bottom));
     display:flex; align-items:center; gap:6px; transition: background .3s; z-index: 10;
   }
@@ -237,7 +241,7 @@
   }
   .btn-primary:active { opacity:0.8; }
 
-  /* 聊天背景设置专属样式 */
+  /* 背景设置模块 */
   .bg-upload-box {
     width:100%; height:120px; border-radius:8px; background:var(--input-bg);
     border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center;
@@ -309,7 +313,29 @@
     <div class="create-scroll">
       <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱"></div>
       
-      <!-- 聊天背景设置 -->
+      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
+
+      <div class="form-group">
+        <div class="form-label">祂的資料</div>
+        <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
+        <input type="file" id="theirFile" accept="image/*" style="display:none">
+        <input type="text" class="form-input" id="inputTheirName" placeholder="名字">
+        <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱">
+        <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名">
+      </div>
+      
+      <div class="form-group">
+        <div class="form-label">我的資料</div>
+        <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
+        <input type="file" id="myFile" accept="image/*" style="display:none">
+        <input type="text" class="form-input" id="inputMyName" placeholder="名字">
+        <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱">
+        <input type="text" class="form-input" id="inputMySign" placeholder="簽名">
+      </div>
+
+      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
+
+      <!-- 背景设置移到了最下面 -->
       <div class="form-group">
         <div class="form-label">聊天背景 (可選)</div>
         <div class="bg-upload-box" id="bgUploadBox" onclick="document.getElementById('bgFile').click()">
@@ -324,31 +350,16 @@
         </div>
       </div>
 
-      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-
-      <div class="form-group">
-        <div class="form-label">祂的資料</div>
-        <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
-        <input type="file" id="theirFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputTheirName" placeholder="名字">
-        <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱">
-        <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名">
-      </div>
-      <div class="form-group">
-        <div class="form-label">我的資料</div>
-        <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
-        <input type="file" id="myFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputMyName" placeholder="名字">
-        <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱">
-        <input type="text" class="form-input" id="inputMySign" placeholder="簽名">
-      </div>
       <button class="btn-primary" id="saveChatBtn">完成</button>
       <div style="height:20px;"></div>
     </div>
   </div>
 
-  <!-- 3. 聊天页 -->
+  <!-- 3. 聊天页 (背景铺满) -->
   <div class="page-chat" id="pageChat">
+    <!-- 全屏遮罩层 -->
+    <div class="chat-bg-mask" id="chatBgMask"></div>
+
     <div class="topbar">
       <button class="icon-btn" id="backBtn">←</button>
       <div class="avatar-sm" id="chatAvatar">祂</div>
@@ -363,9 +374,7 @@
       </button>
     </div>
     
-    <!-- 聊天背景区域 -->
-    <div class="chat-bg-wrap" id="chatBgWrap">
-      <div class="chat-bg-mask" id="chatBgMask"></div>
+    <div class="messages-wrap" id="messagesWrap">
       <div class="messages" id="messages"></div>
     </div>
 
@@ -419,7 +428,7 @@
   </div>
 </div>
 
-<!-- 各种弹窗 ... 保持原样 -->
+<!-- 各种弹窗 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="postoffice">郵電所</div>
@@ -499,6 +508,16 @@ function setTheme(themeName) {
   document.body.className = themeName;
   localStorage.setItem('nz_theme', themeName);
   $('#themeDialogMask').classList.remove('show');
+  // 刷新当前聊天室遮罩颜色（如果开着的话）
+  if (currentChatId) {
+    const c = chats.find(x=>x.id===currentChatId);
+    if(c && c.chatBgImage) {
+      const bgMask = $('#chatBgMask');
+      let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
+      const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-darkblue');
+      bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
+    }
+  }
 }
 initTheme();
 
@@ -546,7 +565,7 @@ let pendingStickerData = null;
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
 let tempBgImage = null;
-let tempBgMask = 60; // 默认遮罩透明度 60%
+let tempBgMask = 60; 
 let isEditingChatId = null;
 let longPressTimer = null;
 let activeChatForMenu = null;
@@ -666,19 +685,19 @@ async function openChat(id){
     avatarEl.innerHTML = (c.theirNick || c.theirName || '祂').charAt(0);
   }
 
-  // 加载聊天背景
-  const bgWrap = $('#chatBgWrap');
+  // 加载背景并铺满整个页面
+  const chatPage = $('#pageChat');
   const bgMask = $('#chatBgMask');
   if(c.chatBgImage) {
-    bgWrap.style.backgroundImage = `url(${c.chatBgImage})`;
-    bgWrap.style.backgroundColor = 'transparent';
-    // 动态设置遮罩透明度
+    chatPage.style.backgroundImage = `url(${c.chatBgImage})`;
+    chatPage.style.backgroundColor = 'transparent';
+    
     let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
     const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-darkblue');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
   } else {
-    bgWrap.style.backgroundImage = 'none';
-    bgWrap.style.backgroundColor = 'var(--bg-color)';
+    chatPage.style.backgroundImage = 'none';
+    chatPage.style.backgroundColor = 'var(--bg-color)';
     bgMask.style.backgroundColor = 'transparent';
   }
   
@@ -1136,7 +1155,6 @@ function bindEvents(){
   };
 }
 
-// 全局挂载删除函数供 onclick 调用
 window.deleteCard = deleteCard;
 
 function handleMenu(act){

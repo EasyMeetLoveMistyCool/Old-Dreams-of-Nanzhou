@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>南洲旧梦</title>
 <style>
   :root{
@@ -11,21 +11,35 @@
     --seal:#a23b2a; --shadow:rgba(58,52,40,.18);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;}
-  body{
-    margin:0; background:var(--paper); color:var(--ink);
+  
+  /* 锁定整个页面，禁止 body 滚动 */
+  html,body{
+    height:100%; margin:0; overflow:hidden; 
+    background:var(--paper); color:var(--ink);
     font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
     background-image:linear-gradient(180deg,#f2ebdc,#e9dfcc);
   }
-  #app{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
-  header{padding:14px 16px 10px;border-bottom:1px dashed var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  /* 弹性布局：头固定，底固定，中间自适应滚动 */
+  #app{max-width:640px;margin:0 auto;height:100%;display:flex;flex-direction:column;}
+  
+  /* 顶栏固定 */
+  header{
+    flex-shrink:0; padding:14px 16px 10px; border-bottom:1px dashed var(--line);
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--paper);
+    position:relative; z-index:5;
+  }
   .title{font-size:16px;letter-spacing:2px;font-weight:700;}
   .title small{display:block;font-size:10px;color:var(--ink-soft);letter-spacing:1px;font-weight:400;}
   .drawers{margin-left:auto;display:flex;gap:8px;}
   .drawer-btn{border:1px solid var(--line);background:var(--paper-2);color:var(--ink);padding:7px 10px;border-radius:4px;font-family:inherit;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;}
   .drawer-btn b{font-size:11px;font-weight:700;}
   .drawer-btn span{font-size:10px;color:var(--ink-soft);}
-  .log{flex:1;padding:16px 14px 8px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;}
+  
+  /* 中间记录区：独立滚动 */
+  .log{
+    flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    padding:16px 14px; display:flex; flex-direction:column; gap:18px;
+  }
   .empty{color:var(--ink-soft);font-size:12px;text-align:center;margin-top:36px;line-height:1.9;}
   .letter{position:relative;border:1px solid var(--line);padding:12px 12px 10px;background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),var(--paper-2);box-shadow:2px 3px 0 var(--shadow);}
   .letter.dream{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),#efe4cf;border-color:#b9ab8e;}
@@ -35,7 +49,12 @@
   .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
   .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
-  .sendbar{border-top:1px dashed var(--line);padding:10px 14px 16px;background:linear-gradient(180deg,transparent,#e6dcc8);}
+  
+  /* 底栏发报区固定 */
+  .sendbar{
+    flex-shrink:0; border-top:1px dashed var(--line); padding:10px 14px 16px;
+    background:linear-gradient(180deg,transparent,#e6dcc8); position:relative; z-index:5;
+  }
   .sendbar .hint{font-size:10px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;}
   .sticker-pick{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;min-height:34px;align-items:center;}
   .sticker-pick .st{width:30px;height:30px;border:1px solid var(--line);border-radius:3px;overflow:hidden;flex-shrink:0;cursor:pointer;background:#fbf7ec;display:flex;align-items:center;justify-content:center;}
@@ -46,22 +65,24 @@
   .input-row input{flex:1;padding:10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:14px;border-radius:3px;}
   .sendbtn{padding:10px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;white-space:nowrap;}
   .sendbtn:disabled{background:transparent;color:var(--ink-soft);border-color:var(--line);cursor:default;}
+  
+  /* 抽屉（弹窗） */
   .overlay{position:fixed;inset:0;background:rgba(58,52,40,.35);display:none;align-items:flex-end;z-index:20;}
   .overlay.open{display:flex;}
-  .panel{width:100%;max-width:640px;margin:0 auto;max-height:84vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
+  .panel{width:100%;max-width:640px;margin:0 auto;max-height:85vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
   @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
-  .panel-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
+  .panel-head{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
   .panel-head b{font-size:13px;letter-spacing:2px;}
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
-  .panel-body{padding:12px 14px 20px;overflow-y:auto;}
+  .panel-body{padding:12px 14px 20px;overflow-y:auto;flex:1;}
 
+  /* 长条字卡列表 */
   .code-list{display:flex;flex-direction:column;gap:8px;}
   .code-row{position:relative;}
   .long-card{
     width:100%;border:1px solid var(--line);background:#fbf7ec;border-radius:4px;
     padding:8px 34px 8px 12px;text-align:left;cursor:pointer;font-family:inherit;
-    color:var(--ink);line-height:1.35;min-height:38px;
-    display:flex;align-items:center;
+    color:var(--ink);line-height:1.35;min-height:38px;display:flex;align-items:center;
   }
   .long-card .txt{font-size:14px;white-space:pre-wrap;word-break:break-all;flex:1;text-align:center;}
   .long-card:active{background:#f1ead9;}
@@ -70,15 +91,9 @@
     width:20px;height:20px;border-radius:50%;background:var(--seal);color:#fff;
     border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer;z-index:3;
   }
-  .back-bar{
-    margin-top:6px;border:1px dashed var(--line);background:#f4eedf;border-radius:4px;padding:6px 8px;
-    display:none;
-  }
+  .back-bar{margin-top:6px;border:1px dashed var(--line);background:#f4eedf;border-radius:4px;padding:6px 8px;display:none;}
   .back-bar.open{display:block;}
-  .back-bar textarea{
-    width:100%;min-height:44px;border:none;background:transparent;resize:vertical;
-    font-family:inherit;font-size:12px;color:var(--ink-soft);outline:none;
-  }
+  .back-bar textarea{width:100%;min-height:44px;border:none;background:transparent;resize:vertical;font-family:inherit;font-size:12px;color:var(--ink-soft);outline:none;}
 
   .stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,66px);gap:10px;}
   .sticker{width:66px;height:66px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf7ec;position:relative;}
@@ -90,10 +105,19 @@
   .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
   .form input[type=text],.form textarea{padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:13px;border-radius:3px;}
   .form textarea{min-height:80px;resize:vertical;}
+  .form input[type=file]{display:none;} /* 隐藏原生文件框 */
   .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
+  
+  /* 导入导出按钮组 */
   .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
-  .io-row button{padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;}
-  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
+  .io-btn{
+    padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
+    font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .io-btn:active{background:#f1ead9;}
+  
+  .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
   .toast.show{opacity:1;}
 </style>
 </head>
@@ -294,9 +318,13 @@ async function openPanel(kind){
   openBackId = null;
   $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
   $('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden'; // 锁死背景
   await renderPanel();
 }
-function closePanel(){ $('overlay').classList.remove('open'); }
+function closePanel(){ 
+  $('overlay').classList.remove('open'); 
+  document.body.style.overflow = ''; // 恢复
+}
 
 async function renderPanel(){
   const body = $('panelBody');
@@ -318,31 +346,32 @@ async function renderPanel(){
           <input type="text" id="fChar" placeholder="一整句，如：今天也想你" maxlength="200" />
         </label>
         <button id="addCodeBtn">录电码</button>
-        <label>批量录入（一行一张字卡，整行保留）
+        <label>批量录入（一行一张字卡）
           <textarea id="fBatch" placeholder="今天也想你&#10;南洲的雨停了&#10;等我回来"></textarea>
         </label>
         <button id="batchCodeBtn">批量录入</button>
       </div>
       <div class="io-row">
-        <button id="expTxt">导出 TXT</button>
-        <button id="expJson">导出 JSON</button>
+        <button class="io-btn" id="expTxt">导出 TXT</button>
+        <button class="io-btn" id="expJson">导出 JSON</button>
       </div>
       <div class="io-row">
-        <div>
-          <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入 TXT：</div>
-          <input type="file" id="fileTxt" accept=".txt,text/plain" style="font-size:12px; width:100%;" />
-        </div>
-        <div>
-          <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入 JSON：</div>
-          <input type="file" id="fileJson" accept=".json,application/json,text/plain" style="font-size:12px; width:100%;" />
-        </div>
+        <!-- 按钮触发隐藏的 input -->
+        <button class="io-btn" id="impTxtBtn">导入 TXT</button>
+        <button class="io-btn" id="impJsonBtn">导入 JSON</button>
       </div>
+      <input type="file" id="fileTxt" accept=".txt,text/plain" />
+      <input type="file" id="fileJson" accept=".json,application/json,text/plain" />
     `;
 
     $('addCodeBtn').addEventListener('click', onAddCode);
     $('batchCodeBtn').addEventListener('click', onBatchCode);
     $('expTxt').addEventListener('click', exportCodeTxt);
     $('expJson').addEventListener('click', exportCodeJson);
+    
+    // 点击按钮去触发文件选择
+    $('impTxtBtn').addEventListener('click', ()=> $('fileTxt').click());
+    $('impJsonBtn').addEventListener('click', ()=> $('fileJson').click());
     $('fileTxt').addEventListener('change', importCodeTxt);
     $('fileJson').addEventListener('change', importCodeJson);
 
@@ -378,26 +407,27 @@ async function renderPanel(){
       ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
       : `<div class="stamp-grid">${stamps.map(s=>`
           <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
-    
-    // 注意这里，我把导入框直接暴露出来了，绝对不会点不动
     body.innerHTML = `${gridHTML}
       <div class="form">
         <label>收邮戳图片（会自动压缩）
+          <button class="io-btn" id="pickStampBtn" style="margin-top:4px;">选择图片</button>
           <input type="file" id="fStamp" accept="image/*" />
         </label>
         <button id="addStampBtn">确认收邮戳</button>
       </div>
-      <div class="io-row" style="grid-template-columns: 1fr;">
-        <button id="expStampJson">导出全部邮戳 JSON</button>
+      <div class="io-row">
+        <button class="io-btn" id="expStampJson">导出 JSON</button>
+        <button class="io-btn" id="impStampBtn">导入 JSON</button>
       </div>
-      <div style="margin-top:10px;">
-        <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入邮戳 JSON：</div>
-        <input type="file" id="fileStampJson" accept=".json,application/json" style="font-size:12px; width:100%;" />
-      </div>
+      <input type="file" id="fileStampJson" accept=".json,application/json" />
     `;
+    
+    $('pickStampBtn').addEventListener('click', ()=> $('fStamp').click());
     $('addStampBtn').addEventListener('click', onAddStamp);
     $('expStampJson').addEventListener('click', exportStampJson);
+    $('impStampBtn').addEventListener('click', ()=> $('fileStampJson').click());
     $('fileStampJson').addEventListener('change', importStampJson);
+    
     body.querySelectorAll('[data-delstamp]').forEach(btn=>{
       btn.addEventListener('click', async e=>{
         e.stopPropagation();
@@ -435,7 +465,7 @@ async function onBatchCode(){
 /* ========== 邮戳 ========== */
 async function onAddStamp(){
   const file = $('fStamp').files[0];
-  if(!file){ toast('选一张邮戳图'); return; }
+  if(!file){ toast('先点击上面的选择图片'); return; }
   let blob;
   try{ blob = await compressImage(file); }catch(e){ toast('图片处理失败'); return; }
   const imageId = await saveImage(blob);
@@ -596,15 +626,24 @@ async function importStampJson(e){
   const list = Array.isArray(data.stamps) ? data.stamps : (Array.isArray(data) ? data : null);
   if(!list){ toast('文件里没有邮戳数据'); return; }
   if(!confirm('导入将覆盖现有邮戳册，继续？')) return;
+  
   try{
+    toast('正在处理图片，请稍候...');
+    // 先让浏览器刷一下界面，避免死锁
+    await new Promise(r => setTimeout(r, 100)); 
+    
     await clearStamps(); await clearImages();
     urlCache = {};
+    let added = 0;
     for(const st of list){
       if(!st.imageBase64) continue;
       let blob;
       try{ blob = base64ToBlob(st.imageBase64); }catch(err){ continue; }
       const imageId = await saveImage(blob);
       await addStamp({ imageId, createdAt: st.createdAt || Date.now() });
+      added++;
+      // 大量图片一张一张存，每次让出主线程，不卡死手机
+      if (added % 5 === 0) await new Promise(r => setTimeout(r, 10));
     }
     pickedStamp = null;
     toast('邮戳册已导入');

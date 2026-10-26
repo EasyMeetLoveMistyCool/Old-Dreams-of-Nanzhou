@@ -16,79 +16,81 @@
     transition: background .3s, color .3s;
   }
 
-  /* ========== 主题变量 (12套) ========== */
+  /* ========== 主题变量 ========== */
   :root {
     --bg-color: #f0f2f5; --topbar-bg: #ffffff; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: #ffffff;
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
-    --input-bg: rgba(255,255,255,0.7); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
+    --input-bg: rgba(0,0,0,0.05); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
     --pinned-bg: #fff5f6;
     --glassy-bg: rgba(255,255,255,0.85);
   }
-  /* 天空藍 (默认) */
   body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; --glassy-bg: rgba(230,235,238,0.85); }
-  /* 森林綠 */
   body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; --glassy-bg: rgba(232,239,233,0.85); }
-  /* 日落橘 */
   body.theme-sunset { --bg-color: #fdf5eb; --bubble-me: #ffe0b2; --primary: #ff9800; --glassy-bg: rgba(253,245,235,0.85); }
-  /* 暮光灰 */
   body.theme-twilight { --bg-color: #e0e0e0; --bubble-me: #cfd8dc; --primary: #607d8b; --glassy-bg: rgba(224,224,224,0.85); }
-  /* 海棠紅 */
   body.theme-crabapple { --bg-color: #fcf2f3; --bubble-me: #ffcdd2; --primary: #e57373; --glassy-bg: rgba(252,242,243,0.85); }
-  /* 煙雨青 */
   body.theme-rain { --bg-color: #eef4f4; --bubble-me: #b2dfdb; --primary: #009688; --glassy-bg: rgba(238,244,244,0.85); }
-  /* 舊報紙 */
   body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; --topbar-bg: #f9f6ee; --glassy-bg: rgba(245,241,230,0.85); }
-  /* 水墨 */
   body.theme-ink { --bg-color: #f4f4f4; --bubble-me: #e0e0e0; --primary: #424242; --glassy-bg: rgba(244,244,244,0.85); }
-
-  /* 深色系列 */
+  
   body.theme-cyber { 
     --bg-color: #000000; --topbar-bg: #111111; --topbar-border: #222;
     --bubble-me: #003366; --bubble-them: #1a1a1a;
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
-    --input-bg: rgba(0,0,0,0.5); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
     --glassy-bg: rgba(17,17,17,0.85);
   }
   body.theme-space { 
     --bg-color: #0b1320; --topbar-bg: #121d30; --topbar-border: #1a2639;
     --bubble-me: #1e3a5f; --bubble-them: #1a2639;
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
-    --input-bg: rgba(0,0,0,0.5); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
     --glassy-bg: rgba(18,29,48,0.85);
   }
   body.theme-nightpurple { 
     --bg-color: #150e1c; --topbar-bg: #1f1528; --topbar-border: #2b1d36;
     --bubble-me: #442266; --bubble-them: #2b1d36;
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
-    --input-bg: rgba(0,0,0,0.5); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
     --glassy-bg: rgba(31,21,40,0.85);
   }
   body.theme-pureblack { 
     --bg-color: #000000; --topbar-bg: #0a0a0a; --topbar-border: #1a1a1a;
     --bubble-me: #333333; --bubble-them: #111111;
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
-    --input-bg: rgba(0,0,0,0.5); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
     --glassy-bg: rgba(10,10,10,0.85);
   }
 
-  #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
+  #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; }
 
-  /* ========== 全局透明与背景 ========== */
-  .page-list, .page-chat, .page-create, .page-sub, .page-settings {
-    background: transparent !important; /* 强制透明 */
+  /* ========== 页面容器（彻底隔离层叠） ========== */
+  .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
+  
+  /* 列表页与二级页面层叠关系 */
+  .page-list { z-index: 1; background: transparent; } 
+  .page-create, .page-sub, .page-settings { z-index: 2; transform:translateX(100%); background: var(--bg-color); }
+  .page-chat { z-index: 3; transform:translateX(100%); background: var(--bg-color); }
+  
+  .page-chat.show, .page-create.show, .page-sub.show, .page-settings.show { transform:translateX(0); }
+
+  /* 强制主页透明，露出 #app 大背景 */
+  #pageList { background: transparent; }
+  .page-create, .page-sub, .page-settings {
+    /* 如果没传背景图，这些页面用半透明磨砂盖住底下，防止透视串层 */
+    background: var(--glassy-bg);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
   }
 
   /* ========== 顶栏 ========== */
   .topbar {
     min-height:56px; flex:0 0 auto; 
-    background: var(--glassy-bg);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     display:flex; align-items:center;
     padding:0 8px;
     border-bottom:1px solid var(--topbar-border);
     position:relative; z-index:10;
-    transition: background .3s, border-color .3s;
+    background: transparent; /* 顶栏透明 */
   }
   .icon-btn {
     width:40px; height:40px; border-radius:50%;
@@ -116,26 +118,15 @@
     white-space: normal; word-break: break-word; 
   }
 
-  /* ========== 页面容器 ========== */
-  .page { flex:1; overflow:hidden; position:relative; }
-  .page-list, .page-chat, .page-create, .page-sub, .page-settings { 
-    position:absolute; inset:0; display:flex; flex-direction:column; 
-    transition:transform .22s ease; 
-  }
-  .page-list { z-index:2; }
-  .page-chat, .page-create, .page-sub, .page-settings { z-index:3; transform:translateX(100%); }
-  .page-chat.show, .page-create.show, .page-sub.show, .page-settings.show { transform:translateX(0); }
-
   /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row {
     display:flex; align-items:center; gap:12px; padding:12px 14px; 
-    background: var(--glassy-bg); /* 列表行半透明 */
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: transparent; /* 彻底透明，露出底层大背景 */
     cursor:pointer;
-    border-bottom:1px solid var(--topbar-border); transition: background .3s; user-select: none;
+    border-bottom:1px solid var(--topbar-border); user-select: none;
   }
-  .chat-row:active { background:rgba(128,128,128,0.2); }
+  .chat-row:active { background:rgba(128,128,128,0.1); }
   .chat-row.pinned { background: var(--pinned-bg); opacity: 0.9; }
 
   .avatar-lg {
@@ -156,13 +147,12 @@
     box-shadow:0 4px 12px rgba(0,0,0,.2); cursor:pointer; z-index:5; border:none;
   }
 
-  /* ========== 聊天页 ========== */
+  /* ========== 聊天页专属逻辑 ========== */
   .page-chat { background-size: cover; background-position: center; }
   .chat-bg-mask { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
   
-  /* 聊天页顶栏与输入区透明 */
-  .page-chat .topbar { background: transparent !important; backdrop-filter: none; border-bottom: none; }
-  .page-chat .composer { background: transparent !important; backdrop-filter: none; border-top: none; }
+  /* 聊天页内部顶栏透明 */
+  .page-chat .topbar { background: transparent !important; border-bottom: none; z-index: 10; }
 
   .messages-wrap {
     flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2;
@@ -205,35 +195,37 @@
   .bubble .meta { float:right; font-size:11px; color:var(--time-color); margin:8px 0 -2px 8px; line-height:1; }
   .bubble::after { content:''; display:block; clear:both; }
 
-  /* ========== 聊天页输入区 ========== */
+  /* ========== 聊天页输入区（毛玻璃） ========== */
   .composer {
     flex:0 0 auto;
-    padding:6px 8px; padding-bottom:calc(6px + env(safe-area-inset-bottom));
-    display:flex; align-items:center; gap:6px; transition: background .3s; z-index: 10;
+    padding:8px 10px; padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; gap:8px; z-index: 10;
+    background: transparent;
+    border-top: none; /* 去掉顶边线，纯磨砂 */
   }
-  .pending-sticker-box { display:none; background:rgba(128,128,128,0.2); backdrop-filter: blur(5px); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
-  .pending-sticker-box.show { display:flex; align-items:center; gap:10px; }
-  .pending-sticker-box img { height:40px; border-radius:4px; }
-  .pending-sticker-box .close-btn { font-size:18px; color:var(--text-secondary); cursor:pointer; margin-left:auto; }
   
-  /* 输入框半透明磨砂 */
+  /* 真正的磨砂输入框 */
   .composer input {
-    flex:1; min-width:0; height:40px; border-radius:20px; border:none; background:var(--input-bg);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    padding:0 14px; font-size:15px; color:var(--text-color); outline:none; transition: background .3s;
+    flex:1; min-width:0; height:42px; border-radius:21px; border:none; 
+    background: rgba(128,128,128,0.15); 
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    padding:0 16px; font-size:15px; color:var(--text-color); outline:none; transition: background .3s;
   }
   .composer input::placeholder { color:var(--text-secondary); }
   
-  /* 发送键半透明或柔和 */
+  /* 柔和的发送键 */
   .send-btn {
-    width:40px; height:40px; border-radius:50%; background:var(--primary); color:#fff; border:none;
-    display:flex; align-items:center; justify-content:center; flex:0 0 40px; cursor:pointer; 
-    transition: opacity .2s, background .3s; opacity: 0.9;
+    width:42px; height:42px; border-radius:50%; 
+    background: var(--primary); color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; flex:0 0 42px; 
+    cursor:pointer; transition: opacity .2s, background .3s; 
+    opacity: 0.85; /* 自带一点透明度，不突兀 */
+    backdrop-filter: blur(5px);
   }
-  .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); opacity: 0.5; }
+  .send-btn:disabled { background: rgba(128,128,128,0.15); color:var(--text-secondary); opacity: 0.5; }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 通用表单页 ========== */
+  /* ========== 表单与邮电所 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
@@ -243,40 +235,34 @@
     margin-bottom:16px; border:2px solid var(--topbar-border); background-size:cover; background-position:center;
   }
   .form-input {
-    width:100%; height:48px; border-radius:8px; background:var(--glassy-bg); border:1px solid var(--topbar-border);
-    backdrop-filter: blur(10px);
+    width:100%; height:48px; border-radius:8px; background:var(--input-bg); border:1px solid var(--topbar-border);
     padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
   }
   .form-input:focus { border-color:var(--primary); }
-  
   .btn-primary {
     width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
     font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
   }
   .btn-primary:active { opacity:0.8; }
 
-  /* 背景设置模块 */
   .bg-upload-box {
     width:100%; height:120px; border-radius:8px; background:var(--input-bg);
     border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center;
     color:var(--text-secondary); font-size:14px; cursor:pointer; overflow:hidden;
     background-size:cover; background-position:center; margin-bottom:15px;
-    backdrop-filter: blur(10px);
   }
   .slider-container { width:100%; display:flex; align-items:center; gap:10px; padding:0 10px; }
   .slider-container input[type=range] { flex:1; }
 
-  /* 邮电所界面 */
-  .tab-bar { display:flex; background:var(--glassy-bg); backdrop-filter: blur(10px); border-bottom:1px solid var(--topbar-border); }
+  .tab-bar { display:flex; background:transparent; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
-  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--glassy-bg); backdrop-filter: blur(10px); border-bottom:1px solid var(--border-light); }
+  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:rgba(128,128,128,0.05); border-bottom:1px solid var(--border-light); }
   .list-item-text { flex:1; font-size:15px; }
 
   /* ========== 佈景页面 ========== */
-  .settings-section { background:var(--glassy-bg); backdrop-filter: blur(10px); border-radius:10px; padding:15px; margin-bottom:20px; }
+  .settings-section { background:rgba(128,128,128,0.05); border-radius:10px; padding:15px; margin-bottom:20px; }
   .settings-title { font-size:15px; font-weight:600; color:var(--text-color); margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; }
-  
   .theme-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
   .theme-card {
     height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center;
@@ -286,10 +272,10 @@
   .theme-card:active { transform:scale(0.95); }
   .theme-card.active { border-color:var(--text-color); }
 
-  /* ========== 菜单 & 弹窗 ========== */
+  /* ========== 菜单与弹窗 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
-  .menu { position:absolute; top:56px; right:10px; background:var(--glassy-bg); backdrop-filter: blur(15px); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; }
+  .menu { position:absolute; top:56px; right:10px; background:var(--glassy-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; }
   .menu-item { padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer; white-space:nowrap; }
   .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
@@ -322,7 +308,7 @@
 <body class="theme-sky">
 
 <div id="app">
-  <!-- 1. 列表页 (全屏背景) -->
+  <!-- 1. 列表页 -->
   <div class="page-list" id="pageList">
     <div class="topbar">
       <div style="font-size:18px;font-weight:600;flex:1;padding-left:8px;">南洲舊夢</div>
@@ -457,7 +443,7 @@
     </div>
   </div>
 
-  <!-- 5. 邮电所 -->
+  <!-- 5. 郵局 (原名：信局) -->
   <div class="page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
@@ -492,7 +478,7 @@
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="postoffice">郵電所</div>
-    <div class="menu-item" data-act="letters">信局</div>
+    <div class="menu-item" data-act="letters">郵局</div>
     <div class="menu-item" data-act="messages">簡訊</div>
     <div class="menu-item" data-act="settings">佈景</div>
     <div class="menu-item" data-act="export">存檔</div>
@@ -558,20 +544,19 @@ function applyThemeAndBg() {
 
   const appEl = $('#app');
   if (globalBgImage) {
-    appEl.style.backgroundImage = `url(${globalBgImage})`;
-    appEl.style.backgroundSize = 'cover';
-    appEl.style.backgroundPosition = 'center';
-    // 使用变量控制全局遮罩（伪元素或独立div），这里直接通过背景渐变实现
     const isDark = savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('pureblack');
     const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
     appEl.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
-    // 强制所有页面透明
-    document.querySelectorAll('.page-list, .page-create, .page-sub, .page-settings').forEach(el => {
-      el.style.background = 'transparent';
+    // 强制主页和列表页透明
+    $('#pageList').style.background = 'transparent';
+    // 二级页面保持半透明磨砂
+    document.querySelectorAll('.page-create, .page-sub, .page-settings').forEach(el => {
+      el.style.background = 'var(--glassy-bg)'; 
     });
   } else {
     appEl.style.background = 'var(--bg-color)';
-    document.querySelectorAll('.page-list, .page-create, .page-sub, .page-settings').forEach(el => {
+    $('#pageList').style.background = 'transparent';
+    document.querySelectorAll('.page-create, .page-sub, .page-settings').forEach(el => {
       el.style.background = 'var(--bg-color)';
     });
   }
@@ -773,9 +758,8 @@ async function openChat(id){
     const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
   } else {
-    // 如果聊天室没背景，直接透明展示全局背景
     chatPage.style.backgroundImage = 'none';
-    chatPage.style.backgroundColor = 'transparent';
+    chatPage.style.backgroundColor = 'var(--bg-color)';
     bgMask.style.backgroundColor = 'transparent';
   }
   
@@ -1255,7 +1239,7 @@ function handleMenu(act){
   else if(act === 'export') toast('存檔：匯出備份（待實作）');
   else if(act === 'clear') toast('焚稿：清空數據（待實作）');
   else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
-  else if(act === 'letters') toast('信局：功能籌備中...');
+  else if(act === 'letters') toast('郵局：功能籌備中...');
   else if(act === 'messages') toast('簡訊：功能籌備中...');
 }
 

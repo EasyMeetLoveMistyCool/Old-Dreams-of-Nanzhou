@@ -258,7 +258,6 @@
   
   .call-bg-mask { position: absolute; inset: 0; background: rgba(0,0,0,0.3); border-radius: 20px; z-index: -1; }
   
-  /* 呼吸波纹（贴近头像，更柔和） */
   .avatar-breath-wrap { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 4px; width: clamp(100px, 22vw, 140px); height: clamp(100px, 22vw, 140px); }
   .avatar-breath { width: clamp(76px, 17vw, 100px); height: clamp(76px, 17vw, 100px); border-radius: 50%; background-size: cover; background-position: center; z-index: 2; border: 2px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: clamp(28px, 7vw, 40px); color: #fff; font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
   .breath-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); animation: breath 2.4s infinite ease-out; z-index: 1; }
@@ -270,7 +269,6 @@
   .call-nickname { font-size: clamp(16px, 4vw, 22px); font-weight: 600; margin-bottom: 4px; }
   .call-status { font-size: clamp(12px, 3vw, 15px); opacity: 0.9; margin-bottom: 10px; }
   
-  /* 音波条：未接通隐藏，接通后显示并跳动 */
   .wave-bars { display: none; gap: 4px; justify-content: center; height: 20px; align-items: center; }
   .call-panel.active .wave-bars { display: flex; }
   .wave-bar { width: 4px; background: #fff; border-radius: 2px; height: 6px; transition: height 0.2s; }
@@ -295,7 +293,6 @@
   .btn-minimize { background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
   @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); } }
 
-  /* 通话悬浮窗 (圆形呼吸，波纹贴近) */
   .call-float {
     position: fixed; bottom: 180px; right: 20px; width: 56px; height: 56px; border-radius: 50%;
     background: var(--input-bg); z-index: 550; display: none; cursor: grab; touch-action: none;
@@ -308,6 +305,87 @@
   @keyframes breath-float { 0% { width: 56px; height: 56px; opacity: 0.8; } 100% { width: 88px; height: 88px; opacity: 0; } }
   
   .draggable { transition: none !important; }
+
+  /* ========== 投問（譯文/譯圖）金色卡片 ========== */
+  .ask-card {
+    width: 100%; max-width: 88%; margin: 0 auto; border-radius: 14px; padding: 14px 16px;
+    background: #fbf3dd; border: 1px solid #e6cf94; color: #4a3a12;
+    display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: left;
+  }
+  body.theme-cyber .ask-card, body.theme-space .ask-card, body.theme-nightpurple .ask-card, body.theme-pureblack .ask-card {
+    background: #2a2416; border-color: #5a4a1e; color: #f0e6c8;
+  }
+  .ask-card-tag { font-size: 12px; color: #a8862f; font-weight: 600; letter-spacing: .5px; }
+  body.theme-cyber .ask-card-tag, body.theme-space .ask-card-tag, body.theme-nightpurple .ask-card-tag, body.theme-pureblack .ask-card-tag { color: #c9a227; }
+  .ask-question { font-size: 15px; line-height: 1.5; word-break: break-word; color: #4a3a12; }
+  body.theme-cyber .ask-question, body.theme-space .ask-question, body.theme-nightpurple .ask-question, body.theme-pureblack .ask-question { color: #f0e6c8; }
+  .ask-question-img { max-width: 100%; max-height: 160px; border-radius: 8px; object-fit: cover; }
+  .ask-options { display: flex; flex-direction: column; gap: 8px; }
+  .ask-option {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px;
+    background: rgba(214,178,80,0.12); border: 1px solid transparent; font-size: 14px; line-height: 1.4;
+    word-break: break-word; transition: all .2s;
+  }
+  body.theme-cyber .ask-option, body.theme-space .ask-option, body.theme-nightpurple .ask-option, body.theme-pureblack .ask-option { background: rgba(214,178,80,0.12); }
+  .ask-option .ask-check { width: 16px; height: 16px; flex: 0 0 16px; border-radius: 50%; border: 1.5px solid #c9a227; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; }
+  .ask-option.picked { background: rgba(212,175,55,0.22); border-color: #c9a227; }
+  .ask-option.picked .ask-check { background: #c9a227; color: #fff; border-color: #c9a227; }
+  body.theme-cyber .ask-option.picked, body.theme-space .ask-option.picked, body.theme-nightpurple .ask-option.picked, body.theme-pureblack .ask-option.picked { background: rgba(201,162,39,0.25); border-color: #d4af37; }
+  body.theme-cyber .ask-option.picked .ask-check, body.theme-space .ask-option.picked .ask-check, body.theme-nightpurple .ask-option.picked .ask-check, body.theme-pureblack .ask-option.picked .ask-check { background: #d4af37; border-color: #d4af37; color: #2a2416; }
+
+  .ask-images { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .ask-img-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 2px solid transparent; }
+  .ask-img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ask-img-item.picked { border-color: #c9a227; }
+  .ask-img-item.picked::after { content: '✓'; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: #c9a227; color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+  body.theme-cyber .ask-img-item.picked, body.theme-space .ask-img-item.picked, body.theme-nightpurple .ask-img-item.picked, body.theme-pureblack .ask-img-item.picked { border-color: #d4af37; }
+  body.theme-cyber .ask-img-item.picked::after, body.theme-space .ask-img-item.picked::after, body.theme-nightpurple .ask-img-item.picked::after, body.theme-pureblack .ask-img-item.picked::after { background: #d4af37; color: #2a2416; }
+
+  .ask-answer { font-size: 14px; display: flex; align-items: center; gap: 8px; min-height: 20px; }
+  .ask-answer .ask-spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #e6cf94; border-top-color: #b8860b; animation: spin 0.8s linear infinite; flex: 0 0 16px; }
+  body.theme-cyber .ask-answer .ask-spinner, body.theme-space .ask-answer .ask-spinner, body.theme-nightpurple .ask-answer .ask-spinner, body.theme-pureblack .ask-answer .ask-spinner { border-color: #5a4a1e; border-top-color: #d4af37; }
+  .ask-answer .ask-thinking-text { color: #a8862f; }
+  body.theme-cyber .ask-answer .ask-thinking-text, body.theme-space .ask-answer .ask-thinking-text, body.theme-nightpurple .ask-answer .ask-thinking-text, body.theme-pureblack .ask-answer .ask-thinking-text { color: #c9a227; }
+  .ask-answer .ask-none { color: #9a8a5a; }
+  body.theme-cyber .ask-answer .ask-none, body.theme-space .ask-answer .ask-none, body.theme-nightpurple .ask-answer .ask-none, body.theme-pureblack .ask-answer .ask-none { color: #8a7a4a; }
+
+  .ask-card-footer { display: flex; justify-content: flex-end; gap: 16px; padding-top: 4px; }
+  .ask-card-footer button { background: transparent; border: none; font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 2px; }
+  .ask-card-footer .ask-continue { color: #b8860b; }
+  body.theme-cyber .ask-card-footer .ask-continue, body.theme-space .ask-card-footer .ask-continue, body.theme-nightpurple .ask-card-footer .ask-continue, body.theme-pureblack .ask-card-footer .ask-continue { color: #d4af37; }
+  .ask-card-footer .ask-end { color: #9a8a5a; }
+  body.theme-cyber .ask-card-footer .ask-end, body.theme-space .ask-card-footer .ask-end, body.theme-nightpurple .ask-card-footer .ask-end, body.theme-pureblack .ask-card-footer .ask-end { color: #8a7a4a; }
+
+  /* 投問弹窗 */
+  .ask-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 16px; }
+  .ask-modal-mask.show { display: flex; }
+  .ask-modal { background: var(--bg-color); color: var(--text-color); width: 100%; max-width: 360px; max-height: 86vh; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+  .ask-modal-header { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); font-size: 16px; font-weight: 600; }
+  .ask-modal-close { font-size: 18px; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; }
+  .ask-modal-tabs { display: flex; border-bottom: 1px solid var(--border-light); }
+  .ask-modal-tab { flex: 1; text-align: center; padding: 11px 0; font-size: 15px; color: var(--text-secondary); cursor: pointer; font-weight: 500; }
+  .ask-modal-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+  .ask-modal-body { padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .ask-modal-body textarea.ask-q-input { width: 100%; min-height: 70px; max-height: 140px; resize: vertical; border-radius: 8px; border: 1px solid var(--topbar-border); background: var(--input-bg); color: var(--text-color); padding: 10px 12px; font-size: 15px; outline: none; line-height: 1.5; }
+  .ask-attach-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ask-attach-btn { background: var(--input-bg); border: 1px dashed var(--topbar-border); color: var(--text-secondary); border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; }
+  .ask-attach-preview { position: relative; width: 56px; height: 56px; border-radius: 8px; overflow: hidden; }
+  .ask-attach-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .ask-attach-preview .ask-attach-del { position: absolute; top: 0; right: 0; width: 18px; height: 18px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-bottom-left-radius: 6px; }
+  .ask-modal-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+  .ask-modal-body textarea.ask-opts-input { width: 100%; min-height: 90px; max-height: 160px; resize: vertical; border-radius: 8px; border: 1px solid var(--topbar-border); background: var(--input-bg); color: var(--text-color); padding: 10px 12px; font-size: 15px; outline: none; line-height: 1.6; }
+  .ask-pick-mode { display: flex; gap: 18px; align-items: center; }
+  .ask-pick-mode label { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+  .ask-pick-mode input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); }
+  .ask-img-upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .ask-img-upload-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--input-bg); }
+  .ask-img-upload-item img { width: 100%; height: 100%; object-fit: cover; }
+  .ask-img-upload-item .ask-attach-del { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; }
+  .ask-add-img-box { aspect-ratio: 1; border-radius: 8px; border: 1px dashed var(--topbar-border); background: var(--input-bg); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 24px; cursor: pointer; }
+  .ask-modal-footer { padding: 12px 16px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; }
+  .ask-send-btn { background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .ask-send-btn:active { opacity: .85; }
 
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:900; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
@@ -656,7 +734,7 @@
   </div>
 </div>
 
-<!-- 通话悬浮小窗（圆形呼吸） -->
+<!-- 通话悬浮小窗 -->
 <div class="call-float" id="callFloat">
   <div class="call-float-avatar" id="callFloatAvatar"></div>
   <div class="breath-ring" style="position:absolute;width:100%;height:100%;border-radius:50%;animation:breath-float 2.4s infinite ease-out;"></div>
@@ -730,6 +808,46 @@
     </div>
   </div>
 </div>
+
+<!-- 投問弹窗 -->
+<div class="ask-modal-mask" id="askModalMask">
+  <div class="ask-modal">
+    <div class="ask-modal-header">
+      <span>投問</span>
+      <span class="ask-modal-close" id="askModalClose">✕</span>
+    </div>
+    <div class="ask-modal-tabs">
+      <div class="ask-modal-tab active" data-asktab="wen">譯文</div>
+      <div class="ask-modal-tab" data-asktab="tu">譯圖</div>
+    </div>
+    <div class="ask-modal-body">
+      <textarea class="ask-q-input" id="askQuestionInput" placeholder="寫下你想問祂的問題…"></textarea>
+      <div class="ask-attach-row" id="askAttachRow">
+        <button class="ask-attach-btn" id="askAttachBtn">附圖</button>
+        <div id="askAttachPreviewWrap"></div>
+      </div>
+      <div id="askWenSection">
+        <div class="ask-modal-label" style="margin-bottom:6px;">選項（每行一個）</div>
+        <textarea class="ask-opts-input" id="askOptsInput" placeholder="選項一&#10;選項二&#10;選項三"></textarea>
+      </div>
+      <div id="askTuSection" style="display:none;">
+        <div class="ask-modal-label" style="margin-bottom:6px;">圖片選項</div>
+        <div class="ask-img-upload-grid" id="askImgGrid">
+          <div class="ask-add-img-box" id="askAddImgBox">＋</div>
+        </div>
+      </div>
+      <div class="ask-pick-mode">
+        <label><input type="checkbox" id="askSingleChk"> 單選</label>
+        <label><input type="checkbox" id="askMultiChk"> 多選</label>
+      </div>
+    </div>
+    <div class="ask-modal-footer">
+      <button class="ask-send-btn" id="askSendBtn">譯出</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="askAttachFile" accept="image/*" style="display:none">
+<input type="file" id="askImgFile" accept="image/*" multiple style="display:none">
 
 <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none">
 <input type="file" id="albumInput" accept="image/*" style="display:none">
@@ -826,7 +944,22 @@ let callStartTime = null;
 let callInterval = null;
 let incomingCallTimeout = null;
 let checkIncomingInterval = null;
-let isCallPanelMinimized = false;
+
+// 通话位置记忆
+let callPanelPos = null;   // {left, top}
+let callFloatPos = null;   // {left, top}
+
+// 投問状态
+let askMode = 'wen'; // wen | tu
+let askAttachData = null;
+let askImgList = [];
+let askSingleChecked = false, askMultiChecked = false;
+
+function clampPos(left, top, w, h) {
+  const maxLeft = Math.max(0, window.innerWidth - w);
+  const maxTop = Math.max(0, window.innerHeight - h);
+  return { left: Math.min(Math.max(0, left), maxLeft), top: Math.min(Math.max(0, top), maxTop) };
+}
 
 async function init(){
   try {
@@ -836,7 +969,27 @@ async function init(){
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag();
     setupIncomingCallTimer();
+    window.addEventListener('resize', handleResizeReposition);
   } catch (err) { console.error(err); toast('資料庫初始化失敗：' + err.message); }
+}
+
+function handleResizeReposition() {
+  const panel = $('#callPanel');
+  if (callPanelPos && panel.classList.contains('show')) {
+    const rect = panel.getBoundingClientRect();
+    const p = clampPos(callPanelPos.left, callPanelPos.top, rect.width, rect.height);
+    callPanelPos = p;
+    panel.style.left = p.left + 'px'; panel.style.top = p.top + 'px';
+    panel.style.transform = 'none';
+    panel.style.bottom = 'auto';
+  }
+  const float = $('#callFloat');
+  if (callFloatPos && float.classList.contains('show')) {
+    const p = clampPos(callFloatPos.left, callFloatPos.top, 56, 56);
+    callFloatPos = p;
+    float.style.left = p.left + 'px'; float.style.top = p.top + 'px';
+    float.style.bottom = 'auto'; float.style.right = 'auto';
+  }
 }
 
 async function loadChats(){
@@ -858,6 +1011,7 @@ async function renderChatList(){
     let preview = '尚無訊息';
     if(last){
       if(last.type === 'sticker') preview = '[貼紙]';
+      else if(last.type === 'ask') preview = '[投問]';
       else if(last.cards && last.cards.length) preview = last.cards[0];
       else if(last.text) preview = last.text;
       else if(last.stickerData) preview = '[圖片]';
@@ -965,6 +1119,13 @@ function renderMessages(forceScrollBottom = false){
       else avatarHtml = `<div class="msg-avatar-top">${(c.theirNick || c.theirName || '祂').charAt(0)}</div>`;
     }
     groupBox.innerHTML = avatarHtml;
+
+    if (m.type === 'ask') {
+      groupBox.appendChild(buildAskCard(m, c));
+      box.appendChild(groupBox);
+      continue;
+    }
+
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     if(m.type === 'action') bubble.classList.add('action-bubble');
@@ -994,6 +1155,146 @@ function renderMessages(forceScrollBottom = false){
   if (forceScrollBottom) { setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50); }
   else if (isNearBottom) { setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50); }
   else { wrap.scrollTop = prevScrollTop; }
+}
+
+function buildAskCard(m, c) {
+  const card = document.createElement('div');
+  card.className = 'ask-card';
+  card.dataset.askId = m.id;
+  const tag = document.createElement('div');
+  tag.className = 'ask-card-tag';
+  tag.textContent = '投問 · ' + (m.askMode === 'tu' ? '譯圖' : '譯文');
+  card.appendChild(tag);
+
+  const q = document.createElement('div');
+  q.className = 'ask-question';
+  q.textContent = m.askQuestion || '';
+  card.appendChild(q);
+
+  if (m.askAttach) {
+    const img = document.createElement('img');
+    img.className = 'ask-question-img';
+    img.src = m.askAttach;
+    card.appendChild(img);
+  }
+
+  if (m.askMode === 'tu') {
+    const grid = document.createElement('div');
+    grid.className = 'ask-images';
+    (m.askImages || []).forEach((src, idx) => {
+      const item = document.createElement('div');
+      item.className = 'ask-img-item';
+      item.dataset.idx = idx;
+      const im = document.createElement('img'); im.src = src;
+      item.appendChild(im);
+      grid.appendChild(item);
+    });
+    card.appendChild(grid);
+  } else {
+    const opts = document.createElement('div');
+    opts.className = 'ask-options';
+    (m.askOptions || []).forEach((text, idx) => {
+      const row = document.createElement('div');
+      row.className = 'ask-option';
+      row.dataset.idx = idx;
+      row.innerHTML = `<span class="ask-check">✓</span><span>${escapeHtml(text)}</span>`;
+      opts.appendChild(row);
+    });
+    card.appendChild(opts);
+  }
+
+  const ans = document.createElement('div');
+  ans.className = 'ask-answer';
+  card.appendChild(ans);
+
+  const footer = document.createElement('div');
+  footer.className = 'ask-card-footer';
+  footer.style.display = 'none';
+  const contBtn = document.createElement('button');
+  contBtn.className = 'ask-continue';
+  contBtn.textContent = '繼續投問';
+  const endBtn = document.createElement('button');
+  endBtn.className = 'ask-end';
+  endBtn.textContent = '收電';
+  footer.appendChild(contBtn); footer.appendChild(endBtn);
+  card.appendChild(footer);
+
+  contBtn.onclick = () => { openAskModal(); };
+  endBtn.onclick = () => { toast('已收電'); };
+
+  applyAskAnswer(card, m);
+  return card;
+}
+
+function applyAskAnswer(card, m) {
+  const ans = card.querySelector('.ask-answer');
+  const footer = card.querySelector('.ask-card-footer');
+  const opts = card.querySelectorAll('.ask-option');
+  const imgs = card.querySelectorAll('.ask-img-item');
+  if (m.askDone) {
+    ans.innerHTML = '';
+    if (m.askAnswer && m.askAnswer.length) {
+      const a = document.createElement('span');
+      a.textContent = '祂選了：' + (m.askMode === 'tu' ? m.askAnswer.length + ' 張圖' : m.askAnswer.map(i => m.askOptions[i]).join('、'));
+      a.style.color = '#a8862f';
+      ans.appendChild(a);
+      if (m.askMode === 'tu') {
+        imgs.forEach(el => { if (m.askAnswer.includes(parseInt(el.dataset.idx))) el.classList.add('picked'); });
+      } else {
+        opts.forEach(el => { if (m.askAnswer.includes(parseInt(el.dataset.idx))) el.classList.add('picked'); });
+      }
+    } else {
+      const a = document.createElement('span');
+      a.className = 'ask-none';
+      a.textContent = '未作任何選擇';
+      ans.appendChild(a);
+    }
+    footer.style.display = 'flex';
+  } else {
+    ans.innerHTML = `<span class="ask-spinner"></span><span class="ask-thinking-text">${escapeHtml((card.querySelector('.ask-question') ? '' : '') + '')}</span>`;
+    const c = chats.find(x=>x.id === m.chatId);
+    const displayName = (c && (c.theirNick || c.theirName)) ? (c.theirNick || c.theirName) : '祂';
+    ans.innerHTML = `<span class="ask-spinner"></span><span class="ask-thinking-text">${escapeHtml(displayName)} 正在思考…</span>`;
+    footer.style.display = 'none';
+    opts.forEach(el => el.classList.remove('picked'));
+    imgs.forEach(el => el.classList.remove('picked'));
+  }
+}
+
+async function refreshAskCardInChat(msgId) {
+  const m = currentMessages.find(x => x.id === msgId);
+  if (!m) return;
+  const card = document.querySelector(`.ask-card[data-ask-id="${msgId}"]`);
+  if (card) applyAskAnswer(card, m);
+}
+
+function startAskThinking(msgId, delay) {
+  setTimeout(async () => {
+    const m = currentMessages.find(x => x.id === msgId);
+    if (!m || m.askDone) return;
+    m.askDone = true;
+    const total = m.askMode === 'tu' ? (m.askImages || []).length : (m.askOptions || []).length;
+    const choices = [];
+    let count = 0;
+    if (m.askPickMode === 'multi') {
+      count = Math.floor(Math.random() * (total + 1));
+    } else if (m.askPickMode === 'single') {
+      count = Math.random() < 0.5 ? 1 : 0;
+    } else {
+      count = Math.floor(Math.random() * (total + 1));
+    }
+    const pool = Array.from({length: total}, (_, i) => i);
+    for (let i = 0; i < count && pool.length; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      choices.push(pool.splice(idx, 1)[0]);
+    }
+    m.askAnswer = choices;
+    await reqToPromise(tx('messages','readwrite').put(m));
+    await refreshAskCardInChat(msgId);
+    const wrap = $('#messagesWrap');
+    const isNearBottom = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight < 150;
+    if (isNearBottom) setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 30);
+  }, delay);
 }
 
 function updateSendBtnState() {
@@ -1236,9 +1537,18 @@ function initPlayerDrag() {
 function showCallPanel() {
   const panel = $('#callPanel');
   panel.classList.add('show');
-  panel.style.transform = '';
-  panel.style.opacity = '';
-  panel.style.pointerEvents = '';
+  if (callPanelPos) {
+    const rect = panel.getBoundingClientRect();
+    const p = clampPos(callPanelPos.left, callPanelPos.top, rect.width, rect.height);
+    callPanelPos = p;
+    panel.style.left = p.left + 'px'; panel.style.top = p.top + 'px';
+    panel.style.transform = 'none';
+    panel.style.bottom = 'auto';
+  } else {
+    panel.style.left = '50%'; panel.style.top = '50%';
+    panel.style.transform = '';
+    panel.style.bottom = 'auto';
+  }
 }
 function hideCallPanel() {
   const panel = $('#callPanel');
@@ -1267,11 +1577,16 @@ function initCallDrag() {
       newLeft = Math.max(0, Math.min(newLeft, maxW)); newTop = Math.max(0, Math.min(newTop, maxH));
       panel.style.left = newLeft + 'px'; panel.style.top = newTop + 'px';
       panel.style.transform = 'none';
+      panel.style.bottom = 'auto';
       panel.classList.add('dragging');
     }
   }, {passive: false});
   
   panel.addEventListener('touchend', () => {
+    if (isDraggingPanel) {
+      const rect = panel.getBoundingClientRect();
+      callPanelPos = { left: rect.left, top: rect.top };
+    }
     panel.classList.remove('dragging');
   });
 
@@ -1294,10 +1609,11 @@ function initCallDrag() {
     }
   }, {passive: false});
   float.addEventListener('touchend', () => {
+    const rect = float.getBoundingClientRect();
+    callFloatPos = { left: rect.left, top: rect.top };
     if (!isDraggingFloat) {
       float.classList.remove('show');
       showCallPanel();
-      panel.style.left = '50%'; panel.style.top = '50%'; panel.style.bottom = 'auto';
     }
   });
 }
@@ -1390,14 +1706,12 @@ function openCallUI(isIncoming = false) {
   }
   $('#callNickname').textContent = c.theirNick || c.theirName || '祂';
 
-  callPanel.style.left = '50%'; callPanel.style.top = '50%'; callPanel.style.bottom = 'auto';
   showCallPanel();
   callFloat.classList.remove('show');
   
   if(isIncoming) {
     $('#callStatus').textContent = '邀請你進行語音通話...';
     callPanel.classList.remove('active');
-    // 来电与主动呼出一致：显示 接听 + 挂断 + 缩小
     $('#btnAnswerCall').style.display = 'flex';
     $('#btnHangupCall').style.display = 'flex';
     $('#btnMinimizeCall').style.display = 'flex';
@@ -1472,6 +1786,91 @@ function setupIncomingCallTimer() {
   }, 300000);
 }
 
+/* ============ 投問弹窗逻辑 ============ */
+function openAskModal() {
+  if (!currentChatId) { toast('請先選擇聊天室'); return; }
+  askMode = 'wen';
+  askAttachData = null;
+  askImgList = [];
+  askSingleChecked = false; askMultiChecked = false;
+  $('#askQuestionInput').value = '';
+  $('#askOptsInput').value = '';
+  $('#askAttachPreviewWrap').innerHTML = '';
+  $('#askSingleChk').checked = false;
+  $('#askMultiChk').checked = false;
+  document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.toggle('active', t.dataset.asktab === 'wen'));
+  $('#askWenSection').style.display = 'block';
+  $('#askTuSection').style.display = 'none';
+  renderAskImgGrid();
+  $('#askModalMask').classList.add('show');
+}
+
+function renderAskImgGrid() {
+  const grid = $('#askImgGrid');
+  grid.innerHTML = '';
+  askImgList.forEach((src, idx) => {
+    const item = document.createElement('div');
+    item.className = 'ask-img-upload-item';
+    item.innerHTML = `<img src="${src}"><div class="ask-attach-del" data-idx="${idx}">✕</div>`;
+    grid.appendChild(item);
+  });
+  const addBox = document.createElement('div');
+  addBox.className = 'ask-add-img-box';
+  addBox.id = 'askAddImgBox';
+  addBox.textContent = '＋';
+  addBox.onclick = () => $('#askImgFile').click();
+  grid.appendChild(addBox);
+  grid.querySelectorAll('.ask-attach-del').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(btn.dataset.idx);
+      askImgList.splice(idx, 1);
+      renderAskImgGrid();
+    };
+  });
+}
+
+async function sendAsk() {
+  const question = $('#askQuestionInput').value.trim();
+  if (!question) { toast('請寫下問題'); return; }
+
+  let options = [];
+  let images = [];
+  if (askMode === 'wen') {
+    options = $('#askOptsInput').value.split('\n').map(s => s.trim()).filter(s => s !== '');
+    if (options.length < 2) { toast('請至少填寫兩個選項'); return; }
+  } else {
+    images = askImgList.slice();
+    if (images.length < 2) { toast('請至少上傳兩張圖片選項'); return; }
+  }
+
+  let pickMode = 'random';
+  if (askSingleChecked && !askMultiChecked) pickMode = 'single';
+  else if (askMultiChecked && !askSingleChecked) pickMode = 'multi';
+
+  const msg = {
+    id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    chatId: currentChatId,
+    sender: 'me',
+    type: 'ask',
+    askMode: askMode,
+    askQuestion: question,
+    askAttach: askAttachData,
+    askOptions: options,
+    askImages: images,
+    askPickMode: pickMode,
+    askDone: false,
+    askAnswer: [],
+    time: Date.now()
+  };
+  await reqToPromise(tx('messages','readwrite').add(msg));
+  currentMessages.push(msg);
+  $('#askModalMask').classList.remove('show');
+  renderMessages(false);
+  await touchChat(currentChatId);
+
+  const delay = 8000 + Math.random() * 7000;
+  startAskThinking(msg.id, delay);
+}
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
@@ -1848,6 +2247,8 @@ function bindEvents(){
     $('#stickerPanelMask').classList.add('show'); $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
+  $('#flashAsk').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAskModal(); };
+
   $('#flashMusic').onclick = async () => {
     $('#flashPanelMask').classList.remove('show'); const musics = await reqToPromise(tx('music').getAll());
     if(!musics.length) { toast('郵電所中尚無留聲'); return; }
@@ -1863,9 +2264,9 @@ function bindEvents(){
     $('#stickerPanelMask').classList.add('show'); $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
-  const soon = ['投問','相伴'];
+  const soon = ['相伴'];
   soon.forEach(t => {
-    const btn = $('#flash' + (t==='投問'?'Ask':'Accompany'));
+    const btn = $('#flash' + (t==='相伴'?'Accompany':''));
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
 
@@ -1889,8 +2290,52 @@ function bindEvents(){
     hideCallPanel();
     const float = $('#callFloat');
     float.classList.add('show');
-    float.style.bottom = '180px'; float.style.right = '20px'; float.style.left = 'auto'; float.style.top = 'auto';
+    if (callFloatPos) {
+      const p = clampPos(callFloatPos.left, callFloatPos.top, 56, 56);
+      callFloatPos = p;
+      float.style.left = p.left + 'px'; float.style.top = p.top + 'px';
+      float.style.bottom = 'auto'; float.style.right = 'auto';
+    } else {
+      float.style.bottom = '180px'; float.style.right = '20px'; float.style.left = 'auto'; float.style.top = 'auto';
+    }
   };
+
+  // 投問弹窗事件
+  $('#askModalClose').onclick = () => $('#askModalMask').classList.remove('show');
+  $('#askModalMask').onclick = (e) => { if (e.target === $('#askModalMask')) $('#askModalMask').classList.remove('show'); };
+  document.querySelectorAll('.ask-modal-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      askMode = tab.dataset.asktab;
+      if (askMode === 'wen') { $('#askWenSection').style.display = 'block'; $('#askTuSection').style.display = 'none'; }
+      else { $('#askWenSection').style.display = 'none'; $('#askTuSection').style.display = 'block'; }
+    };
+  });
+  $('#askAttachBtn').onclick = () => $('#askAttachFile').click();
+  $('#askAttachFile').onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    fileToBase64(f, b => {
+      askAttachData = b;
+      $('#askAttachPreviewWrap').innerHTML = `<div class="ask-attach-preview"><img src="${b}"><div class="ask-attach-del" id="askAttachDel">✕</div></div>`;
+      $('#askAttachDel').onclick = () => { askAttachData = null; $('#askAttachPreviewWrap').innerHTML = ''; };
+    });
+    e.target.value = '';
+  };
+  $('#askImgFile').onchange = e => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    let pending = files.length;
+    files.forEach(f => fileToBase64(f, b => {
+      askImgList.push(b);
+      pending--;
+      if (pending === 0) renderAskImgGrid();
+    }));
+    e.target.value = '';
+  };
+  $('#askSingleChk').onchange = () => { if ($('#askSingleChk').checked) $('#askMultiChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
+  $('#askMultiChk').onchange = () => { if ($('#askMultiChk').checked) $('#askSingleChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
+  $('#askSendBtn').onclick = sendAsk;
 
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';

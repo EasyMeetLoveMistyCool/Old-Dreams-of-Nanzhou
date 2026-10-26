@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>南洲舊夢</title>
 <style>
-  /* 基础重置 */
+  /* ========== 基础重置 ========== */
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; overflow:hidden; }
   body {
@@ -29,12 +29,11 @@
     --input-bg: #f0f2f5;
     --primary: #3390ec;
     --border-light: #f0f2f5;
-    --pinned-bg: #fff5f6; /* 浅蜜粉色 */
+    --pinned-bg: #fff5f6;
   }
   body.theme-blue { --bubble-me: #d6ecff; }
   body.theme-purple { --bubble-me: #e8def8; }
   body.theme-pink { --bubble-me: #fce4ec; }
-  
   body.theme-dark {
     --bg-color: #0e1621;
     --topbar-bg: #17212b;
@@ -47,7 +46,7 @@
     --input-bg: #17212b;
     --primary: #64b5f6;
     --border-light: #101921;
-    --pinned-bg: #2b1f24; /* 深色模式下的暗粉底色 */
+    --pinned-bg: #2b1f24;
   }
   body.theme-darkblue {
     --bg-color: #17212b;
@@ -66,7 +65,7 @@
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
 
-  /* ========== 顶栏 (支持自适应高度) ========== */
+  /* ========== 顶栏 ========== */
   .topbar {
     min-height:56px; flex:0 0 auto; 
     background:var(--topbar-bg);
@@ -80,8 +79,7 @@
     width:40px; height:40px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     font-size:22px; color:var(--text-secondary); cursor:pointer;
-    background:transparent; border:none;
-    flex: 0 0 40px;
+    background:transparent; border:none; flex: 0 0 40px;
   }
   .icon-btn:active { background:rgba(128,128,128,0.15); }
   
@@ -98,76 +96,55 @@
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; 
     color:var(--text-color); margin-bottom: 2px;
   }
-  /* 签名允许自由换行 */
   .header-sub { 
     font-size:12px; color:var(--text-secondary); line-height:1.3; 
-    white-space: normal; 
-    word-break: break-word; 
+    white-space: normal; word-break: break-word; 
   }
 
   /* ========== 页面容器 ========== */
   .page { flex:1; overflow:hidden; position:relative; }
-  .page-list, .page-chat, .page-create { 
+  .page-list, .page-chat, .page-create, .page-sub { 
     position:absolute; inset:0; display:flex; flex-direction:column; 
     background:var(--bg-color); transition:transform .22s ease, background .3s; 
   }
   .page-list { z-index:2; }
-  .page-chat, .page-create { z-index:3; transform:translateX(100%); }
-  .page-chat.show, .page-create.show { transform:translateX(0); }
+  .page-chat, .page-create, .page-sub { z-index:3; transform:translateX(100%); }
+  .page-chat.show, .page-create.show, .page-sub.show { transform:translateX(0); }
 
   /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row {
-    display:flex; align-items:center; gap:12px;
-    padding:12px 14px; background:var(--topbar-bg); cursor:pointer;
-    border-bottom:1px solid var(--topbar-border);
-    transition: background .3s;
-    user-select: none;
+    display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--topbar-bg); cursor:pointer;
+    border-bottom:1px solid var(--topbar-border); transition: background .3s; user-select: none;
   }
   .chat-row:active { background:rgba(128,128,128,0.1); }
-  
-  /* 置顶背景色 */
   .chat-row.pinned { background: var(--pinned-bg); }
   .chat-row.pinned:active { filter: brightness(0.95); }
 
   .avatar-lg {
-    width:48px; height:48px; border-radius:50%;
-    background:var(--primary); color:#fff; object-fit:cover;
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px; flex:0 0 48px;
+    width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover;
+    display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px;
   }
   .chat-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:3px; }
-  
-  /* 第一行：聊天室名字 + 祂的名字 */
   .chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
   .chat-room-name { font-size:16px; font-weight:600; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .chat-their-name { font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  
-  /* 第二行：最后一条消息 */
   .chat-preview { font-size:14px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  
   .chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; align-self:flex-start; margin-top:4px; }
   .chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
 
   .fab {
-    position:absolute; right:18px; bottom:22px;
-    width:56px; height:56px; border-radius:50%;
-    background:var(--primary); color:#fff; font-size:28px;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 4px 12px rgba(51,144,236,.4);
-    cursor:pointer; z-index:5; border:none;
+    position:absolute; right:18px; bottom:22px; width:56px; height:56px; border-radius:50%;
+    background:var(--primary); color:#fff; font-size:28px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(51,144,236,.4); cursor:pointer; z-index:5; border:none;
   }
 
   /* ========== 聊天页 ========== */
   .messages {
-    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
-    padding:10px 14px 6px; /* 加一点侧边距防溢出 */
-    display:flex; flex-direction:column;
+    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 14px 6px; display:flex; flex-direction:column;
   }
   .date-divider {
-    align-self:center;
-    background:rgba(0,0,0,.18); color:#fff;
-    font-size:12px; padding:4px 12px; border-radius:12px;
+    align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px;
     margin:10px 0; font-weight:500;
   }
   body.theme-dark .date-divider, body.theme-darkblue .date-divider { background:rgba(255,255,255,.15); }
@@ -179,25 +156,15 @@
   .msg-row:not(.grouped) { margin-top:8px; }
 
   .msg-avatar {
-    width:28px; height:28px; border-radius:50%;
-    background:var(--primary); color:#fff; object-fit:cover;
-    display:flex; align-items:center; justify-content:center;
-    font-size:12px; flex:0 0 28px; margin-bottom:2px;
+    width:28px; height:28px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover;
+    display:flex; align-items:center; justify-content:center; font-size:12px; flex:0 0 28px; margin-bottom:2px;
   }
   .msg-row.grouped .msg-avatar { visibility:hidden; }
 
   .bubble {
-    max-width:75%;
-    padding:6px 10px;
-    border-radius:12px;
-    position:relative;
-    font-size:15px;
-    line-height:1.4;
-    word-break:break-word;
-    box-shadow:0 1px 2px rgba(0,0,0,.1);
-    transition: background .3s;
+    max-width:75%; padding:6px 10px; border-radius:12px; position:relative; font-size:15px; line-height:1.4;
+    word-break:break-word; box-shadow:0 1px 2px rgba(0,0,0,.1); transition: background .3s;
   }
-  
   .msg-row.me .bubble { background:var(--bubble-me); color:var(--text-color); border-bottom-right-radius:4px; }
   .msg-row.them .bubble { background:var(--bubble-them); color:var(--text-color); border-bottom-left-radius:4px; }
 
@@ -232,7 +199,7 @@
   .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 新建/编辑页面 ========== */
+  /* ========== 通用表单页 (新建/邮电所) ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
@@ -246,11 +213,19 @@
     padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
   }
   .form-input:focus { border-color:var(--primary); }
+  
   .btn-primary {
     width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
     font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
   }
   .btn-primary:active { opacity:0.8; }
+
+  /* 邮电所界面特有 */
+  .tab-bar { display:flex; background:var(--topbar-bg); border-bottom:1px solid var(--topbar-border); }
+  .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
+  .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
+  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--topbar-bg); border-bottom:1px solid var(--border-light); }
+  .list-item-text { flex:1; font-size:15px; }
 
   /* ========== 菜单 & 弹窗 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
@@ -260,7 +235,6 @@
   .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
 
-  /* 长按菜单 */
   .action-sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px; }
   .action-sheet-mask.show { display:flex; }
   .action-sheet { background:var(--topbar-bg); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
@@ -307,13 +281,8 @@
       <div style="width:40px;"></div>
     </div>
     <div class="create-scroll">
-      
-      <div class="form-group">
-        <input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱">
-      </div>
-
+      <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱"></div>
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-
       <div class="form-group">
         <div class="form-label">祂的資料</div>
         <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
@@ -322,7 +291,6 @@
         <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱">
         <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名">
       </div>
-
       <div class="form-group">
         <div class="form-label">我的資料</div>
         <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
@@ -331,7 +299,6 @@
         <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱">
         <input type="text" class="form-input" id="inputMySign" placeholder="簽名">
       </div>
-
       <button class="btn-primary" id="saveChatBtn">完成</button>
       <div style="height:20px;"></div>
     </div>
@@ -371,12 +338,46 @@
       </button>
     </div>
   </div>
+
+  <!-- 4. 邮电所 (子页面) -->
+  <div class="page-sub" id="pagePostOffice">
+    <div class="topbar">
+      <button class="icon-btn" id="backPostOfficeBtn">←</button>
+      <div class="header-title" style="flex:1; text-align:center; font-size:17px;">郵電所</div>
+      <div style="width:40px;"></div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item active" data-tab="cards">電文</div>
+      <div class="tab-item" data-tab="stickers">印花</div>
+      <div class="tab-item" data-tab="actions">暗語</div>
+      <div class="tab-item" data-tab="music">留聲</div>
+    </div>
+    
+    <div class="create-scroll" style="padding: 15px;">
+      <!-- 電文 (字卡) 区域 -->
+      <div id="tabContentCards">
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <input type="text" class="form-input" id="newCardInput" placeholder="輸入新的電文..." style="margin-bottom:0; text-align:left;">
+          <button class="btn-primary" id="addCardBtn" style="width:80px; margin-top:0;">新增</button>
+        </div>
+        <div id="cardList"></div>
+      </div>
+      
+      <!-- 其他占位 -->
+      <div id="tabContentOthers" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
+        該區域功能待開發...
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- 侧边菜单 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
-    <div class="menu-item" data-act="pouch">驛囊</div>
+    <div class="menu-item" data-act="postoffice">郵電所</div>
+    <div class="menu-item" data-act="letters">信局</div>
+    <div class="menu-item" data-act="messages">簡訊</div>
     <div class="menu-item" data-act="theme">燈號</div>
     <div class="menu-item" data-act="export">存檔</div>
     <div class="menu-item danger" data-act="clear">焚稿</div>
@@ -395,7 +396,7 @@
   </div>
 </div>
 
-<!-- 确认弹窗 -->
+<!-- 弹窗类 -->
 <div class="dialog-mask" id="confirmDialogMask">
   <div class="dialog">
     <div class="dialog-title" id="confirmTitle">提示</div>
@@ -407,7 +408,6 @@
   </div>
 </div>
 
-<!-- 貼紙彈窗 -->
 <div class="dialog-mask" id="stickerDialogMask">
   <div class="dialog">
     <div class="dialog-title">選擇貼紙</div>
@@ -416,7 +416,6 @@
   </div>
 </div>
 
-<!-- 燈號彈窗 -->
 <div class="dialog-mask" id="themeDialogMask">
   <div class="dialog">
     <div class="dialog-title">選擇燈號</div>
@@ -458,16 +457,15 @@ function setTheme(themeName) {
 }
 initTheme();
 
-/* ============ 文件转Base64 ============ */
 function fileToBase64(file, callback) {
   const reader = new FileReader();
   reader.onload = e => callback(e.target.result);
   reader.readAsDataURL(file);
 }
 
-/* ============ IndexedDB (版本升级到4，绝不删除数据) ============ */
+/* ============ IndexedDB ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 4;
+const DB_VER = 4; 
 let db = null;
 
 function openDB(){
@@ -475,19 +473,13 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if(!d.objectStoreNames.contains('chats')) {
-        d.createObjectStore('chats', { keyPath:'id' });
-      }
+      if(!d.objectStoreNames.contains('chats')) d.createObjectStore('chats', { keyPath:'id' });
       if(!d.objectStoreNames.contains('messages')) {
         const s = d.createObjectStore('messages', { keyPath:'id' });
         s.createIndex('chatId', 'chatId', { unique:false });
       }
-      if(!d.objectStoreNames.contains('cards')) {
-        d.createObjectStore('cards', { keyPath:'id' });
-      }
-      if(!d.objectStoreNames.contains('stickers')) {
-        d.createObjectStore('stickers', { keyPath:'id' });
-      }
+      if(!d.objectStoreNames.contains('cards')) d.createObjectStore('cards', { keyPath:'id' });
+      if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -506,11 +498,9 @@ let chats = [];
 let currentChatId = null;
 let currentMessages = [];
 let pendingStickerData = null; 
-
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
 let isEditingChatId = null;
-
 let longPressTimer = null;
 let activeChatForMenu = null;
 
@@ -520,6 +510,7 @@ async function init(){
   await loadChats();
   renderChatList();
   bindEvents();
+  renderCards(); // 初始化邮电所卡片
 }
 
 async function loadChats(){
@@ -571,10 +562,7 @@ async function renderChatList(){
       <div class="chat-time">${last ? fmtTime(last.time) : ''}</div>
     `;
     
-    row.onclick = () => { 
-      if(!longPressTimer) openChat(c.id); 
-    };
-    
+    row.onclick = () => { if(!longPressTimer) openChat(c.id); };
     row.addEventListener('touchstart', (e) => {
       longPressTimer = setTimeout(() => {
         longPressTimer = null;
@@ -582,18 +570,14 @@ async function renderChatList(){
         openActionSheet();
       }, 500);
     }, { passive: true });
-    
     row.addEventListener('touchend', () => { clearTimeout(longPressTimer); longPressTimer = null; });
     row.addEventListener('touchmove', () => { clearTimeout(longPressTimer); longPressTimer = null; });
-    
     list.appendChild(row);
   }
 }
 
 function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m]));
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 function fmtTime(ts){
   const d = new Date(ts);
@@ -606,7 +590,7 @@ function fmtDate(ts){
   return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
 }
 
-/* ============ 消息读取与渲染 ============ */
+/* ============ 消息逻辑 ============ */
 function getMessages(chatId){
   return new Promise((res, rej)=>{
     const idx = tx('messages').index('chatId');
@@ -749,10 +733,8 @@ async function sendMyMessage(){
   pendingStickerData = null;
   updatePendingStickerUI();
   updateSendBtnState();
-  
   renderMessages();
   await touchChat(currentChatId);
-
   setTimeout(replyFromThem, 600);
 }
 
@@ -764,13 +746,12 @@ async function touchChat(id){
   await loadChats();
 }
 
-/* ============ 祂的回复 ============ */
 async function replyFromThem(){
   if(!currentChatId) return;
   
   const cards = await reqToPromise(tx('cards').getAll());
   if(!cards.length){
-    toast('驛囊中尚無字卡，請先至「驛囊」新增字卡');
+    toast('郵電所中尚無電文，請先至「郵電所」新增');
     return;
   }
   
@@ -806,7 +787,7 @@ async function replyFromThem(){
   await touchChat(currentChatId);
 }
 
-/* ============ 操作确认弹窗 ============ */
+/* ============ 彈窗 ============ */
 function showConfirm(title, text, okText, isDanger, onOk) {
   $('#confirmTitle').textContent = title;
   $('#confirmText').textContent = text;
@@ -823,9 +804,35 @@ function showConfirm(title, text, okText, isDanger, onOk) {
   };
 }
 
+/* ============ 郵電所：電文管理 ============ */
+async function renderCards() {
+  const cards = await reqToPromise(tx('cards').getAll());
+  const list = $('#cardList');
+  if(!cards.length){
+    list.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無電文</div>';
+    return;
+  }
+  list.innerHTML = '';
+  cards.reverse().forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'list-item-row';
+    div.innerHTML = `
+      <span class="list-item-text">${escapeHtml(c.text)}</span>
+      <span style="color:#e53935; cursor:pointer; font-size:14px; padding:5px;" onclick="deleteCard('${c.id}')">刪除</span>
+    `;
+    list.appendChild(div);
+  });
+}
+
+async function deleteCard(id) {
+  await reqToPromise(tx('cards','readwrite').delete(id));
+  renderCards();
+  toast('電文已刪除');
+}
+
 /* ============ 事件绑定 ============ */
 function bindEvents(){
-  // --- 列表页新建 ---
+  // --- 新建 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null;
     $('#createPageTitle').textContent = '建立新對話';
@@ -836,41 +843,21 @@ function bindEvents(){
     $('#inputMyName').value = '';
     $('#inputMyNick').value = '';
     $('#inputMySign').value = '';
-    
     $('#theirAvatar').style.backgroundImage = '';
     $('#theirAvatar').textContent = '祂';
     $('#myAvatar').style.backgroundImage = '';
     $('#myAvatar').textContent = '我';
     tempTheirAvatar = null;
     tempMyAvatar = null;
-    
     $('#pageCreate').classList.add('show');
   };
 
-  // --- 新建页取消/保存 ---
-  $('#cancelCreateBtn').onclick = ()=>{
-    $('#pageCreate').classList.remove('show');
-  };
-
+  $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
   $('#theirFile').onchange = e => {
-    if(e.target.files[0]) {
-      fileToBase64(e.target.files[0], base64 => {
-        tempTheirAvatar = base64;
-        const el = $('#theirAvatar');
-        el.style.backgroundImage = `url(${base64})`;
-        el.textContent = '';
-      });
-    }
+    if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; });
   };
   $('#myFile').onchange = e => {
-    if(e.target.files[0]) {
-      fileToBase64(e.target.files[0], base64 => {
-        tempMyAvatar = base64;
-        const el = $('#myAvatar');
-        el.style.backgroundImage = `url(${base64})`;
-        el.textContent = '';
-      });
-    }
+    if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; });
   };
 
   $('#saveChatBtn').onclick = async ()=>{
@@ -887,63 +874,35 @@ function bindEvents(){
     if (isEditingChatId) {
       const c = chats.find(x=>x.id===isEditingChatId);
       if(c) {
-        c.roomName = roomName;
-        c.theirName = theirName;
-        c.theirNick = theirNick;
-        c.theirSign = theirSign;
-        c.myName = myName;
-        c.myNick = myNick;
-        c.mySign = mySign;
+        c.roomName = roomName; c.theirName = theirName; c.theirNick = theirNick; c.theirSign = theirSign;
+        c.myName = myName; c.myNick = myNick; c.mySign = mySign;
         if (tempTheirAvatar !== null) c.theirAvatar = tempTheirAvatar;
         if (tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
-        
         await reqToPromise(tx('chats','readwrite').put(c));
         toast('資料已更新');
       }
     } else {
       const c = {
         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-        roomName: roomName,
-        theirName: theirName,
-        theirNick: theirNick,
-        theirSign: theirSign,
-        myName: myName,
-        myNick: myNick,
-        mySign: mySign,
-        theirAvatar: tempTheirAvatar,
-        myAvatar: tempMyAvatar,
-        isPinned: false,
-        createdAt: Date.now(),
-        updatedAt: Date.now()
+        roomName, theirName, theirNick, theirSign, myName, myNick, mySign,
+        theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, isPinned: false,
+        createdAt: Date.now(), updatedAt: Date.now()
       };
       await reqToPromise(tx('chats','readwrite').add(c));
       toast('已建立新對話');
     }
-    
-    await loadChats();
-    renderChatList();
-    $('#pageCreate').classList.remove('show');
+    await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
   // --- 聊天页 ---
-  $('#backBtn').onclick = ()=>{
-    $('#pageChat').classList.remove('show');
-    currentChatId = null;
-    renderChatList();
-  };
+  $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
   $('#sendBtn').onclick = sendMyMessage;
   $('#msgInput').addEventListener('input', updateSendBtnState);
-  $('#msgInput').addEventListener('keydown', e=>{
-    if(e.key === 'Enter' && !e.isComposing) sendMyMessage();
-  });
+  $('#msgInput').addEventListener('keydown', e=>{ if(e.key === 'Enter' && !e.isComposing) sendMyMessage(); });
   $('#callBtn').onclick = ()=> toast('通話功能尚未開放');
-  $('#cancelStickerBtn').onclick = ()=>{
-    pendingStickerData = null;
-    updatePendingStickerUI();
-    updateSendBtnState();
-  };
+  $('#cancelStickerBtn').onclick = ()=>{ pendingStickerData = null; updatePendingStickerUI(); updateSendBtnState(); };
 
-  // --- 长按菜单操作 ---
+  // --- 长按菜单 ---
   const actionMask = $('#actionSheetMask');
   function closeActionSheet(){ actionMask.classList.remove('show'); }
   
@@ -952,26 +911,21 @@ function bindEvents(){
     $('#actPin').textContent = activeChatForMenu.isPinned ? '取消釘選' : '釘選';
     actionMask.classList.add('show');
   };
-
   $('#actCancel').onclick = closeActionSheet;
   actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
 
   $('#actPin').onclick = async () => {
-    closeActionSheet();
-    if(!activeChatForMenu) return;
+    closeActionSheet(); if(!activeChatForMenu) return;
     activeChatForMenu.isPinned = !activeChatForMenu.isPinned;
     await reqToPromise(tx('chats','readwrite').put(activeChatForMenu));
-    await loadChats();
-    renderChatList();
+    await loadChats(); renderChatList();
     toast(activeChatForMenu.isPinned ? '已釘選' : '已取消釘選');
   };
 
   $('#actEdit').onclick = () => {
-    closeActionSheet();
-    if(!activeChatForMenu) return;
+    closeActionSheet(); if(!activeChatForMenu) return;
     isEditingChatId = activeChatForMenu.id;
     $('#createPageTitle').textContent = '編輯資料';
-    
     $('#inputRoomName').value = activeChatForMenu.roomName || '';
     $('#inputTheirName').value = activeChatForMenu.theirName || '';
     $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
@@ -979,79 +933,46 @@ function bindEvents(){
     $('#inputMyName').value = activeChatForMenu.myName || '';
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
     $('#inputMySign').value = activeChatForMenu.mySign || '';
-    
-    tempTheirAvatar = null;
-    tempMyAvatar = null;
+    tempTheirAvatar = null; tempMyAvatar = null;
     
     const theirAvEl = $('#theirAvatar');
-    if(activeChatForMenu.theirAvatar) {
-      theirAvEl.style.backgroundImage = `url(${activeChatForMenu.theirAvatar})`;
-      theirAvEl.textContent = '';
-    } else {
-      theirAvEl.style.backgroundImage = '';
-      theirAvEl.textContent = '祂';
-    }
-    
+    if(activeChatForMenu.theirAvatar) { theirAvEl.style.backgroundImage = `url(${activeChatForMenu.theirAvatar})`; theirAvEl.textContent = ''; } else { theirAvEl.style.backgroundImage = ''; theirAvEl.textContent = '祂'; }
     const myAvEl = $('#myAvatar');
-    if(activeChatForMenu.myAvatar) {
-      myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`;
-      myAvEl.textContent = '';
-    } else {
-      myAvEl.style.backgroundImage = '';
-      myAvEl.textContent = '我';
-    }
-    
+    if(activeChatForMenu.myAvatar) { myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`; myAvEl.textContent = ''; } else { myAvEl.style.backgroundImage = ''; myAvEl.textContent = '我'; }
     $('#pageCreate').classList.add('show');
   };
 
   $('#actClear').onclick = () => {
-    closeActionSheet();
-    if(!activeChatForMenu) return;
-    showConfirm('焚稿', '確定要焚毀該聊天記錄嗎？聊天室將保留，但所有訊息將化為灰燼。', '確定', false, async () => {
+    closeActionSheet(); if(!activeChatForMenu) return;
+    showConfirm('焚稿', '確定要焚毀該聊天記錄嗎？', '確定', false, async () => {
       const msgs = await getMessages(activeChatForMenu.id);
-      for(const m of msgs) {
-        await reqToPromise(tx('messages','readwrite').delete(m.id));
-      }
-      await touchChat(activeChatForMenu.id);
-      renderChatList();
-      toast('紀錄已焚毀');
+      for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id));
+      await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀');
     });
   };
 
   $('#actDelete').onclick = () => {
-    closeActionSheet();
-    if(!activeChatForMenu) return;
-    showConfirm('焚毀', '確定要焚毀此會話嗎？該聊天室及所有記錄將被永久銷毀。', '焚毀', true, async () => {
+    closeActionSheet(); if(!activeChatForMenu) return;
+    showConfirm('焚毀', '確定要焚毀此會話嗎？', '焚毀', true, async () => {
       const msgs = await getMessages(activeChatForMenu.id);
-      for(const m of msgs) {
-        await reqToPromise(tx('messages','readwrite').delete(m.id));
-      }
+      for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id));
       await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id));
-      await loadChats();
-      renderChatList();
-      toast('會話已焚毀');
+      await loadChats(); renderChatList(); toast('會話已焚毀');
     });
   };
 
-  // --- 确认弹窗取消 ---
   $('#confirmCancelBtn').onclick = () => $('#confirmDialogMask').classList.remove('show');
 
   // --- 贴纸选择器 ---
   $('#stickerBtn').onclick = async ()=>{
     const stickers = await reqToPromise(tx('stickers').getAll());
     const list = $('#stickerList');
-    if(!stickers.length) { toast('驛囊中尚無貼紙'); return; }
+    if(!stickers.length) { toast('郵電所中尚無印花'); return; }
     list.innerHTML = '';
     stickers.forEach(s => {
       const img = document.createElement('img');
-      img.src = s.data;
-      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;';
-      img.onclick = () => {
-        pendingStickerData = s.data;
-        updatePendingStickerUI();
-        updateSendBtnState();
-        $('#stickerDialogMask').classList.remove('show');
-      };
+      img.src = s.data; img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;';
+      img.onclick = () => { pendingStickerData = s.data; updatePendingStickerUI(); updateSendBtnState(); $('#stickerDialogMask').classList.remove('show'); };
       list.appendChild(img);
     });
     $('#stickerDialogMask').classList.add('show');
@@ -1071,14 +992,46 @@ function bindEvents(){
     handleMenu(act);
   };
   $('#closeThemeDialog').onclick = ()=> $('#themeDialogMask').classList.remove('show');
+
+  // --- 邮电所页面 ---
+  $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
+
+  document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if(tab.dataset.tab === 'cards') {
+        $('#tabContentCards').style.display = 'block';
+        $('#tabContentOthers').style.display = 'none';
+      } else {
+        $('#tabContentCards').style.display = 'none';
+        $('#tabContentOthers').style.display = 'block';
+      }
+    };
+  });
+
+  $('#addCardBtn').onclick = async () => {
+    const text = $('#newCardInput').value.trim();
+    if(!text) return;
+    const card = { id: 'card_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), text };
+    await reqToPromise(tx('cards', 'readwrite').add(card));
+    $('#newCardInput').value = '';
+    renderCards();
+    toast('電文已新增');
+  };
 }
 
+// 全局挂载删除函数供 onclick 调用
+window.deleteCard = deleteCard;
+
 function handleMenu(act){
-  if(act === 'pouch') toast('驛囊：字卡與貼紙管理（待實作）');
+  if(act === 'postoffice') $('#pagePostOffice').classList.add('show');
   else if(act === 'theme') $('#themeDialogMask').classList.add('show');
   else if(act === 'export') toast('存檔：匯出備份（待實作）');
-  else if(act === 'clear') toast('焚稿：清空記錄（待實作）');
+  else if(act === 'clear') toast('焚稿：清空數據（待實作）');
   else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
+  else if(act === 'letters') toast('信局：功能籌備中...');
+  else if(act === 'messages') toast('簡訊：功能籌備中...');
 }
 
 /* ============ 启动 ============ */

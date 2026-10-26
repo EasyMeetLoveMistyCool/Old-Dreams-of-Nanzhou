@@ -12,14 +12,12 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   
-  /* 锁定整体页面，绝不产生滚动穿透 */
   html,body{
     height:100%; margin:0; overflow:hidden; 
     background:var(--paper); color:var(--ink);
     font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
     background-image:linear-gradient(180deg,#f2ebdc,#e9dfcc);
   }
-  /* 弹性布局：主界面头部和底栏固定 */
   #app{max-width:640px;margin:0 auto;height:100%;display:flex;flex-direction:column;}
   
   header{
@@ -34,7 +32,6 @@
   .drawer-btn b{font-size:11px;font-weight:700;}
   .drawer-btn span{font-size:10px;color:var(--ink-soft);}
   
-  /* 中间消息记录区：独立滚动 */
   .log{
     flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
     padding:16px 14px; display:flex; flex-direction:column; gap:18px;
@@ -49,7 +46,6 @@
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
   .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
   
-  /* 底部发报区固定 */
   .sendbar{
     flex-shrink:0; border-top:1px dashed var(--line); padding:10px 14px 16px;
     background:linear-gradient(180deg,transparent,#e6dcc8); position:relative; z-index:5;
@@ -65,7 +61,6 @@
   .sendbtn{padding:10px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;white-space:nowrap;}
   .sendbtn:disabled{background:transparent;color:var(--ink-soft);border-color:var(--line);cursor:default;}
   
-  /* 抽屉（弹窗） */
   .overlay{position:fixed;inset:0;background:rgba(58,52,40,.35);display:none;align-items:flex-end;z-index:20;}
   .overlay.open{display:flex;}
   .panel{width:100%;max-width:640px;margin:0 auto;height:85vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
@@ -73,17 +68,10 @@
   .panel-head{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
   .panel-head b{font-size:13px;letter-spacing:2px;}
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
-  
-  /* 抽屉中间内容：滚动 */
   .panel-body{padding:12px 14px 20px;overflow-y:auto;flex:1;}
-
-  /* 抽屉底部操作栏（固定） */
   .panel-footer {
-    flex-shrink: 0;
-    padding: 10px 14px;
-    background: var(--paper-2);
-    border-top: 1px dashed var(--line);
-    padding-bottom: max(10px, env(safe-area-inset-bottom)); /* 适配 iPhone 底部小黑条 */
+    flex-shrink: 0; padding: 10px 14px; background: var(--paper-2);
+    border-top: 1px dashed var(--line); padding-bottom: max(10px, env(safe-area-inset-bottom));
   }
 
   .code-list{display:flex;flex-direction:column;gap:8px;}
@@ -116,7 +104,6 @@
   .form textarea{min-height:60px;resize:vertical;}
   .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
   
-  /* 统一的导入导出按钮 */
   .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
   .io-btn-wrap { position: relative; overflow: hidden; }
   .io-btn{
@@ -125,9 +112,9 @@
     display:flex;align-items:center;justify-content:center;
   }
   .io-btn:active{background:#f1ead9;}
-  /* 隐藏丑陋的原生文件框，并用透明覆盖法点击 */
+  /* 完美隐藏原生文件框，覆盖在按钮上 */
   .io-btn-wrap input[type=file] {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size:0;
   }
 
   .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
@@ -165,9 +152,7 @@
       <b id="panelTitle">梦角的电码本</b>
       <button class="close" id="closePanel">×</button>
     </div>
-    <!-- 中间列表区 -->
     <div class="panel-body" id="panelBody"></div>
-    <!-- 底部操作区（固定） -->
     <div class="panel-footer" id="panelFooter"></div>
   </div>
 </div>
@@ -177,12 +162,12 @@
 <script>
 window.onerror = function(msg){ toast('运行错误：' + msg); };
 
-/* ========== IndexedDB (修复了存储和版本问题) ========== */
+/* ========== IndexedDB ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
   return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat_v6', 1); // 升到 v6 确保干净
+    const req = indexedDB.open('dreamchat_v7', 1); // 升到 v7，清空一切脏数据
     req.onupgradeneeded = e=>{
       const d = e.target.result;
       if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
@@ -272,7 +257,6 @@ async function renderAll(){
   codes = await allCodes();
   stamps = await allStamps();
   messages = await allMessages();
-  // 预加载图片链接
   for(const st of stamps){ if(st.imageId) await ensureUrl(st.imageId); }
   $('cntCode').textContent = codes.length + ' 码';
   $('cntStamp').textContent = stamps.length + ' 枚';
@@ -335,7 +319,7 @@ async function openPanel(kind){
   openBackId = null;
   $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
   $('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; // 锁死背景滚动
+  document.body.style.overflow = 'hidden';
   await renderPanel();
 }
 function closePanel(){ 
@@ -348,7 +332,6 @@ async function renderPanel(){
   const footer = $('panelFooter');
   
   if(panelKind==='code'){
-    // 1. 渲染中间列表
     let listHTML = codes.length===0
       ? `<div class="empty-note">电码本空空的。<br>在下面录几码进去。</div>`
       : `<div class="code-list">${codes.map(c=>`
@@ -373,7 +356,6 @@ async function renderPanel(){
       </div>
     `;
 
-    // 2. 渲染底部固定操作区
     footer.innerHTML = `
       <div class="io-row">
         <button class="io-btn" id="expTxt">导出 TXT</button>
@@ -391,7 +373,6 @@ async function renderPanel(){
       </div>
     `;
 
-    // 绑定事件
     $('addCodeBtn').addEventListener('click', onAddCode);
     $('batchCodeBtn').addEventListener('click', onBatchCode);
     $('expTxt').addEventListener('click', exportCodeTxt);
@@ -427,7 +408,6 @@ async function renderPanel(){
       });
     });
   }else{
-    // 1. 邮戳中间列表
     let gridHTML = stamps.length===0
       ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
       : `<div class="stamp-grid">${stamps.map(s=>`
@@ -445,7 +425,6 @@ async function renderPanel(){
       </div>
     `;
 
-    // 2. 邮戳底部固定操作区
     footer.innerHTML = `
       <div class="io-row" style="margin-bottom:0;">
         <button class="io-btn" id="expStampJson">导出 JSON</button>
@@ -565,7 +544,7 @@ async function importCodeTxt(e){
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
-    version: 6,
+    version: 7,
     exportedAt: Date.now(),
     codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
   };
@@ -669,7 +648,7 @@ async function importStampJson(e){
       let blob;
       try{ blob = base64ToBlob(st.imageBase64); }catch(err){ continue; }
       
-      // 【核心修复点】：之前这里忘了先存图片文件，直接存的空ID，导致显示不出来。
+      // 修复：把数据正确存入 images 表并获取 imageId
       const imageId = await saveImage(blob);
       await addStamp({ imageId, createdAt: st.createdAt || Date.now() });
       

@@ -18,11 +18,11 @@
 
   /* ========== 主题变量 ========== */
   :root {
-    --bg-color: #f0f2f5; --topbar-bg: #ffffff; --topbar-border: #e4e6eb;
+    --bg-color: #f0f2f5; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: #ffffff;
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
     --input-bg: rgba(128,128,128,0.15); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
-    --pinned-bg: #fff5f6;
+    --pinned-bg: rgba(255, 245, 246, 0.9);
   }
   body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; }
   body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; }
@@ -30,39 +30,39 @@
   body.theme-twilight { --bg-color: #e0e0e0; --bubble-me: #cfd8dc; --primary: #607d8b; }
   body.theme-crabapple { --bg-color: #fcf2f3; --bubble-me: #ffcdd2; --primary: #e57373; }
   body.theme-rain { --bg-color: #eef4f4; --bubble-me: #b2dfdb; --primary: #009688; }
-  body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; --topbar-bg: #f9f6ee; }
+  body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; }
   body.theme-ink { --bg-color: #f4f4f4; --bubble-me: #e0e0e0; --primary: #424242; }
   
   body.theme-cyber { 
-    --bg-color: #000000; --topbar-bg: #111111; --topbar-border: #222;
+    --bg-color: #000000; --topbar-border: #222;
     --bubble-me: #003366; --bubble-them: #1a1a1a;
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
-    --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-space { 
-    --bg-color: #0b1320; --topbar-bg: #121d30; --topbar-border: #1a2639;
+    --bg-color: #0b1320; --topbar-border: #1a2639;
     --bubble-me: #1e3a5f; --bubble-them: #1a2639;
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
-    --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-nightpurple { 
-    --bg-color: #150e1c; --topbar-bg: #1f1528; --topbar-border: #2b1d36;
+    --bg-color: #150e1c; --topbar-border: #2b1d36;
     --bubble-me: #442266; --bubble-them: #2b1d36;
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
-    --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
   body.theme-pureblack { 
-    --bg-color: #000000; --topbar-bg: #0a0a0a; --topbar-border: #1a1a1a;
+    --bg-color: #000000; --topbar-border: #1a1a1a;
     --bubble-me: #333333; --bubble-them: #111111;
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
-    --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
   }
 
   /* ========== 核心容器 ========== */
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background: var(--bg-color); }
 
-  /* ========== 页面容器（确保点击不穿透） ========== */
-  .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; background: transparent; }
+  /* ========== 页面容器 ========== */
+  .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
   
   /* 页面层级 */
   .page-list { z-index: 1; pointer-events: auto; } 
@@ -183,7 +183,7 @@
   .bubble .meta { float:right; font-size:11px; color:var(--time-color); margin:8px 0 -2px 8px; line-height:1; }
   .bubble::after { content:''; display:block; clear:both; }
 
-  /* ========== 聊天页输入区（极简磨砂） ========== */
+  /* ========== 聊天页输入区 ========== */
   .composer {
     flex:0 0 auto;
     padding:8px 10px; padding-bottom:calc(8px + env(safe-area-inset-bottom));
@@ -191,7 +191,6 @@
     background: transparent; border-top: none;
   }
   
-  /* 彻底删掉那个丑提示框，用隐藏类覆盖 */
   .pending-sticker-box { display: none !important; }
 
   .composer input {
@@ -212,7 +211,7 @@
   .send-btn:disabled { background: rgba(128,128,128,0.2); color:var(--text-secondary); opacity: 0.5; }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 表单与邮电所（全部透明穿透） ========== */
+  /* ========== 表单与邮电所 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
@@ -245,7 +244,7 @@
   .tab-bar { display:flex; background:transparent; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
-  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--input-bg); border-radius:8px; margin-bottom:8px; }
+  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:rgba(128,128,128,0.1); border-radius:8px; margin-bottom:8px; }
   .list-item-text { flex:1; font-size:15px; }
 
   /* ========== 佈景页面 ========== */
@@ -370,7 +369,6 @@
       <div class="messages" id="messages"></div>
     </div>
     
-    <!-- 彻底删掉原来占位置的预览框，用隐藏类覆盖 -->
     <div class="pending-sticker-box"></div>
 
     <div class="composer">
@@ -517,7 +515,7 @@ function toast(msg){
   toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800);
 }
 
-/* ============ 主题与全局背景逻辑 ============ */
+/* ============ 核心：主题与页面独立背景逻辑 ============ */
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
@@ -529,12 +527,32 @@ function applyThemeAndBg() {
     card.classList.toggle('active', card.dataset.theme === savedTheme);
   });
 
+  // 那些需要铺背景的二级页面
+  const bgPages = ['#pageList', '#pageCreate', '#pageSettings', '#pagePostOffice'];
   const appEl = $('#app');
+
   if (globalBgImage) {
     const isDark = savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('pureblack');
     const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
-    appEl.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+    const bgStyle = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+    
+    // 给每个页面单独设置背景，保证它们相互独立，绝对不穿透
+    bgPages.forEach(sel => {
+      const el = document.querySelector(sel);
+      if(el) {
+        el.style.background = bgStyle;
+        el.style.backgroundColor = 'transparent';
+      }
+    });
+    appEl.style.background = 'var(--bg-color)'; // 最底层用纯色
   } else {
+    // 没设置背景图时
+    bgPages.forEach(sel => {
+      const el = document.querySelector(sel);
+      if(el) {
+        el.style.background = 'var(--bg-color)';
+      }
+    });
     appEl.style.background = 'var(--bg-color)';
   }
 }
@@ -727,6 +745,8 @@ async function openChat(id){
 
   const chatPage = $('#pageChat');
   const bgMask = $('#chatBgMask');
+  
+  // 聊天室页面的背景优先级：聊天室专属背景 > 全局背景 > 默认底色
   if(c.chatBgImage) {
     chatPage.style.backgroundImage = `url(${c.chatBgImage})`;
     chatPage.style.backgroundColor = 'transparent';
@@ -734,10 +754,15 @@ async function openChat(id){
     let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
     const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
-  } else {
-    // 没有单独背景，也透明，露出底下的全局背景
-    chatPage.style.backgroundImage = 'none';
+  } else if(globalBgImage) {
+    // 没传背景，用全局背景
+    chatPage.style.backgroundImage = `url(${globalBgImage})`;
     chatPage.style.backgroundColor = 'transparent';
+    const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
+    bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
+  } else {
+    chatPage.style.backgroundImage = 'none';
+    chatPage.style.backgroundColor = 'var(--bg-color)';
     bgMask.style.backgroundColor = 'transparent';
   }
   

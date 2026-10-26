@@ -20,7 +20,7 @@
   :root {
     --bg-color: #f0f2f5; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: rgba(255,255,255,0.85);
-    --bubble-action-me: rgba(255, 230, 235, 0.9); /* 绯红信笺底色 */
+    --bubble-action-me: rgba(255, 230, 235, 0.9);
     --bubble-action-them: rgba(255, 235, 240, 0.85);
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
     --input-bg: rgba(128,128,128,0.15); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
@@ -182,7 +182,6 @@
   .msg-group.them .bubble { background: var(--bubble-them); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
   .msg-group.me .bubble { background: var(--bubble-me); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
 
-  /* 动作专属绯红信笺 */
   .msg-group.them .bubble.action-bubble { background: var(--bubble-action-them); border: 1px solid rgba(255, 150, 150, 0.3); }
   .msg-group.me .bubble.action-bubble { background: var(--bubble-action-me); border: 1px solid rgba(255, 150, 150, 0.3); }
 
@@ -310,12 +309,17 @@
 
   .sticker-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:250; align-items:flex-end; }
   .sticker-panel-mask.show { display:flex; }
-  .sticker-panel { background:var(--bg-color); width:100%; max-height:50vh; border-radius:16px 16px 0 0; display:flex; flex-direction:column; animation: slideUp 0.25s ease; }
+  .sticker-panel { background:var(--bg-color); width:100%; max-height:60vh; border-radius:16px 16px 0 0; display:flex; flex-direction:column; animation: slideUp 0.25s ease; }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .sticker-panel-header { padding:12px; text-align:center; border-bottom:1px solid var(--border-light); font-size:15px; font-weight:600; position:relative; }
   .sticker-panel-close { position:absolute; right:15px; top:12px; font-size:16px; color:var(--text-secondary); cursor:pointer; }
   .sticker-panel-content { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
   .sticker-panel-content img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; cursor:pointer; }
+  
+  /* 动作选择列表样式 */
+  .action-list-content { flex:1; overflow-y:auto; padding:0; display:flex; flex-direction:column; }
+  .action-select-item { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer; font-size:15px; color:var(--text-color); background:transparent; }
+  .action-select-item:active { background:var(--input-bg); }
 
   /* ⚡ 面板 */
   .flash-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:250; align-items:center; justify-content:center; }
@@ -323,9 +327,23 @@
   .flash-panel { background:var(--bg-color); width:80%; max-width:300px; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; animation: zoomIn 0.2s ease; }
   @keyframes zoomIn { from { transform: scale(0.9); opacity:0; } to { transform: scale(1); opacity:1; } }
   .flash-panel-header { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); font-size:16px; font-weight:600; color:var(--text-color); }
-  .flash-grid { display:grid; grid-template-columns: 1fr 1fr; gap:1px; background:var(--border-light); }
-  .flash-item { background:var(--bg-color); padding:20px 0; text-align:center; font-size:16px; font-weight:500; color:var(--primary); cursor:pointer; }
-  .flash-item:active { background:var(--input-bg); }
+  
+  .flash-grid { 
+    display: flex; 
+    flex-direction: column; 
+    background: var(--border-light); 
+    gap: 1px; 
+  }
+  .flash-item { 
+    background: var(--bg-color); 
+    padding: 16px 0; 
+    text-align: center; 
+    font-size: 16px; 
+    font-weight: 500; 
+    color: var(--primary); 
+    cursor: pointer; 
+  }
+  .flash-item:active { background: var(--input-bg); }
 
   .toast {
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff;
@@ -398,7 +416,6 @@
     </div>
 
     <div class="composer">
-      <!-- 待发送的贴纸预览挂件 -->
       <div class="pending-sticker-preview" id="pendingStickerPreview" onclick="clearPendingSticker()">
         <img id="pendingStickerImg" src="" alt="待發送印花">
       </div>
@@ -570,7 +587,7 @@
         <div id="actionListContainer"></div>
       </div>
 
-      <!-- 暗语、留声占位 -->
+      <!-- 留声占位 -->
       <div id="tabContentMusic" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
         該區域功能待開發...
       </div>
@@ -626,18 +643,19 @@
   </div>
 </div>
 
-<!-- 贴纸选择面板 -->
+<!-- 印花面板 -->
 <div class="sticker-panel-mask" id="stickerPanelMask">
   <div class="sticker-panel">
-    <div class="sticker-panel-header">
+    <div class="sticker-panel-header" id="stickerPanelHeader">
       選擇印花
       <span class="sticker-panel-close" id="closeStickerPanel">✕</span>
     </div>
     <div class="sticker-panel-content" id="stickerPanelContent"></div>
+    <div class="action-list-content" id="actionListContent" style="display:none;"></div>
   </div>
 </div>
 
-<!-- ⚡ 闪电互动面板 -->
+<!-- ⚡ 闪电面板 -->
 <div class="flash-panel-mask" id="flashPanelMask">
   <div class="flash-panel">
     <div class="flash-panel-header">互動</div>
@@ -725,7 +743,7 @@ function fileToBase64(file, callback) {
 
 /* ============ IndexedDB ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 5; // 升个版本，确保动作表建立
+const DB_VER = 5; // 版本5：新增actions表
 let db = null;
 
 function openDB(){
@@ -743,7 +761,6 @@ function openDB(){
         s.createIndex('category', 'category', { unique:false });
       }
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
-      // 新增动作表
       if(!d.objectStoreNames.contains('actions')) {
         const s = d.createObjectStore('actions', { keyPath:'id' });
         s.createIndex('category', 'category', { unique:false });
@@ -1560,8 +1577,7 @@ function bindEvents(){
             const data = JSON.parse(event.target.result);
             if (Array.isArray(data)) data.forEach(item => { if (item.text) newCards.push({ text: item.text, category: item.category || currentSubTab }); });
           } else {
-            const lines = event.target.result.split('\n');
-            lines.forEach(line => { if(line.trim()) newCards.push({ text: line.trim(), category: currentSubTab }); });
+            event.target.result.split('\n').forEach(line => { if(line.trim()) newCards.push({ text: line.trim(), category: currentSubTab }); });
           }
         } catch (err) { toast('收報失敗：文件格式錯誤'); return; }
         for (let card of newCards) {
@@ -1807,7 +1823,11 @@ function bindEvents(){
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent'); if(!stickers.length) { toast('郵電所中尚無印花'); return; }
-    content.innerHTML = '';
+    content.innerHTML = ''; content.style.display = 'grid';
+    $('#actionListContent').style.display = 'none';
+    $('#stickerPanelHeader').innerHTML = '選擇印花 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
+    $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
+    
     stickers.forEach(s => {
       const img = document.createElement('img'); img.src = s.data;
       img.onclick = () => {
@@ -1819,7 +1839,6 @@ function bindEvents(){
     });
     $('#stickerPanelMask').classList.add('show');
   };
-  $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   
   // ⚡ 闪电面板
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
@@ -1832,12 +1851,17 @@ function bindEvents(){
     const toThem = allActions.filter(a => a.category === 'to_them');
     if(!toThem.length) { toast('尚未留痕任何對祂的動作'); return; }
     
-    // 用极简的弹出框让用户选
     const content = $('#stickerPanelContent');
-    content.innerHTML = '';
+    const list = $('#actionListContent');
+    content.style.display = 'none';
+    list.style.display = 'flex';
+    list.innerHTML = '';
+    
+    $('#stickerPanelHeader').innerHTML = '予祂 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
+    
     toThem.forEach(a => {
       const div = document.createElement('div');
-      div.style.cssText = 'padding:15px; text-align:center; border-bottom:1px solid rgba(0,0,0,0.1); cursor:pointer; font-size:15px; background:var(--bg-color);';
+      div.className = 'action-select-item';
       div.textContent = a.text;
       div.onclick = async () => {
         $('#stickerPanelMask').classList.remove('show');
@@ -1846,10 +1870,12 @@ function bindEvents(){
         currentMessages.push(msg);
         renderMessages(false);
         await touchChat(currentChatId);
+        
+        // 方案二：触发祂的正常概率回复
+        setTimeout(replyFromThem, 8000 + Math.random() * 7000); 
       };
-      content.appendChild(div);
+      list.appendChild(div);
     });
-    $('.sticker-panel-header').innerHTML = '予祂 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
     $('#stickerPanelMask').classList.add('show');
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };

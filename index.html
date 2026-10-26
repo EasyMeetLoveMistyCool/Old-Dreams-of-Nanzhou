@@ -16,51 +16,55 @@
     transition: background .3s, color .3s;
   }
 
-  /* ========== 主题变量 ========== */
+  /* ========== 主题变量 (12套) ========== */
   :root {
-    --bg-color: #e6ebee;
-    --topbar-bg: #ffffff;
-    --topbar-border: #e4e6eb;
-    --bubble-me: #effdde;
-    --bubble-them: #ffffff;
-    --text-color: #000000;
-    --text-secondary: #707579;
-    --time-color: #a0a0a0;
-    --input-bg: #f0f2f5;
-    --primary: #3390ec;
-    --border-light: #f0f2f5;
+    --bg-color: #f0f2f5; --topbar-bg: #ffffff; --topbar-border: #e4e6eb;
+    --bubble-me: #d6ecff; --bubble-them: #ffffff;
+    --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
+    --input-bg: #f0f2f5; --primary: #3390ec; --border-light: #f0f2f5;
     --pinned-bg: #fff5f6;
   }
-  body.theme-blue { --bubble-me: #d6ecff; }
-  body.theme-purple { --bubble-me: #e8def8; }
-  body.theme-pink { --bubble-me: #fce4ec; }
-  body.theme-dark {
-    --bg-color: #0e1621;
-    --topbar-bg: #17212b;
-    --topbar-border: #101921;
-    --bubble-me: #2b5278;
-    --bubble-them: #182533;
-    --text-color: #ffffff;
-    --text-secondary: #7f91a4;
-    --time-color: #6c7883;
-    --input-bg: #17212b;
-    --primary: #64b5f6;
-    --border-light: #101921;
-    --pinned-bg: #2b1f24;
+  /* 天空藍 (默认) */
+  body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; }
+  /* 森林綠 */
+  body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; }
+  /* 日落橘 */
+  body.theme-sunset { --bg-color: #fdf5eb; --bubble-me: #ffe0b2; --primary: #ff9800; }
+  /* 暮光灰 */
+  body.theme-twilight { --bg-color: #e0e0e0; --bubble-me: #cfd8dc; --primary: #607d8b; }
+  /* 海棠紅 */
+  body.theme-crabapple { --bg-color: #fcf2f3; --bubble-me: #ffcdd2; --primary: #e57373; }
+  /* 煙雨青 */
+  body.theme-rain { --bg-color: #eef4f4; --bubble-me: #b2dfdb; --primary: #009688; }
+  /* 舊報紙 */
+  body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; --topbar-bg: #f9f6ee; }
+  /* 水墨 */
+  body.theme-ink { --bg-color: #f4f4f4; --bubble-me: #e0e0e0; --primary: #424242; }
+
+  /* 深色系列 */
+  body.theme-cyber { 
+    --bg-color: #000000; --topbar-bg: #111111; --topbar-border: #222;
+    --bubble-me: #003366; --bubble-them: #1a1a1a;
+    --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
+    --input-bg: #111; --primary: #00b0ff; --border-light: #222; --pinned-bg: #2b1f24;
   }
-  body.theme-darkblue {
-    --bg-color: #17212b;
-    --topbar-bg: #1c2733;
-    --topbar-border: #121a22;
-    --bubble-me: #3a6ea5;
-    --bubble-them: #212d3b;
-    --text-color: #ffffff;
-    --text-secondary: #7f91a4;
-    --time-color: #6c7883;
-    --input-bg: #212d3b;
-    --primary: #64b5f6;
-    --border-light: #121a22;
-    --pinned-bg: #2b1f24;
+  body.theme-space { 
+    --bg-color: #0b1320; --topbar-bg: #121d30; --topbar-border: #1a2639;
+    --bubble-me: #1e3a5f; --bubble-them: #1a2639;
+    --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
+    --input-bg: #121d30; --primary: #4a90e2; --border-light: #1a2639; --pinned-bg: #2b1f24;
+  }
+  body.theme-nightpurple { 
+    --bg-color: #150e1c; --topbar-bg: #1f1528; --topbar-border: #2b1d36;
+    --bubble-me: #442266; --bubble-them: #2b1d36;
+    --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
+    --input-bg: #1f1528; --primary: #b388ff; --border-light: #2b1d36; --pinned-bg: #2b1f24;
+  }
+  body.theme-pureblack { 
+    --bg-color: #000000; --topbar-bg: #0a0a0a; --topbar-border: #1a1a1a;
+    --bubble-me: #333333; --bubble-them: #111111;
+    --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
+    --input-bg: #0a0a0a; --primary: #888; --border-light: #1a1a1a; --pinned-bg: #2b1f24;
   }
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
@@ -103,13 +107,13 @@
 
   /* ========== 页面容器 ========== */
   .page { flex:1; overflow:hidden; position:relative; }
-  .page-list, .page-chat, .page-create, .page-sub { 
+  .page-list, .page-chat, .page-create, .page-sub, .page-settings { 
     position:absolute; inset:0; display:flex; flex-direction:column; 
     background:var(--bg-color); transition:transform .22s ease, background .3s; 
   }
   .page-list { z-index:2; }
-  .page-chat, .page-create, .page-sub { z-index:3; transform:translateX(100%); }
-  .page-chat.show, .page-create.show, .page-sub.show { transform:translateX(0); }
+  .page-chat, .page-create, .page-sub, .page-settings { z-index:3; transform:translateX(100%); }
+  .page-chat.show, .page-create.show, .page-sub.show, .page-settings.show { transform:translateX(0); }
 
   /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
@@ -139,36 +143,26 @@
     box-shadow:0 4px 12px rgba(51,144,236,.4); cursor:pointer; z-index:5; border:none;
   }
 
-  /* ========== 聊天页 (背景全覆盖) ========== */
-  .page-chat {
-    background-size: cover; background-position: center;
-  }
-  /* 独立遮罩层，绝对定位盖住全屏 */
-  .page-chat .chat-bg-mask {
-    position: absolute; inset: 0; pointer-events: none; z-index: 1;
-  }
-  /* 聊天内容的滚动区 */
+  /* ========== 聊天页 (全屏背景铺满) ========== */
+  .page-chat { background-size: cover; background-position: center; }
+  .chat-bg-mask { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+  
+  /* 关键：让顶栏和输入区透明，露出背景 */
+  .page-chat .topbar { background: transparent !important; border-bottom: 1px solid var(--topbar-border); z-index: 10; }
+  .page-chat .composer { background: transparent !important; border-top: 1px solid var(--topbar-border); z-index: 10; }
+
   .messages-wrap {
     flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2;
   }
   .messages {
     padding: 10px 14px 6px; display: flex; flex-direction: column; min-height: 100%;
   }
-  /* 聊天页的顶栏和输入栏设为半透明 */
-  .page-chat .topbar { background: var(--topbar-bg); z-index: 10; opacity: 0.95; }
-  .page-chat .composer { background: var(--topbar-bg); z-index: 10; opacity: 0.95; }
-  /* 深色主题加磨砂 */
-  body.theme-dark .page-chat .topbar, body.theme-darkblue .page-chat .topbar,
-  body.theme-dark .page-chat .composer, body.theme-darkblue .page-chat .composer {
-    background: rgba(23, 33, 43, 0.85);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  }
-
+  
   .date-divider {
     align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px;
     margin:10px 0; font-weight:500;
   }
-  body.theme-dark .date-divider, body.theme-darkblue .date-divider { background:rgba(255,255,255,.15); }
+  body.theme-cyber .date-divider, body.theme-space .date-divider, body.theme-nightpurple .date-divider, body.theme-pureblack .date-divider { background:rgba(255,255,255,.15); }
 
   .msg-row { display:flex; margin:2px 0; align-items:flex-end; gap:6px; }
   .msg-row.me { justify-content:flex-end; flex-direction:row-reverse; }
@@ -200,11 +194,11 @@
 
   /* ========== 输入区 ========== */
   .composer {
-    flex:0 0 auto; border-top:1px solid var(--topbar-border);
+    flex:0 0 auto;
     padding:6px 8px; padding-bottom:calc(6px + env(safe-area-inset-bottom));
     display:flex; align-items:center; gap:6px; transition: background .3s; z-index: 10;
   }
-  .pending-sticker-box { display:none; background:var(--input-bg); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
+  .pending-sticker-box { display:none; background:rgba(128,128,128,0.1); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
   .pending-sticker-box.show { display:flex; align-items:center; gap:10px; }
   .pending-sticker-box img { height:40px; border-radius:4px; }
   .pending-sticker-box .close-btn { font-size:18px; color:var(--text-secondary); cursor:pointer; margin-left:auto; }
@@ -220,7 +214,7 @@
   .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 新建/编辑页 & 邮电所 ========== */
+  /* ========== 通用表单页 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
@@ -234,7 +228,6 @@
     padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
   }
   .form-input:focus { border-color:var(--primary); }
-  
   .btn-primary {
     width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
     font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
@@ -251,11 +244,25 @@
   .slider-container { width:100%; display:flex; align-items:center; gap:10px; padding:0 10px; }
   .slider-container input[type=range] { flex:1; }
 
+  /* 邮电所界面 */
   .tab-bar { display:flex; background:var(--topbar-bg); border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
   .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--topbar-bg); border-bottom:1px solid var(--border-light); }
   .list-item-text { flex:1; font-size:15px; }
+
+  /* ========== 佈景页面 (专属UI) ========== */
+  .settings-section { background:var(--topbar-bg); border-radius:10px; padding:15px; margin-bottom:20px; }
+  .settings-title { font-size:15px; font-weight:600; color:var(--text-color); margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; }
+  
+  .theme-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+  .theme-card {
+    height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:500; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.1);
+    border:2px solid transparent; transition:all .2s;
+  }
+  .theme-card:active { transform:scale(0.95); }
+  .theme-card.active { border-color:var(--text-color); }
 
   /* ========== 菜单 & 弹窗 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
@@ -290,7 +297,7 @@
   .toast.show { opacity:1; }
 </style>
 </head>
-<body class="theme-green">
+<body class="theme-sky">
 
 <div id="app">
   <!-- 1. 列表页 -->
@@ -312,9 +319,7 @@
     </div>
     <div class="create-scroll">
       <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱"></div>
-      
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-
       <div class="form-group">
         <div class="form-label">祂的資料</div>
         <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
@@ -323,7 +328,6 @@
         <input type="text" class="form-input" id="inputTheirNick" placeholder="暱稱">
         <input type="text" class="form-input" id="inputTheirSign" placeholder="簽名">
       </div>
-      
       <div class="form-group">
         <div class="form-label">我的資料</div>
         <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
@@ -332,34 +336,27 @@
         <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱">
         <input type="text" class="form-input" id="inputMySign" placeholder="簽名">
       </div>
-
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-
-      <!-- 背景设置移到了最下面 -->
       <div class="form-group">
         <div class="form-label">聊天背景 (可選)</div>
         <div class="bg-upload-box" id="bgUploadBox" onclick="document.getElementById('bgFile').click()">
           <span id="bgUploadText">點擊上傳背景圖</span>
         </div>
         <input type="file" id="bgFile" accept="image/*" style="display:none">
-        
         <div class="slider-container" id="bgMaskContainer" style="display:none;">
           <span style="font-size:12px; color:var(--text-secondary);">遮罩</span>
           <input type="range" id="bgMaskSlider" min="0" max="90" value="60">
           <span id="bgMaskValue" style="font-size:12px; color:var(--text-secondary); width:30px; text-align:right;">60%</span>
         </div>
       </div>
-
       <button class="btn-primary" id="saveChatBtn">完成</button>
       <div style="height:20px;"></div>
     </div>
   </div>
 
-  <!-- 3. 聊天页 (背景铺满) -->
+  <!-- 3. 聊天页 -->
   <div class="page-chat" id="pageChat">
-    <!-- 全屏遮罩层 -->
     <div class="chat-bg-mask" id="chatBgMask"></div>
-
     <div class="topbar">
       <button class="icon-btn" id="backBtn">←</button>
       <div class="avatar-sm" id="chatAvatar">祂</div>
@@ -373,11 +370,9 @@
         </svg>
       </button>
     </div>
-    
     <div class="messages-wrap" id="messagesWrap">
       <div class="messages" id="messages"></div>
     </div>
-
     <div class="pending-sticker-box" id="pendingStickerBox">
       <img id="pendingStickerImg" src="" alt="待發送">
       <span style="font-size:13px;color:var(--text-secondary)">將隨文字發送</span>
@@ -397,7 +392,52 @@
     </div>
   </div>
 
-  <!-- 4. 邮电所 (子页面) -->
+  <!-- 4. 佈景 页面 (独立) -->
+  <div class="page-settings" id="pageSettings">
+    <div class="topbar">
+      <button class="icon-btn" id="backSettingsBtn">←</button>
+      <div class="header-title" style="flex:1; text-align:center; font-size:17px;">佈景</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="create-scroll" style="padding:15px;">
+      
+      <!-- 主頁背景 -->
+      <div class="settings-section">
+        <div class="settings-title">主頁背景</div>
+        <div class="bg-upload-box" id="mainBgUploadBox" onclick="document.getElementById('mainBgFile').click()">
+          <span id="mainBgText">點擊上傳主頁背景</span>
+        </div>
+        <input type="file" id="mainBgFile" accept="image/*" style="display:none">
+        <div class="slider-container" id="mainBgMaskContainer" style="display:none;">
+          <span style="font-size:12px; color:var(--text-secondary);">遮罩</span>
+          <input type="range" id="mainBgMaskSlider" min="0" max="90" value="20">
+          <span id="mainBgMaskValue" style="font-size:12px; color:var(--text-secondary); width:30px; text-align:right;">20%</span>
+        </div>
+      </div>
+
+      <!-- 主題顏色 -->
+      <div class="settings-section">
+        <div class="settings-title">主題顏色</div>
+        <div class="theme-grid">
+          <div class="theme-card" data-theme="theme-sky" style="background:#e6ebee; color:#000;">天空藍</div>
+          <div class="theme-card" data-theme="theme-forest" style="background:#e8efe9; color:#000;">森林綠</div>
+          <div class="theme-card" data-theme="theme-sunset" style="background:#fdf5eb; color:#000;">日落橘</div>
+          <div class="theme-card" data-theme="theme-twilight" style="background:#e0e0e0; color:#000;">暮光灰</div>
+          <div class="theme-card" data-theme="theme-crabapple" style="background:#fcf2f3; color:#000;">海棠紅</div>
+          <div class="theme-card" data-theme="theme-rain" style="background:#eef4f4; color:#000;">煙雨青</div>
+          <div class="theme-card" data-theme="theme-paper" style="background:#f5f1e6; color:#000;">舊報紙</div>
+          <div class="theme-card" data-theme="theme-ink" style="background:#f4f4f4; color:#000;">水墨</div>
+          <div class="theme-card" data-theme="theme-cyber" style="background:#000; color:#fff;">賽博黑</div>
+          <div class="theme-card" data-theme="theme-space" style="background:#0b1320; color:#fff;">深空</div>
+          <div class="theme-card" data-theme="theme-nightpurple" style="background:#150e1c; color:#fff;">暗夜紫</div>
+          <div class="theme-card" data-theme="theme-pureblack" style="background:#000; color:#aaa;">純黑</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. 邮电所 (子页面) -->
   <div class="page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
@@ -434,7 +474,7 @@
     <div class="menu-item" data-act="postoffice">郵電所</div>
     <div class="menu-item" data-act="letters">信局</div>
     <div class="menu-item" data-act="messages">簡訊</div>
-    <div class="menu-item" data-act="theme">燈號</div>
+    <div class="menu-item" data-act="settings">佈景</div>
     <div class="menu-item" data-act="export">存檔</div>
     <div class="menu-item danger" data-act="clear">焚稿</div>
     <div class="menu-item" data-act="about">南洲誌</div>
@@ -470,21 +510,6 @@
   </div>
 </div>
 
-<div class="dialog-mask" id="themeDialogMask">
-  <div class="dialog">
-    <div class="dialog-title">選擇燈號</div>
-    <div class="dialog-list">
-      <div class="dialog-item" onclick="setTheme('theme-green')">淺綠</div>
-      <div class="dialog-item" onclick="setTheme('theme-blue')">淺藍</div>
-      <div class="dialog-item" onclick="setTheme('theme-purple')">淺紫</div>
-      <div class="dialog-item" onclick="setTheme('theme-pink')">淺粉</div>
-      <div class="dialog-item" onclick="setTheme('theme-dark')">深色</div>
-      <div class="dialog-item" onclick="setTheme('theme-darkblue')">深藍</div>
-    </div>
-    <div class="dialog-item" id="closeThemeDialog" style="color:var(--primary)">取消</div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -499,27 +524,49 @@ function toast(msg){
   toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800);
 }
 
-/* ============ 主题逻辑 ============ */
-function initTheme() {
-  let savedTheme = localStorage.getItem('nz_theme') || 'theme-green';
+/* ============ 主题与全局背景逻辑 ============ */
+let globalBgImage = localStorage.getItem('nz_main_bg') || null;
+let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
+
+function applyThemeAndBg() {
+  // 1. 应用主题颜色
+  let savedTheme = localStorage.getItem('nz_theme') || 'theme-sky';
   document.body.className = savedTheme;
+  
+  // 高亮当前选中的色卡
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.classList.toggle('active', card.dataset.theme === savedTheme);
+  });
+
+  // 2. 应用主页面背景
+  const pageList = $('#pageList');
+  if (globalBgImage) {
+    pageList.style.backgroundImage = `url(${globalBgImage})`;
+    // 动态加一层遮罩底色
+    const isDark = savedTheme.includes('dark') || savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('black');
+    const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
+    // 为了不破坏原有列表结构，利用线性渐变铺色
+    pageList.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+  } else {
+    pageList.style.backgroundImage = 'none';
+    pageList.style.background = 'var(--bg-color)';
+  }
 }
+
 function setTheme(themeName) {
-  document.body.className = themeName;
   localStorage.setItem('nz_theme', themeName);
-  $('#themeDialogMask').classList.remove('show');
+  applyThemeAndBg();
   // 刷新当前聊天室遮罩颜色（如果开着的话）
   if (currentChatId) {
     const c = chats.find(x=>x.id===currentChatId);
     if(c && c.chatBgImage) {
       const bgMask = $('#chatBgMask');
       let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-      const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-darkblue');
+      const isDark = themeName.includes('dark') || themeName.includes('cyber') || themeName.includes('space') || themeName.includes('purple') || themeName.includes('black');
       bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
     }
   }
 }
-initTheme();
 
 function fileToBase64(file, callback) {
   const reader = new FileReader();
@@ -577,6 +624,15 @@ async function init(){
   renderChatList();
   bindEvents();
   renderCards();
+  applyThemeAndBg();
+  // 初始化主页背景UI状态
+  if (globalBgImage) {
+    $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
+    $('#mainBgText').textContent = '';
+    $('#mainBgMaskContainer').style.display = 'flex';
+    $('#mainBgMaskSlider').value = globalBgMask;
+    $('#mainBgMaskValue').textContent = globalBgMask + '%';
+  }
 }
 
 async function loadChats(){
@@ -693,7 +749,7 @@ async function openChat(id){
     chatPage.style.backgroundColor = 'transparent';
     
     let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-    const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-darkblue');
+    const isDark = document.body.className.includes('dark') || document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('black');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
   } else {
     chatPage.style.backgroundImage = 'none';
@@ -931,39 +987,32 @@ function bindEvents(){
     $('#myAvatar').style.backgroundImage = '';
     $('#myAvatar').textContent = '我';
     
-    // 重置背景设置
     $('#bgUploadBox').style.backgroundImage = '';
     $('#bgUploadText').textContent = '點擊上傳背景圖';
     $('#bgMaskContainer').style.display = 'none';
     $('#bgMaskSlider').value = 60;
     $('#bgMaskValue').textContent = '60%';
     
-    tempTheirAvatar = null;
-    tempMyAvatar = null;
-    tempBgImage = null;
-    tempBgMask = 60;
+    tempTheirAvatar = null; tempMyAvatar = null; tempBgImage = null; tempBgMask = 60;
     
     $('#pageCreate').classList.add('show');
   };
 
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
   
-  // 头像
   $('#theirFile').onchange = e => {
     if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; });
   };
   $('#myFile').onchange = e => {
     if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; });
   };
-  
-  // 聊天背景
   $('#bgFile').onchange = e => {
     if(e.target.files[0]) {
       fileToBase64(e.target.files[0], b => {
         tempBgImage = b;
         $('#bgUploadBox').style.backgroundImage = `url(${b})`;
         $('#bgUploadText').textContent = '';
-        $('#bgMaskContainer').style.display = 'flex'; // 显示滑块
+        $('#bgMaskContainer').style.display = 'flex';
       });
     }
   };
@@ -972,7 +1021,6 @@ function bindEvents(){
     $('#bgMaskValue').textContent = tempBgMask + '%';
   };
 
-  // 保存
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim();
     const theirName = $('#inputTheirName').value.trim();
@@ -1060,7 +1108,6 @@ function bindEvents(){
     const myAvEl = $('#myAvatar');
     if(activeChatForMenu.myAvatar) { myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`; myAvEl.textContent = ''; } else { myAvEl.style.backgroundImage = ''; myAvEl.textContent = '我'; }
     
-    // 编辑时加载背景状态
     if(activeChatForMenu.chatBgImage) {
       $('#bgUploadBox').style.backgroundImage = `url(${activeChatForMenu.chatBgImage})`;
       $('#bgUploadText').textContent = '';
@@ -1125,7 +1172,6 @@ function bindEvents(){
     closeMenu();
     handleMenu(act);
   };
-  $('#closeThemeDialog').onclick = ()=> $('#themeDialogMask').classList.remove('show');
 
   // --- 邮电所页面 ---
   $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
@@ -1153,13 +1199,41 @@ function bindEvents(){
     renderCards();
     toast('電文已新增');
   };
+
+  // --- 佈景页面 ---
+  $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
+  
+  // 佈景：色卡切换
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.onclick = () => setTheme(card.dataset.theme);
+  });
+
+  // 佈景：主页面背景设置
+  $('#mainBgFile').onchange = e => {
+    if(e.target.files[0]) {
+      fileToBase64(e.target.files[0], b => {
+        globalBgImage = b;
+        localStorage.setItem('nz_main_bg', b);
+        applyThemeAndBg();
+        $('#mainBgUploadBox').style.backgroundImage = `url(${b})`;
+        $('#mainBgText').textContent = '';
+        $('#mainBgMaskContainer').style.display = 'flex';
+      });
+    }
+  };
+  $('#mainBgMaskSlider').oninput = e => {
+    globalBgMask = e.target.value;
+    localStorage.setItem('nz_main_bg_mask', globalBgMask);
+    $('#mainBgMaskValue').textContent = globalBgMask + '%';
+    applyThemeAndBg();
+  };
 }
 
 window.deleteCard = deleteCard;
 
 function handleMenu(act){
   if(act === 'postoffice') $('#pagePostOffice').classList.add('show');
-  else if(act === 'theme') $('#themeDialogMask').classList.add('show');
+  else if(act === 'settings') $('#pageSettings').classList.add('show');
   else if(act === 'export') toast('存檔：匯出備份（待實作）');
   else if(act === 'clear') toast('焚稿：清空數據（待實作）');
   else if(act === 'about') toast('南洲誌：關於本網站（待實作）');

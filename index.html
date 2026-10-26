@@ -6,10 +6,11 @@
 <meta name="theme-color" content="#ffffff">
 <title>南洲舊夢</title>
 <style>
+  /* 之前的所有 CSS 保持原样，为了节省字数略去，请直接用你文件里的 */
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; overflow:hidden; }
   body { font-family: -apple-system, "HarmonyOS Sans", "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg-color); color: var(--text-color); transition: background .3s, color .3s; }
-
+  
   :root {
     --bg-color: #f0f2f5; --topbar-border: #e4e6eb; --bubble-me: #d6ecff; --bubble-them: rgba(255,255,255,0.85);
     --bubble-action-me: rgba(255, 230, 235, 0.9); --bubble-action-them: rgba(255, 235, 240, 0.85);
@@ -40,7 +41,6 @@
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); position:relative; z-index:10; background: transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); cursor:pointer; background:transparent; border:none; flex: 0 0 40px; z-index: 20; }
   .icon-btn:active { background:rgba(128,128,128,0.15); }
-  
   .avatar-sm { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 36px; margin-right:10px; }
   .header-info { flex:1; display:flex; flex-direction:column; justify-content:center; min-width:0; padding: 8px 0; }
   .header-title { font-size:16px; font-weight:500; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom: 2px; }
@@ -497,6 +497,7 @@
 </div>
 
 <div class="music-player-panel" id="musicPlayerPanel">
+  <div id="btnClosePlayer" style="position:absolute; top:10px; right:15px; font-size:20px; color:var(--text-secondary); cursor:pointer; padding:5px;">✕</div>
   <div class="music-disc-large" id="musicDiscLarge"></div>
   <div class="music-info-text">
     <div class="music-title-text" id="playerTitle">未播放</div>
@@ -1487,6 +1488,21 @@ function bindEvents(){
   $('#btnNext').onclick = playNext; $('#btnPrev').onclick = playPrev;
   $('#btnMode').onclick = () => { playMode = (playMode + 1) % 4; updateModeIcon(); };
   $('#progressBar').onclick = (e) => { const bar = e.currentTarget; const rect = bar.getBoundingClientRect(); const percent = (e.clientX - rect.left) / rect.width; if (audioPlayer.duration) audioPlayer.currentTime = percent * audioPlayer.duration; };
+  
+  if($('#btnClosePlayer')) {
+    $('#btnClosePlayer').onclick = () => {
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
+      updatePlayState(false);
+      $('#musicPlayerFloat').classList.remove('show');
+      $('#musicPlayerPanel').classList.remove('show');
+      $('#musicPlayerFloat').style.bottom = '100px';
+      $('#musicPlayerFloat').style.right = '20px';
+      $('#musicPlayerFloat').style.left = 'auto';
+      $('#musicPlayerFloat').style.top = 'auto';
+      toast('已關閉留聲');
+    };
+  }
 
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';

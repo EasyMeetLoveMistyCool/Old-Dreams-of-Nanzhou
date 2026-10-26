@@ -31,19 +31,9 @@
     --primary: #3390ec;
     --border-light: #f0f2f5;
   }
-  /* 淺藍 */
-  body.theme-blue {
-    --bubble-me: #d6ecff;
-  }
-  /* 淺紫 */
-  body.theme-purple {
-    --bubble-me: #e8def8;
-  }
-  /* 淺粉 */
-  body.theme-pink {
-    --bubble-me: #fce4ec;
-  }
-  /* 深色 */
+  body.theme-blue { --bubble-me: #d6ecff; }
+  body.theme-purple { --bubble-me: #e8def8; }
+  body.theme-pink { --bubble-me: #fce4ec; }
   body.theme-dark {
     --bg-color: #0e1621;
     --topbar-bg: #17212b;
@@ -57,7 +47,6 @@
     --primary: #64b5f6;
     --border-light: #101921;
   }
-  /* 深藍 */
   body.theme-darkblue {
     --bg-color: #17212b;
     --topbar-bg: #1c2733;
@@ -84,24 +73,36 @@
     position:relative; z-index:10;
     transition: background .3s, border-color .3s;
   }
-  .topbar .title { font-size:18px; font-weight:600; flex:1; padding-left:8px; }
   .icon-btn {
     width:40px; height:40px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-size:22px; color:var(--primary); cursor:pointer;
+    font-size:22px; color:var(--text-secondary); cursor:pointer;
     background:transparent; border:none;
   }
   .icon-btn:active { background:rgba(128,128,128,0.15); }
+  
+  /* 顶栏头像 */
+  .avatar-sm {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--primary); color:#fff; object-fit:cover;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex:0 0 36px; margin-right:10px;
+  }
+  
+  /* 顶栏双层文字 */
+  .header-info { flex:1; display:flex; flex-direction:column; justify-content:center; min-width:0; }
+  .header-title { font-size:16px; font-weight:500; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); }
+  .header-sub { font-size:12px; color:var(--text-secondary); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   /* ========== 页面容器 ========== */
   .page { flex:1; overflow:hidden; position:relative; }
-  .page-list, .page-chat { 
+  .page-list, .page-chat, .page-create { 
     position:absolute; inset:0; display:flex; flex-direction:column; 
     background:var(--bg-color); transition:transform .22s ease, background .3s; 
   }
   .page-list { z-index:2; }
-  .page-chat { z-index:3; transform:translateX(100%); }
-  .page-chat.show { transform:translateX(0); }
+  .page-chat, .page-create { z-index:3; transform:translateX(100%); }
+  .page-chat.show, .page-create.show { transform:translateX(0); }
 
   /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
@@ -112,9 +113,9 @@
     transition: background .3s;
   }
   .chat-row:active { background:rgba(128,128,128,0.1); }
-  .avatar {
+  .avatar-lg {
     width:48px; height:48px; border-radius:50%;
-    background:var(--primary); color:#fff;
+    background:var(--primary); color:#fff; object-fit:cover;
     display:flex; align-items:center; justify-content:center;
     font-size:20px; flex:0 0 48px;
   }
@@ -145,20 +146,27 @@
     font-size:12px; padding:4px 12px; border-radius:12px;
     margin:10px 0; font-weight:500;
   }
-  body.theme-dark .date-divider, body.theme-darkblue .date-divider {
-    background:rgba(255,255,255,.15);
-  }
+  body.theme-dark .date-divider, body.theme-darkblue .date-divider { background:rgba(255,255,255,.15); }
 
-  /* 气泡基础 */
-  .msg-row { display:flex; margin:2px 0; }
-  .msg-row.me { justify-content:flex-end; }
+  /* 消息行布局（加入头像） */
+  .msg-row { display:flex; margin:2px 0; align-items:flex-end; gap:6px; }
+  .msg-row.me { justify-content:flex-end; flex-direction:row-reverse; }
   .msg-row.them { justify-content:flex-start; }
-  /* 连续消息缩小间距 */
   .msg-row.grouped { margin-top:2px; }
   .msg-row:not(.grouped) { margin-top:8px; }
 
+  /* 气泡旁边的头像 (28px) */
+  .msg-avatar {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--primary); color:#fff; object-fit:cover;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; flex:0 0 28px; margin-bottom:2px;
+  }
+  /* 连续消息隐藏头像 */
+  .msg-row.grouped .msg-avatar { visibility:hidden; }
+
   .bubble {
-    max-width:80%;
+    max-width:75%;
     padding:6px 10px;
     border-radius:12px;
     position:relative;
@@ -169,12 +177,10 @@
     transition: background .3s;
   }
   
-  /* 我方气泡（带小尾巴） */
   .msg-row.me .bubble {
     background:var(--bubble-me); color:var(--text-color);
     border-bottom-right-radius:4px;
   }
-  /* 祂方气泡（带小尾巴） */
   .msg-row.them .bubble {
     background:var(--bubble-them); color:var(--text-color);
     border-bottom-left-radius:4px;
@@ -207,7 +213,6 @@
     margin:8px 0 -2px 8px;
     line-height:1;
   }
-  /* 为了让时间戳不挡住文字 */
   .bubble::after { content:''; display:block; clear:both; }
 
   /* ========== 输入区 ========== */
@@ -217,10 +222,9 @@
     border-top:1px solid var(--topbar-border);
     padding:6px 8px;
     padding-bottom:calc(6px + env(safe-area-inset-bottom));
-    display:flex; align-items:flex-end; gap:6px;
+    display:flex; align-items:center; gap:6px;
     transition: background .3s;
   }
-  .composer .icon-btn { color:var(--text-secondary); font-size:22px; }
   
   /* 待发送的贴纸预览 */
   .pending-sticker-box {
@@ -249,11 +253,35 @@
   .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 菜单 ========== */
-  .menu-mask {
-    position:fixed; inset:0; background:rgba(0,0,0,.25);
-    display:none; z-index:50;
+  /* ========== 新建页面 (编辑资料) ========== */
+  .create-scroll { flex:1; overflow-y:auto; padding:20px; }
+  .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
+  .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; align-self:flex-start; margin-left:10px; font-weight:500; }
+  .avatar-upload {
+    width:80px; height:80px; border-radius:50%;
+    background:var(--input-bg); color:var(--text-secondary);
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; cursor:pointer; overflow:hidden;
+    margin-bottom:12px; border:2px solid var(--topbar-border);
+    background-size:cover; background-position:center;
   }
+  .form-input {
+    width:100%; height:48px; border-radius:8px;
+    background:var(--topbar-bg); border:1px solid var(--topbar-border);
+    padding:0 14px; font-size:15px; color:var(--text-color);
+    outline:none; text-align:center;
+  }
+  .form-input:focus { border-color:var(--primary); }
+  
+  .btn-primary {
+    width:100%; height:48px; border-radius:8px;
+    background:var(--primary); color:#fff;
+    font-size:16px; font-weight:500; border:none; cursor:pointer;
+  }
+  .btn-primary:active { opacity:0.8; }
+
+  /* ========== 菜单 & 弹窗 ========== */
+  .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
   .menu {
     position:absolute; top:56px; right:10px;
@@ -261,14 +289,10 @@
     box-shadow:0 4px 20px rgba(0,0,0,.18);
     min-width:150px; overflow:hidden;
   }
-  .menu-item {
-    padding:12px 18px; font-size:15px; color:var(--text-color);
-    cursor:pointer; white-space:nowrap;
-  }
+  .menu-item { padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer; white-space:nowrap; }
   .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
 
-  /* ========== 弹窗与提示 ========== */
   .toast {
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
     background:rgba(0,0,0,.75); color:#fff;
@@ -277,16 +301,9 @@
   }
   .toast.show { opacity:1; }
 
-  /* 选择器弹窗（供贴纸、主题选择等用） */
-  .dialog-mask {
-    position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200;
-    display:none; align-items:center; justify-content:center; padding:20px;
-  }
+  .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
-  .dialog {
-    background:var(--topbar-bg); width:100%; max-width:320px;
-    border-radius:12px; overflow:hidden; color:var(--text-color);
-  }
+  .dialog { background:var(--topbar-bg); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
   .dialog-list { max-height:300px; overflow-y:auto; }
   .dialog-item { padding:12px 20px; border-bottom:1px solid var(--border-light); cursor:pointer; text-align:center; }
@@ -296,39 +313,96 @@
 <body class="theme-green">
 
 <div id="app">
-  <!-- 列表页 -->
+  <!-- 1. 列表页 -->
   <div class="page-list" id="pageList">
     <div class="topbar">
-      <div class="title">南洲舊夢</div>
-      <button class="icon-btn" id="menuBtnList">⋮</button>
+      <div style="font-size:18px;font-weight:600;flex:1;padding-left:8px;">南洲舊夢</div>
+      <button class="icon-btn" id="menuBtnList" style="color:var(--primary);">⋮</button>
     </div>
     <div class="chat-list" id="chatList"></div>
     <button class="fab" id="newChatBtn">＋</button>
   </div>
 
-  <!-- 聊天页 -->
+  <!-- 2. 新建页 -->
+  <div class="page-create" id="pageCreate">
+    <div class="topbar">
+      <button class="icon-btn" id="cancelCreateBtn">✕</button>
+      <div class="header-title" style="flex:1; text-align:center; font-size:17px;">建立新對話</div>
+      <div style="width:40px;"></div> <!-- 占位保持居中 -->
+    </div>
+    <div class="create-scroll">
+      
+      <div class="form-group">
+        <div class="form-label">聊天室名稱</div>
+        <input type="text" class="form-input" id="inputRoomName" placeholder="例如：夢境、日常">
+      </div>
+
+      <div style="height:1px;background:var(--topbar-border);margin:20px 0;"></div>
+
+      <div class="form-group">
+        <div class="form-label">祂的資料</div>
+        <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
+        <input type="file" id="theirFile" accept="image/*" style="display:none">
+        <input type="text" class="form-input" id="inputTheirNick" placeholder="祂的暱稱（例如：阿沐）">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">我的資料</div>
+        <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
+        <input type="file" id="myFile" accept="image/*" style="display:none">
+        <input type="text" class="form-input" id="inputMyNick" placeholder="我的暱稱（例如：旅人）">
+      </div>
+
+      <button class="btn-primary" id="saveChatBtn">完成建立</button>
+      <div style="height:20px;"></div>
+    </div>
+  </div>
+
+  <!-- 3. 聊天页 -->
   <div class="page-chat" id="pageChat">
     <div class="topbar">
       <button class="icon-btn" id="backBtn">←</button>
-      <div class="avatar" id="chatAvatar" style="width:36px;height:36px;flex:0 0 36px;font-size:16px;">祂</div>
-      <div class="title" id="chatTitle" style="font-size:16px;font-weight:500;">聊天室</div>
-      <button class="icon-btn" id="menuBtnChat">⋮</button>
+      
+      <!-- 动态头像 -->
+      <div class="avatar-sm" id="chatAvatar">祂</div>
+      
+      <!-- 聊天室名 + 祂的昵称 -->
+      <div class="header-info">
+        <div class="header-title" id="chatTitle">聊天室</div>
+        <div class="header-sub" id="chatSub">最近曾上線</div>
+      </div>
+      
+      <!-- 通话图标 -->
+      <button class="icon-btn" id="callBtn">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+      </button>
     </div>
     
     <div class="messages" id="messages"></div>
     
-    <!-- 待发送贴纸预览 -->
     <div class="pending-sticker-box" id="pendingStickerBox">
-      <img id="pendingStickerImg" src="" alt="待發送貼紙">
+      <img id="pendingStickerImg" src="" alt="待發送">
       <span style="font-size:13px;color:var(--text-secondary)">將隨文字發送</span>
       <span class="close-btn" id="cancelStickerBtn">✕</span>
     </div>
 
     <div class="composer">
-      <!-- 贴纸入口 -->
-      <button class="icon-btn" id="stickerBtn">📎</button>
+      <!-- ⚡ 小功能 -->
+      <button class="icon-btn" id="smallFuncBtn">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+        </svg>
+      </button>
+      
+      <!-- 输入框 -->
       <input type="text" id="msgInput" placeholder="輸入訊息…" autocomplete="off">
-      <!-- 发送按钮 (纸飞机SVG) -->
+      
+      <!-- 🔗 贴纸入口 -->
+      <button class="icon-btn" id="stickerBtn" style="font-size:20px;color:var(--text-secondary);">🔗</button>
+      
+      <!-- 发送 -->
       <button class="send-btn" id="sendBtn" disabled>
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
@@ -336,7 +410,7 @@
   </div>
 </div>
 
-<!-- 遮罩菜单 -->
+<!-- 菜单与弹窗 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="pouch">驛囊</div>
@@ -347,18 +421,14 @@
   </div>
 </div>
 
-<!-- 贴纸选择器 -->
 <div class="dialog-mask" id="stickerDialogMask">
   <div class="dialog">
     <div class="dialog-title">選擇貼紙</div>
-    <div class="dialog-list" id="stickerList" style="display:flex;flex-wrap:wrap;padding:10px;justify-content:center;gap:10px;">
-      <!-- 动态渲染 -->
-    </div>
+    <div class="dialog-list" id="stickerList" style="display:flex;flex-wrap:wrap;padding:10px;justify-content:center;gap:10px;"></div>
     <div class="dialog-item" id="closeStickerDialog" style="color:var(--primary)">取消</div>
   </div>
 </div>
 
-<!-- 燈號(主题)选择器 -->
 <div class="dialog-mask" id="themeDialogMask">
   <div class="dialog">
     <div class="dialog-title">選擇燈號</div>
@@ -400,9 +470,16 @@ function setTheme(themeName) {
 }
 initTheme();
 
-/* ============ IndexedDB 基础 ============ */
+/* ============ 头像转 Base64 工具 ============ */
+function fileToBase64(file, callback) {
+  const reader = new FileReader();
+  reader.onload = e => callback(e.target.result);
+  reader.readAsDataURL(file);
+}
+
+/* ============ IndexedDB (版本升级到2清空旧数据) ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 1;
+const DB_VER = 2; 
 let db = null;
 
 function openDB(){
@@ -410,13 +487,18 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if(!d.objectStoreNames.contains('chats')) d.createObjectStore('chats', { keyPath:'id' });
-      if(!d.objectStoreNames.contains('messages')){
-        const s = d.createObjectStore('messages', { keyPath:'id' });
-        s.createIndex('chatId', 'chatId', { unique:false });
-      }
-      if(!d.objectStoreNames.contains('cards')) d.createObjectStore('cards', { keyPath:'id' });
-      if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
+      // 删掉旧表重来
+      if(d.objectStoreNames.contains('chats')) d.deleteObjectStore('chats');
+      if(d.objectStoreNames.contains('messages')) d.deleteObjectStore('messages');
+      if(d.objectStoreNames.contains('cards')) d.deleteObjectStore('cards');
+      if(d.objectStoreNames.contains('stickers')) d.deleteObjectStore('stickers');
+      
+      // 重建新表
+      d.createObjectStore('chats', { keyPath:'id' });
+      const s = d.createObjectStore('messages', { keyPath:'id' });
+      s.createIndex('chatId', 'chatId', { unique:false });
+      d.createObjectStore('cards', { keyPath:'id' });
+      d.createObjectStore('stickers', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -434,7 +516,11 @@ function reqToPromise(req){
 let chats = [];
 let currentChatId = null;
 let currentMessages = [];
-let pendingStickerData = null; // 当前准备发送的贴纸
+let pendingStickerData = null; 
+
+// 新建时的暂存状态
+let tempTheirAvatar = null;
+let tempMyAvatar = null;
 
 /* ============ 初始化 ============ */
 async function init(){
@@ -453,7 +539,7 @@ async function loadChats(){
 async function renderChatList(){
   const list = $('#chatList');
   if(!chats.length){
-    list.innerHTML = '<div class="chat-empty">尚無聊天室<br>點右下角 ＋ 新增</div>';
+    list.innerHTML = '<div class="chat-empty">尚無聊天室<br>點右下角 ＋ 建立新對話</div>';
     return;
   }
   list.innerHTML = '';
@@ -467,12 +553,18 @@ async function renderChatList(){
       else if(last.text) preview = last.text;
       else if(last.stickerData) preview = '[圖片]';
     }
+    
+    // 渲染头像（有图用图，没图用首字）
+    const avatarHtml = c.theirAvatar 
+      ? `<img src="${c.theirAvatar}" class="avatar-lg">` 
+      : `<div class="avatar-lg">${(c.theirNick||'祂').charAt(0)}</div>`;
+      
     const row = document.createElement('div');
     row.className = 'chat-row';
     row.innerHTML = `
-      <div class="avatar">${(c.name||'祂').charAt(0)}</div>
+      ${avatarHtml}
       <div class="chat-info">
-        <div class="chat-name">${escapeHtml(c.name||'未命名')}</div>
+        <div class="chat-name">${escapeHtml(c.roomName||'未命名')}</div>
         <div class="chat-preview">${escapeHtml(preview)}</div>
       </div>
       <div class="chat-time">${last ? fmtTime(last.time) : ''}</div>
@@ -498,7 +590,7 @@ function fmtDate(ts){
   return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
 }
 
-/* ============ 消息相关 ============ */
+/* ============ 消息读取与渲染 ============ */
 function getMessages(chatId){
   return new Promise((res, rej)=>{
     const idx = tx('messages').index('chatId');
@@ -516,12 +608,22 @@ async function openChat(id){
   currentChatId = id;
   const c = chats.find(x=>x.id===id);
   if(!c) return;
-  $('#chatTitle').textContent = c.name || '聊天室';
-  $('#chatAvatar').textContent = (c.name||'祂').charAt(0);
+  
+  $('#chatTitle').textContent = c.roomName || '聊天室';
+  $('#chatSub').textContent = c.theirNick || '最近曾上線';
+  
+  // 头像
+  const avatarEl = $('#chatAvatar');
+  if(c.theirAvatar) {
+    avatarEl.innerHTML = `<img src="${c.theirAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+  } else {
+    avatarEl.textContent = (c.theirNick||'祂').charAt(0);
+    avatarEl.innerHTML = (c.theirNick||'祂').charAt(0);
+  }
+  
   currentMessages = await getMessages(id);
   renderMessages();
   
-  // 清空输入区状态
   $('#msgInput').value = '';
   pendingStickerData = null;
   updatePendingStickerUI();
@@ -535,6 +637,8 @@ function renderMessages(){
   box.innerHTML = '';
   let lastDate = '';
   let prevSender = null;
+  
+  const c = chats.find(x=>x.id===currentChatId);
   
   for(const m of currentMessages){
     const dstr = fmtDate(m.time);
@@ -551,26 +655,29 @@ function renderMessages(){
     row.className = 'msg-row ' + senderClass;
     if(prevSender === m.sender) row.classList.add('grouped');
 
+    // 渲染气泡旁边的头像
+    let avatarHtml = '';
+    if(m.sender === 'them') {
+      if(c.theirAvatar) avatarHtml = `<img src="${c.theirAvatar}" class="msg-avatar">`;
+      else avatarHtml = `<div class="msg-avatar">${(c.theirNick||'祂').charAt(0)}</div>`;
+    } else {
+      if(c.myAvatar) avatarHtml = `<img src="${c.myAvatar}" class="msg-avatar">`;
+      else avatarHtml = `<div class="msg-avatar" style="background:#999">${(c.myNick||'我').charAt(0)}</div>`;
+    }
+
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
 
     let html = '';
-    // 渲染字卡（祂的特有逻辑）
     if(m.cards && m.cards.length){
       html += m.cards.map(c=>`<span class="card-line">${escapeHtml(c)}</span>`).join('');
     }
-    // 渲染文本
-    if(m.text){
-      html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
-    }
-    // 渲染图片（如果有）
-    if(m.stickerData){
-      html += `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
-    }
-    // 时间戳
+    if(m.text) html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
+    if(m.stickerData) html += `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
     html += `<span class="meta">${fmtTime(m.time)}</span>`;
     
     bubble.innerHTML = html;
+    row.innerHTML = avatarHtml;
     row.appendChild(bubble);
     box.appendChild(row);
     prevSender = m.sender;
@@ -578,7 +685,7 @@ function renderMessages(){
   box.scrollTop = box.scrollHeight;
 }
 
-/* ============ 输入与发送逻辑 ============ */
+/* ============ 发送逻辑 ============ */
 function updateSendBtnState() {
   const text = $('#msgInput').value.trim();
   const btn = $('#sendBtn');
@@ -618,14 +725,13 @@ async function sendMyMessage(){
     type: 'text',
     text: text,
     cards: [],
-    stickerData: pendingStickerData, // 存入图片
+    stickerData: pendingStickerData,
     time: Date.now()
   };
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
   
-  // 清空输入状态
   input.value = '';
   pendingStickerData = null;
   updatePendingStickerUI();
@@ -634,7 +740,6 @@ async function sendMyMessage(){
   renderMessages();
   await touchChat(currentChatId);
 
-  // 延迟一下让祂回复
   setTimeout(replyFromThem, 600);
 }
 
@@ -645,18 +750,16 @@ async function touchChat(id){
   await reqToPromise(tx('chats','readwrite').put(c));
 }
 
-/* ============ 祂的回复逻辑 ============ */
+/* ============ 祂的回复 ============ */
 async function replyFromThem(){
   if(!currentChatId) return;
   
   const cards = await reqToPromise(tx('cards').getAll());
   if(!cards.length){
-    // 如果没字卡，提醒一下
     toast('驛囊中尚無字卡，請先至「驛囊」新增字卡');
     return;
   }
   
-  // 抽 3~5 张字卡
   const n = 3 + Math.floor(Math.random()*3); 
   const picked = [];
   const pool = [...cards];
@@ -665,7 +768,6 @@ async function replyFromThem(){
     picked.push(pool.splice(idx,1)[0].text);
   }
 
-  // 随机决定是否附带贴纸（概率 40%）
   let stickerData = null;
   const stickers = await reqToPromise(tx('stickers').getAll());
   if(stickers.length && Math.random() < 0.4){
@@ -692,6 +794,75 @@ async function replyFromThem(){
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
+  // --- 列表页 ---
+  $('#newChatBtn').onclick = ()=>{
+    // 重置新建表单
+    $('#inputRoomName').value = '';
+    $('#inputTheirNick').value = '';
+    $('#inputMyNick').value = '';
+    $('#theirAvatar').style.backgroundImage = '';
+    $('#theirAvatar').textContent = '祂';
+    $('#myAvatar').style.backgroundImage = '';
+    $('#myAvatar').textContent = '我';
+    tempTheirAvatar = null;
+    tempMyAvatar = null;
+    
+    $('#pageCreate').classList.add('show');
+  };
+
+  // --- 新建页 ---
+  $('#cancelCreateBtn').onclick = ()=>{
+    $('#pageCreate').classList.remove('show');
+  };
+
+  $('#theirFile').onchange = e => {
+    if(e.target.files[0]) {
+      fileToBase64(e.target.files[0], base64 => {
+        tempTheirAvatar = base64;
+        const el = $('#theirAvatar');
+        el.style.backgroundImage = `url(${base64})`;
+        el.textContent = '';
+      });
+    }
+  };
+  
+  $('#myFile').onchange = e => {
+    if(e.target.files[0]) {
+      fileToBase64(e.target.files[0], base64 => {
+        tempMyAvatar = base64;
+        const el = $('#myAvatar');
+        el.style.backgroundImage = `url(${base64})`;
+        el.textContent = '';
+      });
+    }
+  };
+
+  $('#saveChatBtn').onclick = async ()=>{
+    const roomName = $('#inputRoomName').value.trim();
+    const theirNick = $('#inputTheirNick').value.trim();
+    const myNick = $('#inputMyNick').value.trim();
+    
+    if(!roomName) { toast('請輸入聊天室名稱'); return; }
+    
+    const c = {
+      id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      roomName: roomName,
+      theirNick: theirNick || '祂',
+      myNick: myNick || '我',
+      theirAvatar: tempTheirAvatar,
+      myAvatar: tempMyAvatar,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    
+    await reqToPromise(tx('chats','readwrite').add(c));
+    chats.unshift(c);
+    renderChatList();
+    $('#pageCreate').classList.remove('show');
+    toast('已建立新對話');
+  };
+
+  // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{
     $('#pageChat').classList.remove('show');
     currentChatId = null;
@@ -703,31 +874,16 @@ function bindEvents(){
   $('#msgInput').addEventListener('keydown', e=>{
     if(e.key === 'Enter' && !e.isComposing) sendMyMessage();
   });
+  
+  $('#callBtn').onclick = ()=> toast('通話功能尚未開放');
 
-  $('#newChatBtn').onclick = createChat;
-
-  // 菜单
-  const mask = $('#menuMask');
-  function openMenu(){ mask.classList.add('show'); }
-  function closeMenu(){ mask.classList.remove('show'); }
-  $('#menuBtnList').onclick = openMenu;
-  $('#menuBtnChat').onclick = openMenu;
-  mask.onclick = e=>{ if(e.target === mask) closeMenu(); };
-  $('#menuPanel').onclick = e=>{
-    const act = e.target.dataset.act;
-    if(!act) return;
-    closeMenu();
-    handleMenu(act);
-  };
-
-  // 取消待发送贴纸
   $('#cancelStickerBtn').onclick = ()=>{
     pendingStickerData = null;
     updatePendingStickerUI();
     updateSendBtnState();
   };
 
-  // 打开贴纸选择器
+  // --- 贴纸选择器 ---
   $('#stickerBtn').onclick = async ()=>{
     const stickers = await reqToPromise(tx('stickers').getAll());
     const list = $('#stickerList');
@@ -750,8 +906,20 @@ function bindEvents(){
     });
     $('#stickerDialogMask').classList.add('show');
   };
-  
   $('#closeStickerDialog').onclick = ()=> $('#stickerDialogMask').classList.remove('show');
+  
+  // --- 侧边菜单 ---
+  const mask = $('#menuMask');
+  function openMenu(){ mask.classList.add('show'); }
+  function closeMenu(){ mask.classList.remove('show'); }
+  $('#menuBtnList').onclick = openMenu;
+  mask.onclick = e=>{ if(e.target === mask) closeMenu(); };
+  $('#menuPanel').onclick = e=>{
+    const act = e.target.dataset.act;
+    if(!act) return;
+    closeMenu();
+    handleMenu(act);
+  };
   $('#closeThemeDialog').onclick = ()=> $('#themeDialogMask').classList.remove('show');
 }
 
@@ -761,22 +929,6 @@ function handleMenu(act){
   else if(act === 'export') toast('存檔：匯出備份（待實作）');
   else if(act === 'clear') toast('焚稿：清空記錄（待實作）');
   else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
-}
-
-/* ============ 新建聊天室 ============ */
-async function createChat(){
-  const name = prompt('請輸入聊天室名稱：');
-  if(!name || !name.trim()) return;
-  const c = {
-    id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-    name: name.trim(),
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  };
-  await reqToPromise(tx('chats','readwrite').add(c));
-  chats.unshift(c);
-  renderChatList();
-  toast('已建立聊天室');
 }
 
 /* ============ 启动 ============ */

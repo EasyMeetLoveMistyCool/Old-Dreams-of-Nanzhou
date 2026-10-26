@@ -21,58 +21,69 @@
     --bg-color: #f0f2f5; --topbar-bg: #ffffff; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: #ffffff;
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
-    --input-bg: #f0f2f5; --primary: #3390ec; --border-light: #f0f2f5;
+    --input-bg: rgba(255,255,255,0.7); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
     --pinned-bg: #fff5f6;
+    --glassy-bg: rgba(255,255,255,0.85);
   }
   /* 天空藍 (默认) */
-  body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; }
+  body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; --glassy-bg: rgba(230,235,238,0.85); }
   /* 森林綠 */
-  body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; }
+  body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; --glassy-bg: rgba(232,239,233,0.85); }
   /* 日落橘 */
-  body.theme-sunset { --bg-color: #fdf5eb; --bubble-me: #ffe0b2; --primary: #ff9800; }
+  body.theme-sunset { --bg-color: #fdf5eb; --bubble-me: #ffe0b2; --primary: #ff9800; --glassy-bg: rgba(253,245,235,0.85); }
   /* 暮光灰 */
-  body.theme-twilight { --bg-color: #e0e0e0; --bubble-me: #cfd8dc; --primary: #607d8b; }
+  body.theme-twilight { --bg-color: #e0e0e0; --bubble-me: #cfd8dc; --primary: #607d8b; --glassy-bg: rgba(224,224,224,0.85); }
   /* 海棠紅 */
-  body.theme-crabapple { --bg-color: #fcf2f3; --bubble-me: #ffcdd2; --primary: #e57373; }
+  body.theme-crabapple { --bg-color: #fcf2f3; --bubble-me: #ffcdd2; --primary: #e57373; --glassy-bg: rgba(252,242,243,0.85); }
   /* 煙雨青 */
-  body.theme-rain { --bg-color: #eef4f4; --bubble-me: #b2dfdb; --primary: #009688; }
+  body.theme-rain { --bg-color: #eef4f4; --bubble-me: #b2dfdb; --primary: #009688; --glassy-bg: rgba(238,244,244,0.85); }
   /* 舊報紙 */
-  body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; --topbar-bg: #f9f6ee; }
+  body.theme-paper { --bg-color: #f5f1e6; --bubble-me: #f0e6d2; --primary: #8d6e63; --topbar-bg: #f9f6ee; --glassy-bg: rgba(245,241,230,0.85); }
   /* 水墨 */
-  body.theme-ink { --bg-color: #f4f4f4; --bubble-me: #e0e0e0; --primary: #424242; }
+  body.theme-ink { --bg-color: #f4f4f4; --bubble-me: #e0e0e0; --primary: #424242; --glassy-bg: rgba(244,244,244,0.85); }
 
   /* 深色系列 */
   body.theme-cyber { 
     --bg-color: #000000; --topbar-bg: #111111; --topbar-border: #222;
     --bubble-me: #003366; --bubble-them: #1a1a1a;
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
-    --input-bg: #111; --primary: #00b0ff; --border-light: #222; --pinned-bg: #2b1f24;
+    --input-bg: rgba(0,0,0,0.5); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --glassy-bg: rgba(17,17,17,0.85);
   }
   body.theme-space { 
     --bg-color: #0b1320; --topbar-bg: #121d30; --topbar-border: #1a2639;
     --bubble-me: #1e3a5f; --bubble-them: #1a2639;
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
-    --input-bg: #121d30; --primary: #4a90e2; --border-light: #1a2639; --pinned-bg: #2b1f24;
+    --input-bg: rgba(0,0,0,0.5); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --glassy-bg: rgba(18,29,48,0.85);
   }
   body.theme-nightpurple { 
     --bg-color: #150e1c; --topbar-bg: #1f1528; --topbar-border: #2b1d36;
     --bubble-me: #442266; --bubble-them: #2b1d36;
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
-    --input-bg: #1f1528; --primary: #b388ff; --border-light: #2b1d36; --pinned-bg: #2b1f24;
+    --input-bg: rgba(0,0,0,0.5); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --glassy-bg: rgba(31,21,40,0.85);
   }
   body.theme-pureblack { 
     --bg-color: #000000; --topbar-bg: #0a0a0a; --topbar-border: #1a1a1a;
     --bubble-me: #333333; --bubble-them: #111111;
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
-    --input-bg: #0a0a0a; --primary: #888; --border-light: #1a1a1a; --pinned-bg: #2b1f24;
+    --input-bg: rgba(0,0,0,0.5); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --glassy-bg: rgba(10,10,10,0.85);
   }
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
 
+  /* ========== 全局透明与背景 ========== */
+  .page-list, .page-chat, .page-create, .page-sub, .page-settings {
+    background: transparent !important; /* 强制透明 */
+  }
+
   /* ========== 顶栏 ========== */
   .topbar {
     min-height:56px; flex:0 0 auto; 
-    background:var(--topbar-bg);
+    background: var(--glassy-bg);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     display:flex; align-items:center;
     padding:0 8px;
     border-bottom:1px solid var(--topbar-border);
@@ -109,7 +120,7 @@
   .page { flex:1; overflow:hidden; position:relative; }
   .page-list, .page-chat, .page-create, .page-sub, .page-settings { 
     position:absolute; inset:0; display:flex; flex-direction:column; 
-    background:var(--bg-color); transition:transform .22s ease, background .3s; 
+    transition:transform .22s ease; 
   }
   .page-list { z-index:2; }
   .page-chat, .page-create, .page-sub, .page-settings { z-index:3; transform:translateX(100%); }
@@ -118,12 +129,14 @@
   /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row {
-    display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--topbar-bg); cursor:pointer;
+    display:flex; align-items:center; gap:12px; padding:12px 14px; 
+    background: var(--glassy-bg); /* 列表行半透明 */
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    cursor:pointer;
     border-bottom:1px solid var(--topbar-border); transition: background .3s; user-select: none;
   }
-  .chat-row:active { background:rgba(128,128,128,0.1); }
-  .chat-row.pinned { background: var(--pinned-bg); }
-  .chat-row.pinned:active { filter: brightness(0.95); }
+  .chat-row:active { background:rgba(128,128,128,0.2); }
+  .chat-row.pinned { background: var(--pinned-bg); opacity: 0.9; }
 
   .avatar-lg {
     width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover;
@@ -140,16 +153,16 @@
   .fab {
     position:absolute; right:18px; bottom:22px; width:56px; height:56px; border-radius:50%;
     background:var(--primary); color:#fff; font-size:28px; display:flex; align-items:center; justify-content:center;
-    box-shadow:0 4px 12px rgba(51,144,236,.4); cursor:pointer; z-index:5; border:none;
+    box-shadow:0 4px 12px rgba(0,0,0,.2); cursor:pointer; z-index:5; border:none;
   }
 
-  /* ========== 聊天页 (全屏背景铺满) ========== */
+  /* ========== 聊天页 ========== */
   .page-chat { background-size: cover; background-position: center; }
   .chat-bg-mask { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
   
-  /* 关键：让顶栏和输入区透明，露出背景 */
-  .page-chat .topbar { background: transparent !important; border-bottom: 1px solid var(--topbar-border); z-index: 10; }
-  .page-chat .composer { background: transparent !important; border-top: 1px solid var(--topbar-border); z-index: 10; }
+  /* 聊天页顶栏与输入区透明 */
+  .page-chat .topbar { background: transparent !important; backdrop-filter: none; border-bottom: none; }
+  .page-chat .composer { background: transparent !important; backdrop-filter: none; border-top: none; }
 
   .messages-wrap {
     flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 2;
@@ -192,26 +205,32 @@
   .bubble .meta { float:right; font-size:11px; color:var(--time-color); margin:8px 0 -2px 8px; line-height:1; }
   .bubble::after { content:''; display:block; clear:both; }
 
-  /* ========== 输入区 ========== */
+  /* ========== 聊天页输入区 ========== */
   .composer {
     flex:0 0 auto;
     padding:6px 8px; padding-bottom:calc(6px + env(safe-area-inset-bottom));
     display:flex; align-items:center; gap:6px; transition: background .3s; z-index: 10;
   }
-  .pending-sticker-box { display:none; background:rgba(128,128,128,0.1); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
+  .pending-sticker-box { display:none; background:rgba(128,128,128,0.2); backdrop-filter: blur(5px); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
   .pending-sticker-box.show { display:flex; align-items:center; gap:10px; }
   .pending-sticker-box img { height:40px; border-radius:4px; }
   .pending-sticker-box .close-btn { font-size:18px; color:var(--text-secondary); cursor:pointer; margin-left:auto; }
+  
+  /* 输入框半透明磨砂 */
   .composer input {
     flex:1; min-width:0; height:40px; border-radius:20px; border:none; background:var(--input-bg);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     padding:0 14px; font-size:15px; color:var(--text-color); outline:none; transition: background .3s;
   }
   .composer input::placeholder { color:var(--text-secondary); }
+  
+  /* 发送键半透明或柔和 */
   .send-btn {
     width:40px; height:40px; border-radius:50%; background:var(--primary); color:#fff; border:none;
-    display:flex; align-items:center; justify-content:center; flex:0 0 40px; cursor:pointer; transition: opacity .2s, background .3s;
+    display:flex; align-items:center; justify-content:center; flex:0 0 40px; cursor:pointer; 
+    transition: opacity .2s, background .3s; opacity: 0.9;
   }
-  .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
+  .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); opacity: 0.5; }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
   /* ========== 通用表单页 ========== */
@@ -224,10 +243,12 @@
     margin-bottom:16px; border:2px solid var(--topbar-border); background-size:cover; background-position:center;
   }
   .form-input {
-    width:100%; height:48px; border-radius:8px; background:var(--topbar-bg); border:1px solid var(--topbar-border);
+    width:100%; height:48px; border-radius:8px; background:var(--glassy-bg); border:1px solid var(--topbar-border);
+    backdrop-filter: blur(10px);
     padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
   }
   .form-input:focus { border-color:var(--primary); }
+  
   .btn-primary {
     width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
     font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
@@ -240,19 +261,20 @@
     border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center;
     color:var(--text-secondary); font-size:14px; cursor:pointer; overflow:hidden;
     background-size:cover; background-position:center; margin-bottom:15px;
+    backdrop-filter: blur(10px);
   }
   .slider-container { width:100%; display:flex; align-items:center; gap:10px; padding:0 10px; }
   .slider-container input[type=range] { flex:1; }
 
   /* 邮电所界面 */
-  .tab-bar { display:flex; background:var(--topbar-bg); border-bottom:1px solid var(--topbar-border); }
+  .tab-bar { display:flex; background:var(--glassy-bg); backdrop-filter: blur(10px); border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
-  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--topbar-bg); border-bottom:1px solid var(--border-light); }
+  .list-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--glassy-bg); backdrop-filter: blur(10px); border-bottom:1px solid var(--border-light); }
   .list-item-text { flex:1; font-size:15px; }
 
-  /* ========== 佈景页面 (专属UI) ========== */
-  .settings-section { background:var(--topbar-bg); border-radius:10px; padding:15px; margin-bottom:20px; }
+  /* ========== 佈景页面 ========== */
+  .settings-section { background:var(--glassy-bg); backdrop-filter: blur(10px); border-radius:10px; padding:15px; margin-bottom:20px; }
   .settings-title { font-size:15px; font-weight:600; color:var(--text-color); margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; }
   
   .theme-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
@@ -267,21 +289,21 @@
   /* ========== 菜单 & 弹窗 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
-  .menu { position:absolute; top:56px; right:10px; background:var(--topbar-bg); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; }
+  .menu { position:absolute; top:56px; right:10px; background:var(--glassy-bg); backdrop-filter: blur(15px); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; }
   .menu-item { padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer; white-space:nowrap; }
   .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
 
   .action-sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px; }
   .action-sheet-mask.show { display:flex; }
-  .action-sheet { background:var(--topbar-bg); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
+  .action-sheet { background:var(--glassy-bg); backdrop-filter: blur(15px); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
   .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer; }
   .action-item:active { background:var(--input-bg); }
   .action-item.danger { color:#e53935; }
 
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
-  .dialog { background:var(--topbar-bg); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); }
+  .dialog { background:var(--glassy-bg); backdrop-filter: blur(15px); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
   .dialog-content { padding:16px; font-size:14px; color:var(--text-secondary); text-align:center; line-height:1.5; }
   .dialog-footer { display:flex; border-top:1px solid var(--border-light); }
@@ -300,7 +322,7 @@
 <body class="theme-sky">
 
 <div id="app">
-  <!-- 1. 列表页 -->
+  <!-- 1. 列表页 (全屏背景) -->
   <div class="page-list" id="pageList">
     <div class="topbar">
       <div style="font-size:18px;font-weight:600;flex:1;padding-left:8px;">南洲舊夢</div>
@@ -313,7 +335,7 @@
   <!-- 2. 新建/编辑页 -->
   <div class="page-create" id="pageCreate">
     <div class="topbar">
-      <button class="icon-btn" id="cancelCreateBtn">✕</button>
+      <button class="icon-btn" id="cancelCreateBtn">←</button>
       <div class="header-title" style="flex:1; text-align:center; font-size:17px;" id="createPageTitle">建立新對話</div>
       <div style="width:40px;"></div>
     </div>
@@ -392,7 +414,7 @@
     </div>
   </div>
 
-  <!-- 4. 佈景 页面 (独立) -->
+  <!-- 4. 佈景 页面 -->
   <div class="page-settings" id="pageSettings">
     <div class="topbar">
       <button class="icon-btn" id="backSettingsBtn">←</button>
@@ -401,7 +423,6 @@
     </div>
     <div class="create-scroll" style="padding:15px;">
       
-      <!-- 主頁背景 -->
       <div class="settings-section">
         <div class="settings-title">主頁背景</div>
         <div class="bg-upload-box" id="mainBgUploadBox" onclick="document.getElementById('mainBgFile').click()">
@@ -415,7 +436,6 @@
         </div>
       </div>
 
-      <!-- 主題顏色 -->
       <div class="settings-section">
         <div class="settings-title">主題顏色</div>
         <div class="theme-grid">
@@ -437,7 +457,7 @@
     </div>
   </div>
 
-  <!-- 5. 邮电所 (子页面) -->
+  <!-- 5. 邮电所 -->
   <div class="page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
@@ -468,7 +488,7 @@
   </div>
 </div>
 
-<!-- 各种弹窗 -->
+<!-- 弹窗区 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="postoffice">郵電所</div>
@@ -529,40 +549,43 @@ let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
 function applyThemeAndBg() {
-  // 1. 应用主题颜色
   let savedTheme = localStorage.getItem('nz_theme') || 'theme-sky';
   document.body.className = savedTheme;
   
-  // 高亮当前选中的色卡
   document.querySelectorAll('.theme-card').forEach(card => {
     card.classList.toggle('active', card.dataset.theme === savedTheme);
   });
 
-  // 2. 应用主页面背景
-  const pageList = $('#pageList');
+  const appEl = $('#app');
   if (globalBgImage) {
-    pageList.style.backgroundImage = `url(${globalBgImage})`;
-    // 动态加一层遮罩底色
-    const isDark = savedTheme.includes('dark') || savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('black');
+    appEl.style.backgroundImage = `url(${globalBgImage})`;
+    appEl.style.backgroundSize = 'cover';
+    appEl.style.backgroundPosition = 'center';
+    // 使用变量控制全局遮罩（伪元素或独立div），这里直接通过背景渐变实现
+    const isDark = savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('pureblack');
     const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
-    // 为了不破坏原有列表结构，利用线性渐变铺色
-    pageList.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+    appEl.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+    // 强制所有页面透明
+    document.querySelectorAll('.page-list, .page-create, .page-sub, .page-settings').forEach(el => {
+      el.style.background = 'transparent';
+    });
   } else {
-    pageList.style.backgroundImage = 'none';
-    pageList.style.background = 'var(--bg-color)';
+    appEl.style.background = 'var(--bg-color)';
+    document.querySelectorAll('.page-list, .page-create, .page-sub, .page-settings').forEach(el => {
+      el.style.background = 'var(--bg-color)';
+    });
   }
 }
 
 function setTheme(themeName) {
   localStorage.setItem('nz_theme', themeName);
   applyThemeAndBg();
-  // 刷新当前聊天室遮罩颜色（如果开着的话）
   if (currentChatId) {
     const c = chats.find(x=>x.id===currentChatId);
     if(c && c.chatBgImage) {
       const bgMask = $('#chatBgMask');
       let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-      const isDark = themeName.includes('dark') || themeName.includes('cyber') || themeName.includes('space') || themeName.includes('purple') || themeName.includes('black');
+      const isDark = themeName.includes('cyber') || themeName.includes('space') || themeName.includes('purple') || themeName.includes('pureblack');
       bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
     }
   }
@@ -625,7 +648,6 @@ async function init(){
   bindEvents();
   renderCards();
   applyThemeAndBg();
-  // 初始化主页背景UI状态
   if (globalBgImage) {
     $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
     $('#mainBgText').textContent = '';
@@ -741,7 +763,6 @@ async function openChat(id){
     avatarEl.innerHTML = (c.theirNick || c.theirName || '祂').charAt(0);
   }
 
-  // 加载背景并铺满整个页面
   const chatPage = $('#pageChat');
   const bgMask = $('#chatBgMask');
   if(c.chatBgImage) {
@@ -749,11 +770,12 @@ async function openChat(id){
     chatPage.style.backgroundColor = 'transparent';
     
     let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-    const isDark = document.body.className.includes('dark') || document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('black');
+    const isDark = document.body.className.includes('cyber') || document.body.className.includes('space') || document.body.className.includes('purple') || document.body.className.includes('pureblack');
     bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
   } else {
+    // 如果聊天室没背景，直接透明展示全局背景
     chatPage.style.backgroundImage = 'none';
-    chatPage.style.backgroundColor = 'var(--bg-color)';
+    chatPage.style.backgroundColor = 'transparent';
     bgMask.style.backgroundColor = 'transparent';
   }
   
@@ -826,12 +848,10 @@ function updateSendBtnState() {
   const btn = $('#sendBtn');
   if(text || pendingStickerData) {
     btn.disabled = false;
-    btn.style.background = 'var(--primary)';
-    btn.style.color = '#fff';
+    btn.style.opacity = '0.9';
   } else {
     btn.disabled = true;
-    btn.style.background = 'var(--input-bg)';
-    btn.style.color = 'var(--text-secondary)';
+    btn.style.opacity = '0.5';
   }
 }
 
@@ -1203,12 +1223,10 @@ function bindEvents(){
   // --- 佈景页面 ---
   $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
   
-  // 佈景：色卡切换
   document.querySelectorAll('.theme-card').forEach(card => {
     card.onclick = () => setTheme(card.dataset.theme);
   });
 
-  // 佈景：主页面背景设置
   $('#mainBgFile').onchange = e => {
     if(e.target.files[0]) {
       fileToBase64(e.target.files[0], b => {

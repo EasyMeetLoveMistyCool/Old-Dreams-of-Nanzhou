@@ -148,7 +148,7 @@
   /* ========== 核心：居中悬停信笺 ========== */
   .msg-group {
     display: flex; flex-direction: column; align-items: center;
-    margin-bottom: 24px; /* 大卡片之间间距 */
+    margin-bottom: 24px;
     width: 100%;
     animation: fadeIn 0.4s ease forwards;
   }
@@ -182,6 +182,7 @@
     display:block; opacity: 0; transform: translateY(5px);
     animation: cardIn 0.5s ease forwards;
   }
+  /* 历史消息或者我发的消息，立即显示，不播动画 */
   .card-line.no-anim {
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
@@ -233,6 +234,11 @@
   .toolbar { display:flex; justify-content:space-around; padding:10px 0; margin-bottom:10px; }
   .tool-btn { background:transparent; border:none; color:var(--text-color); font-size:14px; font-weight:500; cursor:pointer; padding:5px 10px; }
   .tool-btn:active { opacity:0.7; }
+
+  .batch-toolbar { display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:10px 15px; border-radius:8px; margin-bottom:10px; }
+  .batch-toolbar .batch-info { font-size:14px; color:var(--text-color); }
+  .batch-btn { background:transparent; border:none; color:var(--primary); font-size:14px; cursor:pointer; font-weight:500; }
+  .batch-btn.danger { color:#e53935; }
 
   .card-list-header { font-size:13px; color:var(--text-secondary); margin-bottom:10px; padding-left:5px; }
   .card-item { display:flex; justify-content:space-between; align-items:flex-start; background:var(--input-bg); border-radius:8px; padding:12px 14px; margin-bottom:12px; gap:10px; }
@@ -345,7 +351,7 @@
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
         </svg>
       </button>
-      <textarea id="msgInput" placeholder="輸入訊息… (換行即為下一句)" rows="1"></textarea>
+      <textarea id="msgInput" placeholder="輸入訊息…" rows="1"></textarea>
       <button class="icon-btn" id="stickerBtn" style="font-size:20px;color:var(--text-secondary);">🔗</button>
       <button class="send-btn" id="sendBtn" disabled>
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -413,7 +419,7 @@
 
         <!-- 大输入框 -->
         <div class="add-box">
-          <textarea class="add-textarea" id="newCardsInput" placeholder="寫下新的電文...（支援換行，一行即一份）"></textarea>
+          <textarea class="add-textarea" id="newCardsInput" placeholder="寫下新的電文..."></textarea>
           <div class="add-footer">
             <span class="add-count" id="draftCount">待定稿：0 份</span>
             <button class="btn-add" id="btnAddCards">定稿</button>
@@ -425,12 +431,22 @@
           <input type="text" class="search-input" id="searchCardsInput" placeholder="尋檢電文...">
         </div>
 
-        <!-- 工具栏 -->
-        <div class="toolbar">
+        <!-- 工具栏 (普通状态) -->
+        <div class="toolbar" id="normalToolbar">
           <button class="tool-btn" id="btnImport">收報</button>
           <button class="tool-btn" id="btnExport">發報</button>
           <button class="tool-btn" id="btnDeduplicate">清冗</button>
           <button class="tool-btn" id="btnBatchDelete" style="color:#e53935;">焚毀</button>
+        </div>
+
+        <!-- 工具栏 (批量删除状态) -->
+        <div class="batch-toolbar" id="batchToolbar" style="display:none;">
+          <span class="batch-info" id="batchCount">已選 0 份</span>
+          <div style="display:flex; gap:15px;">
+            <button class="batch-btn" id="btnSelectAll">全選</button>
+            <button class="batch-btn danger" id="btnConfirmDelete">確認焚毀</button>
+            <button class="batch-btn" id="btnCancelDelete" style="color:var(--text-secondary);">取消</button>
+          </div>
         </div>
 
         <!-- 列表 -->
@@ -473,7 +489,7 @@
     <div class="dialog-title" id="dialogTitle">提示</div>
     <div class="dialog-content" id="dialogText"></div>
     <input type="text" class="dialog-input" id="dialogInput" style="display:none;">
-    <div class="dialog-footer">
+    <div class="dialog-footer" id="dialogFooter">
       <button class="dialog-btn cancel" id="dialogCancelBtn">取消</button>
       <button class="dialog-btn danger" id="dialogOkBtn" style="color:var(--primary);">確定</button>
     </div>
@@ -742,7 +758,7 @@ async function openChat(id){
   }
   
   currentMessages = await getMessages(id);
-  renderMessages();
+  renderMessages(true); // true 表示是初次打开，强制滚动到底部
   
   $('#msgInput').value = '';
   $('#msgInput').style.height = '44px';
@@ -753,8 +769,14 @@ async function openChat(id){
 }
 
 /* ============ 居中大卡片渲染 ============ */
-function renderMessages(){
+function renderMessages(forceScrollBottom = false){
   const box = $('#messages');
+  const wrap = $('#messagesWrap');
+  
+  // 记录当前是否在底部，如果不是且不强制滚动，就保持位置
+  const isNearBottom = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight < 150;
+  const prevScrollTop = wrap.scrollTop;
+
   box.innerHTML = '';
   let lastDate = '';
   
@@ -794,21 +816,22 @@ function renderMessages(){
       bubble.innerHTML = `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
     } else {
       let linesHtml = '';
+      // 只有最新一条，且是祂发的，才播放 1~3 秒间隔的动画
+      const isLatest = (i === currentMessages.length - 1);
+      const useAnim = !forceScrollBottom && isLatest && !isMe; 
+      
       if(m.cards && m.cards.length > 0){
         m.cards.forEach((cardText, idx) => {
-          // 历史消息无动画，当前新消息带延迟动画
-          const isLatest = (i === currentMessages.length - 1);
-          const animClass = isLatest ? '' : 'no-anim';
-          const delay = isLatest ? (idx * (3 + Math.random() * 2)) : 0; // 3~5秒
+          const animClass = useAnim ? '' : 'no-anim';
+          const delay = useAnim ? (idx * (1 + Math.random() * 2)) : 0; // 1~3秒
           linesHtml += `<span class="card-line ${animClass}" style="animation-delay: ${delay}s">${escapeHtml(cardText)}</span>`;
         });
       } else if(m.text) {
         linesHtml += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
       }
       
-      const isLatest = (i === currentMessages.length - 1);
-      const timeAnimClass = isLatest ? '' : 'no-anim';
-      const timeDelay = isLatest ? ((m.cards ? m.cards.length : 1) * 3.5) : 0;
+      const timeAnimClass = useAnim ? '' : 'no-anim';
+      const timeDelay = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
       
       const timeHtml = `<span class="msg-time-center ${timeAnimClass}" style="animation-delay: ${timeDelay}s">${fmtTime(m.time)}</span>`;
       bubble.innerHTML = linesHtml + timeHtml;
@@ -816,13 +839,16 @@ function renderMessages(){
     
     groupBox.appendChild(bubble);
     box.appendChild(groupBox);
-    
-    // 新消息自动滚到底部
-    if (i === currentMessages.length - 1) {
-      setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
-    }
   }
-  box.scrollTop = box.scrollHeight;
+  
+  // 滚动逻辑
+  if (forceScrollBottom) {
+    setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50);
+  } else if (isNearBottom) {
+    setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50);
+  } else {
+    wrap.scrollTop = prevScrollTop;
+  }
 }
 
 /* ============ 发送逻辑 ============ */
@@ -862,9 +888,9 @@ async function sendMyMessage(){
   input.style.height = '44px';
   pendingStickerData = null;
   updateSendBtnState();
-  renderMessages();
+  renderMessages(false);
   await touchChat(currentChatId);
-  setTimeout(replyFromThem, 8000 + Math.random() * 7000); // 8~15 秒后回复
+  setTimeout(replyFromThem, 8000 + Math.random() * 7000); // 8~15 秒
 }
 
 async function touchChat(id){
@@ -885,7 +911,7 @@ async function replyFromThem(){
     return;
   }
   
-  const n = 3 + Math.floor(Math.random()*3); // 3~5 张
+  const n = 1 + Math.floor(Math.random()*5); // 1~5 张
   const picked = [];
   const pool = [...cards];
   
@@ -901,7 +927,6 @@ async function replyFromThem(){
     picked.push(cardText);
   }
 
-  // 10% 概率带贴纸
   let stickerData = null;
   const stickers = await reqToPromise(tx('stickers').getAll());
   if(stickers.length && Math.random() < 0.1){
@@ -922,7 +947,7 @@ async function replyFromThem(){
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
-  renderMessages();
+  renderMessages(false);
   await touchChat(currentChatId);
 }
 
@@ -992,20 +1017,12 @@ async function loadAndRenderCards() {
   });
 
   if (isBatchDeleteMode) {
-    const btnConfirm = document.createElement('button');
-    btnConfirm.textContent = `確認焚毀 (${selectedCardIds.size})`;
-    btnConfirm.style.cssText = 'width:100%; height:44px; background:#e53935; color:#fff; border:none; border-radius:8px; margin-top:15px; font-size:15px; cursor:pointer;';
-    btnConfirm.onclick = async () => {
-      if(selectedCardIds.size === 0) return;
-      for (const id of selectedCardIds) {
-        await reqToPromise(tx('cards', 'readwrite').delete(id));
-      }
-      toast('已焚毀所選電文');
-      isBatchDeleteMode = false;
-      selectedCardIds.clear();
-      loadAndRenderCards();
-    };
-    container.appendChild(btnConfirm);
+    $('#normalToolbar').style.display = 'none';
+    $('#batchToolbar').style.display = 'flex';
+    $('#batchCount').textContent = `已選 ${selectedCardIds.size} 份`;
+  } else {
+    $('#normalToolbar').style.display = 'flex';
+    $('#batchToolbar').style.display = 'none';
   }
 }
 
@@ -1126,7 +1143,38 @@ function bindEvents(){
   };
 
   $('#btnBatchDelete').onclick = () => {
-    isBatchDeleteMode = !isBatchDeleteMode;
+    isBatchDeleteMode = true;
+    selectedCardIds.clear();
+    loadAndRenderCards();
+  };
+
+  $('#btnSelectAll').onclick = () => {
+    const checkboxes = document.querySelectorAll('#cardListContainer input[type="checkbox"]');
+    if(selectedCardIds.size === checkboxes.length && checkboxes.length > 0) {
+      selectedCardIds.clear(); // 如果全选了，就取消全选
+    } else {
+      checkboxes.forEach(cb => {
+        selectedCardIds.add(cb.getAttribute('onchange').split("'")[1]);
+      });
+    }
+    loadAndRenderCards();
+  };
+
+  $('#btnConfirmDelete').onclick = () => {
+    if(selectedCardIds.size === 0) return;
+    showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => {
+      for(const id of selectedCardIds) {
+        await reqToPromise(tx('cards', 'readwrite').delete(id));
+      }
+      toast('已焚毀所選電文');
+      isBatchDeleteMode = false;
+      selectedCardIds.clear();
+      loadAndRenderCards();
+    });
+  };
+
+  $('#btnCancelDelete').onclick = () => {
+    isBatchDeleteMode = false;
     selectedCardIds.clear();
     loadAndRenderCards();
   };
@@ -1153,8 +1201,116 @@ function bindEvents(){
     });
   };
 
-  $('#btnImport').onclick = () => toast('收報：文件導入準備中...');
-  $('#btnExport').onclick = () => toast('發報：文件導出準備中...');
+  $('#btnImport').onclick = () => {
+    // 构建隐藏的 file input 并触发
+    let fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json,.txt';
+    fileInput.onchange = e => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const content = event.target.result;
+        let newCards = [];
+        let added = 0, duplicate = 0;
+        const all = await reqToPromise(tx('cards').getAll());
+
+        try {
+          if (file.name.endsWith('.json')) {
+            const data = JSON.parse(content);
+            if (Array.isArray(data)) {
+              data.forEach(item => {
+                if (item.text) newCards.push({ text: item.text, category: item.category || currentSubTab });
+              });
+            }
+          } else {
+            // txt
+            const lines = content.split('\n');
+            lines.forEach(line => {
+              if(line.trim()) newCards.push({ text: line.trim(), category: currentSubTab });
+            });
+          }
+        } catch (err) {
+          toast('收報失敗：文件格式錯誤');
+          return;
+        }
+
+        for (let card of newCards) {
+          if (all.find(c => c.text === card.text)) {
+            duplicate++;
+          } else {
+            const newCard = { id: 'c_'+Date.now()+Math.random(), text: card.text, category: card.category, createdAt: Date.now() };
+            await reqToPromise(tx('cards', 'readwrite').add(newCard));
+            all.push(newCard);
+            added++;
+          }
+        }
+
+        toast(`收報完成：導入 ${added} 份` + (duplicate ? `，略過 ${duplicate} 份重複` : ''));
+        loadAndRenderCards();
+      };
+      reader.readAsText(file);
+    };
+    fileInput.click();
+  };
+
+  $('#btnExport').onclick = async () => {
+    const all = await reqToPromise(tx('cards').getAll());
+    const filtered = all.filter(c => (c.category || 'normal') === currentSubTab);
+    
+    if(!filtered.length) { toast('暫無電文可發報'); return; }
+
+    showCustomDialog('發報', '請選擇發報格式：', false, 'JSON (完整數據)', () => {
+      // 导出 JSON
+      const exportData = filtered.map(c => ({ text: c.text, category: c.category }));
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `電文_${currentSubTab}_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('已發報 (JSON)');
+    });
+
+    // 调整弹窗按钮，变成两个导出的选项
+    const okBtn = $('#dialogOkBtn');
+    const newOkBtn = okBtn.cloneNode(true);
+    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+    newOkBtn.textContent = 'JSON (完整)';
+    newOkBtn.onclick = () => {
+      $('#dialogMask').classList.remove('show');
+      const exportData = filtered.map(c => ({ text: c.text, category: c.category }));
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `電文_${currentSubTab}_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('已發報 (JSON)');
+    };
+
+    const cancelBtn = $('#dialogCancelBtn');
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+    newCancelBtn.textContent = 'TXT (純文字)';
+    newCancelBtn.classList.remove('cancel');
+    newCancelBtn.style.borderRight = '1px solid var(--border-light)';
+    newCancelBtn.onclick = () => {
+      $('#dialogMask').classList.remove('show');
+      const textData = filtered.map(c => c.text).join('\n');
+      const blob = new Blob([textData], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `電文_${currentSubTab}_${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('已發報 (TXT)');
+    };
+  };
 
   // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{

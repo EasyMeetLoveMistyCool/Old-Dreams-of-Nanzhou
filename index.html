@@ -342,8 +342,9 @@
         <div class="form-label">祂的資料</div>
         <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
         <input type="file" id="theirFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputTheirName" placeholder="祂的名字（例如：阿沐）">
-        <input type="text" class="form-input" id="inputTheirNick" placeholder="祂的暱稱（例如：@amu）">
+        <input type="text" class="form-input" id="inputTheirName" placeholder="祂的名字（例如：易遇）">
+        <input type="text" class="form-input" id="inputTheirNick" placeholder="祂的暱稱（例如：阿遇）">
+        <input type="text" class="form-input" id="inputTheirSign" placeholder="祂的簽名（例如：最近曾上線）">
       </div>
 
       <div class="form-group">
@@ -351,7 +352,8 @@
         <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
         <input type="file" id="myFile" accept="image/*" style="display:none">
         <input type="text" class="form-input" id="inputMyName" placeholder="我的名字（例如：旅人）">
-        <input type="text" class="form-input" id="inputMyNick" placeholder="我的暱稱（例如：@traveler）">
+        <input type="text" class="form-input" id="inputMyNick" placeholder="我的暱稱（例如：阿旅）">
+        <input type="text" class="form-input" id="inputMySign" placeholder="我的簽名（例如：夢中尋路）">
       </div>
 
       <button class="btn-primary" id="saveChatBtn">完成建立</button>
@@ -366,9 +368,10 @@
       
       <div class="avatar-sm" id="chatAvatar">祂</div>
       
+      <!-- 聊天室名 + 祂的昵称 -->
       <div class="header-info">
-        <div class="header-title" id="chatTitle">聊天室</div>
-        <div class="header-sub" id="chatSub">最近曾上線</div>
+        <div class="header-title" id="chatTitle">暱稱</div>
+        <div class="header-sub" id="chatSub">簽名</div>
       </div>
       
       <button class="icon-btn" id="callBtn">
@@ -471,9 +474,9 @@ function fileToBase64(file, callback) {
   reader.readAsDataURL(file);
 }
 
-/* ============ IndexedDB (版本升级到2清空旧数据) ============ */
+/* ============ IndexedDB (版本升级到3清空旧数据) ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 2; 
+const DB_VER = 3; 
 let db = null;
 
 function openDB(){
@@ -547,7 +550,7 @@ async function renderChatList(){
     
     const avatarHtml = c.theirAvatar 
       ? `<img src="${c.theirAvatar}" class="avatar-lg">` 
-      : `<div class="avatar-lg">${(c.theirName||c.theirNick||'祂').charAt(0)}</div>`;
+      : `<div class="avatar-lg">${(c.theirNick || c.theirName ||'祂').charAt(0)}</div>`;
       
     const row = document.createElement('div');
     row.className = 'chat-row';
@@ -599,16 +602,15 @@ async function openChat(id){
   const c = chats.find(x=>x.id===id);
   if(!c) return;
   
-  // 顶栏大字：祂的名字
-  $('#chatTitle').textContent = c.theirName || '聊天室';
-  // 顶栏小字：祂的昵称
-  $('#chatSub').textContent = c.theirNick || '最近曾上線';
+  // 【核心修改区】：顶栏大字显示昵称，小字显示签名
+  $('#chatTitle').textContent = c.theirNick || c.theirName || '聊天室';
+  $('#chatSub').textContent = c.theirSign || '最近曾上線';
   
   const avatarEl = $('#chatAvatar');
   if(c.theirAvatar) {
     avatarEl.innerHTML = `<img src="${c.theirAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
   } else {
-    avatarEl.innerHTML = (c.theirName||c.theirNick||'祂').charAt(0);
+    avatarEl.innerHTML = (c.theirNick || c.theirName || '祂').charAt(0);
   }
   
   currentMessages = await getMessages(id);
@@ -648,10 +650,10 @@ function renderMessages(){
     let avatarHtml = '';
     if(m.sender === 'them') {
       if(c.theirAvatar) avatarHtml = `<img src="${c.theirAvatar}" class="msg-avatar">`;
-      else avatarHtml = `<div class="msg-avatar">${(c.theirName||c.theirNick||'祂').charAt(0)}</div>`;
+      else avatarHtml = `<div class="msg-avatar">${(c.theirNick || c.theirName || '祂').charAt(0)}</div>`;
     } else {
       if(c.myAvatar) avatarHtml = `<img src="${c.myAvatar}" class="msg-avatar">`;
-      else avatarHtml = `<div class="msg-avatar" style="background:#999">${(c.myName||c.myNick||'我').charAt(0)}</div>`;
+      else avatarHtml = `<div class="msg-avatar" style="background:#999">${(c.myNick || c.myName || '我').charAt(0)}</div>`;
     }
 
     const bubble = document.createElement('div');
@@ -788,8 +790,10 @@ function bindEvents(){
     $('#inputRoomName').value = '';
     $('#inputTheirName').value = '';
     $('#inputTheirNick').value = '';
+    $('#inputTheirSign').value = '';
     $('#inputMyName').value = '';
     $('#inputMyNick').value = '';
+    $('#inputMySign').value = '';
     
     $('#theirAvatar').style.backgroundImage = '';
     $('#theirAvatar').textContent = '祂';
@@ -832,8 +836,10 @@ function bindEvents(){
     const roomName = $('#inputRoomName').value.trim();
     const theirName = $('#inputTheirName').value.trim();
     const theirNick = $('#inputTheirNick').value.trim();
+    const theirSign = $('#inputTheirSign').value.trim();
     const myName = $('#inputMyName').value.trim();
     const myNick = $('#inputMyNick').value.trim();
+    const mySign = $('#inputMySign').value.trim();
     
     if(!roomName) { toast('請輸入聊天室名稱'); return; }
     
@@ -842,8 +848,10 @@ function bindEvents(){
       roomName: roomName,
       theirName: theirName || '祂',
       theirNick: theirNick,
+      theirSign: theirSign,
       myName: myName || '我',
       myNick: myNick,
+      mySign: mySign,
       theirAvatar: tempTheirAvatar,
       myAvatar: tempMyAvatar,
       createdAt: Date.now(),

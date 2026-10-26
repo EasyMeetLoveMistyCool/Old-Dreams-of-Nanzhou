@@ -115,6 +115,7 @@
     user-select: none;
   }
   .chat-row:active { background:rgba(128,128,128,0.1); }
+  
   /* 置顶背景色 */
   .chat-row.pinned { background: var(--pinned-bg); }
   .chat-row.pinned:active { filter: brightness(0.95); }
@@ -230,11 +231,30 @@
     display:flex; align-items:center; justify-content:center; font-size:32px; cursor:pointer; overflow:hidden;
     margin-bottom:12px; border:2px solid var(--topbar-border); background-size:cover; background-position:center;
   }
-  .form-input {
-    width:100%; height:48px; border-radius:8px; background:var(--topbar-bg); border:1px solid var(--topbar-border);
-    padding:0 14px; font-size:15px; color:var(--text-color); outline:none; text-align:center; margin-bottom:10px;
+  
+  /* 将标签和输入框排成一行 */
+  .input-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
   }
-  .form-input:focus { border-color:var(--primary); }
+  .row-label {
+    width: 50px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-right: 12px;
+    flex: 0 0 50px;
+  }
+  
+  .form-input {
+    flex: 1;
+    height: 48px; border-radius: 8px; background: var(--topbar-bg); border: 1px solid var(--topbar-border);
+    padding: 0 14px; font-size: 15px; color: var(--text-color); outline: none; text-align: left;
+  }
+  .form-input:focus { border-color: var(--primary); }
+  
   .btn-primary {
     width:100%; height:48px; border-radius:8px; background:var(--primary); color:#fff;
     font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:10px;
@@ -249,7 +269,7 @@
   .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
 
-  /* 长按菜单 (固定在屏幕中央) */
+  /* 长按菜单 */
   .action-sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px; }
   .action-sheet-mask.show { display:flex; }
   .action-sheet { background:var(--topbar-bg); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
@@ -296,27 +316,52 @@
       <div style="width:40px;"></div>
     </div>
     <div class="create-scroll">
-      <div class="form-group">
-        <div class="form-label">聊天室名稱</div>
-        <input type="text" class="form-input" id="inputRoomName" placeholder="">
+      
+      <div class="form-group" style="align-items: flex-start;">
+        <div class="form-label" style="margin-left:0; margin-bottom:6px;">聊天室名稱</div>
+        <input type="text" class="form-input" style="width:100%" id="inputRoomName">
       </div>
+
       <div style="height:1px;background:var(--topbar-border);margin:20px 0;"></div>
+
       <div class="form-group">
-        <div class="form-label">祂的資料</div>
+        <div class="form-label" style="margin-left:0; margin-bottom:12px; font-size:15px; color:var(--text-color);">祂的資料</div>
         <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
         <input type="file" id="theirFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputTheirName" placeholder="">
-        <input type="text" class="form-input" id="inputTheirNick" placeholder="">
-        <input type="text" class="form-input" id="inputTheirSign" placeholder="">
+        
+        <div class="input-row">
+          <span class="row-label">名字</span>
+          <input type="text" class="form-input" id="inputTheirName">
+        </div>
+        <div class="input-row">
+          <span class="row-label">暱稱</span>
+          <input type="text" class="form-input" id="inputTheirNick">
+        </div>
+        <div class="input-row">
+          <span class="row-label">簽名</span>
+          <input type="text" class="form-input" id="inputTheirSign">
+        </div>
       </div>
+
       <div class="form-group">
-        <div class="form-label">我的資料</div>
+        <div class="form-label" style="margin-left:0; margin-bottom:12px; font-size:15px; color:var(--text-color);">我的資料</div>
         <div class="avatar-upload" id="myAvatar" onclick="document.getElementById('myFile').click()">我</div>
         <input type="file" id="myFile" accept="image/*" style="display:none">
-        <input type="text" class="form-input" id="inputMyName" placeholder="">
-        <input type="text" class="form-input" id="inputMyNick" placeholder="">
-        <input type="text" class="form-input" id="inputMySign" placeholder="">
+        
+        <div class="input-row">
+          <span class="row-label">名字</span>
+          <input type="text" class="form-input" id="inputMyName">
+        </div>
+        <div class="input-row">
+          <span class="row-label">暱稱</span>
+          <input type="text" class="form-input" id="inputMyNick">
+        </div>
+        <div class="input-row">
+          <span class="row-label">簽名</span>
+          <input type="text" class="form-input" id="inputMySign">
+        </div>
       </div>
+
       <button class="btn-primary" id="saveChatBtn">完成</button>
       <div style="height:20px;"></div>
     </div>
@@ -452,7 +497,7 @@ function fileToBase64(file, callback) {
 
 /* ============ IndexedDB (版本升级到4，绝不删除数据) ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 4; // 只升版本，保留数据
+const DB_VER = 4;
 let db = null;
 
 function openDB(){
@@ -460,7 +505,6 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      // 只有表不存在时才创建，绝不 deleteObjectStore
       if(!d.objectStoreNames.contains('chats')) {
         d.createObjectStore('chats', { keyPath:'id' });
       }
@@ -495,10 +539,10 @@ let pendingStickerData = null;
 
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
-let isEditingChatId = null; // 区分新建和编辑
+let isEditingChatId = null;
 
-let longPressTimer = null; // 长按计时器
-let activeChatForMenu = null; // 当前长按选中的聊天室
+let longPressTimer = null;
+let activeChatForMenu = null;
 
 /* ============ 初始化 ============ */
 async function init(){
@@ -510,7 +554,6 @@ async function init(){
 
 async function loadChats(){
   chats = await reqToPromise(tx('chats').getAll());
-  // 排序：先按 isPinned 降序，再按 updatedAt 降序
   chats.sort((a,b) => {
     const pinA = a.isPinned ? 1 : 0;
     const pinB = b.isPinned ? 1 : 0;
@@ -538,7 +581,6 @@ async function renderChatList(){
       else if(last.stickerData) preview = '[圖片]';
     }
     
-    // 头像兜底
     const avatarHtml = c.theirAvatar 
       ? `<img src="${c.theirAvatar}" class="avatar-lg">` 
       : `<div class="avatar-lg">${(c.theirNick || c.theirName ||'祂').charAt(0)}</div>`;
@@ -547,7 +589,6 @@ async function renderChatList(){
     row.className = 'chat-row' + (c.isPinned ? ' pinned' : '');
     row.dataset.id = c.id;
     
-    // 主页排版：聊天室名字 + 祂的名字（同一行）
     row.innerHTML = `
       ${avatarHtml}
       <div class="chat-info">
@@ -560,12 +601,10 @@ async function renderChatList(){
       <div class="chat-time">${last ? fmtTime(last.time) : ''}</div>
     `;
     
-    // 点击事件
     row.onclick = () => { 
       if(!longPressTimer) openChat(c.id); 
     };
     
-    // 长按事件
     row.addEventListener('touchstart', (e) => {
       longPressTimer = setTimeout(() => {
         longPressTimer = null;
@@ -752,7 +791,6 @@ async function touchChat(id){
   if(!c) return;
   c.updatedAt = Date.now();
   await reqToPromise(tx('chats','readwrite').put(c));
-  // 更新内存里的排序
   await loadChats();
 }
 
@@ -807,7 +845,6 @@ function showConfirm(title, text, okText, isDanger, onOk) {
   okBtn.className = 'dialog-btn ' + (isDanger ? 'danger' : '');
   $('#confirmDialogMask').classList.add('show');
   
-  // 清除旧监听
   const newOkBtn = okBtn.cloneNode(true);
   okBtn.parentNode.replaceChild(newOkBtn, okBtn);
   newOkBtn.onclick = () => {
@@ -878,7 +915,6 @@ function bindEvents(){
     if(!roomName) { toast('請輸入聊天室名稱'); return; }
     
     if (isEditingChatId) {
-      // 编辑模式
       const c = chats.find(x=>x.id===isEditingChatId);
       if(c) {
         c.roomName = roomName;
@@ -895,7 +931,6 @@ function bindEvents(){
         toast('資料已更新');
       }
     } else {
-      // 新建模式
       const c = {
         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
         roomName: roomName,
@@ -999,7 +1034,6 @@ function bindEvents(){
     $('#pageCreate').classList.add('show');
   };
 
-  // 【焚稿】只删聊天记录
   $('#actClear').onclick = () => {
     closeActionSheet();
     if(!activeChatForMenu) return;
@@ -1014,17 +1048,14 @@ function bindEvents(){
     });
   };
 
-  // 【焚毁】彻底删除会话
   $('#actDelete').onclick = () => {
     closeActionSheet();
     if(!activeChatForMenu) return;
     showConfirm('焚毀', '確定要焚毀此會話嗎？該聊天室及所有記錄將被永久銷毀。', '焚毀', true, async () => {
-      // 删消息
       const msgs = await getMessages(activeChatForMenu.id);
       for(const m of msgs) {
         await reqToPromise(tx('messages','readwrite').delete(m.id));
       }
-      // 删会话
       await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id));
       await loadChats();
       renderChatList();

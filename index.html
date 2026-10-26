@@ -145,10 +145,10 @@
   }
   body.theme-cyber .date-divider, body.theme-space .date-divider, body.theme-nightpurple .date-divider, body.theme-pureblack .date-divider { background:rgba(255,255,255,.15); }
 
-  /* ========== 核心：居中悬停信笺（带呼吸间隔） ========== */
+  /* ========== 核心：居中悬停信笺 ========== */
   .msg-group {
     display: flex; flex-direction: column; align-items: center;
-    margin-bottom: 24px; /* 【核心强调】：大卡片之间的超大间距，拉开呼吸感 */
+    margin-bottom: 24px; /* 大卡片之间间距 */
     width: 100%;
     animation: fadeIn 0.4s ease forwards;
   }
@@ -168,22 +168,22 @@
 
   .bubble {
     max-width: 85%; padding: 16px 20px; border-radius: 16px; position: relative; font-size: 15px; line-height: 1.6;
-    word-break: break-word; text-align: center; /* 文本居中 */
+    word-break: break-word; text-align: center;
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    display: flex; flex-direction: column; gap: 8px; /* 内部句子的间距 */
+    display: flex; flex-direction: column; gap: 8px;
   }
 
-  /* 祂的信笺 */
   .msg-group.them .bubble { background: var(--bubble-them); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
-  /* 我的信笺 */
   .msg-group.me .bubble { background: var(--bubble-me); color: var(--text-color); border: 1px solid rgba(128,128,128,0.1); }
 
   /* 内部句子浮现动效 */
   .card-line { 
-    display:block; 
-    opacity: 0; transform: translateY(5px);
+    display:block; opacity: 0; transform: translateY(5px);
     animation: cardIn 0.5s ease forwards;
+  }
+  .card-line.no-anim {
+    animation: none !important; opacity: 1 !important; transform: none !important;
   }
   @keyframes cardIn {
     to { opacity: 1; transform: translateY(0); }
@@ -192,7 +192,6 @@
   /* 贴纸气泡 */
   .bubble.sticker-bubble { padding: 0; background: transparent; box-shadow: none; border: none; margin-top: 10px; gap: 0; }
   .bubble .sticker-img { display:block; max-width:160px; max-height:160px; border-radius:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 0 auto; }
-
   .msg-time-center { font-size: 11px; color: var(--time-color); margin-top: 6px; text-align: right; width: 100%; }
 
   /* ========== 聊天页输入区 ========== */
@@ -243,22 +242,38 @@
   .btn-edit { color:var(--primary); }
   .btn-del { color:#e53935; }
 
-  /* ========== 通用弹窗 ========== */
+  /* ========== 菜单 & 弹窗 ========== */
+  .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
+  .menu-mask.show { display:block; }
+  .menu { position:absolute; top:56px; right:10px; background:var(--bg-color); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; border: 1px solid var(--topbar-border); }
+  .menu-item { padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer; white-space:nowrap; }
+  .menu-item:active { background:var(--input-bg); }
+  .menu-item.danger { color:#e53935; }
+
+  .action-sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px; }
+  .action-sheet-mask.show { display:flex; }
+  .action-sheet { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2); }
+  .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer; }
+  .action-item:active { background:var(--input-bg); }
+  .action-item.danger { color:#e53935; }
+
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
   .dialog-content { padding:20px; font-size:15px; color:var(--text-color); text-align:center; }
-  .dialog-input { width:100%; height:40px; border-radius:6px; border:1px solid var(--topbar-border); padding:0 10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); }
+  .dialog-input { width:100%; height:40px; border-radius:6px; border:1px solid var(--topbar-border); padding:0 10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); margin-bottom:10px; }
   .dialog-footer { display:flex; border-top:1px solid var(--border-light); }
   .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; cursor:pointer; border:none; background:transparent; color:var(--primary); }
   .dialog-btn:active { background:var(--input-bg); }
   .dialog-btn.cancel { color:var(--text-secondary); border-right:1px solid var(--border-light); }
   .dialog-btn.danger { color:#e53935; }
 
-  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:300; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .toast {
+    position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff;
+    font-size:13px; padding:8px 16px; border-radius:16px; z-index:300; opacity:0; transition:opacity .2s; pointer-events:none;
+  }
   .toast.show { opacity:1; }
-
 </style>
 </head>
 <body class="theme-sky">
@@ -274,7 +289,7 @@
     <button class="fab" id="newChatBtn">＋</button>
   </div>
 
-  <!-- 2. 新建页 (基础逻辑省略，原样保留) -->
+  <!-- 2. 新建页 -->
   <div class="page page-create" id="pageCreate">
     <div class="topbar">
       <button class="icon-btn" id="cancelCreateBtn">←</button>
@@ -304,7 +319,7 @@
     </div>
   </div>
 
-  <!-- 3. 聊天页 (核心更新) -->
+  <!-- 3. 聊天页 -->
   <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
@@ -338,7 +353,7 @@
     </div>
   </div>
 
-  <!-- 4. 佈景 (原样保留) -->
+  <!-- 4. 佈景 -->
   <div class="page page-settings" id="pageSettings">
     <div class="topbar">
       <button class="icon-btn" id="backSettingsBtn">←</button>
@@ -373,7 +388,7 @@
     </div>
   </div>
 
-  <!-- 5. 郵電所 (核心更新) -->
+  <!-- 5. 郵電所 -->
   <div class="page page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
@@ -389,40 +404,40 @@
     </div>
     
     <div class="create-scroll" style="padding: 15px;">
-      
-      <!-- 常訊 / 撩撥 子标签 -->
-      <div style="display:flex; margin-bottom:15px; border-bottom:1px solid var(--border-light);">
-        <div class="sub-tab active" data-subtab="normal" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">常訊</div>
-        <div class="sub-tab" data-subtab="flirt" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; color:var(--text-secondary);">撩撥</div>
-      </div>
-
-      <!-- 添加大输入框 -->
-      <div class="add-box">
-        <textarea class="add-textarea" id="newCardsInput" placeholder="寫下新的電文...（支援換行，一行即一份）"></textarea>
-        <div class="add-footer">
-          <span class="add-count" id="draftCount">待定稿：0 份</span>
-          <button class="btn-add" id="btnAddCards">定稿</button>
+      <div id="tabContentCards">
+        <!-- 子标签：常訊 / 撩撥 -->
+        <div style="display:flex; margin-bottom:15px; border-bottom:1px solid var(--border-light);">
+          <div class="sub-tab active" data-subtab="normal" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; font-weight:600; color:var(--primary); border-bottom:2px solid var(--primary);">常訊</div>
+          <div class="sub-tab" data-subtab="flirt" style="flex:1; text-align:center; padding:10px 0; font-size:15px; cursor:pointer; color:var(--text-secondary);">撩撥</div>
         </div>
+
+        <!-- 大输入框 -->
+        <div class="add-box">
+          <textarea class="add-textarea" id="newCardsInput" placeholder="寫下新的電文...（支援換行，一行即一份）"></textarea>
+          <div class="add-footer">
+            <span class="add-count" id="draftCount">待定稿：0 份</span>
+            <button class="btn-add" id="btnAddCards">定稿</button>
+          </div>
+        </div>
+
+        <!-- 搜索 -->
+        <div class="search-box">
+          <input type="text" class="search-input" id="searchCardsInput" placeholder="尋檢電文...">
+        </div>
+
+        <!-- 工具栏 -->
+        <div class="toolbar">
+          <button class="tool-btn" id="btnImport">收報</button>
+          <button class="tool-btn" id="btnExport">發報</button>
+          <button class="tool-btn" id="btnDeduplicate">清冗</button>
+          <button class="tool-btn" id="btnBatchDelete" style="color:#e53935;">焚毀</button>
+        </div>
+
+        <!-- 列表 -->
+        <div class="card-list-header" id="cardListHeader">常訊：共 0 份</div>
+        <div id="cardListContainer"></div>
       </div>
-
-      <!-- 搜索框 -->
-      <div class="search-box">
-        <input type="text" class="search-input" id="searchCardsInput" placeholder="尋檢電文...">
-      </div>
-
-      <!-- 工具栏 -->
-      <div class="toolbar">
-        <button class="tool-btn" id="btnImport">收報</button>
-        <button class="tool-btn" id="btnExport">發報</button>
-        <button class="tool-btn" id="btnDeduplicate">清冗</button>
-        <button class="tool-btn" id="btnBatchDelete" style="color:#e53935;">焚毀</button>
-      </div>
-
-      <!-- 字卡列表 -->
-      <div class="card-list-header" id="cardListHeader">常訊：共 0 份</div>
-      <div id="cardListContainer"></div>
-
-      <!-- 印花、暗语、留声占位 -->
+      
       <div id="tabContentOthers" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
         該區域功能待開發...
       </div>
@@ -432,24 +447,24 @@
 
 <!-- 弹窗区 -->
 <div class="menu-mask" id="menuMask">
-  <div class="menu" id="menuPanel" style="position:absolute; top:56px; right:10px; background:var(--bg-color); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; border: 1px solid var(--topbar-border);">
-    <div class="menu-item" data-act="postoffice" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">郵電所</div>
-    <div class="menu-item" data-act="letters" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">郵局</div>
-    <div class="menu-item" data-act="messages" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">簡訊</div>
-    <div class="menu-item" data-act="settings" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">佈景</div>
-    <div class="menu-item" data-act="export" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">存檔</div>
-    <div class="menu-item danger" data-act="clear" style="padding:12px 18px; font-size:15px; color:#e53935; cursor:pointer;">焚稿</div>
-    <div class="menu-item" data-act="about" style="padding:12px 18px; font-size:15px; color:var(--text-color); cursor:pointer;">南洲誌</div>
+  <div class="menu" id="menuPanel">
+    <div class="menu-item" data-act="postoffice">郵電所</div>
+    <div class="menu-item" data-act="letters">郵局</div>
+    <div class="menu-item" data-act="messages">簡訊</div>
+    <div class="menu-item" data-act="settings">佈景</div>
+    <div class="menu-item" data-act="export">存檔</div>
+    <div class="menu-item danger" data-act="clear">焚稿</div>
+    <div class="menu-item" data-act="about">南洲誌</div>
   </div>
 </div>
 
-<div class="action-sheet-mask" id="actionSheetMask" style="position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:150; align-items:center; justify-content:center; padding:20px;">
-  <div class="action-sheet" style="background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); box-shadow:0 8px 30px rgba(0,0,0,.2);">
-    <div class="action-item" id="actPin" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">釘選</div>
-    <div class="action-item" id="actEdit" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">編輯</div>
-    <div class="action-item" id="actClear" style="padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer;">焚稿</div>
-    <div class="action-item danger" id="actDelete" style="padding:14px 20px; font-size:16px; text-align:center; color:#e53935; border-bottom:1px solid var(--border-light); cursor:pointer;">焚毀</div>
-    <div class="action-item" style="padding:14px 20px; font-size:16px; text-align:center; color:var(--text-secondary); cursor:pointer;" id="actCancel">取消</div>
+<div class="action-sheet-mask" id="actionSheetMask">
+  <div class="action-sheet">
+    <div class="action-item" id="actPin">釘選</div>
+    <div class="action-item" id="actEdit">編輯</div>
+    <div class="action-item" id="actClear">焚稿</div>
+    <div class="action-item danger" id="actDelete">焚毀</div>
+    <div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div>
   </div>
 </div>
 
@@ -457,7 +472,7 @@
   <div class="dialog">
     <div class="dialog-title" id="dialogTitle">提示</div>
     <div class="dialog-content" id="dialogText"></div>
-    <input type="text" class="dialog-input" id="dialogInput" style="display:none; margin-bottom:10px;">
+    <input type="text" class="dialog-input" id="dialogInput" style="display:none;">
     <div class="dialog-footer">
       <button class="dialog-btn cancel" id="dialogCancelBtn">取消</button>
       <button class="dialog-btn danger" id="dialogOkBtn" style="color:var(--primary);">確定</button>
@@ -576,14 +591,12 @@ let currentMessages = [];
 let pendingStickerData = null; 
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
-let tempBgImage = null;
-let tempBgMask = 60; 
 let isEditingChatId = null;
 let longPressTimer = null;
 let activeChatForMenu = null;
 
 // 電文管理状态
-let currentSubTab = 'normal'; // 'normal' | 'flirt'
+let currentSubTab = 'normal'; 
 let currentSearchQuery = '';
 let isBatchDeleteMode = false;
 let selectedCardIds = new Set();
@@ -599,7 +612,6 @@ async function init(){
     $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
     $('#mainBgText').textContent = '';
   }
-  // 默认加载 電文-常訊
   loadAndRenderCards();
 }
 
@@ -733,13 +745,14 @@ async function openChat(id){
   renderMessages();
   
   $('#msgInput').value = '';
+  $('#msgInput').style.height = '44px';
   pendingStickerData = null;
   updateSendBtnState();
   
   $('#pageChat').classList.add('show');
 }
 
-/* ============ 居中大卡片渲染 & 发报机浮现特效 ============ */
+/* ============ 居中大卡片渲染 ============ */
 function renderMessages(){
   const box = $('#messages');
   box.innerHTML = '';
@@ -751,7 +764,6 @@ function renderMessages(){
     const m = currentMessages[i];
     const dstr = fmtDate(m.time);
     
-    // 日期分隔线
     if(dstr !== lastDate){
       const div = document.createElement('div');
       div.className = 'date-divider';
@@ -774,7 +786,6 @@ function renderMessages(){
     }
     groupBox.innerHTML = avatarHtml;
     
-    // 大卡片
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     
@@ -785,29 +796,28 @@ function renderMessages(){
       let linesHtml = '';
       if(m.cards && m.cards.length > 0){
         m.cards.forEach((cardText, idx) => {
-          // 计算延迟动画时间
-          const delay = idx * (3 + Math.random() * 2); // 3~5秒
-          linesHtml += `<span class="card-line" style="animation-delay: ${delay}s">${escapeHtml(cardText)}</span>`;
+          // 历史消息无动画，当前新消息带延迟动画
+          const isLatest = (i === currentMessages.length - 1);
+          const animClass = isLatest ? '' : 'no-anim';
+          const delay = isLatest ? (idx * (3 + Math.random() * 2)) : 0; // 3~5秒
+          linesHtml += `<span class="card-line ${animClass}" style="animation-delay: ${delay}s">${escapeHtml(cardText)}</span>`;
         });
       } else if(m.text) {
-        linesHtml += `<span class="card-line" style="animation-delay: 0s">${escapeHtml(m.text)}</span>`;
+        linesHtml += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
       }
       
-      const timeHtml = `<span class="msg-time-center" style="animation-delay: ${(m.cards ? m.cards.length : 1) * 3.5}s">${fmtTime(m.time)}</span>`;
+      const isLatest = (i === currentMessages.length - 1);
+      const timeAnimClass = isLatest ? '' : 'no-anim';
+      const timeDelay = isLatest ? ((m.cards ? m.cards.length : 1) * 3.5) : 0;
       
-      // 如果是历史记录，直接取消延迟动画，瞬间显示
-      if (i < currentMessages.length - 1) {
-         bubble.innerHTML = (m.cards && m.cards.length > 0 ? m.cards.map(t=>`<span class="card-line" style="animation:none;opacity:1;transform:none;">${escapeHtml(t)}</span>`).join('') : `<span class="card-line" style="animation:none;opacity:1;transform:none;">${escapeHtml(m.text)}</span>`)
-          + `<span class="msg-time-center" style="animation:none;opacity:1;">${fmtTime(m.time)}</span>`;
-      } else {
-         bubble.innerHTML = linesHtml + timeHtml;
-      }
+      const timeHtml = `<span class="msg-time-center ${timeAnimClass}" style="animation-delay: ${timeDelay}s">${fmtTime(m.time)}</span>`;
+      bubble.innerHTML = linesHtml + timeHtml;
     }
     
     groupBox.appendChild(bubble);
     box.appendChild(groupBox);
     
-    // 如果是新出现的回复，确保滚动到最底下
+    // 新消息自动滚到底部
     if (i === currentMessages.length - 1) {
       setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
     }
@@ -832,7 +842,6 @@ async function sendMyMessage(){
   if(!text && !pendingStickerData) return;
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
 
-  // 按换行拆分文字
   const lines = text ? text.split('\n').filter(l => l.trim() !== '') : [];
 
   const msg = {
@@ -850,12 +859,12 @@ async function sendMyMessage(){
   currentMessages.push(msg);
   
   input.value = '';
-  input.style.height = '44px'; // 重置高度
+  input.style.height = '44px';
   pendingStickerData = null;
   updateSendBtnState();
   renderMessages();
   await touchChat(currentChatId);
-  setTimeout(replyFromThem, 8000 + Math.random() * 7000); // 等待 8~15 秒后回复
+  setTimeout(replyFromThem, 8000 + Math.random() * 7000); // 8~15 秒后回复
 }
 
 async function touchChat(id){
@@ -918,7 +927,6 @@ async function replyFromThem(){
 }
 
 /* ============ 弹窗工具 ============ */
-let dialogCallback = null;
 function showCustomDialog(title, text, showInput, okText, onOk) {
   $('#dialogTitle').textContent = title;
   $('#dialogText').textContent = text;
@@ -942,22 +950,17 @@ function showCustomDialog(title, text, showInput, okText, onOk) {
 async function loadAndRenderCards() {
   const allCards = await reqToPromise(tx('cards').getAll());
   
-  // 过滤分类
   let filtered = allCards.filter(c => (c.category || 'normal') === currentSubTab);
   
-  // 过滤搜索
   if(currentSearchQuery) {
     filtered = filtered.filter(c => c.text.includes(currentSearchQuery));
   }
 
-  // 排序：最新的在上面
   filtered.sort((a,b) => b.createdAt - a.createdAt);
 
-  // 渲染头部数量
   const catName = currentSubTab === 'normal' ? '常訊' : '撩撥';
   $('#cardListHeader').textContent = `${catName}：共 ${filtered.length} 份`;
 
-  // 渲染列表
   const container = $('#cardListContainer');
   container.innerHTML = '';
   
@@ -988,7 +991,6 @@ async function loadAndRenderCards() {
     container.appendChild(div);
   });
 
-  // 如果处于批量删除模式，在列表底部加个确认按钮
   if (isBatchDeleteMode) {
     const btnConfirm = document.createElement('button');
     btnConfirm.textContent = `確認焚毀 (${selectedCardIds.size})`;
@@ -1018,7 +1020,6 @@ window.editCard = function(id, oldText) {
     newText = newText.trim();
     if(!newText || newText === oldText) return;
     
-    // 查重
     const all = await reqToPromise(tx('cards').getAll());
     if(all.find(c => c.text === newText && c.id !== id)) {
       toast('校對失敗：內容與現有電文重複！');
@@ -1109,7 +1110,7 @@ function bindEvents(){
       }
       const newCard = { id: 'c_'+Date.now()+Math.random(), text: line, category: currentSubTab, createdAt: Date.now() };
       await reqToPromise(tx('cards', 'readwrite').add(newCard));
-      all.push(newCard); // 防止本次输入框内自己重复
+      all.push(newCard);
       added++;
     }
 
@@ -1152,7 +1153,6 @@ function bindEvents(){
     });
   };
 
-  // 导入导出（这里留口子，点击先弹提示，下次写具体文件流）
   $('#btnImport').onclick = () => toast('收報：文件導入準備中...');
   $('#btnExport').onclick = () => toast('發報：文件導出準備中...');
 
@@ -1203,7 +1203,6 @@ function bindEvents(){
   // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
   
-  // 多行输入自适应高度
   $('#msgInput').addEventListener('input', function() {
     this.style.height = '44px';
     this.style.height = (this.scrollHeight) + 'px';
@@ -1251,7 +1250,6 @@ function bindEvents(){
     }
   };
 
-  // 弹窗取消
   $('#dialogCancelBtn').onclick = () => $('#dialogMask').classList.remove('show');
 }
 

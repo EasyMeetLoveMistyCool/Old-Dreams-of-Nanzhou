@@ -30,7 +30,7 @@
   .letter{position:relative;border:1px solid var(--line);padding:12px 12px 10px;background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),var(--paper-2);box-shadow:2px 3px 0 var(--shadow);}
   .letter.dream{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(58,52,40,.07) 27px 28px),#efe4cf;border-color:#b9ab8e;}
   .letter .meta{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;}
-  .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
+  .telegram-text{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;min-height:28px;}
   .telegram-line{font-size:17px;line-height:28px;letter-spacing:1px;white-space:pre-wrap;word-break:break-all;}
   .seal{position:absolute;right:10px;bottom:6px;width:34px;height:34px;border:1.5px solid var(--seal);color:var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;transform:rotate(-12deg);opacity:.85;}
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
@@ -90,7 +90,6 @@
   .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
   .form input[type=text],.form textarea{padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:13px;border-radius:3px;}
   .form textarea{min-height:80px;resize:vertical;}
-  .form input[type=file]{font-size:11px;color:var(--ink-soft);}
   .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
   .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
   .io-row button{padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;}
@@ -327,19 +326,23 @@ async function renderPanel(){
       <div class="io-row">
         <button id="expTxt">导出 TXT</button>
         <button id="expJson">导出 JSON</button>
-        <button id="impTxt">导入 TXT</button>
-        <button id="impJson">导入 JSON</button>
       </div>
-      <input type="file" id="fileTxt" accept=".txt,text/plain" style="display:none" />
-      <input type="file" id="fileJson" accept=".json,application/json,text/plain" style="display:none" />
+      <div class="io-row">
+        <div>
+          <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入 TXT：</div>
+          <input type="file" id="fileTxt" accept=".txt,text/plain" style="font-size:12px; width:100%;" />
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入 JSON：</div>
+          <input type="file" id="fileJson" accept=".json,application/json,text/plain" style="font-size:12px; width:100%;" />
+        </div>
+      </div>
     `;
 
     $('addCodeBtn').addEventListener('click', onAddCode);
     $('batchCodeBtn').addEventListener('click', onBatchCode);
     $('expTxt').addEventListener('click', exportCodeTxt);
     $('expJson').addEventListener('click', exportCodeJson);
-    $('impTxt').addEventListener('click', ()=> $('fileTxt').click());
-    $('impJson').addEventListener('click', ()=> $('fileJson').click());
     $('fileTxt').addEventListener('change', importCodeTxt);
     $('fileJson').addEventListener('change', importCodeJson);
 
@@ -375,22 +378,25 @@ async function renderPanel(){
       ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
       : `<div class="stamp-grid">${stamps.map(s=>`
           <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
+    
+    // 注意这里，我把导入框直接暴露出来了，绝对不会点不动
     body.innerHTML = `${gridHTML}
       <div class="form">
-        <label>邮戳图片（会自动压缩）
+        <label>收邮戳图片（会自动压缩）
           <input type="file" id="fStamp" accept="image/*" />
         </label>
-        <button id="addStampBtn">收邮戳</button>
+        <button id="addStampBtn">确认收邮戳</button>
       </div>
-      <div class="io-row">
-        <button id="expStampJson">导出 JSON</button>
-        <button id="impStampJson">导入 JSON</button>
+      <div class="io-row" style="grid-template-columns: 1fr;">
+        <button id="expStampJson">导出全部邮戳 JSON</button>
       </div>
-      <input type="file" id="fileStampJson" accept=".json,application/json" style="display:none" />
+      <div style="margin-top:10px;">
+        <div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">导入邮戳 JSON：</div>
+        <input type="file" id="fileStampJson" accept=".json,application/json" style="font-size:12px; width:100%;" />
+      </div>
     `;
     $('addStampBtn').addEventListener('click', onAddStamp);
     $('expStampJson').addEventListener('click', exportStampJson);
-    $('impStampJson').addEventListener('click', ()=> $('fileStampJson').click());
     $('fileStampJson').addEventListener('change', importStampJson);
     body.querySelectorAll('[data-delstamp]').forEach(btn=>{
       btn.addEventListener('click', async e=>{

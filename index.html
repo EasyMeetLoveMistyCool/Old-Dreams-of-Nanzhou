@@ -373,7 +373,7 @@
     z-index: 500;
     display: none;
     cursor: grab;
-    touch-action: none; /* 防止拖动时触发页面滚动 */
+    touch-action: none;
   }
   .music-player-float.show { display: block; }
   .music-player-float:active { cursor: grabbing; }
@@ -1833,6 +1833,7 @@ function updateModeIcon() {
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
+  // --- 邮电所标签切换 ---
   document.querySelectorAll('.tab-item').forEach(tab => {
     tab.onclick = () => {
       document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -1912,6 +1913,7 @@ function bindEvents(){
 
   $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
 
+  // --- 電文工具栏 ---
   $('#newCardsInput').addEventListener('input', (e) => {
     const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
     $('#draftCount').textContent = `待定稿：${lines.length} 份`;
@@ -2032,6 +2034,7 @@ function bindEvents(){
     };
   };
 
+  // --- 印花操作 ---
   $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
   $('#stampFileInput').onchange = async (e) => {
     const files = Array.from(e.target.files); if(!files.length) return;
@@ -2116,6 +2119,7 @@ function bindEvents(){
   };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
 
+  // --- 暗語操作 ---
   $('#newActionsInput').addEventListener('input', (e) => {
     const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
     $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`;
@@ -2225,6 +2229,7 @@ function bindEvents(){
     };
   };
 
+  // --- 留聲操作 ---
   $('#musicFileBox').onclick = () => $('#musicFileInput').click();
   $('#musicFileInput').onchange = e => {
     const file = e.target.files[0];

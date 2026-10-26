@@ -30,6 +30,8 @@
     --primary: #3390ec;
     --border-light: #f0f2f5;
     --pinned-bg: #fff5f6;
+    --chat-bg: var(--bg-color); /* 聊天背景底色 */
+    --mask-color: rgba(255,255,255, 0.6); /* 默认遮罩色，浅色主题为白 */
   }
   body.theme-blue { --bubble-me: #d6ecff; }
   body.theme-purple { --bubble-me: #e8def8; }
@@ -47,6 +49,8 @@
     --primary: #64b5f6;
     --border-light: #101921;
     --pinned-bg: #2b1f24;
+    --chat-bg: var(--bg-color);
+    --mask-color: rgba(0,0,0, 0.6); /* 深色主题遮罩为黑 */
   }
   body.theme-darkblue {
     --bg-color: #17212b;
@@ -61,6 +65,8 @@
     --primary: #64b5f6;
     --border-light: #121a22;
     --pinned-bg: #2b1f24;
+    --chat-bg: var(--bg-color);
+    --mask-color: rgba(0,0,0, 0.6);
   }
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
@@ -140,9 +146,20 @@
   }
 
   /* ========== 聊天页 ========== */
-  .messages {
-    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 14px 6px; display:flex; flex-direction:column;
+  .chat-bg-wrap {
+    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative;
+    background-color: var(--bg-color);
+    background-size: cover; background-position: center;
   }
+  /* 遮罩层 */
+  .chat-bg-mask {
+    position: absolute; inset: 0; background-color: var(--mask-color); pointer-events: none; z-index: 1;
+  }
+  .messages {
+    position: relative; z-index: 2;
+    padding:10px 14px 6px; display:flex; flex-direction:column; min-height: 100%;
+  }
+  
   .date-divider {
     align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px;
     margin:10px 0; font-weight:500;
@@ -163,7 +180,7 @@
 
   .bubble {
     max-width:75%; padding:6px 10px; border-radius:12px; position:relative; font-size:15px; line-height:1.4;
-    word-break:break-word; box-shadow:0 1px 2px rgba(0,0,0,.1); transition: background .3s;
+    word-break:break-word; box-shadow:0 1px 3px rgba(0,0,0,.15); transition: background .3s;
   }
   .msg-row.me .bubble { background:var(--bubble-me); color:var(--text-color); border-bottom-right-radius:4px; }
   .msg-row.them .bubble { background:var(--bubble-them); color:var(--text-color); border-bottom-left-radius:4px; }
@@ -181,9 +198,9 @@
   .composer {
     flex:0 0 auto; background:var(--topbar-bg); border-top:1px solid var(--topbar-border);
     padding:6px 8px; padding-bottom:calc(6px + env(safe-area-inset-bottom));
-    display:flex; align-items:center; gap:6px; transition: background .3s;
+    display:flex; align-items:center; gap:6px; transition: background .3s; z-index: 10;
   }
-  .pending-sticker-box { display:none; background:var(--input-bg); padding:6px 12px; border-top:1px solid var(--topbar-border); }
+  .pending-sticker-box { display:none; background:var(--input-bg); padding:6px 12px; border-top:1px solid var(--topbar-border); z-index:10; }
   .pending-sticker-box.show { display:flex; align-items:center; gap:10px; }
   .pending-sticker-box img { height:40px; border-radius:4px; }
   .pending-sticker-box .close-btn { font-size:18px; color:var(--text-secondary); cursor:pointer; margin-left:auto; }
@@ -199,7 +216,7 @@
   .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
   .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* ========== 通用表单页 (新建/邮电所) ========== */
+  /* ========== 新建/编辑页 & 邮电所 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .form-group { margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .form-label { font-size:13px; color:var(--text-secondary); margin-bottom:8px; font-weight:500; }
@@ -220,7 +237,16 @@
   }
   .btn-primary:active { opacity:0.8; }
 
-  /* 邮电所界面特有 */
+  /* 聊天背景设置专属样式 */
+  .bg-upload-box {
+    width:100%; height:120px; border-radius:8px; background:var(--input-bg);
+    border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center;
+    color:var(--text-secondary); font-size:14px; cursor:pointer; overflow:hidden;
+    background-size:cover; background-position:center; margin-bottom:15px;
+  }
+  .slider-container { width:100%; display:flex; align-items:center; gap:10px; padding:0 10px; }
+  .slider-container input[type=range] { flex:1; }
+
   .tab-bar { display:flex; background:var(--topbar-bg); border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); cursor:pointer; font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
@@ -282,7 +308,24 @@
     </div>
     <div class="create-scroll">
       <div class="form-group"><input type="text" class="form-input" id="inputRoomName" placeholder="聊天室名稱"></div>
+      
+      <!-- 聊天背景设置 -->
+      <div class="form-group">
+        <div class="form-label">聊天背景 (可選)</div>
+        <div class="bg-upload-box" id="bgUploadBox" onclick="document.getElementById('bgFile').click()">
+          <span id="bgUploadText">點擊上傳背景圖</span>
+        </div>
+        <input type="file" id="bgFile" accept="image/*" style="display:none">
+        
+        <div class="slider-container" id="bgMaskContainer" style="display:none;">
+          <span style="font-size:12px; color:var(--text-secondary);">遮罩</span>
+          <input type="range" id="bgMaskSlider" min="0" max="90" value="60">
+          <span id="bgMaskValue" style="font-size:12px; color:var(--text-secondary); width:30px; text-align:right;">60%</span>
+        </div>
+      </div>
+
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
+
       <div class="form-group">
         <div class="form-label">祂的資料</div>
         <div class="avatar-upload" id="theirAvatar" onclick="document.getElementById('theirFile').click()">祂</div>
@@ -319,7 +362,13 @@
         </svg>
       </button>
     </div>
-    <div class="messages" id="messages"></div>
+    
+    <!-- 聊天背景区域 -->
+    <div class="chat-bg-wrap" id="chatBgWrap">
+      <div class="chat-bg-mask" id="chatBgMask"></div>
+      <div class="messages" id="messages"></div>
+    </div>
+
     <div class="pending-sticker-box" id="pendingStickerBox">
       <img id="pendingStickerImg" src="" alt="待發送">
       <span style="font-size:13px;color:var(--text-secondary)">將隨文字發送</span>
@@ -355,7 +404,6 @@
     </div>
     
     <div class="create-scroll" style="padding: 15px;">
-      <!-- 電文 (字卡) 区域 -->
       <div id="tabContentCards">
         <div style="display:flex; gap:10px; margin-bottom:15px;">
           <input type="text" class="form-input" id="newCardInput" placeholder="輸入新的電文..." style="margin-bottom:0; text-align:left;">
@@ -364,7 +412,6 @@
         <div id="cardList"></div>
       </div>
       
-      <!-- 其他占位 -->
       <div id="tabContentOthers" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
         該區域功能待開發...
       </div>
@@ -372,7 +419,7 @@
   </div>
 </div>
 
-<!-- 侧边菜单 -->
+<!-- 各种弹窗 ... 保持原样 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="postoffice">郵電所</div>
@@ -385,7 +432,6 @@
   </div>
 </div>
 
-<!-- 长按操作菜单 -->
 <div class="action-sheet-mask" id="actionSheetMask">
   <div class="action-sheet">
     <div class="action-item" id="actPin">釘選</div>
@@ -396,7 +442,6 @@
   </div>
 </div>
 
-<!-- 弹窗类 -->
 <div class="dialog-mask" id="confirmDialogMask">
   <div class="dialog">
     <div class="dialog-title" id="confirmTitle">提示</div>
@@ -500,6 +545,8 @@ let currentMessages = [];
 let pendingStickerData = null; 
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
+let tempBgImage = null;
+let tempBgMask = 60; // 默认遮罩透明度 60%
 let isEditingChatId = null;
 let longPressTimer = null;
 let activeChatForMenu = null;
@@ -510,7 +557,7 @@ async function init(){
   await loadChats();
   renderChatList();
   bindEvents();
-  renderCards(); // 初始化邮电所卡片
+  renderCards();
 }
 
 async function loadChats(){
@@ -617,6 +664,22 @@ async function openChat(id){
     avatarEl.innerHTML = `<img src="${c.theirAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
   } else {
     avatarEl.innerHTML = (c.theirNick || c.theirName || '祂').charAt(0);
+  }
+
+  // 加载聊天背景
+  const bgWrap = $('#chatBgWrap');
+  const bgMask = $('#chatBgMask');
+  if(c.chatBgImage) {
+    bgWrap.style.backgroundImage = `url(${c.chatBgImage})`;
+    bgWrap.style.backgroundColor = 'transparent';
+    // 动态设置遮罩透明度
+    let maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
+    const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-darkblue');
+    bgMask.style.backgroundColor = isDark ? `rgba(0,0,0, ${maskVal/100})` : `rgba(255,255,255, ${maskVal/100})`;
+  } else {
+    bgWrap.style.backgroundImage = 'none';
+    bgWrap.style.backgroundColor = 'var(--bg-color)';
+    bgMask.style.backgroundColor = 'transparent';
   }
   
   currentMessages = await getMessages(id);
@@ -832,7 +895,7 @@ async function deleteCard(id) {
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
-  // --- 新建 ---
+  // --- 新建/编辑 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null;
     $('#createPageTitle').textContent = '建立新對話';
@@ -843,23 +906,54 @@ function bindEvents(){
     $('#inputMyName').value = '';
     $('#inputMyNick').value = '';
     $('#inputMySign').value = '';
+    
     $('#theirAvatar').style.backgroundImage = '';
     $('#theirAvatar').textContent = '祂';
     $('#myAvatar').style.backgroundImage = '';
     $('#myAvatar').textContent = '我';
+    
+    // 重置背景设置
+    $('#bgUploadBox').style.backgroundImage = '';
+    $('#bgUploadText').textContent = '點擊上傳背景圖';
+    $('#bgMaskContainer').style.display = 'none';
+    $('#bgMaskSlider').value = 60;
+    $('#bgMaskValue').textContent = '60%';
+    
     tempTheirAvatar = null;
     tempMyAvatar = null;
+    tempBgImage = null;
+    tempBgMask = 60;
+    
     $('#pageCreate').classList.add('show');
   };
 
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
+  
+  // 头像
   $('#theirFile').onchange = e => {
     if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; });
   };
   $('#myFile').onchange = e => {
     if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; });
   };
+  
+  // 聊天背景
+  $('#bgFile').onchange = e => {
+    if(e.target.files[0]) {
+      fileToBase64(e.target.files[0], b => {
+        tempBgImage = b;
+        $('#bgUploadBox').style.backgroundImage = `url(${b})`;
+        $('#bgUploadText').textContent = '';
+        $('#bgMaskContainer').style.display = 'flex'; // 显示滑块
+      });
+    }
+  };
+  $('#bgMaskSlider').oninput = e => {
+    tempBgMask = e.target.value;
+    $('#bgMaskValue').textContent = tempBgMask + '%';
+  };
 
+  // 保存
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim();
     const theirName = $('#inputTheirName').value.trim();
@@ -878,6 +972,10 @@ function bindEvents(){
         c.myName = myName; c.myNick = myNick; c.mySign = mySign;
         if (tempTheirAvatar !== null) c.theirAvatar = tempTheirAvatar;
         if (tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
+        if (tempBgImage !== null) {
+          c.chatBgImage = tempBgImage;
+          c.chatBgMask = tempBgMask;
+        }
         await reqToPromise(tx('chats','readwrite').put(c));
         toast('資料已更新');
       }
@@ -885,8 +983,9 @@ function bindEvents(){
       const c = {
         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
         roomName, theirName, theirNick, theirSign, myName, myNick, mySign,
-        theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, isPinned: false,
-        createdAt: Date.now(), updatedAt: Date.now()
+        theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, 
+        chatBgImage: tempBgImage, chatBgMask: tempBgMask,
+        isPinned: false, createdAt: Date.now(), updatedAt: Date.now()
       };
       await reqToPromise(tx('chats','readwrite').add(c));
       toast('已建立新對話');
@@ -894,8 +993,9 @@ function bindEvents(){
     await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
-  // --- 聊天页 ---
+  // --- 聊天页返回 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
+  
   $('#sendBtn').onclick = sendMyMessage;
   $('#msgInput').addEventListener('input', updateSendBtnState);
   $('#msgInput').addEventListener('keydown', e=>{ if(e.key === 'Enter' && !e.isComposing) sendMyMessage(); });
@@ -933,12 +1033,27 @@ function bindEvents(){
     $('#inputMyName').value = activeChatForMenu.myName || '';
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
     $('#inputMySign').value = activeChatForMenu.mySign || '';
-    tempTheirAvatar = null; tempMyAvatar = null;
+    
+    tempTheirAvatar = null; tempMyAvatar = null; tempBgImage = null; tempBgMask = activeChatForMenu.chatBgMask || 60;
     
     const theirAvEl = $('#theirAvatar');
     if(activeChatForMenu.theirAvatar) { theirAvEl.style.backgroundImage = `url(${activeChatForMenu.theirAvatar})`; theirAvEl.textContent = ''; } else { theirAvEl.style.backgroundImage = ''; theirAvEl.textContent = '祂'; }
     const myAvEl = $('#myAvatar');
     if(activeChatForMenu.myAvatar) { myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`; myAvEl.textContent = ''; } else { myAvEl.style.backgroundImage = ''; myAvEl.textContent = '我'; }
+    
+    // 编辑时加载背景状态
+    if(activeChatForMenu.chatBgImage) {
+      $('#bgUploadBox').style.backgroundImage = `url(${activeChatForMenu.chatBgImage})`;
+      $('#bgUploadText').textContent = '';
+      $('#bgMaskContainer').style.display = 'flex';
+      $('#bgMaskSlider').value = tempBgMask;
+      $('#bgMaskValue').textContent = tempBgMask + '%';
+    } else {
+      $('#bgUploadBox').style.backgroundImage = '';
+      $('#bgUploadText').textContent = '點擊上傳背景圖';
+      $('#bgMaskContainer').style.display = 'none';
+    }
+    
     $('#pageCreate').classList.add('show');
   };
 

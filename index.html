@@ -12,17 +12,16 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   
-  /* 锁定整个页面，禁止 body 滚动 */
+  /* 锁定整体页面，绝不产生滚动穿透 */
   html,body{
     height:100%; margin:0; overflow:hidden; 
     background:var(--paper); color:var(--ink);
     font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
     background-image:linear-gradient(180deg,#f2ebdc,#e9dfcc);
   }
-  /* 弹性布局：头固定，底固定，中间自适应滚动 */
+  /* 弹性布局：主界面头部和底栏固定 */
   #app{max-width:640px;margin:0 auto;height:100%;display:flex;flex-direction:column;}
   
-  /* 顶栏固定 */
   header{
     flex-shrink:0; padding:14px 16px 10px; border-bottom:1px dashed var(--line);
     display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--paper);
@@ -35,7 +34,7 @@
   .drawer-btn b{font-size:11px;font-weight:700;}
   .drawer-btn span{font-size:10px;color:var(--ink-soft);}
   
-  /* 中间记录区：独立滚动 */
+  /* 中间消息记录区：独立滚动 */
   .log{
     flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
     padding:16px 14px; display:flex; flex-direction:column; gap:18px;
@@ -50,7 +49,7 @@
   .stamp{position:absolute;right:12px;bottom:10px;width:46px;height:46px;object-fit:cover;border:1px solid var(--line);border-radius:3px;transform:rotate(4deg);box-shadow:1px 1px 0 var(--shadow);}
   .incoming{font-size:11px;color:var(--ink-soft);letter-spacing:2px;padding-left:6px;}
   
-  /* 底栏发报区固定 */
+  /* 底部发报区固定 */
   .sendbar{
     flex-shrink:0; border-top:1px dashed var(--line); padding:10px 14px 16px;
     background:linear-gradient(180deg,transparent,#e6dcc8); position:relative; z-index:5;
@@ -69,14 +68,24 @@
   /* 抽屉（弹窗） */
   .overlay{position:fixed;inset:0;background:rgba(58,52,40,.35);display:none;align-items:flex-end;z-index:20;}
   .overlay.open{display:flex;}
-  .panel{width:100%;max-width:640px;margin:0 auto;max-height:85vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
+  .panel{width:100%;max-width:640px;margin:0 auto;height:85vh;background:var(--paper-2);border-top:2px solid var(--ink);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:slideUp .22s ease;}
   @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
   .panel-head{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed var(--line);}
   .panel-head b{font-size:13px;letter-spacing:2px;}
   .panel-head .close{margin-left:auto;border:none;background:none;font-family:inherit;font-size:20px;color:var(--ink-soft);cursor:pointer;}
+  
+  /* 抽屉中间内容：滚动 */
   .panel-body{padding:12px 14px 20px;overflow-y:auto;flex:1;}
 
-  /* 长条字卡列表 */
+  /* 抽屉底部操作栏（固定） */
+  .panel-footer {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border-top: 1px dashed var(--line);
+    padding-bottom: max(10px, env(safe-area-inset-bottom)); /* 适配 iPhone 底部小黑条 */
+  }
+
   .code-list{display:flex;flex-direction:column;gap:8px;}
   .code-row{position:relative;}
   .long-card{
@@ -104,19 +113,23 @@
   .form{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
   .form label{font-size:11px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px;letter-spacing:1px;}
   .form input[type=text],.form textarea{padding:9px 10px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);font-family:inherit;font-size:13px;border-radius:3px;}
-  .form textarea{min-height:80px;resize:vertical;}
-  .form input[type=file]{display:none;} /* 隐藏原生文件框 */
+  .form textarea{min-height:60px;resize:vertical;}
   .form button{padding:10px;border:1px solid var(--ink);background:var(--ink);color:var(--paper-2);font-family:inherit;font-size:13px;letter-spacing:2px;border-radius:3px;cursor:pointer;}
   
-  /* 导入导出按钮组 */
-  .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  /* 统一的导入导出按钮 */
+  .io-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .io-btn-wrap { position: relative; overflow: hidden; }
   .io-btn{
-    padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
+    width:100%; padding:9px;border:1px solid var(--line);background:#fbf7ec;color:var(--ink);
     font-family:inherit;font-size:12px;border-radius:3px;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
   }
   .io-btn:active{background:#f1ead9;}
-  
+  /* 隐藏丑陋的原生文件框，并用透明覆盖法点击 */
+  .io-btn-wrap input[type=file] {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+  }
+
   .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--paper-2);padding:8px 16px;font-size:12px;border-radius:3px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none;letter-spacing:1px;}
   .toast.show{opacity:1;}
 </style>
@@ -152,7 +165,10 @@
       <b id="panelTitle">梦角的电码本</b>
       <button class="close" id="closePanel">×</button>
     </div>
+    <!-- 中间列表区 -->
     <div class="panel-body" id="panelBody"></div>
+    <!-- 底部操作区（固定） -->
+    <div class="panel-footer" id="panelFooter"></div>
   </div>
 </div>
 
@@ -161,12 +177,12 @@
 <script>
 window.onerror = function(msg){ toast('运行错误：' + msg); };
 
-/* ========== IndexedDB ========== */
+/* ========== IndexedDB (修复了存储和版本问题) ========== */
 let _db = null;
 function db(){
   if(_db) return Promise.resolve(_db);
   return new Promise((res, rej)=>{
-    const req = indexedDB.open('dreamchat_v5', 1);
+    const req = indexedDB.open('dreamchat_v6', 1); // 升到 v6 确保干净
     req.onupgradeneeded = e=>{
       const d = e.target.result;
       if(!d.objectStoreNames.contains('codes')) d.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
@@ -256,6 +272,7 @@ async function renderAll(){
   codes = await allCodes();
   stamps = await allStamps();
   messages = await allMessages();
+  // 预加载图片链接
   for(const st of stamps){ if(st.imageId) await ensureUrl(st.imageId); }
   $('cntCode').textContent = codes.length + ' 码';
   $('cntStamp').textContent = stamps.length + ' 枚';
@@ -318,17 +335,20 @@ async function openPanel(kind){
   openBackId = null;
   $('panelTitle').textContent = kind==='code' ? '梦角的电码本' : '梦角的邮戳册';
   $('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; // 锁死背景
+  document.body.style.overflow = 'hidden'; // 锁死背景滚动
   await renderPanel();
 }
 function closePanel(){ 
   $('overlay').classList.remove('open'); 
-  document.body.style.overflow = ''; // 恢复
+  document.body.style.overflow = ''; 
 }
 
 async function renderPanel(){
   const body = $('panelBody');
+  const footer = $('panelFooter');
+  
   if(panelKind==='code'){
+    // 1. 渲染中间列表
     let listHTML = codes.length===0
       ? `<div class="empty-note">电码本空空的。<br>在下面录几码进去。</div>`
       : `<div class="code-list">${codes.map(c=>`
@@ -341,7 +361,7 @@ async function renderPanel(){
           </div>`).join('')}</div>`;
 
     body.innerHTML = `${listHTML}
-      <div class="form">
+      <div class="form" style="margin-top:20px;">
         <label>录入一条字卡
           <input type="text" id="fChar" placeholder="一整句，如：今天也想你" maxlength="200" />
         </label>
@@ -351,27 +371,31 @@ async function renderPanel(){
         </label>
         <button id="batchCodeBtn">批量录入</button>
       </div>
+    `;
+
+    // 2. 渲染底部固定操作区
+    footer.innerHTML = `
       <div class="io-row">
         <button class="io-btn" id="expTxt">导出 TXT</button>
         <button class="io-btn" id="expJson">导出 JSON</button>
       </div>
-      <div class="io-row">
-        <!-- 按钮触发隐藏的 input -->
-        <button class="io-btn" id="impTxtBtn">导入 TXT</button>
-        <button class="io-btn" id="impJsonBtn">导入 JSON</button>
+      <div class="io-row" style="margin-bottom:0;">
+        <div class="io-btn-wrap">
+          <button class="io-btn">导入 TXT</button>
+          <input type="file" id="fileTxt" accept=".txt,text/plain" />
+        </div>
+        <div class="io-btn-wrap">
+          <button class="io-btn">导入 JSON</button>
+          <input type="file" id="fileJson" accept=".json,application/json,text/plain" />
+        </div>
       </div>
-      <input type="file" id="fileTxt" accept=".txt,text/plain" />
-      <input type="file" id="fileJson" accept=".json,application/json,text/plain" />
     `;
 
+    // 绑定事件
     $('addCodeBtn').addEventListener('click', onAddCode);
     $('batchCodeBtn').addEventListener('click', onBatchCode);
     $('expTxt').addEventListener('click', exportCodeTxt);
     $('expJson').addEventListener('click', exportCodeJson);
-    
-    // 点击按钮去触发文件选择
-    $('impTxtBtn').addEventListener('click', ()=> $('fileTxt').click());
-    $('impJsonBtn').addEventListener('click', ()=> $('fileJson').click());
     $('fileTxt').addEventListener('change', importCodeTxt);
     $('fileJson').addEventListener('change', importCodeJson);
 
@@ -403,29 +427,37 @@ async function renderPanel(){
       });
     });
   }else{
+    // 1. 邮戳中间列表
     let gridHTML = stamps.length===0
       ? `<div class="empty-note">邮戳册空空的。<br>在下面收几枚邮戳进去。</div>`
       : `<div class="stamp-grid">${stamps.map(s=>`
           <div class="sticker"><img src="${urlCache[s.imageId]||''}" alt=""><button class="del" data-delstamp="${s.id}">×</button></div>`).join('')}</div>`;
+    
     body.innerHTML = `${gridHTML}
-      <div class="form">
+      <div class="form" style="margin-top:20px;">
         <label>收邮戳图片（会自动压缩）
-          <button class="io-btn" id="pickStampBtn" style="margin-top:4px;">选择图片</button>
-          <input type="file" id="fStamp" accept="image/*" />
+          <div class="io-btn-wrap" style="margin-top:4px;">
+            <button class="io-btn">选择图片</button>
+            <input type="file" id="fStamp" accept="image/*" />
+          </div>
         </label>
         <button id="addStampBtn">确认收邮戳</button>
       </div>
-      <div class="io-row">
-        <button class="io-btn" id="expStampJson">导出 JSON</button>
-        <button class="io-btn" id="impStampBtn">导入 JSON</button>
-      </div>
-      <input type="file" id="fileStampJson" accept=".json,application/json" />
     `;
-    
-    $('pickStampBtn').addEventListener('click', ()=> $('fStamp').click());
+
+    // 2. 邮戳底部固定操作区
+    footer.innerHTML = `
+      <div class="io-row" style="margin-bottom:0;">
+        <button class="io-btn" id="expStampJson">导出 JSON</button>
+        <div class="io-btn-wrap">
+          <button class="io-btn">导入 JSON</button>
+          <input type="file" id="fileStampJson" accept=".json,application/json" />
+        </div>
+      </div>
+    `;
+
     $('addStampBtn').addEventListener('click', onAddStamp);
     $('expStampJson').addEventListener('click', exportStampJson);
-    $('impStampBtn').addEventListener('click', ()=> $('fileStampJson').click());
     $('fileStampJson').addEventListener('change', importStampJson);
     
     body.querySelectorAll('[data-delstamp]').forEach(btn=>{
@@ -533,7 +565,7 @@ async function importCodeTxt(e){
 function exportCodeJson(){
   const data = {
     type: 'nanchou-codes',
-    version: 5,
+    version: 6,
     exportedAt: Date.now(),
     codes: codes.map(c=>({ char:c.char, back:c.back||'', createdAt:c.createdAt }))
   };
@@ -555,9 +587,7 @@ async function importCodeJson(e){
     let parsed = null;
     try {
       parsed = JSON.parse(rawText);
-    } catch(err) {
-      console.log('JSON 解析失败，尝试正则提取');
-    }
+    } catch(err) {}
 
     if (parsed) {
       let list = null;
@@ -629,7 +659,6 @@ async function importStampJson(e){
   
   try{
     toast('正在处理图片，请稍候...');
-    // 先让浏览器刷一下界面，避免死锁
     await new Promise(r => setTimeout(r, 100)); 
     
     await clearStamps(); await clearImages();
@@ -639,10 +668,12 @@ async function importStampJson(e){
       if(!st.imageBase64) continue;
       let blob;
       try{ blob = base64ToBlob(st.imageBase64); }catch(err){ continue; }
+      
+      // 【核心修复点】：之前这里忘了先存图片文件，直接存的空ID，导致显示不出来。
       const imageId = await saveImage(blob);
       await addStamp({ imageId, createdAt: st.createdAt || Date.now() });
+      
       added++;
-      // 大量图片一张一张存，每次让出主线程，不卡死手机
       if (added % 5 === 0) await new Promise(r => setTimeout(r, 10));
     }
     pickedStamp = null;

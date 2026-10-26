@@ -2,379 +2,549 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ffffff">
 <title>南洲舊夢</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#f5f0e8;color:#1a1a1a;font-family:"Courier New","Noto Serif TC",monospace;height:100vh;overflow:hidden}
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; }
+  body {
+    font-family: -apple-system, "HarmonyOS Sans", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background:#f0f2f5;
+    color:#1a1a1a;
+    overflow:hidden;
+  }
+  #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
 
-.top{position:fixed;top:0;left:0;right:0;z-index:100;background:#f5f0e8;border-bottom:1px solid #c9a84c;padding-top:12px}
-.top h1{text-align:center;font-size:15px;letter-spacing:10px;color:#c9a84c;font-weight:normal;padding-bottom:6px}
-.top .info{display:flex;justify-content:space-between;padding:0 20px 4px;font-size:9px;color:#8b7d6b}
-.top .line{flex:1;text-align:center;color:#c9a84c;opacity:.3}
-.top .tabs{display:flex;justify-content:center;gap:24px;padding-bottom:8px}
-.top .tabs span{color:#8b7d6b;font-size:12px;letter-spacing:2px;cursor:pointer;padding:2px 0}
-.top .tabs span.active{color:#c9a84c;border-bottom:1px solid #c9a84c}
+  /* 頂欄 */
+  .topbar {
+    height:56px; flex:0 0 56px;
+    background:#ffffff;
+    display:flex; align-items:center;
+    padding:0 8px;
+    border-bottom:1px solid #e4e6eb;
+    position:relative; z-index:10;
+  }
+  .topbar .title {
+    font-size:18px; font-weight:600; flex:1;
+    padding-left:8px;
+  }
+  .topbar .title.center { text-align:center; padding-left:0; }
+  .icon-btn {
+    width:40px; height:40px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; color:#3390ec; cursor:pointer;
+    background:transparent; border:none;
+  }
+  .icon-btn:active { background:#e8f0fe; }
 
-.list{position:fixed;top:88px;bottom:56px;left:0;right:0;overflow-y:auto;padding:14px 5%;-webkit-overflow-scrolling:touch}
+  /* 頁面容器 */
+  .page { flex:1; overflow:hidden; position:relative; }
+  .page-list, .page-chat { position:absolute; inset:0; display:flex; flex-direction:column; background:#f0f2f5; transition:transform .22s ease; }
+  .page-list { z-index:2; }
+  .page-chat { z-index:3; transform:translateX(100%); }
+  .page-chat.show { transform:translateX(0); }
 
-.msg{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;margin-bottom:14px;padding:12px;font-size:13px;line-height:1.9}
-.msg .label{font-size:10px;font-weight:bold;border-bottom:1px solid #1a1a1a;padding-bottom:4px;margin-bottom:8px;display:flex;justify-content:space-between}
-.msg .stamp{text-align:right;margin-top:8px;border-top:1px solid #1a1a1a;padding-top:6px}
-.msg .stamp img{max-width:60px;max-height:60px;display:block;margin-left:auto;border:1px solid #1a1a1a}
-.msg .time{text-align:right;font-size:9px;color:#6b6258;margin-top:6px}
+  /* 對話列表 */
+  .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .chat-row {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 14px; background:#fff; cursor:pointer;
+    border-bottom:1px solid #f0f2f5;
+  }
+  .chat-row:active { background:#f5f5f5; }
+  .avatar {
+    width:48px; height:48px; border-radius:50%;
+    background:#3390ec; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex:0 0 48px;
+  }
+  .chat-info { flex:1; min-width:0; }
+  .chat-name { font-size:16px; font-weight:500; }
+  .chat-preview { font-size:13px; color:#8a8a8a; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-time { font-size:12px; color:#8a8a8a; flex:0 0 auto; }
+  .chat-empty { text-align:center; color:#8a8a8a; padding:40px 20px; font-size:14px; }
 
-.item{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;margin-bottom:10px;padding:10px;font-size:13px;line-height:1.7}
-.item .item-head{display:flex;justify-content:space-between;font-size:10px;color:#6b6258;border-bottom:1px solid #1a1a1a;padding-bottom:3px;margin-bottom:6px}
-.item .item-actions{display:flex;gap:12px;margin-top:6px;border-top:1px solid #1a1a1a;padding-top:4px}
-.item .item-actions span{font-size:10px;color:#c9a84c;cursor:pointer}
+  /* 新建按鈕 */
+  .fab {
+    position:absolute; right:18px; bottom:22px;
+    width:56px; height:56px; border-radius:50%;
+    background:#3390ec; color:#fff; font-size:28px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(51,144,236,.4);
+    cursor:pointer; z-index:5; border:none;
+  }
 
-.btn-row{position:fixed;bottom:0;left:0;right:0;display:flex;flex-wrap:wrap;border-top:1px solid #c9a84c;background:#f5f0e8}
-.btn-row button{flex:1 0 33.33%;max-width:33.33%;border:none;border-right:1px solid rgba(201,168,76,.3);border-bottom:1px solid rgba(201,168,76,.3);background:none;color:#1a1a1a;font-family:inherit;font-size:11px;padding:12px 2px;cursor:pointer;letter-spacing:1px}
-.btn-row button:active{background:rgba(201,168,76,.15)}
+  /* 訊息區 */
+  .messages {
+    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    padding:10px 10px 6px;
+    display:flex; flex-direction:column;
+  }
+  .date-divider {
+    align-self:center;
+    background:rgba(0,0,0,.18); color:#fff;
+    font-size:12px; padding:3px 10px; border-radius:10px;
+    margin:10px 0;
+  }
+  .msg-row { display:flex; margin:4px 0; }
+  .msg-row.me { justify-content:flex-end; }
+  .msg-row.them { justify-content:flex-start; }
+  .msg-row.grouped { margin-top:2px; }
+  .bubble {
+    max-width:78%;
+    padding:7px 10px 8px;
+    border-radius:14px;
+    position:relative;
+    font-size:15px;
+    line-height:1.45;
+    word-break:break-word;
+    box-shadow:0 1px 1px rgba(0,0,0,.08);
+  }
+  .msg-row.me .bubble {
+    background:#d6ecff; color:#1a1a1a;
+    border-bottom-right-radius:4px;
+  }
+  .msg-row.them .bubble {
+    background:#ffffff; color:#1a1a1a;
+    border-bottom-left-radius:4px;
+  }
+  .bubble .card-line { display:block; }
+  .bubble .meta {
+    float:right;
+    font-size:11px; color:#8a8a8a;
+    margin:6px 0 -2px 8px;
+    line-height:1;
+  }
+  .bubble .sticker-img {
+    display:block; max-width:160px; border-radius:10px; margin-top:6px;
+  }
+  .bubble.only-sticker { padding:4px; }
 
-.input-row{position:fixed;bottom:0;left:0;right:0;display:flex;padding:10px 5%;border-top:1px solid #c9a84c;background:#f5f0e8}
-.input-row input{flex:1;background:transparent;border:none;border-bottom:1px solid #c9a84c;color:#1a1a1a;font-family:inherit;font-size:14px;padding:4px 0;outline:none}
-.input-row button{background:none;border:none;color:#c9a84c;font-family:inherit;font-size:13px;padding:4px 10px;cursor:pointer;letter-spacing:1px}
+  /* 輸入區 */
+  .composer {
+    flex:0 0 auto;
+    background:#ffffff;
+    border-top:1px solid #e4e6eb;
+    padding:6px 8px;
+    padding-bottom:calc(6px + env(safe-area-inset-bottom));
+    display:flex; align-items:flex-end; gap:6px;
+  }
+  .composer .icon-btn { color:#6a6a6a; font-size:22px; }
+  .composer input {
+    flex:1; min-width:0;
+    height:40px; border-radius:20px;
+    border:none; background:#f0f2f5;
+    padding:0 14px; font-size:15px; color:#1a1a1a;
+    outline:none;
+  }
+  .send-btn {
+    width:40px; height:40px; border-radius:50%;
+    background:#3390ec; color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; flex:0 0 40px; cursor:pointer;
+  }
+  .send-btn:disabled { background:#b8d4f0; }
 
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,18,11,.5);z-index:200;justify-content:center;align-items:center}
-.modal.show{display:flex}
-.modal-box{background:#ede8d5;color:#1a1a1a;border:1px solid #1a1a1a;width:92%;max-height:85vh;overflow-y:auto;padding:16px}
-.modal-box h3{text-align:center;margin:0 0 12px;font-size:14px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;letter-spacing:4px}
-.modal-box textarea{width:100%;min-height:200px;background:transparent;border:1px solid #1a1a1a;color:#1a1a1a;font-family:inherit;font-size:14px;line-height:1.8;padding:8px;outline:none;resize:vertical}
-.modal-box input[type=text]{width:100%;padding:8px;border:1px solid #1a1a1a;background:transparent;color:#1a1a1a;font-family:inherit;font-size:14px;outline:none;margin-bottom:8px}
-.modal-box input[type=file]{width:100%;font-size:11px;margin-bottom:8px}
-.modal-btns{display:flex;gap:8px;margin-top:12px}
-.modal-btns button{flex:1;padding:10px;border:1px solid #1a1a1a;background:transparent;color:#1a1a1a;font-family:inherit;font-size:12px;cursor:pointer;letter-spacing:2px}
-.modal-btns button.primary{background:#1a1a1a;color:#c9a84c;border-color:#1a1a1a}
+  /* 遮罩選單 */
+  .menu-mask {
+    position:fixed; inset:0; background:rgba(0,0,0,.25);
+    display:none; z-index:50;
+  }
+  .menu-mask.show { display:block; }
+  .menu {
+    position:absolute; top:56px; right:10px;
+    background:#fff; border-radius:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,.18);
+    min-width:150px; overflow:hidden;
+  }
+  .menu-item {
+    padding:12px 18px; font-size:15px; color:#1a1a1a;
+    cursor:pointer; white-space:nowrap;
+  }
+  .menu-item:active { background:#f0f2f5; }
+  .menu-item.danger { color:#e53935; }
 
-.empty{text-align:center;color:#8b7d6b;padding:40px 0;font-size:12px;line-height:2}
-#status{position:fixed;top:92px;left:50%;transform:translateX(-50%);font-size:10px;padding:4px 12px;background:#c9a84c;color:#1a1a1a;display:none;z-index:999;letter-spacing:1px}
+  /* 提示 */
+  .toast {
+    position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
+    background:rgba(0,0,0,.75); color:#fff;
+    font-size:13px; padding:8px 16px; border-radius:16px;
+    z-index:100; opacity:0; transition:opacity .2s; pointer-events:none;
+  }
+  .toast.show { opacity:1; }
 </style>
 </head>
 <body>
+<div id="app">
 
-<div class="top">
-  <h1>南 洲 舊 夢</h1>
-  <div class="info"><span>發 · 此端</span><span class="line">─────</span><span>收 · 舊夢</span></div>
-  <div class="tabs">
-    <span class="active" onclick="switchTab('chat')">來電</span>
-    <span onclick="switchTab('code')">電碼本</span>
-    <span onclick="switchTab('stamp')">郵戳冊</span>
+  <!-- 對話列表頁 -->
+  <div class="page-list" id="pageList">
+    <div class="topbar">
+      <div class="title">南洲舊夢</div>
+      <button class="icon-btn" id="menuBtnList">⋮</button>
+    </div>
+    <div class="chat-list" id="chatList"></div>
+    <button class="fab" id="newChatBtn">＋</button>
   </div>
-</div>
 
-<div id="status"></div>
-<div class="list" id="list"></div>
-
-<!-- 聊天页输入区 -->
-<div class="input-row" id="inputRow">
-  <input id="inputRowInput" placeholder="落筆...">
-  <button onclick="sendMsg()">發報 ▸</button>
-</div>
-
-<!-- 底部按钮区（仅电码本/邮戳册使用） -->
-<div class="btn-row" id="btnRow"></div>
-
-<!-- 落筆彈窗 -->
-<div class="modal" id="writeModal">
-  <div class="modal-box">
-    <h3>† 落筆</h3>
-    <textarea id="writeInput" placeholder="每行一句，換行即分隔&#10;封存後自動拆為多條電文"></textarea>
-    <div class="modal-btns">
-      <button onclick="closeModal('writeModal')">取消</button>
-      <button class="primary" onclick="sealText()">封存</button>
+  <!-- 聊天頁 -->
+  <div class="page-chat" id="pageChat">
+    <div class="topbar">
+      <button class="icon-btn" id="backBtn">←</button>
+      <div class="avatar" id="chatAvatar" style="width:36px;height:36px;flex:0 0 36px;font-size:16px;">祂</div>
+      <div class="title" id="chatTitle" style="font-size:16px;font-weight:500;">聊天室</div>
+      <button class="icon-btn" id="menuBtnChat">⋮</button>
+    </div>
+    <div class="messages" id="messages"></div>
+    <div class="composer">
+      <button class="icon-btn" id="stickerBtn">☺</button>
+      <input type="text" id="msgInput" placeholder="輸入訊息…" autocomplete="off">
+      <button class="send-btn" id="sendBtn">➤</button>
     </div>
   </div>
+
 </div>
 
-<!-- 修訂彈窗 -->
-<div class="modal" id="editModal">
-  <div class="modal-box">
-    <h3>† 修訂</h3>
-    <input type="text" id="editInput">
-    <div class="modal-btns">
-      <button onclick="closeModal('editModal')">取消</button>
-      <button class="primary" onclick="saveEdit()">存檔</button>
-    </div>
+<!-- 選單 -->
+<div class="menu-mask" id="menuMask">
+  <div class="menu" id="menuPanel">
+    <div class="menu-item" data-act="pouch">驛囊</div>
+    <div class="menu-item" data-act="export">存檔</div>
+    <div class="menu-item danger" data-act="clear">焚稿</div>
+    <div class="menu-item" data-act="about">南洲誌</div>
   </div>
 </div>
 
-<!-- 謄入彈窗 -->
-<div class="modal" id="importModal">
-  <div class="modal-box">
-    <h3>† 謄入</h3>
-    <input type="file" id="importFile" accept=".txt,.json">
-    <div class="modal-btns">
-      <button onclick="closeModal('importModal')">取消</button>
-      <button class="primary" onclick="doImport()">確認</button>
-    </div>
-  </div>
-</div>
-
-<!-- 附郵戳彈窗 -->
-<div class="modal" id="stampModal">
-  <div class="modal-box">
-    <h3>† 附郵戳</h3>
-    <input type="file" id="stampFile" accept="image/jpeg,image/png" multiple>
-    <div class="modal-btns">
-      <button onclick="closeModal('stampModal')">取消</button>
-      <button class="primary" onclick="doStampAdd()">封存</button>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-var db=null,currentTab='chat',editId=null,editType='';
-var chatMsgs=[],codeList=[],stampList=[];
-
-function $(id){return document.getElementById(id)}
-function showStatus(m){var el=$('status');el.textContent=m;el.style.display='block';setTimeout(function(){el.style.display='none'},1800)}
-function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML}
-function fmtTime(d){return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+' · '+(d.getMonth()+1)+'.'+d.getDate()}
-
-// DB
-var req=indexedDB.open('南洲舊夢',2);
-req.onerror=function(){showStatus('數據庫錯誤')};
-req.onsuccess=function(e){db=e.target.result;showStatus('就緒');loadAll()};
-req.onupgradeneeded=function(e){
-  db=e.target.result;
-  if(!db.objectStoreNames.contains('messages')) db.createObjectStore('messages',{keyPath:'id',autoIncrement:true});
-  if(!db.objectStoreNames.contains('codes')) db.createObjectStore('codes',{keyPath:'id',autoIncrement:true});
-  if(!db.objectStoreNames.contains('stamps')) db.createObjectStore('stamps',{keyPath:'id',autoIncrement:true});
-};
-
-function tx(store,mode){return db.transaction(store,mode).objectStore(store)}
-function loadAll(){loadChat();loadCodes();loadStamps();render()}
-
-function loadChat(){var r=tx('messages','readonly').getAll();r.onsuccess=function(){chatMsgs=r.result||[];if(currentTab==='chat')render()}}
-function loadCodes(){var r=tx('codes','readonly').getAll();r.onsuccess=function(){codeList=r.result||[];if(currentTab==='code')render()}}
-function loadStamps(){var r=tx('stamps','readonly').getAll();r.onsuccess=function(){stampList=r.result||[];if(currentTab==='stamp')render()}}
-
-function switchTab(t){
-  currentTab=t;
-  document.querySelectorAll('.tabs span').forEach(function(s,i){s.className=i===({'chat':0,'code':1,'stamp':2}[t])?'active':''});
-  render()
+/* ============ 基礎工具 ============ */
+const $ = s => document.querySelector(s);
+const toastEl = $('#toast');
+let toastTimer = null;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800);
 }
 
-function render(){
-  var list=$('list'),btns=$('btnRow');
-  list.innerHTML='';btns.innerHTML='';
-  if(currentTab==='chat'){
-    $('inputRow').style.display='flex';
-    renderChat(list);
-    $('list').style.bottom='56px';
-  } else {
-    $('inputRow').style.display='none';
-    if(currentTab==='code') renderCode(list);
-    else if(currentTab==='stamp') renderStamp(list);
-    renderBtns(btns);
-    $('list').style.bottom='104px';
+/* ============ IndexedDB 基礎 ============ */
+const DB_NAME = 'nanzhou_jiu_meng';
+const DB_VER = 1;
+let db = null;
+
+function openDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if(!d.objectStoreNames.contains('chats')){
+        d.createObjectStore('chats', { keyPath:'id' });
+      }
+      if(!d.objectStoreNames.contains('messages')){
+        const s = d.createObjectStore('messages', { keyPath:'id' });
+        s.createIndex('chatId', 'chatId', { unique:false });
+      }
+      if(!d.objectStoreNames.contains('cards')){
+        d.createObjectStore('cards', { keyPath:'id' });
+      }
+      if(!d.objectStoreNames.contains('stickers')){
+        d.createObjectStore('stickers', { keyPath:'id' });
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(db); };
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+function tx(store, mode='readonly'){
+  return db.transaction(store, mode).objectStore(store);
+}
+function reqToPromise(req){
+  return new Promise((res, rej)=>{
+    req.onsuccess = ()=>res(req.result);
+    req.onerror = ()=>rej(req.error);
+  });
+}
+
+/* ============ 狀態 ============ */
+let chats = [];
+let currentChatId = null;
+let currentMessages = [];
+
+/* ============ 初始化 ============ */
+async function init(){
+  await openDB();
+  await loadChats();
+  renderChatList();
+  bindEvents();
+}
+
+async function loadChats(){
+  chats = await reqToPromise(tx('chats').getAll());
+  chats.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+}
+
+/* ============ 對話列表渲染 ============ */
+async function renderChatList(){
+  const list = $('#chatList');
+  if(!chats.length){
+    list.innerHTML = '<div class="chat-empty">尚無聊天室<br>點右下角 ＋ 新增</div>';
+    return;
+  }
+  list.innerHTML = '';
+  for(const c of chats){
+    const msgs = await getMessages(c.id);
+    const last = msgs[msgs.length-1];
+    let preview = '尚無訊息';
+    if(last){
+      if(last.type === 'sticker') preview = '[貼紙]';
+      else if(last.cards && last.cards.length) preview = last.cards[0];
+      else if(last.text) preview = last.text;
+    }
+    const row = document.createElement('div');
+    row.className = 'chat-row';
+    row.innerHTML = `
+      <div class="avatar">${(c.name||'祂').charAt(0)}</div>
+      <div class="chat-info">
+        <div class="chat-name">${escapeHtml(c.name||'未命名')}</div>
+        <div class="chat-preview">${escapeHtml(preview)}</div>
+      </div>
+      <div class="chat-time">${last ? fmtTime(last.time) : ''}</div>
+    `;
+    row.onclick = ()=>openChat(c.id);
+    list.appendChild(row);
   }
 }
 
-function renderChat(list){
-  if(!chatMsgs.length){list.innerHTML='<div class="empty">∅ 尚無來電<br>落筆發報，靜候回音</div>';return}
-  chatMsgs.sort(function(a,b){return b.id-a.id}).forEach(function(m){
-    var d=document.createElement('div');d.className='msg';
-    var stampHtml=m.stamp?'<div class="stamp"><img src="'+m.stamp+'"></div>':'';
-    d.innerHTML='<div class="label"><span>† 來電 № '+('000'+m.id).slice(-4)+'</span><span>'+esc(m.sender||'舊夢')+'</span></div><div>'+esc(m.text)+'</div>'+stampHtml+'<div class="time">'+m.time+'</div>';
-    list.appendChild(d)
-  })
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+function fmtTime(ts){
+  const d = new Date(ts);
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function fmtDate(ts){
+  const d = new Date(ts);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if(sameDay) return '今天';
+  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
 }
 
-function buildCodeItem(c){
-  var d=document.createElement('div');d.className='item';
-  d.innerHTML='<div class="item-head"><span>№ '+('000'+c.id).slice(-4)+'</span><span>'+c.time+'</span></div><div>'+esc(c.text)+'</div><div class="item-actions"><span onclick="editItem(\'code\','+c.id+',\''+esc(c.text)+'\')">修訂</span><span onclick="deleteItem(\'code\','+c.id+')">焚毀</span></div>';
-  return d
-}
-function renderCode(list){
-  if(!codeList.length){list.innerHTML='<div class="empty">∅ 電碼本空空如也</div>';return}
-  codeList.forEach(function(c){list.appendChild(buildCodeItem(c))})
-}
-function renderStamp(list){
-  if(!stampList.length){list.innerHTML='<div class="empty">∅ 郵戳冊尚無收藏</div>';return}
-  stampList.forEach(function(s){
-    var d=document.createElement('div');d.className='item';
-    d.innerHTML='<div class="item-head"><span>№ '+('000'+s.id).slice(-4)+'</span><span>'+s.time+'</span></div><div style="text-align:center;padding:6px 0"><img src="'+s.data+'" style="max-width:80px;max-height:80px;border:1px solid #1a1a1a"></div><div class="item-actions"><span onclick="editItem(\'stamp\','+s.id+',\''+esc(s.note||'')+'\')">修訂</span><span onclick="deleteItem(\'stamp\','+s.id+')">焚毀</span></div>';
-    list.appendChild(d)
-  })
+/* ============ 訊息讀取 ============ */
+function getMessages(chatId){
+  return new Promise((res, rej)=>{
+    const store = tx('messages');
+    const idx = store.index('chatId');
+    const req = idx.getAll(chatId);
+    req.onsuccess = ()=>{
+      const arr = req.result || [];
+      arr.sort((a,b)=>a.time-b.time);
+      res(arr);
+    };
+    req.onerror = ()=>rej(req.error);
+  });
 }
 
-function renderBtns(btns){
-  if(currentTab==='code'){
-    btns.innerHTML=
-      '<button onclick="searchCode()">翻查</button>'+
-      '<button onclick="openModal(\'writeModal\')">落筆</button>'+
-      '<button onclick="dedup(\'code\')">剔重</button>'+
-      '<button onclick="openModal(\'importModal\')">謄入</button>'+
-      '<button onclick="exportData(\'code\')">抄出</button>'+
-      '<button onclick="clearAll(\'code\')">焚毀</button>';
+/* ============ 打開聊天 ============ */
+async function openChat(id){
+  currentChatId = id;
+  const c = chats.find(x=>x.id===id);
+  if(!c) return;
+  $('#chatTitle').textContent = c.name || '聊天室';
+  $('#chatAvatar').textContent = (c.name||'祂').charAt(0);
+  currentMessages = await getMessages(id);
+  renderMessages();
+  $('#pageChat').classList.add('show');
+}
+
+function renderMessages(){
+  const box = $('#messages');
+  box.innerHTML = '';
+  let lastDate = '';
+  let prevSender = null;
+  for(const m of currentMessages){
+    const dstr = fmtDate(m.time);
+    if(dstr !== lastDate){
+      const div = document.createElement('div');
+      div.className = 'date-divider';
+      div.textContent = dstr;
+      box.appendChild(div);
+      lastDate = dstr;
+      prevSender = null;
+    }
+    const row = document.createElement('div');
+    const senderClass = m.sender === 'me' ? 'me' : 'them';
+    row.className = 'msg-row ' + senderClass;
+    if(prevSender === m.sender) row.classList.add('grouped');
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    if(m.type === 'sticker' && m.stickerId){
+      bubble.classList.add('only-sticker');
+      bubble.innerHTML = `<img class="sticker-img" src="${m.stickerData || ''}" alt="貼紙">`;
+    } else {
+      let html = '';
+      if(m.cards && m.cards.length){
+        html += m.cards.map(c=>`<span class="card-line">${escapeHtml(c)}</span>`).join('');
+      }
+      if(m.text){
+        html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
+      }
+      if(m.stickerData){
+        html += `<img class="sticker-img" src="${m.stickerData}" alt="貼紙">`;
+      }
+      html += `<span class="meta">${fmtTime(m.time)}</span>`;
+      bubble.innerHTML = html;
+    }
+    row.appendChild(bubble);
+    box.appendChild(row);
+    prevSender = m.sender;
   }
-  else if(currentTab==='stamp'){
-    btns.innerHTML=
-      '<button onclick="openModal(\'stampModal\')">附郵戳</button>'+
-      '<button onclick="dedup(\'stamp\')">剔重</button>'+
-      '<button onclick="openModal(\'importModal\')">謄入</button>'+
-      '<button onclick="exportData(\'stamp\')">抄出</button>'+
-      '<button onclick="clearAll(\'stamp\')">焚毀</button>'+
-      '<button style="visibility:hidden">占位</button>';
-  }
+  box.scrollTop = box.scrollHeight;
 }
 
-function sendMsg(){
-  if(!db){showStatus('數據庫未就緒');return}
-  var input=$('inputRowInput');
-  var text=input.value.trim();
-  if(!text){showStatus('無內容');return}
-  input.value='';
-  var now=new Date(),time=fmtTime(now);
-  var tx2=db.transaction('messages','readwrite'),store=tx2.objectStore('messages');
-  store.add({text:text,time:time,date:now.toISOString(),sender:'此端'});
-  tx2.oncomplete=function(){
-    showStatus('已發出，等候回電...');
-    setTimeout(function(){genReply(text)},1500+Math.random()*1000)
-  }
-}
+/* ============ 發送訊息 ============ */
+async function sendMyMessage(){
+  const input = $('#msgInput');
+  const text = input.value.trim();
+  if(!text) return;
+  if(!currentChatId){ toast('請先選擇聊天室'); return; }
 
-function genReply(origText){
-  if(!codeList.length){showStatus('電碼本空，無法回電');return}
-  var count=1+Math.floor(Math.random()*3),replies=[];
-  for(var i=0;i<count;i++){replies.push(codeList[Math.floor(Math.random()*codeList.length)].text)}
-  var replyText=replies.join('　　');
-  var stampData=stampList.length?stampList[Math.floor(Math.random()*stampList.length)].data:null;
-  var now=new Date(),time=fmtTime(now);
-  var tx2=db.transaction('messages','readwrite'),store=tx2.objectStore('messages');
-  store.add({text:replyText,time:time,date:now.toISOString(),sender:'舊夢',stamp:stampData});
-  tx2.oncomplete=function(){loadChat()}
-}
-
-function sealText(){
-  var text=$('writeInput').value.trim();
-  if(!text){showStatus('無內容');return}
-  var lines=text.split('\n').map(function(l){return l.trim()}).filter(function(l){return l});
-  if(!lines.length){showStatus('無有效內容');return}
-  var now=new Date(),time=fmtTime(now);
-  var t=db.transaction('codes','readwrite'),store=t.objectStore('codes');
-  lines.forEach(function(l){store.add({text:l,time:time,date:now.toISOString()})});
-  t.oncomplete=function(){showStatus('封存 '+lines.length+' 條');$('writeInput').value='';closeModal('writeModal');loadCodes()}
-}
-
-function doImport(){
-  var file=$('importFile').files[0];
-  if(!file){showStatus('未選文件');return}
-  var reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      var data=JSON.parse(e.target.result);
-      var list=Array.isArray(data)?data:data.list||data.codes||data.texts||[];
-      if(!list.length&&typeof data==='string'){list=data.split('\n').map(function(l){return l.trim()}).filter(function(l){return l})}
-      if(!list.length){showStatus('格式錯誤');return}
-      var now=new Date(),time=fmtTime(now),t=db.transaction('codes','readwrite'),store=t.objectStore('codes');
-      list.forEach(function(item){var txt=typeof item==='string'?item:item.text||item.content||'';if(txt)store.add({text:txt,time:time,date:now.toISOString()})});
-      t.oncomplete=function(){showStatus('導入 '+list.length+' 條');closeModal('importModal');loadCodes()}
-    }catch(err){showStatus('解析失敗')}
+  const msg = {
+    id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    chatId: currentChatId,
+    sender: 'me',
+    type: 'text',
+    text,
+    cards: [],
+    time: Date.now()
   };
-  reader.readAsText(file)
+  await reqToPromise(tx('messages','readwrite').add(msg));
+  currentMessages.push(msg);
+  input.value = '';
+  renderMessages();
+  await touchChat(currentChatId);
+
+  // 觸發祂的回覆
+  await replyFromThem();
 }
 
-function doStampAdd(){
-  var files=$('stampFile').files;
-  if(!files.length){showStatus('未選圖片');return}
-  var loaded=0,total=files.length;
-  for(var i=0;i<files.length;i++){
-    (function(file){
-      var reader=new FileReader();
-      reader.onload=function(e){
-        var now=new Date(),time=fmtTime(now);
-        var t=db.transaction('stamps','readwrite'),store=t.objectStore('stamps');
-        store.add({data:e.target.result,time:time,date:now.toISOString(),note:file.name});
-        t.oncomplete=function(){loaded++;if(loaded>=total){showStatus('附戳 '+loaded+' 張');closeModal('stampModal');loadStamps()}}
-      };
-      reader.readAsDataURL(file)
-    })(files[i])
+async function touchChat(id){
+  const c = chats.find(x=>x.id===id);
+  if(!c) return;
+  c.updatedAt = Date.now();
+  await reqToPromise(tx('chats','readwrite').put(c));
+}
+
+/* ============ 祂的回覆 ============ */
+async function replyFromThem(){
+  const cards = await reqToPromise(tx('cards').getAll());
+  if(!cards.length){
+    toast('驛囊中尚無字卡，請先新增字卡');
+    return;
   }
-}
-
-function editItem(type,id,curVal){
-  editType=type;editId=id;$('editInput').value=curVal||'';
-  openModal('editModal')
-}
-function saveEdit(){
-  var val=$('editInput').value.trim();
-  if(!val){showStatus('無內容');return}
-  var t=db.transaction(editType==='code'?'codes':'stamps','readwrite');
-  var store=t.objectStore(editType==='code'?'codes':'stamps');
-  var getReq=store.get(editId);
-  getReq.onsuccess=function(){
-    var obj=getReq.result;
-    if(editType==='code') obj.text=val;else obj.note=val;
-    store.put(obj);
-    t.oncomplete=function(){showStatus('已修訂');closeModal('editModal');editId=null;loadCodes();loadStamps()}
+  const n = 3 + Math.floor(Math.random()*3); // 3~5
+  const picked = [];
+  const pool = [...cards];
+  for(let i=0;i<n && pool.length;i++){
+    const idx = Math.floor(Math.random()*pool.length);
+    picked.push(pool.splice(idx,1)[0].text);
   }
-}
 
-function deleteItem(type,id){
-  if(!confirm('確認焚毀？'))return;
-  var t=db.transaction(type==='code'?'codes':'stamps','readwrite');
-  var store=t.objectStore(type==='code'?'codes':'stamps');
-  store.delete(id);
-  t.oncomplete=function(){showStatus('已焚毀');loadCodes();loadStamps()}
-}
-
-function clearAll(type){
-  if(!confirm('確認焚毀整冊？此操作不可復原'))return;
-  var storeName=type==='code'?'codes':'stamps';
-  var t=db.transaction(storeName,'readwrite');
-  t.objectStore(storeName).clear();
-  t.oncomplete=function(){showStatus('已焚毀整冊');loadCodes();loadStamps()}
-}
-
-function dedup(type){
-  var list=type==='code'?codeList:stampList;
-  var seen={},dups=[];
-  list.forEach(function(item){var key=type==='code'?item.text:item.data;if(seen[key])dups.push(item.id);else seen[key]=true});
-  if(!dups.length){showStatus('無重複');return}
-  var t=db.transaction(type==='code'?'codes':'stamps','readwrite');
-  var store=t.objectStore(type==='code'?'codes':'stamps');
-  dups.forEach(function(id){store.delete(id)});
-  t.oncomplete=function(){showStatus('剔重 '+dups.length+' 條');loadCodes();loadStamps()}
-}
-
-function exportData(type){
-  var list=type==='code'?codeList:stampList;
-  if(!list.length){showStatus('無數據');return}
-  if(type==='code'){
-    var text=list.map(function(c){return c.text}).join('\n');
-    var blob=new Blob([text],{type:'text/plain;charset=utf-8'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='電碼本.txt';a.click()
-  } else {
-    var json=JSON.stringify(list.map(function(s){return{id:s.id,note:s.note,data:s.data}}),null,2);
-    var blob=new Blob([json],{type:'application/json;charset=utf-8'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='郵戳冊.json';a.click()
+  // 隨機附加貼紙
+  let stickerData = null;
+  const stickers = await reqToPromise(tx('stickers').getAll());
+  if(stickers.length && Math.random() < 0.35){
+    const s = stickers[Math.floor(Math.random()*stickers.length)];
+    stickerData = s.data;
   }
-  showStatus('已抄出')
+
+  const msg = {
+    id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    chatId: currentChatId,
+    sender: 'them',
+    type: 'cards',
+    text: '',
+    cards: picked,
+    stickerData,
+    time: Date.now()
+  };
+  await reqToPromise(tx('messages','readwrite').add(msg));
+  currentMessages.push(msg);
+  renderMessages();
+  await touchChat(currentChatId);
 }
 
-function searchCode(){
-  var q=prompt('輸入關鍵字：');
-  if(!q)return;
-  var r=codeList.filter(function(c){return c.text.indexOf(q)>-1});
-  if(!r.length){showStatus('無結果');return}
-  var list=$('list');list.innerHTML='';
-  r.forEach(function(c){list.appendChild(buildCodeItem(c))});
-  showStatus('翻得 '+r.length+' 條')
+/* ============ 事件綁定 ============ */
+function bindEvents(){
+  $('#backBtn').onclick = ()=>{
+    $('#pageChat').classList.remove('show');
+    currentChatId = null;
+    renderChatList();
+  };
+
+  $('#sendBtn').onclick = sendMyMessage;
+  $('#msgInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter' && !e.isComposing) sendMyMessage();
+  });
+
+  $('#newChatBtn').onclick = createChat;
+
+  // 菜單
+  const mask = $('#menuMask');
+  const panel = $('#menuPanel');
+  function openMenu(){
+    mask.classList.add('show');
+  }
+  function closeMenu(){
+    mask.classList.remove('show');
+  }
+  $('#menuBtnList').onclick = openMenu;
+  $('#menuBtnChat').onclick = openMenu;
+  mask.onclick = e=>{ if(e.target === mask) closeMenu(); };
+  panel.onclick = e=>{
+    const act = e.target.dataset.act;
+    if(!act) return;
+    closeMenu();
+    handleMenu(act);
+  };
 }
 
-function openModal(id){$(''+id).classList.add('show')}
-function closeModal(id){$(''+id).classList.remove('show')}
+function handleMenu(act){
+  if(act === 'pouch') toast('驛囊：字卡與貼紙管理（待實作）');
+  else if(act === 'export') toast('存檔：匯出備份（待實作）');
+  else if(act === 'clear') toast('焚稿：清空記錄（待實作）');
+  else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
+}
 
-document.addEventListener('keydown',function(e){
-  if(e.key==='Enter'&&$('inputRowInput')===document.activeElement){sendMsg()}
+/* ============ 新建聊天室 ============ */
+async function createChat(){
+  const name = prompt('聊天室名稱：');
+  if(!name || !name.trim()) return;
+  const c = {
+    id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    name: name.trim(),
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+  await reqToPromise(tx('chats','readwrite').add(c));
+  chats.unshift(c);
+  renderChatList();
+  toast('已建立聊天室');
+}
+
+/* ============ 啟動 ============ */
+init().catch(err=>{
+  console.error(err);
+  toast('資料庫初始化失敗');
 });
-
-if(db){loadAll()}else{var wait=setInterval(function(){if(db){clearInterval(wait);loadAll()}else if(Date.now()-start>5000){clearInterval(wait);showStatus('數據庫連接超時')}},200)}
-var start=Date.now();
 </script>
 </body>
 </html>

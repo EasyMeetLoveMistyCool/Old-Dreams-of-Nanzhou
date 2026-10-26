@@ -275,6 +275,16 @@
   }
   .stamp-grid.batch-mode .stamp-checkbox { display: block; }
 
+  /* ========== 留聲板块 ========== */
+  .music-add-box { display: flex; flex-direction: column; background: var(--input-bg); border-radius: 8px; padding: 15px; margin-bottom: 20px; gap: 10px; }
+  .music-input { width:100%; height:44px; border-radius:6px; background:rgba(128,128,128,0.1); border:none; padding:0 12px; font-size:15px; color:var(--text-color); outline:none; }
+  .music-upload-row { display: flex; gap: 10px; }
+  .music-file-box { flex:1; height:44px; border-radius:6px; border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--text-secondary); cursor:pointer; background:rgba(128,128,128,0.05); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; padding:0 10px; }
+  .music-list-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); border-radius: 8px; padding: 12px; margin-bottom: 10px; gap: 10px; }
+  .music-info { flex: 1; min-width: 0; }
+  .music-title { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .music-artist { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
   /* ========== 菜单 & 弹窗 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
@@ -307,6 +317,7 @@
   .progress-bar-bg { width: 100%; height: 6px; background: var(--input-bg); border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.1s linear; }
 
+  /* 底部滑出面板：贴纸、暗语、留声共用 */
   .sticker-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:250; align-items:flex-end; }
   .sticker-panel-mask.show { display:flex; }
   .sticker-panel { background:var(--bg-color); width:100%; max-height:60vh; border-radius:16px 16px 0 0; display:flex; flex-direction:column; animation: slideUp 0.25s ease; }
@@ -316,10 +327,14 @@
   .sticker-panel-content { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
   .sticker-panel-content img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; cursor:pointer; }
   
-  /* 动作选择列表样式 */
   .action-list-content { flex:1; overflow-y:auto; padding:0; display:flex; flex-direction:column; }
   .action-select-item { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); cursor:pointer; font-size:15px; color:var(--text-color); background:transparent; }
   .action-select-item:active { background:var(--input-bg); }
+
+  /* 留声选择列表 */
+  .music-select-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-light); cursor: pointer; background: transparent; }
+  .music-select-item:active { background: var(--input-bg); }
+  .music-select-info { flex:1; text-align:left; }
 
   /* ⚡ 面板 */
   .flash-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:250; align-items:center; justify-content:center; }
@@ -345,9 +360,79 @@
   }
   .flash-item:active { background: var(--input-bg); }
 
+  /* ========== 悬浮音乐播放器 ========== */
+  .music-player-float {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--input-bg);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 500;
+    display: none;
+    cursor: grab;
+    touch-action: none; /* 防止拖动时触发页面滚动 */
+  }
+  .music-player-float.show { display: block; }
+  .music-player-float:active { cursor: grabbing; }
+  .music-disc {
+    width: 100%; height: 100%; border-radius: 50%;
+    background-size: cover; background-position: center;
+    border: 2px solid rgba(255,255,255,0.2);
+    animation: spin 4s linear infinite;
+    animation-play-state: paused;
+  }
+  .music-player-float.playing .music-disc { animation-play-state: running; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* 播放器展开面板 */
+  .music-player-panel {
+    position: fixed;
+    bottom: 170px;
+    right: 20px;
+    width: 260px;
+    background: var(--bg-color);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 499;
+    display: none;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    border: 1px solid var(--topbar-border);
+  }
+  .music-player-panel.show { display: flex; }
+  .music-player-panel .music-disc-large {
+    width: 120px; height: 120px; border-radius: 50%;
+    background-size: cover; background-position: center;
+    border: 2px solid rgba(255,255,255,0.2);
+    margin-bottom: 15px;
+    animation: spin 4s linear infinite;
+    animation-play-state: paused;
+  }
+  .music-player-panel.playing .music-disc-large { animation-play-state: running; }
+
+  .music-info-text { text-align: center; width: 100%; margin-bottom: 15px; }
+  .music-title-text { font-size: 16px; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .music-artist-text { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+  .music-progress-bar { width: 100%; height: 4px; background: var(--input-bg); border-radius: 2px; margin-bottom: 10px; position: relative; cursor: pointer; }
+  .music-progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 2px; }
+  .music-time { display: flex; justify-content: space-between; width: 100%; font-size: 11px; color: var(--text-secondary); margin-bottom: 15px; }
+
+  .music-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .music-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .music-btn svg { width: 24px; height: 24px; fill: var(--text-color); }
+  .music-btn.play-btn svg { width: 36px; height: 36px; fill: var(--primary); }
+  
+  /* SVG 模式图标 */
+  .mode-icon { width: 20px; height: 20px; fill: var(--text-secondary); }
+
   .toast {
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff;
-    font-size:13px; padding:8px 16px; border-radius:16px; z-index:300; opacity:0; transition:opacity .2s; pointer-events:none;
+    font-size:13px; padding:8px 16px; border-radius:16px; z-index:600; opacity:0; transition:opacity .2s; pointer-events:none;
   }
   .toast.show { opacity:1; }
 </style>
@@ -390,6 +475,12 @@
         <input type="text" class="form-input" id="inputMyName" placeholder="名字" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
         <input type="text" class="form-input" id="inputMyNick" placeholder="暱稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
         <input type="text" class="form-input" id="inputMySign" placeholder="簽名" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+      </div>
+      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
+      <div class="form-group" style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:500;">專屬留聲底圖 (56x56 可選)</div>
+        <div class="avatar-upload" id="musicCoverUpload" onclick="document.getElementById('musicCoverFile').click()" style="width:56px;height:56px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">圖</div>
+        <input type="file" id="musicCoverFile" accept="image/*" style="display:none">
       </div>
       <button class="btn-primary" id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;cursor:pointer;margin-top:10px;">完成</button>
     </div>
@@ -587,16 +678,78 @@
         <div id="actionListContainer"></div>
       </div>
 
-      <!-- 留声占位 -->
-      <div id="tabContentMusic" style="display:none; text-align:center; color:var(--text-secondary); padding-top:40px;">
-        該區域功能待開發...
+      <!-- 留聲模块 -->
+      <div id="tabContentMusic" style="display:none;">
+        <div class="music-add-box">
+          <input type="text" class="music-input" id="newMusicTitle" placeholder="歌名...">
+          <input type="text" class="music-input" id="newMusicArtist" placeholder="歌手...">
+          <div class="music-upload-row">
+            <div class="music-file-box" id="musicFileBox" onclick="document.getElementById('musicFileInput').click()">
+              <span id="musicFileName">點擊上傳音檔</span>
+            </div>
+            <button class="btn-add" id="btnAddMusic" style="width:80px; margin-top:0;">留聲</button>
+          </div>
+        </div>
+        <input type="file" id="musicFileInput" accept="audio/*" style="display:none">
+        
+        <div class="toolbar" id="musicNormalToolbar">
+          <button class="tool-btn" id="btnMusicImport">接波</button>
+          <button class="tool-btn" id="btnMusicExport">發波</button>
+          <button class="tool-btn" id="btnMusicDeduplicate">清波</button>
+          <button class="tool-btn" id="btnMusicBatchDelete" style="color:#e53935;">消聲</button>
+        </div>
+
+        <div class="batch-toolbar" id="musicBatchToolbar" style="display:none;">
+          <span class="batch-info" id="musicBatchCount">已選 0 首</span>
+          <div style="display:flex; gap:15px;">
+            <button class="batch-btn" id="btnMusicSelectAll">全選</button>
+            <button class="batch-btn danger" id="btnMusicConfirmDelete">確認消聲</button>
+            <button class="batch-btn" id="btnMusicCancelDelete" style="color:var(--text-secondary);">取消</button>
+          </div>
+        </div>
+
+        <div class="card-list-header" id="musicListHeader">留聲：共 0 首</div>
+        <div id="musicListContainer"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 选图 input (隐藏) -->
-<input type="file" id="stampFileInput" accept="image/*" multiple style="display:none">
+<!-- 悬浮音乐播放器 -->
+<div class="music-player-float" id="musicPlayerFloat">
+  <div class="music-disc" id="musicDiscFloat"></div>
+</div>
+
+<!-- 播放器展开面板 -->
+<div class="music-player-panel" id="musicPlayerPanel">
+  <div class="music-disc-large" id="musicDiscLarge"></div>
+  <div class="music-info-text">
+    <div class="music-title-text" id="playerTitle">未播放</div>
+    <div class="music-artist-text" id="playerArtist">-</div>
+  </div>
+  <div class="music-progress-bar" id="progressBar">
+    <div class="music-progress-fill" id="progressFill"></div>
+  </div>
+  <div class="music-time">
+    <span id="timeCurrent">00:00</span>
+    <span id="timeTotal">00:00</span>
+  </div>
+  <div class="music-controls">
+    <button class="music-btn" id="btnPrev">
+      <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+    </button>
+    <button class="music-btn play-btn" id="btnPlayPause">
+      <svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg>
+      <svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+    <button class="music-btn" id="btnNext">
+      <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6v12z"/></svg>
+    </button>
+    <button class="music-btn" id="btnMode">
+      <svg class="mode-icon" id="iconMode" viewBox="0 0 24 24"></svg>
+    </button>
+  </div>
+</div>
 
 <!-- 弹窗区 -->
 <div class="menu-mask" id="menuMask">
@@ -633,17 +786,15 @@
   </div>
 </div>
 
-<!-- 进度条弹窗 -->
 <div class="dialog-mask" id="progressDialogMask" style="z-index:210;">
   <div class="dialog" style="max-width:260px;">
     <div class="progress-dialog">
-      <div class="progress-text" id="progressText">正在沖印... 0%</div>
+      <div class="progress-text" id="progressText">正在處理... 0%</div>
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div>
     </div>
   </div>
 </div>
 
-<!-- 印花面板 -->
 <div class="sticker-panel-mask" id="stickerPanelMask">
   <div class="sticker-panel">
     <div class="sticker-panel-header" id="stickerPanelHeader">
@@ -652,6 +803,8 @@
     </div>
     <div class="sticker-panel-content" id="stickerPanelContent"></div>
     <div class="action-list-content" id="actionListContent" style="display:none;"></div>
+    <!-- 留声选择列表直接复用action-list-content的样式 -->
+    <div class="action-list-content" id="musicSelectContent" style="display:none;"></div>
   </div>
 </div>
 
@@ -660,12 +813,12 @@
   <div class="flash-panel">
     <div class="flash-panel-header">互動</div>
     <div class="flash-grid">
-      <div class="flash-item" id="flashAction">予祂</div>
       <div class="flash-item" id="flashPhoto">攝錄</div>
       <div class="flash-item" id="flashAlbum">舊簿</div>
+      <div class="flash-item" id="flashAction">予祂</div>
       <div class="flash-item" id="flashAsk">投問</div>
+      <div class="flash-item" id="flashMusic">留聲</div>
       <div class="flash-item" id="flashAccompany">相伴</div>
-      <div class="flash-item" id="flashMusic" style="color:var(--text-secondary);">留聲</div>
     </div>
   </div>
 </div>
@@ -743,7 +896,7 @@ function fileToBase64(file, callback) {
 
 /* ============ IndexedDB ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 5; // 版本5：新增actions表
+const DB_VER = 6; 
 let db = null;
 
 function openDB(){
@@ -765,6 +918,9 @@ function openDB(){
         const s = d.createObjectStore('actions', { keyPath:'id' });
         s.createIndex('category', 'category', { unique:false });
       }
+      if(!d.objectStoreNames.contains('music')) {
+        d.createObjectStore('music', { keyPath:'id' });
+      }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -785,6 +941,7 @@ let currentMessages = [];
 let pendingStickerData = null; 
 let tempTheirAvatar = null;
 let tempMyAvatar = null;
+let tempMusicCover = null;
 let isEditingChatId = null;
 let longPressTimer = null;
 let activeChatForMenu = null;
@@ -802,6 +959,16 @@ let selectedActionIds = new Set();
 let isStampBatchMode = false;
 let selectedStampIds = new Set();
 
+let isMusicBatchMode = false;
+let selectedMusicIds = new Set();
+let tempMusicFileData = null;
+
+// 音乐播放器状态
+let audioPlayer = new Audio();
+let playlist = [];
+let currentTrackIndex = -1;
+let playMode = 0; // 0:顺序, 1:单曲, 2:随机, 3:播完即停
+
 /* ============ 初始化 ============ */
 async function init(){
   await openDB();
@@ -816,6 +983,9 @@ async function init(){
   loadAndRenderCards();
   loadAndRenderStamps();
   loadAndRenderActions();
+  loadAndRenderMusic();
+  updateModeIcon();
+  initPlayerDrag();
 }
 
 async function loadChats(){
@@ -1421,6 +1591,260 @@ window.deleteSingleAction = function(id) {
   });
 };
 
+/* ============ 郵電所：留聲管理 ============ */
+async function loadAndRenderMusic() {
+  const musics = await reqToPromise(tx('music').getAll());
+  musics.sort((a,b) => b.createdAt - a.createdAt);
+
+  $('#musicListHeader').textContent = `留聲：共 ${musics.length} 首`;
+  const container = $('#musicListContainer');
+  container.innerHTML = '';
+  
+  if(!musics.length) {
+    container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); margin-top:20px;">尚無留聲</div>';
+    return;
+  }
+
+  musics.forEach((m, index) => {
+    const div = document.createElement('div');
+    div.className = 'music-list-item';
+    
+    let checkboxHtml = '';
+    if (isMusicBatchMode) {
+      checkboxHtml = `<input type="checkbox" style="margin-right:10px; width:18px; height:18px; accent-color:#e53935;" ${selectedMusicIds.has(m.id) ? 'checked' : ''} onchange="toggleSelectMusic('${m.id}')">`;
+    }
+
+    div.innerHTML = `
+      <div style="display:flex; align-items:center; flex:1;">
+        ${checkboxHtml}
+        <div class="music-info">
+          <div class="music-title">${escapeHtml(m.title)}</div>
+          <div class="music-artist">${escapeHtml(m.artist)}</div>
+        </div>
+      </div>
+      <div class="card-actions" style="display:${isMusicBatchMode ? 'none' : 'flex'}">
+        <button class="btn-del" onclick="deleteSingleMusic('${m.id}')">作廢</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  if (isMusicBatchMode) {
+    $('#musicNormalToolbar').style.display = 'none';
+    $('#musicBatchToolbar').style.display = 'flex';
+    $('#musicBatchCount').textContent = `已選 ${selectedMusicIds.size} 首`;
+  } else {
+    $('#musicNormalToolbar').style.display = 'flex';
+    $('#musicBatchToolbar').style.display = 'none';
+  }
+}
+
+window.toggleSelectMusic = function(id) {
+  if(selectedMusicIds.has(id)) selectedMusicIds.delete(id);
+  else selectedMusicIds.add(id);
+  loadAndRenderMusic();
+};
+
+window.deleteSingleMusic = function(id) {
+  showCustomDialog('作廢留聲', '確定要銷毀這首留聲嗎？', false, '作廢', async () => {
+    await reqToPromise(tx('music', 'readwrite').delete(id));
+    toast('已作廢');
+    loadAndRenderMusic();
+  });
+};
+
+/* ============ 音乐播放器逻辑 ============ */
+function initPlayerDrag() {
+  const float = $('#musicPlayerFloat');
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+
+  float.addEventListener('touchstart', (e) => {
+    isDragging = false;
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    
+    // 获取初始位置
+    const rect = float.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    
+    // 切换为绝对定位，移除 bottom/right
+    float.style.bottom = 'auto';
+    float.style.right = 'auto';
+    float.style.left = initialLeft + 'px';
+    float.style.top = initialTop + 'px';
+  }, {passive: true});
+
+  float.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+    
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      isDragging = true;
+    }
+
+    if (isDragging) {
+      e.preventDefault(); // 阻止滚动
+      let newLeft = initialLeft + dx;
+      let newTop = initialTop + dy;
+      
+      // 边界限制
+      const maxW = window.innerWidth - 56;
+      const maxH = window.innerHeight - 56;
+      newLeft = Math.max(0, Math.min(newLeft, maxW));
+      newTop = Math.max(0, Math.min(newTop, maxH));
+      
+      float.style.left = newLeft + 'px';
+      float.style.top = newTop + 'px';
+    }
+  }, {passive: false});
+
+  float.addEventListener('touchend', (e) => {
+    if (!isDragging) {
+      // 算作点击，展开面板
+      $('#musicPlayerPanel').classList.toggle('show');
+      if ($('#musicPlayerPanel').classList.contains('show')) {
+        // 面板跟随悬浮窗位置
+        const rect = float.getBoundingClientRect();
+        const panel = $('#musicPlayerPanel');
+        let panelTop = rect.top - 180; // 假设面板高度约180
+        if (panelTop < 10) panelTop = rect.bottom + 10;
+        
+        let panelLeft = rect.left - 100; // 居中
+        if (panelLeft < 10) panelLeft = 10;
+        if (panelLeft > window.innerWidth - 270) panelLeft = window.innerWidth - 270;
+
+        panel.style.bottom = 'auto';
+        panel.style.right = 'auto';
+        panel.style.top = panelTop + 'px';
+        panel.style.left = panelLeft + 'px';
+      }
+    }
+  });
+}
+
+function playMusic(musics, index) {
+  playlist = musics;
+  currentTrackIndex = index;
+  loadTrack();
+  $('#musicPlayerFloat').classList.add('show');
+}
+
+function loadTrack() {
+  if (currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
+  const track = playlist[currentTrackIndex];
+  
+  $('#playerTitle').textContent = track.title;
+  $('#playerArtist').textContent = track.artist;
+  
+  // 获取底图
+  const c = chats.find(x=>x.id===currentChatId);
+  let coverUrl = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
+  
+  $('#musicDiscFloat').style.backgroundImage = `url(${coverUrl})`;
+  $('#musicDiscLarge').style.backgroundImage = `url(${coverUrl})`;
+  
+  audioPlayer.src = track.data;
+  audioPlayer.play().then(() => {
+    updatePlayState(true);
+  }).catch(e => {
+    updatePlayState(false);
+    toast('點擊播放按鈕開始');
+  });
+}
+
+audioPlayer.addEventListener('timeupdate', () => {
+  if (!audioPlayer.duration) return;
+  const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  $('#progressFill').style.width = percent + '%';
+  $('#timeCurrent').textContent = formatTime(audioPlayer.currentTime);
+});
+
+audioPlayer.addEventListener('loadedmetadata', () => {
+  $('#timeTotal').textContent = formatTime(audioPlayer.duration);
+});
+
+audioPlayer.addEventListener('ended', () => {
+  if (playMode === 1) {
+    // 单曲循环
+    audioPlayer.currentTime = 0;
+    audioPlayer.play();
+  } else if (playMode === 3) {
+    // 播完即停
+    updatePlayState(false);
+  } else {
+    // 顺序或随机
+    playNext();
+  }
+});
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function updatePlayState(isPlaying) {
+  const float = $('#musicPlayerFloat');
+  const panel = $('#musicPlayerPanel');
+  if (isPlaying) {
+    float.classList.add('playing');
+    panel.classList.add('playing');
+    $('#iconPlay').style.display = 'none';
+    $('#iconPause').style.display = 'block';
+  } else {
+    float.classList.remove('playing');
+    panel.classList.remove('playing');
+    $('#iconPlay').style.display = 'block';
+    $('#iconPause').style.display = 'none';
+  }
+}
+
+function playNext() {
+  if (!playlist.length) return;
+  if (playMode === 2) {
+    // 随机
+    currentTrackIndex = Math.floor(Math.random() * playlist.length);
+  } else {
+    // 顺序
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+  }
+  loadTrack();
+}
+
+function playPrev() {
+  if (!playlist.length) return;
+  if (playMode === 2) {
+    currentTrackIndex = Math.floor(Math.random() * playlist.length);
+  } else {
+    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+  }
+  loadTrack();
+}
+
+function updateModeIcon() {
+  const icon = $('#iconMode');
+  if (playMode === 0) {
+    // 列表循环
+    icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>';
+    toast('列表循環');
+  } else if (playMode === 1) {
+    // 单曲循环
+    icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>';
+    toast('單曲循環');
+  } else if (playMode === 2) {
+    // 随机
+    icon.innerHTML = '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>';
+    toast('隨機播放');
+  } else if (playMode === 3) {
+    // 播完即停
+    icon.innerHTML = '<path d="M6 6h12v12H6z"/>';
+    toast('播完即停');
+  }
+}
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
@@ -1445,6 +1869,7 @@ function bindEvents(){
         loadAndRenderActions();
       } else {
         $('#tabContentMusic').style.display = 'block';
+        loadAndRenderMusic();
       }
     };
   });
@@ -1819,12 +2244,71 @@ function bindEvents(){
     };
   };
 
+  // --- 留聲操作 ---
+  $('#musicFileBox').onclick = () => $('#musicFileInput').click();
+  $('#musicFileInput').onchange = e => {
+    const file = e.target.files[0];
+    if(file) {
+      $('#musicFileName').textContent = file.name;
+      fileToBase64(file, b => { tempMusicFileData = b; });
+    }
+  };
+
+  $('#btnAddMusic').onclick = async () => {
+    const title = $('#newMusicTitle').value.trim();
+    const artist = $('#newMusicArtist').value.trim();
+    if(!title || !artist || !tempMusicFileData) { toast('請填寫歌名、歌手並上傳音檔'); return; }
+    
+    await reqToPromise(tx('music', 'readwrite').add({
+      id: 'm_'+Date.now(), title, artist, data: tempMusicFileData, createdAt: Date.now()
+    }));
+    
+    $('#newMusicTitle').value = '';
+    $('#newMusicArtist').value = '';
+    $('#musicFileName').textContent = '點擊上傳音檔';
+    tempMusicFileData = null;
+    toast('已留聲');
+    loadAndRenderMusic();
+  };
+
+  $('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
+  $('#btnMusicSelectAll').onclick = () => {
+    const checkboxes = document.querySelectorAll('#musicListContainer input[type="checkbox"]');
+    if(selectedMusicIds.size === checkboxes.length && checkboxes.length > 0) selectedMusicIds.clear();
+    else checkboxes.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1]));
+    loadAndRenderMusic();
+  };
+  $('#btnMusicConfirmDelete').onclick = () => {
+    if(selectedMusicIds.size === 0) return;
+    showCustomDialog('消聲確認', `確定要消聲這 ${selectedMusicIds.size} 首歌嗎？`, false, '消聲', async () => {
+      for(const id of selectedMusicIds) await reqToPromise(tx('music', 'readwrite').delete(id));
+      toast('已消聲所選歌曲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic();
+    });
+  };
+  $('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
+
+  $('#btnMusicDeduplicate').onclick = async () => {
+    const all = await reqToPromise(tx('music').getAll());
+    const seen = new Set(); let dups = [];
+    all.forEach(m => {
+      const key = m.title + m.artist;
+      if(seen.has(key)) dups.push(m.id);
+      else seen.add(key);
+    });
+    if(!dups.length) { toast('未發現重複項'); return; }
+    showCustomDialog('清波', `發現 ${dups.length} 首重複留聲，是否一併消聲？`, false, '確認消聲', async () => {
+      for(const id of dups) await reqToPromise(tx('music', 'readwrite').delete(id));
+      toast('已清理重複項'); loadAndRenderMusic();
+    });
+  };
+
   // --- 聊天交互 ---
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent'); if(!stickers.length) { toast('郵電所中尚無印花'); return; }
     content.innerHTML = ''; content.style.display = 'grid';
     $('#actionListContent').style.display = 'none';
+    $('#musicSelectContent').style.display = 'none';
     $('#stickerPanelHeader').innerHTML = '選擇印花 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
     
@@ -1854,6 +2338,7 @@ function bindEvents(){
     const content = $('#stickerPanelContent');
     const list = $('#actionListContent');
     content.style.display = 'none';
+    $('#musicSelectContent').style.display = 'none';
     list.style.display = 'flex';
     list.innerHTML = '';
     
@@ -1871,7 +2356,6 @@ function bindEvents(){
         renderMessages(false);
         await touchChat(currentChatId);
         
-        // 方案二：触发祂的正常概率回复
         setTimeout(replyFromThem, 8000 + Math.random() * 7000); 
       };
       list.appendChild(div);
@@ -1880,12 +2364,74 @@ function bindEvents(){
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
+  $('#flashMusic').onclick = async () => {
+    $('#flashPanelMask').classList.remove('show');
+    const musics = await reqToPromise(tx('music').getAll());
+    if(!musics.length) { toast('郵電所中尚無留聲'); return; }
+    
+    const content = $('#stickerPanelContent');
+    const list = $('#actionListContent');
+    const musicList = $('#musicSelectContent');
+    
+    content.style.display = 'none';
+    list.style.display = 'none';
+    musicList.style.display = 'flex';
+    musicList.innerHTML = '';
+    
+    $('#stickerPanelHeader').innerHTML = '選擇留聲 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
+    
+    musics.forEach((m, idx) => {
+      const div = document.createElement('div');
+      div.className = 'music-select-item';
+      div.innerHTML = `<div class="music-select-info">
+                         <div class="music-title">${escapeHtml(m.title)}</div>
+                         <div class="music-artist">${escapeHtml(m.artist)}</div>
+                       </div>
+                       <div style="color:var(--primary);">▶</div>`;
+      div.onclick = () => {
+        $('#stickerPanelMask').classList.remove('show');
+        playMusic(musics, idx);
+      };
+      musicList.appendChild(div);
+    });
+    $('#stickerPanelMask').classList.add('show');
+    $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
+  };
+
   // 占位提示
-  const soon = ['攝錄','舊簿','投問','相伴','留聲'];
+  const soon = ['攝錄','舊簿','投問','相伴'];
   soon.forEach(t => {
-    const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':t==='相伴'?'Accompany':'Music'));
+    const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':'Accompany'));
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
+
+  // --- 音乐播放器操作 ---
+  $('#btnPlayPause').onclick = () => {
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      updatePlayState(true);
+    } else {
+      audioPlayer.pause();
+      updatePlayState(false);
+    }
+  };
+  
+  $('#btnNext').onclick = playNext;
+  $('#btnPrev').onclick = playPrev;
+  
+  $('#btnMode').onclick = () => {
+    playMode = (playMode + 1) % 4;
+    updateModeIcon();
+  };
+
+  $('#progressBar').onclick = (e) => {
+    const bar = e.currentTarget;
+    const rect = bar.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    if (audioPlayer.duration) {
+      audioPlayer.currentTime = percent * audioPlayer.duration;
+    }
+  };
 
   // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
@@ -1894,19 +2440,21 @@ function bindEvents(){
     $('#inputMyName').value = ''; $('#inputMyNick').value = ''; $('#inputMySign').value = '';
     $('#theirAvatar').style.backgroundImage = ''; $('#theirAvatar').textContent = '祂';
     $('#myAvatar').style.backgroundImage = ''; $('#myAvatar').textContent = '我';
-    tempTheirAvatar = null; tempMyAvatar = null;
+    $('#musicCoverUpload').style.backgroundImage = ''; $('#musicCoverUpload').textContent = '圖';
+    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null;
     $('#pageCreate').classList.add('show');
   };
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
   $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage = `url(${b})`; $('#theirAvatar').textContent=''; }); };
   $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
+  $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage = `url(${b})`; $('#musicCoverUpload').textContent=''; }); };
 
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim(); const theirName = $('#inputTheirName').value.trim();
     const theirNick = $('#inputTheirNick').value.trim(); const theirSign = $('#inputTheirSign').value.trim();
     const myName = $('#inputMyName').value.trim(); const myNick = $('#inputMyNick').value.trim(); const mySign = $('#inputMySign').value.trim();
     if(!roomName) { toast('請輸入聊天室名稱'); return; }
-    const c = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, isPinned: false, createdAt: Date.now(), updatedAt: Date.now() };
+    const c = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, musicCover: tempMusicCover, isPinned: false, createdAt: Date.now(), updatedAt: Date.now() };
     await reqToPromise(tx('chats','readwrite').add(c));
     toast('已建立新對話'); await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };

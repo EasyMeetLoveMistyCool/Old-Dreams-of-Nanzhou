@@ -21,9 +21,9 @@
     --bg-color: #f0f2f5; --topbar-bg: #ffffff; --topbar-border: #e4e6eb;
     --bubble-me: #d6ecff; --bubble-them: #ffffff;
     --text-color: #000000; --text-secondary: #707579; --time-color: #a0a0a0;
-    --input-bg: rgba(128,128,128,0.15); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
-    --pinned-bg: #fff5f6;
-    --glassy-bg: rgba(240, 242, 245, 0.95); /* 二级页面不透明的磨砂底 */
+    --input-bg: rgba(0,0,0,0.06); --primary: #3390ec; --border-light: rgba(0,0,0,0.05);
+    --pinned-bg: rgba(255, 245, 246, 0.9);
+    --glassy-bg: rgba(240, 242, 245, 0.95); /* 二级页面不透明磨砂底 */
   }
   body.theme-sky { --bg-color: #e6ebee; --bubble-me: #d6ecff; --glassy-bg: rgba(230,235,238,0.95); }
   body.theme-forest { --bg-color: #e8efe9; --bubble-me: #d4ebd9; --primary: #4caf50; --glassy-bg: rgba(232,239,233,0.95); }
@@ -38,40 +38,46 @@
     --bg-color: #000000; --topbar-bg: #111111; --topbar-border: #222;
     --bubble-me: #003366; --bubble-them: #1a1a1a;
     --text-color: #ffffff; --text-secondary: #888; --time-color: #555;
-    --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #00b0ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
     --glassy-bg: rgba(17,17,17,0.95);
   }
   body.theme-space { 
     --bg-color: #0b1320; --topbar-bg: #121d30; --topbar-border: #1a2639;
     --bubble-me: #1e3a5f; --bubble-them: #1a2639;
     --text-color: #e0e0e0; --text-secondary: #8fa0b5; --time-color: #5a6b7c;
-    --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #4a90e2; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
     --glassy-bg: rgba(18,29,48,0.95);
   }
   body.theme-nightpurple { 
     --bg-color: #150e1c; --topbar-bg: #1f1528; --topbar-border: #2b1d36;
     --bubble-me: #442266; --bubble-them: #2b1d36;
     --text-color: #e8dff0; --text-secondary: #9a86a8; --time-color: #6c5a78;
-    --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #b388ff; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
     --glassy-bg: rgba(31,21,40,0.95);
   }
   body.theme-pureblack { 
     --bg-color: #000000; --topbar-bg: #0a0a0a; --topbar-border: #1a1a1a;
     --bubble-me: #333333; --bubble-them: #111111;
     --text-color: #e0e0e0; --text-secondary: #666; --time-color: #444;
-    --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: #2b1f24;
+    --input-bg: rgba(255,255,255,0.1); --primary: #888; --border-light: rgba(255,255,255,0.05); --pinned-bg: rgba(43, 31, 36, 0.9);
     --glassy-bg: rgba(10,10,10,0.95);
   }
 
-  /* ========== 核心容器（修复点击穿透和层级） ========== */
+  /* ========== 核心容器 ========== */
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background: var(--bg-color); }
 
+  /* ========== 页面容器（彻底解决重叠） ========== */
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
   
-  /* 确保层级正确：主页在底，新建/设置在上，聊天页最高 */
-  .page-list { z-index: 1; background: transparent; pointer-events: auto; } 
-  .page-create, .page-sub, .page-settings { z-index: 2; transform:translateX(100%); background: var(--glassy-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); pointer-events: auto; }
-  .page-chat { z-index: 3; transform:translateX(100%); background: var(--bg-color); pointer-events: auto; }
+  /* 层级区分：主页面1，新建/设置2，聊天页3 */
+  .page-list { z-index: 1; background: transparent; } 
+  .page-create, .page-sub, .page-settings { 
+    z-index: 2; 
+    transform:translateX(100%); 
+    background: var(--glassy-bg); /* 确保不是透明底，遮挡住主页面 */
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+  }
+  .page-chat { z-index: 3; transform:translateX(100%); background: var(--bg-color); }
   
   .page-chat.show, .page-create.show, .page-sub.show, .page-settings.show { transform:translateX(0); }
 
@@ -89,7 +95,7 @@
     display:flex; align-items:center; justify-content:center;
     font-size:22px; color:var(--text-secondary); cursor:pointer;
     background:transparent; border:none; flex: 0 0 40px;
-    z-index: 20; /* 确保按钮能点到 */
+    z-index: 20;
   }
   .icon-btn:active { background:rgba(128,128,128,0.15); }
   
@@ -120,7 +126,7 @@
     border-bottom:1px solid var(--topbar-border); user-select: none;
   }
   .chat-row:active { background:rgba(128,128,128,0.1); }
-  .chat-row.pinned { background: var(--pinned-bg); opacity: 0.9; }
+  .chat-row.pinned { background: var(--pinned-bg); }
 
   .avatar-lg {
     width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover;
@@ -295,7 +301,7 @@
 
 <div id="app">
   <!-- 1. 列表页 -->
-  <div class="page-list" id="pageList">
+  <div class="page page-list" id="pageList">
     <div class="topbar">
       <div style="font-size:18px;font-weight:600;flex:1;padding-left:8px;">南洲舊夢</div>
       <button class="icon-btn" id="menuBtnList" style="color:var(--primary);">⋮</button>
@@ -305,7 +311,7 @@
   </div>
 
   <!-- 2. 新建/编辑页 -->
-  <div class="page-create" id="pageCreate">
+  <div class="page page-create" id="pageCreate">
     <div class="topbar">
       <button class="icon-btn" id="cancelCreateBtn">←</button>
       <div class="header-title" style="flex:1; text-align:center; font-size:17px;" id="createPageTitle">建立新對話</div>
@@ -349,7 +355,7 @@
   </div>
 
   <!-- 3. 聊天页 -->
-  <div class="page-chat" id="pageChat">
+  <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
       <button class="icon-btn" id="backBtn">←</button>
@@ -387,7 +393,7 @@
   </div>
 
   <!-- 4. 佈景 页面 -->
-  <div class="page-settings" id="pageSettings">
+  <div class="page page-settings" id="pageSettings">
     <div class="topbar">
       <button class="icon-btn" id="backSettingsBtn">←</button>
       <div class="header-title" style="flex:1; text-align:center; font-size:17px;">佈景</div>
@@ -430,7 +436,7 @@
   </div>
 
   <!-- 5. 郵電所 -->
-  <div class="page-sub" id="pagePostOffice">
+  <div class="page page-sub" id="pagePostOffice">
     <div class="topbar">
       <button class="icon-btn" id="backPostOfficeBtn">←</button>
       <div class="header-title" style="flex:1; text-align:center; font-size:17px;">郵電所</div>
@@ -533,9 +539,10 @@ function applyThemeAndBg() {
     const isDark = savedTheme.includes('cyber') || savedTheme.includes('space') || savedTheme.includes('purple') || savedTheme.includes('pureblack');
     const maskColor = isDark ? `rgba(0,0,0, ${globalBgMask/100})` : `rgba(255,255,255, ${globalBgMask/100})`;
     appEl.style.background = `linear-gradient(${maskColor}, ${maskColor}), url(${globalBgImage}) center/cover no-repeat`;
+    
     // 强制主页和列表页透明
     $('#pageList').style.background = 'transparent';
-    // 二级页面保持磨砂
+    // 二级页面保持磨砂半透明（使用 --glassy-bg 变量）
     document.querySelectorAll('.page-create, .page-sub, .page-settings').forEach(el => {
       el.style.background = 'var(--glassy-bg)'; 
     });

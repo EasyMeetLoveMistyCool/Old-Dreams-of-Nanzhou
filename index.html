@@ -803,7 +803,6 @@
     </div>
     <div class="sticker-panel-content" id="stickerPanelContent"></div>
     <div class="action-list-content" id="actionListContent" style="display:none;"></div>
-    <!-- 留声选择列表直接复用action-list-content的样式 -->
     <div class="action-list-content" id="musicSelectContent" style="display:none;"></div>
   </div>
 </div>
@@ -896,7 +895,7 @@ function fileToBase64(file, callback) {
 
 /* ============ IndexedDB ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER =7; 
+const DB_VER = 10; // 强行升级
 let db = null;
 
 function openDB(){
@@ -971,21 +970,26 @@ let playMode = 0; // 0:顺序, 1:单曲, 2:随机, 3:播完即停
 
 /* ============ 初始化 ============ */
 async function init(){
-  await openDB();
-  await loadChats();
-  renderChatList();
-  bindEvents();
-  applyThemeAndBg();
-  if (globalBgImage) {
-    $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
-    $('#mainBgText').textContent = '';
+  try {
+    await openDB();
+    await loadChats();
+    renderChatList();
+    bindEvents();
+    applyThemeAndBg();
+    if (globalBgImage) {
+      $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`;
+      $('#mainBgText').textContent = '';
+    }
+    loadAndRenderCards();
+    loadAndRenderStamps();
+    loadAndRenderActions();
+    loadAndRenderMusic();
+    updateModeIcon();
+    initPlayerDrag();
+  } catch (err) {
+    console.error(err);
+    toast('資料庫初始化失敗：' + err.message);
   }
-  loadAndRenderCards();
-  loadAndRenderStamps();
-  loadAndRenderActions();
-  loadAndRenderMusic();
-  updateModeIcon();
-  initPlayerDrag();
 }
 
 async function loadChats(){
@@ -1665,12 +1669,10 @@ function initPlayerDrag() {
     startX = touch.clientX;
     startY = touch.clientY;
     
-    // 获取初始位置
     const rect = float.getBoundingClientRect();
     initialLeft = rect.left;
     initialTop = rect.top;
     
-    // 切换为绝对定位，移除 bottom/right
     float.style.bottom = 'auto';
     float.style.right = 'auto';
     float.style.left = initialLeft + 'px';
@@ -1687,11 +1689,10 @@ function initPlayerDrag() {
     }
 
     if (isDragging) {
-      e.preventDefault(); // 阻止滚动
+      e.preventDefault();
       let newLeft = initialLeft + dx;
       let newTop = initialTop + dy;
       
-      // 边界限制
       const maxW = window.innerWidth - 56;
       const maxH = window.innerHeight - 56;
       newLeft = Math.max(0, Math.min(newLeft, maxW));
@@ -1704,16 +1705,14 @@ function initPlayerDrag() {
 
   float.addEventListener('touchend', (e) => {
     if (!isDragging) {
-      // 算作点击，展开面板
       $('#musicPlayerPanel').classList.toggle('show');
       if ($('#musicPlayerPanel').classList.contains('show')) {
-        // 面板跟随悬浮窗位置
         const rect = float.getBoundingClientRect();
         const panel = $('#musicPlayerPanel');
-        let panelTop = rect.top - 180; // 假设面板高度约180
+        let panelTop = rect.top - 180;
         if (panelTop < 10) panelTop = rect.bottom + 10;
         
-        let panelLeft = rect.left - 100; // 居中
+        let panelLeft = rect.left - 100;
         if (panelLeft < 10) panelLeft = 10;
         if (panelLeft > window.innerWidth - 270) panelLeft = window.innerWidth - 270;
 
@@ -1740,7 +1739,6 @@ function loadTrack() {
   $('#playerTitle').textContent = track.title;
   $('#playerArtist').textContent = track.artist;
   
-  // 获取底图
   const c = chats.find(x=>x.id===currentChatId);
   let coverUrl = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
   
@@ -1769,14 +1767,11 @@ audioPlayer.addEventListener('loadedmetadata', () => {
 
 audioPlayer.addEventListener('ended', () => {
   if (playMode === 1) {
-    // 单曲循环
     audioPlayer.currentTime = 0;
     audioPlayer.play();
   } else if (playMode === 3) {
-    // 播完即停
     updatePlayState(false);
   } else {
-    // 顺序或随机
     playNext();
   }
 });
@@ -1806,10 +1801,8 @@ function updatePlayState(isPlaying) {
 function playNext() {
   if (!playlist.length) return;
   if (playMode === 2) {
-    // 随机
     currentTrackIndex = Math.floor(Math.random() * playlist.length);
   } else {
-    // 顺序
     currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
   }
   loadTrack();
@@ -1828,27 +1821,18 @@ function playPrev() {
 function updateModeIcon() {
   const icon = $('#iconMode');
   if (playMode === 0) {
-    // 列表循环
     icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>';
-    toast('列表循環');
   } else if (playMode === 1) {
-    // 单曲循环
     icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>';
-    toast('單曲循環');
   } else if (playMode === 2) {
-    // 随机
     icon.innerHTML = '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>';
-    toast('隨機播放');
   } else if (playMode === 3) {
-    // 播完即停
     icon.innerHTML = '<path d="M6 6h12v12H6z"/>';
-    toast('播完即停');
   }
 }
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
-  // --- 邮电所标签切换 ---
   document.querySelectorAll('.tab-item').forEach(tab => {
     tab.onclick = () => {
       document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -1928,7 +1912,6 @@ function bindEvents(){
 
   $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
 
-  // --- 電文工具栏 ---
   $('#newCardsInput').addEventListener('input', (e) => {
     const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
     $('#draftCount').textContent = `待定稿：${lines.length} 份`;
@@ -2049,7 +2032,6 @@ function bindEvents(){
     };
   };
 
-  // --- 印花操作 ---
   $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
   $('#stampFileInput').onchange = async (e) => {
     const files = Array.from(e.target.files); if(!files.length) return;
@@ -2134,7 +2116,6 @@ function bindEvents(){
   };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
 
-  // --- 暗語操作 ---
   $('#newActionsInput').addEventListener('input', (e) => {
     const lines = e.target.value.split('\n').filter(l => l.trim() !== '');
     $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`;
@@ -2244,7 +2225,6 @@ function bindEvents(){
     };
   };
 
-  // --- 留聲操作 ---
   $('#musicFileBox').onclick = () => $('#musicFileInput').click();
   $('#musicFileInput').onchange = e => {
     const file = e.target.files[0];
@@ -2302,7 +2282,6 @@ function bindEvents(){
     });
   };
 
-  // --- 聊天交互 ---
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent'); if(!stickers.length) { toast('郵電所中尚無印花'); return; }
@@ -2324,11 +2303,9 @@ function bindEvents(){
     $('#stickerPanelMask').classList.add('show');
   };
   
-  // ⚡ 闪电面板
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
   $('#flashPanelMask').onclick = (e) => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
   
-  // 面板选项
   $('#flashAction').onclick = async () => {
     $('#flashPanelMask').classList.remove('show');
     const allActions = await reqToPromise(tx('actions').getAll());
@@ -2398,14 +2375,12 @@ function bindEvents(){
     $('#closeStickerPanel').onclick = () => $('#stickerPanelMask').classList.remove('show');
   };
 
-  // 占位提示
   const soon = ['攝錄','舊簿','投問','相伴'];
   soon.forEach(t => {
     const btn = $('#flash' + (t==='攝錄'?'Photo':t==='舊簿'?'Album':t==='投問'?'Ask':'Accompany'));
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
 
-  // --- 音乐播放器操作 ---
   $('#btnPlayPause').onclick = () => {
     if (audioPlayer.paused) {
       audioPlayer.play();
@@ -2433,7 +2408,6 @@ function bindEvents(){
     }
   };
 
-  // --- 新建聊天室 ---
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
     $('#inputRoomName').value = ''; $('#inputTheirName').value = ''; $('#inputTheirNick').value = ''; $('#inputTheirSign').value = '';
@@ -2459,7 +2433,6 @@ function bindEvents(){
     toast('已建立新對話'); await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
   };
 
-  // --- 聊天页 ---
   $('#backBtn').onclick = ()=>{ $('#pageChat').classList.remove('show'); currentChatId = null; renderChatList(); };
   $('#msgInput').addEventListener('input', function() {
     this.style.height = '44px';
@@ -2468,7 +2441,6 @@ function bindEvents(){
   });
   $('#sendBtn').onclick = sendMyMessage;
   
-  // --- 全局菜单 ---
   const mask = $('#menuMask');
   function openMenu(){ mask.classList.add('show'); }
   function closeMenu(){ mask.classList.remove('show'); }
@@ -2485,7 +2457,6 @@ function bindEvents(){
     else if(act === 'messages') toast('簡訊：功能籌備中...');
   };
 
-  // --- 佈景页面 ---
   $('#backSettingsBtn').onclick = ()=> $('#pageSettings').classList.remove('show');
   document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
   $('#mainBgFile').onchange = e => {
@@ -2497,7 +2468,6 @@ function bindEvents(){
     }
   };
 
-  // 遮罩点空白取消
   const allMasks = ['#dialogMask', '#progressDialogMask', '#menuMask', '#actionSheetMask', '#stickerPanelMask', '#flashPanelMask'];
   allMasks.forEach(id => {
     const el = document.querySelector(id);
@@ -2523,7 +2493,7 @@ function bindEvents(){
 /* ============ 启动 ============ */
 init().catch(err=>{
   console.error(err);
-  toast('資料庫初始化失敗，請重新整理');
+  toast('資料庫初始化失敗：' + err.message);
 });
 </script>
 </body>

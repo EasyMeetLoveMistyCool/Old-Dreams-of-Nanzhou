@@ -256,19 +256,19 @@
   
   .call-bg-mask { position: absolute; inset: 0; background: rgba(0,0,0,0.3); border-radius: 20px 20px 0 0; z-index: -1; }
   
-  /* 呼吸波纹 */
-  .avatar-breath-wrap { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
-  .avatar-breath { width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; z-index: 2; border: 2px solid rgba(255,255,255,0.5); }
-  .breath-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); animation: breath 2s infinite ease-out; z-index: 1; }
-  .breath-ring:nth-child(2) { animation-delay: 0.5s; }
-  .breath-ring:nth-child(3) { animation-delay: 1s; }
-  @keyframes breath { 0% { width: 100px; height: 100px; opacity: 1; } 100% { width: 180px; height: 180px; opacity: 0; } }
+  /* 呼吸波纹（贴近头像，更柔和） */
+  .avatar-breath-wrap { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 10px; width: 140px; height: 140px; }
+  .avatar-breath { width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; z-index: 2; border: 2px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 40px; color: #fff; font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .breath-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); animation: breath 2.4s infinite ease-out; z-index: 1; }
+  .breath-ring:nth-child(2) { animation-delay: 0.8s; }
+  .breath-ring:nth-child(3) { animation-delay: 1.6s; }
+  @keyframes breath { 0% { width: 100px; height: 100px; opacity: 0.8; } 100% { width: 138px; height: 138px; opacity: 0; } }
 
   .call-info { text-align: center; z-index: 2; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
   .call-nickname { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
   .call-status { font-size: 15px; opacity: 0.9; margin-bottom: 15px; }
   
-  /* 音波条 */
+  /* 音波条（未接通静止，接通后跳动） */
   .wave-bars { display: flex; gap: 4px; justify-content: center; height: 20px; align-items: center; }
   .wave-bar { width: 4px; background: #fff; border-radius: 2px; height: 6px; transition: height 0.2s; }
   .call-panel.active .wave-bar { animation: wave 1s infinite alternate ease-in-out; }
@@ -292,15 +292,17 @@
   .btn-minimize { background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
   @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); } }
 
-  /* 通话悬浮窗 (圆形呼吸) */
+  /* 通话悬浮窗 (圆形呼吸，波纹贴近) */
   .call-float {
     position: fixed; bottom: 180px; right: 20px; width: 56px; height: 56px; border-radius: 50%;
     background: var(--input-bg); z-index: 550; display: none; cursor: grab; touch-action: none;
     align-items: center; justify-content: center;
   }
   .call-float.show { display: flex; }
-  .call-float-avatar { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.5); z-index: 2; }
-  .call-float .breath-ring { border-color: rgba(76, 175, 80, 0.6); }
+  .call-float-avatar { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.5); z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+  .call-float .breath-ring { border-color: rgba(76, 175, 80, 0.6); animation: breath-float 2.4s infinite ease-out; }
+  .call-float .breath-ring:nth-child(2) { animation-delay: 1.2s; }
+  @keyframes breath-float { 0% { width: 56px; height: 56px; opacity: 0.8; } 100% { width: 88px; height: 88px; opacity: 0; } }
   
   /* 拖拽用的通用样式 */
   .draggable { transition: none !important; }
@@ -347,7 +349,7 @@
         <input type="text" class="form-input" id="inputMySign" placeholder="簽名" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
       </div>
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
-      
+
       <div class="form-group" style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:500;">專屬留聲底圖</div>
         <div class="avatar-upload" id="musicCoverUpload" onclick="document.getElementById('musicCoverFile').click()" style="width:56px;height:56px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">圖</div>
@@ -360,6 +362,21 @@
           <span id="callBgText">點擊上傳通話背景</span>
         </div>
         <input type="file" id="callBgFile" accept="image/*" style="display:none">
+      </div>
+
+      <div class="form-group" style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:500;">聊天背景</div>
+        <div class="bg-upload-box" id="chatBgUploadBox" onclick="document.getElementById('chatBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;">
+          <span id="chatBgText">點擊上傳聊天背景</span>
+        </div>
+        <input type="file" id="chatBgFile" accept="image/*" style="display:none">
+        <div style="width:100%;display:flex;flex-direction:column;gap:6px;margin-bottom:15px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);">
+            <span>聊天背景遮罩</span>
+            <span id="chatBgMaskValue">60%</span>
+          </div>
+          <input type="range" id="chatBgMaskRange" min="0" max="100" value="60" step="1" style="width:100%;accent-color:var(--primary);">
+        </div>
       </div>
 
       <button class="btn-primary" id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;cursor:pointer;margin-top:10px;">完成</button>
@@ -610,6 +627,7 @@
   <div class="avatar-breath-wrap">
     <div class="breath-ring"></div>
     <div class="breath-ring"></div>
+    <div class="breath-ring"></div>
     <div class="avatar-breath" id="callAvatar"></div>
   </div>
   <div class="call-info">
@@ -641,7 +659,7 @@
 <!-- 通话悬浮小窗（圆形呼吸） -->
 <div class="call-float" id="callFloat">
   <div class="call-float-avatar" id="callFloatAvatar"></div>
-  <div class="breath-ring" style="position:absolute;width:100%;height:100%;border-radius:50%;animation:breath 2s infinite ease-out;"></div>
+  <div class="breath-ring" style="position:absolute;width:100%;height:100%;border-radius:50%;animation:breath-float 2.4s infinite ease-out;"></div>
 </div>
 
 <div class="menu-mask" id="menuMask">
@@ -791,7 +809,7 @@ function tx(store, mode='readonly'){ return db.transaction(store, mode).objectSt
 function reqToPromise(req){ return new Promise((res, rej)=>{ req.onsuccess = ()=>res(req.result); req.onerror = ()=>rej(req.error); }); }
 
 let chats = [], currentChatId = null, currentMessages = [], pendingStickerData = null; 
-let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempCallBg = null, isEditingChatId = null;
+let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempCallBg = null, tempChatBg = null, tempChatBgMask = 60, isEditingChatId = null;
 let longPressTimer = null, activeChatForMenu = null;
 let currentSubTab = 'normal', currentSearchQuery = '', isBatchDeleteMode = false, selectedCardIds = new Set();
 let currentActionSubTab = 'to_them', currentActionSearchQuery = '', isActionBatchDeleteMode = false, selectedActionIds = new Set();
@@ -816,8 +834,9 @@ async function init(){
     await openDB(); await loadChats(); renderChatList(); bindEvents(); applyThemeAndBg();
     if (globalBgImage) { $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic(); 
-    updateModeIcon(); initPlayerDrag(); initCallDrag();
-    setupIncomingCallTimer(); // 启动来电随机检测
+    updateModeIcon(false);
+    initPlayerDrag(); initCallDrag();
+    setupIncomingCallTimer();
   } catch (err) { console.error(err); toast('資料庫初始化失敗：' + err.message); }
 }
 
@@ -1220,9 +1239,8 @@ function initCallDrag() {
   const panel = $('#callPanel');
   let isDraggingPanel = false, startX, startY, initialLeft, initialTop;
   
-  // 仅在非底部默认位置时允许拖动，或者直接让整个面板可拖动
   panel.addEventListener('touchstart', (e) => {
-    if(e.target.closest('.call-btn')) return; // 点按钮不拖拽
+    if(e.target.closest('.call-btn')) return;
     isDraggingPanel = false;
     const touch = e.touches[0]; startX = touch.clientX; startY = touch.clientY;
     const rect = panel.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top;
@@ -1268,10 +1286,8 @@ function initCallDrag() {
   }, {passive: false});
   float.addEventListener('touchend', () => {
     if (!isDraggingFloat) {
-      // 点击悬浮窗，展开
       float.classList.remove('show');
       panel.classList.add('show');
-      // 恢复默认位置或保留
       panel.style.left = '0'; panel.style.top = 'auto'; panel.style.bottom = '0';
     }
   });
@@ -1313,17 +1329,21 @@ function updatePlayState(isPlaying) {
 }
 function playNext() { if (!playlist.length) return; if (playMode === 2) currentTrackIndex = Math.floor(Math.random() * playlist.length); else currentTrackIndex = (currentTrackIndex + 1) % playlist.length; loadTrack(); }
 function playPrev() { if (!playlist.length) return; if (playMode === 2) currentTrackIndex = Math.floor(Math.random() * playlist.length); else currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length; loadTrack(); }
-function updateModeIcon() {
+function updateModeIcon(showToast = true) {
   const icon = $('#iconMode');
   let modeName = '';
   if (playMode === 0) { icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>'; modeName = '列表循環'; }
   else if (playMode === 1) { icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>'; modeName = '單曲循環'; }
   else if (playMode === 2) { icon.innerHTML = '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>'; modeName = '隨機播放'; }
   else if (playMode === 3) { icon.innerHTML = '<path d="M6 6h12v12H6z"/>'; modeName = '播完即停'; }
-  toast(`當前模式：${modeName}`);
+  if (showToast) toast(`當前模式：${modeName}`);
 }
 
 /* ============ 通话系统逻辑 ============ */
+function getTheirDisplayChar(c) {
+  return (c.theirNick || c.theirName || '祂').charAt(0);
+}
+
 function openCallUI(isIncoming = false) {
   if(isGlobalCallActive) {
     toast('請先掛斷當前通話');
@@ -1336,7 +1356,6 @@ function openCallUI(isIncoming = false) {
   const callPanel = $('#callPanel');
   const callFloat = $('#callFloat');
   
-  // 设置通话背景
   if(c.callBgImage) {
     callPanel.style.backgroundImage = `url(${c.callBgImage})`;
   } else if (c.chatBgImage) {
@@ -1346,13 +1365,23 @@ function openCallUI(isIncoming = false) {
     callPanel.style.backgroundColor = 'var(--topbar-bg)';
   }
 
-  // 设置头像与昵称
-  const avatarUrl = c.theirAvatar || `https://via.placeholder.com/100/3390ec/fff?text=${(c.theirNick||'祂').charAt(0)}`;
-  $('#callAvatar').style.backgroundImage = `url(${avatarUrl})`;
-  $('#callFloatAvatar').style.backgroundImage = `url(${avatarUrl})`;
-  $('#callNickname').textContent = c.theirNick || '祂';
+  // 头像兜底：没图就用昵称首字填满圆形
+  const avatarEl = $('#callAvatar');
+  const floatAvatarEl = $('#callFloatAvatar');
+  const displayChar = getTheirDisplayChar(c);
+  if(c.theirAvatar) {
+    avatarEl.style.backgroundImage = `url(${c.theirAvatar})`;
+    avatarEl.textContent = '';
+    floatAvatarEl.style.backgroundImage = `url(${c.theirAvatar})`;
+    floatAvatarEl.textContent = '';
+  } else {
+    avatarEl.style.backgroundImage = 'linear-gradient(135deg, var(--primary), #5aa9f0)';
+    avatarEl.textContent = displayChar;
+    floatAvatarEl.style.backgroundImage = 'linear-gradient(135deg, var(--primary), #5aa9f0)';
+    floatAvatarEl.textContent = displayChar;
+  }
+  $('#callNickname').textContent = c.theirNick || c.theirName || '祂';
 
-  // 恢复面板状态
   callPanel.style.transform = 'translateY(0)';
   callPanel.style.opacity = '1';
   callPanel.style.pointerEvents = 'auto';
@@ -1360,24 +1389,21 @@ function openCallUI(isIncoming = false) {
   callFloat.classList.remove('show');
   
   if(isIncoming) {
-    // 来电状态
     $('#callStatus').textContent = '邀請你進行語音通話...';
     callPanel.classList.remove('active');
     $('#btnAnswerCall').style.display = 'flex';
     $('#btnHangupCall').style.display = 'flex';
-    $('#btnMinimizeCall').style.display = 'none'; // 来电时不能缩小，只能接或挂
+    $('#btnMinimizeCall').style.display = 'none';
   } else {
-    // 呼出状态
     $('#callStatus').textContent = '正在呼叫...';
     callPanel.classList.remove('active');
     $('#btnAnswerCall').style.display = 'none';
     $('#btnHangupCall').style.display = 'flex';
     $('#btnMinimizeCall').style.display = 'flex'; 
     
-    // 模拟接通
     const waitTime = 3000 + Math.random() * 7000;
     callTimer = setTimeout(() => {
-      if(!isGlobalCallActive) return; // 如果期间挂了
+      if(!isGlobalCallActive) return;
       answerCall();
     }, waitTime);
   }
@@ -1388,7 +1414,7 @@ function answerCall() {
   clearTimeout(incomingCallTimeout);
   $('#callStatus').textContent = '00:00';
   $('#btnAnswerCall').style.display = 'none';
-  $('#callPanel').classList.add('active'); // 开启音波动画
+  $('#callPanel').classList.add('active');
   
   callStartTime = Date.now();
   clearInterval(callInterval);
@@ -1419,18 +1445,15 @@ function hangupCall() {
 function setupIncomingCallTimer() {
   clearInterval(checkIncomingInterval);
   checkIncomingInterval = setInterval(() => {
-    // 如果当前没有通话，且在聊天页面，且没有在打字
     if(!isGlobalCallActive && currentChatId && $('#pageChat').classList.contains('show')) {
-      if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return; // 打字时不弹
+      if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
       
-      if(Math.random() < 0.05) { // 5% 概率
-        openCallUI(true); // 来电
-        // 如果 15 秒没接，自动挂断
+      if(Math.random() < 0.05) {
+        openCallUI(true);
         incomingCallTimeout = setTimeout(() => {
           if(isGlobalCallActive && $('#btnAnswerCall').style.display !== 'none') {
             hangupCall();
             toast('未接來電');
-            // 对方发一条消息抱怨
             const c = chats.find(x=>x.id===currentChatId);
             if(c) {
               const msg = { id: 'm_'+Date.now(), chatId: currentChatId, sender: 'them', type: 'cards', text: '', cards: ['怎麼不接我電話？'], stickerData: null, time: Date.now() };
@@ -1442,13 +1465,12 @@ function setupIncomingCallTimer() {
         }, 15000);
       }
     }
-  }, 300000); // 5分钟
+  }, 300000);
 }
 
 
 /* ============ 事件绑定 ============ */
 function bindEvents(){
-  // 导航切换
   document.querySelectorAll('.tab-item').forEach(tab => {
     tab.onclick = () => {
       document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -1482,7 +1504,6 @@ function bindEvents(){
   
   $('#backPostOfficeBtn').onclick = ()=> $('#pagePostOffice').classList.remove('show');
 
-  // 长按菜单
   const actionMask = $('#actionSheetMask');
   const closeActionSheet = () => actionMask.classList.remove('show');
   
@@ -1509,12 +1530,24 @@ function bindEvents(){
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
     $('#inputMySign').value = activeChatForMenu.mySign || '';
     
-    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempCallBg = null;
+    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempCallBg = null; tempChatBg = null;
     
     const theirAvEl = $('#theirAvatar');
     if(activeChatForMenu.theirAvatar) { theirAvEl.style.backgroundImage = `url(${activeChatForMenu.theirAvatar})`; theirAvEl.textContent = ''; } else { theirAvEl.style.backgroundImage = ''; theirAvEl.textContent = '祂'; }
     const myAvEl = $('#myAvatar');
     if(activeChatForMenu.myAvatar) { myAvEl.style.backgroundImage = `url(${activeChatForMenu.myAvatar})`; myAvEl.textContent = ''; } else { myAvEl.style.backgroundImage = ''; myAvEl.textContent = '我'; }
+    // 回显留声底图
+    const musicCoverEl = $('#musicCoverUpload');
+    if(activeChatForMenu.musicCover) { musicCoverEl.style.backgroundImage = `url(${activeChatForMenu.musicCover})`; musicCoverEl.textContent = ''; } else { musicCoverEl.style.backgroundImage = ''; musicCoverEl.textContent = '圖'; }
+    // 回显通话背景
+    const callBgEl = $('#callBgUploadBox');
+    if(activeChatForMenu.callBgImage) { callBgEl.style.backgroundImage = `url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent = ''; } else { callBgEl.style.backgroundImage = ''; $('#callBgText').textContent = '點擊上傳通話背景'; }
+    // 回显聊天背景
+    const chatBgEl = $('#chatBgUploadBox');
+    if(activeChatForMenu.chatBgImage) { chatBgEl.style.backgroundImage = `url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent = ''; } else { chatBgEl.style.backgroundImage = ''; $('#chatBgText').textContent = '點擊上傳聊天背景'; }
+    const maskVal = (activeChatForMenu.chatBgMask !== undefined) ? activeChatForMenu.chatBgMask : 60;
+    $('#chatBgMaskRange').value = maskVal;
+    $('#chatBgMaskValue').textContent = maskVal + '%';
     
     $('#pageCreate').classList.add('show');
   };
@@ -1538,7 +1571,6 @@ function bindEvents(){
     });
   };
 
-  // 电文操作
   $('#newCardsInput').addEventListener('input', (e) => { const lines = e.target.value.split('\n').filter(l => l.trim() !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
   $('#btnAddCards').onclick = async () => {
     const text = $('#newCardsInput').value.trim(); if(!text) return;
@@ -1608,7 +1640,6 @@ function bindEvents(){
     };
   };
 
-  // 印花操作
   if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
   if($('#stampFileInput')) {
     $('#stampFileInput').onchange = async (e) => {
@@ -1664,7 +1695,6 @@ function bindEvents(){
   };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
 
-  // 暗语操作
   $('#newActionsInput').addEventListener('input', (e) => { const lines = e.target.value.split('\n').filter(l => l.trim() !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
   $('#btnAddActions').onclick = async () => {
     const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').filter(l => l.trim() !== '');
@@ -1729,7 +1759,6 @@ function bindEvents(){
     };
   };
 
-  // 留声操作
   $('#musicFileBox').onclick = () => $('#musicFileInput').click();
   $('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file) { $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
   $('#btnAddMusic').onclick = async () => {
@@ -1757,7 +1786,6 @@ function bindEvents(){
     });
   };
 
-  // 聊天页互动
   $('#stickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent');
     if(!stickers.length) { toast('尚無印花'); return; }
@@ -1775,7 +1803,6 @@ function bindEvents(){
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
   $('#flashPanelMask').onclick = (e) => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
 
-  // 拍照与相册
   $('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
   $('#cameraInput').onchange = e => {
     if(e.target.files[0]) {
@@ -1828,7 +1855,8 @@ function bindEvents(){
     $('#stickerPanelHeader').innerHTML = '選擇留聲 <span class="sticker-panel-close" id="closeStickerPanel">✕</span>';
     musics.forEach((m, idx) => {
       const div = document.createElement('div'); div.className = 'music-select-item';
-      div.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div><div style="color:var(--primary);">▶</div>`;
+      // 清理三角形：只留歌名+歌手
+      div.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div>`;
       div.onclick = () => { $('#stickerPanelMask').classList.remove('show'); playMusic(musics, idx); };
       musicList.appendChild(div);
     });
@@ -1841,10 +1869,9 @@ function bindEvents(){
     if(btn) btn.onclick = () => { $('#flashPanelMask').classList.remove('show'); toast(`${t} 功能籌備中...`); };
   });
 
-  // 音乐播放器按钮
   $('#btnPlayPause').onclick = () => { if (audioPlayer.paused) { audioPlayer.play(); updatePlayState(true); } else { audioPlayer.pause(); updatePlayState(false); } };
   $('#btnNext').onclick = playNext; $('#btnPrev').onclick = playPrev;
-  $('#btnMode').onclick = () => { playMode = (playMode + 1) % 4; updateModeIcon(); };
+  $('#btnMode').onclick = () => { playMode = (playMode + 1) % 4; updateModeIcon(true); };
   $('#progressBar').onclick = (e) => { const bar = e.currentTarget; const rect = bar.getBoundingClientRect(); const percent = (e.clientX - rect.left) / rect.width; if (audioPlayer.duration) audioPlayer.currentTime = percent * audioPlayer.duration; };
   if($('#btnClosePlayer')) {
     $('#btnClosePlayer').onclick = () => {
@@ -1855,7 +1882,6 @@ function bindEvents(){
     };
   }
 
-  // 通话按钮
   $('#callBtn').onclick = () => openCallUI(false);
   $('#btnHangupCall').onclick = hangupCall;
   $('#btnAnswerCall').onclick = answerCall;
@@ -1868,7 +1894,6 @@ function bindEvents(){
     float.style.bottom = '180px'; float.style.right = '20px'; float.style.left = 'auto'; float.style.top = 'auto';
   };
 
-  // 新建/编辑
   $('#newChatBtn').onclick = ()=>{
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
     $('#inputRoomName').value = ''; $('#inputTheirName').value = ''; $('#inputTheirNick').value = ''; $('#inputTheirSign').value = '';
@@ -1877,7 +1902,9 @@ function bindEvents(){
     $('#myAvatar').style.backgroundImage = ''; $('#myAvatar').textContent = '我';
     $('#musicCoverUpload').style.backgroundImage = ''; $('#musicCoverUpload').textContent = '圖';
     $('#callBgUploadBox').style.backgroundImage = ''; $('#callBgText').textContent = '點擊上傳通話背景';
-    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempCallBg = null; 
+    $('#chatBgUploadBox').style.backgroundImage = ''; $('#chatBgText').textContent = '點擊上傳聊天背景';
+    $('#chatBgMaskRange').value = 60; $('#chatBgMaskValue').textContent = '60%';
+    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempCallBg = null; tempChatBg = null; tempChatBgMask = 60;
     $('#pageCreate').classList.add('show');
   };
   $('#cancelCreateBtn').onclick = ()=> $('#pageCreate').classList.remove('show');
@@ -1886,6 +1913,8 @@ function bindEvents(){
   if($('#myFile')) $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage = `url(${b})`; $('#myAvatar').textContent=''; }); };
   if($('#musicCoverFile')) $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage = `url(${b})`; $('#musicCoverUpload').textContent=''; }); };
   if($('#callBgFile')) $('#callBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempCallBg = b; $('#callBgUploadBox').style.backgroundImage = `url(${b})`; $('#callBgText').textContent=''; }); };
+  if($('#chatBgFile')) $('#chatBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempChatBg = b; $('#chatBgUploadBox').style.backgroundImage = `url(${b})`; $('#chatBgText').textContent=''; }); };
+  if($('#chatBgMaskRange')) $('#chatBgMaskRange').oninput = e => { tempChatBgMask = parseInt(e.target.value); $('#chatBgMaskValue').textContent = tempChatBgMask + '%'; };
 
   $('#saveChatBtn').onclick = async ()=>{
     const roomName = $('#inputRoomName').value.trim(), theirName = $('#inputTheirName').value.trim();
@@ -1902,11 +1931,13 @@ function bindEvents(){
         if (tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
         if (tempMusicCover !== null) c.musicCover = tempMusicCover;
         if (tempCallBg !== null) c.callBgImage = tempCallBg;
+        if (tempChatBg !== null) c.chatBgImage = tempChatBg;
+        c.chatBgMask = tempChatBgMask;
         await reqToPromise(tx('chats','readwrite').put(c));
         toast('資料已更新');
       }
     } else {
-      const c = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, musicCover: tempMusicCover, callBgImage: tempCallBg, isPinned: false, createdAt: Date.now(), updatedAt: Date.now() };
+      const c = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar: tempTheirAvatar, myAvatar: tempMyAvatar, musicCover: tempMusicCover, callBgImage: tempCallBg, chatBgImage: tempChatBg, chatBgMask: tempChatBgMask, isPinned: false, createdAt: Date.now(), updatedAt: Date.now() };
       await reqToPromise(tx('chats','readwrite').add(c));
       toast('已建立新對話');
     }
@@ -1918,7 +1949,6 @@ function bindEvents(){
   $('#msgInput').addEventListener('input', function() { this.style.height = '44px'; this.style.height = (this.scrollHeight) + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
   
-  // 全局菜单
   const mask = $('#menuMask');
   function openMenu(){ mask.classList.add('show'); }
   function closeMenu(){ mask.classList.remove('show'); }

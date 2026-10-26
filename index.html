@@ -2,80 +2,138 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>南洲舊夢</title>
 <style>
+  /* 基础重置 */
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html, body { height:100%; }
+  html, body { height:100%; overflow:hidden; }
   body {
     font-family: -apple-system, "HarmonyOS Sans", "PingFang TC", "Microsoft JhengHei", sans-serif;
-    background:#f0f2f5;
-    color:#1a1a1a;
-    overflow:hidden;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background .3s, color .3s;
   }
+
+  /* ========== 主题变量 ========== */
+  :root {
+    /* 默认：淺綠 */
+    --bg-color: #e6ebee;
+    --topbar-bg: #ffffff;
+    --topbar-border: #e4e6eb;
+    --bubble-me: #effdde;
+    --bubble-them: #ffffff;
+    --text-color: #000000;
+    --text-secondary: #707579;
+    --time-color: #a0a0a0;
+    --input-bg: #f0f2f5;
+    --primary: #3390ec;
+    --border-light: #f0f2f5;
+  }
+  /* 淺藍 */
+  body.theme-blue {
+    --bubble-me: #d6ecff;
+  }
+  /* 淺紫 */
+  body.theme-purple {
+    --bubble-me: #e8def8;
+  }
+  /* 淺粉 */
+  body.theme-pink {
+    --bubble-me: #fce4ec;
+  }
+  /* 深色 */
+  body.theme-dark {
+    --bg-color: #0e1621;
+    --topbar-bg: #17212b;
+    --topbar-border: #101921;
+    --bubble-me: #2b5278;
+    --bubble-them: #182533;
+    --text-color: #ffffff;
+    --text-secondary: #7f91a4;
+    --time-color: #6c7883;
+    --input-bg: #17212b;
+    --primary: #64b5f6;
+    --border-light: #101921;
+  }
+  /* 深藍 */
+  body.theme-darkblue {
+    --bg-color: #17212b;
+    --topbar-bg: #1c2733;
+    --topbar-border: #121a22;
+    --bubble-me: #3a6ea5;
+    --bubble-them: #212d3b;
+    --text-color: #ffffff;
+    --text-secondary: #7f91a4;
+    --time-color: #6c7883;
+    --input-bg: #212d3b;
+    --primary: #64b5f6;
+    --border-light: #121a22;
+  }
+
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; }
 
-  /* 頂欄 */
+  /* ========== 顶栏 ========== */
   .topbar {
     height:56px; flex:0 0 56px;
-    background:#ffffff;
+    background:var(--topbar-bg);
     display:flex; align-items:center;
     padding:0 8px;
-    border-bottom:1px solid #e4e6eb;
+    border-bottom:1px solid var(--topbar-border);
     position:relative; z-index:10;
+    transition: background .3s, border-color .3s;
   }
-  .topbar .title {
-    font-size:18px; font-weight:600; flex:1;
-    padding-left:8px;
-  }
-  .topbar .title.center { text-align:center; padding-left:0; }
+  .topbar .title { font-size:18px; font-weight:600; flex:1; padding-left:8px; }
   .icon-btn {
     width:40px; height:40px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-size:20px; color:#3390ec; cursor:pointer;
+    font-size:22px; color:var(--primary); cursor:pointer;
     background:transparent; border:none;
   }
-  .icon-btn:active { background:#e8f0fe; }
+  .icon-btn:active { background:rgba(128,128,128,0.15); }
 
-  /* 頁面容器 */
+  /* ========== 页面容器 ========== */
   .page { flex:1; overflow:hidden; position:relative; }
-  .page-list, .page-chat { position:absolute; inset:0; display:flex; flex-direction:column; background:#f0f2f5; transition:transform .22s ease; }
+  .page-list, .page-chat { 
+    position:absolute; inset:0; display:flex; flex-direction:column; 
+    background:var(--bg-color); transition:transform .22s ease, background .3s; 
+  }
   .page-list { z-index:2; }
   .page-chat { z-index:3; transform:translateX(100%); }
   .page-chat.show { transform:translateX(0); }
 
-  /* 對話列表 */
+  /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row {
     display:flex; align-items:center; gap:12px;
-    padding:10px 14px; background:#fff; cursor:pointer;
-    border-bottom:1px solid #f0f2f5;
+    padding:10px 14px; background:var(--topbar-bg); cursor:pointer;
+    border-bottom:1px solid var(--topbar-border);
+    transition: background .3s;
   }
-  .chat-row:active { background:#f5f5f5; }
+  .chat-row:active { background:rgba(128,128,128,0.1); }
   .avatar {
     width:48px; height:48px; border-radius:50%;
-    background:#3390ec; color:#fff;
+    background:var(--primary); color:#fff;
     display:flex; align-items:center; justify-content:center;
     font-size:20px; flex:0 0 48px;
   }
   .chat-info { flex:1; min-width:0; }
-  .chat-name { font-size:16px; font-weight:500; }
-  .chat-preview { font-size:13px; color:#8a8a8a; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .chat-time { font-size:12px; color:#8a8a8a; flex:0 0 auto; }
-  .chat-empty { text-align:center; color:#8a8a8a; padding:40px 20px; font-size:14px; }
+  .chat-name { font-size:16px; font-weight:500; color:var(--text-color); }
+  .chat-preview { font-size:13px; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; }
+  .chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
 
-  /* 新建按鈕 */
   .fab {
     position:absolute; right:18px; bottom:22px;
     width:56px; height:56px; border-radius:50%;
-    background:#3390ec; color:#fff; font-size:28px;
+    background:var(--primary); color:#fff; font-size:28px;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 4px 12px rgba(51,144,236,.4);
     cursor:pointer; z-index:5; border:none;
   }
 
-  /* 訊息區 */
+  /* ========== 聊天页 ========== */
   .messages {
     flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
     padding:10px 10px 6px;
@@ -84,69 +142,114 @@
   .date-divider {
     align-self:center;
     background:rgba(0,0,0,.18); color:#fff;
-    font-size:12px; padding:3px 10px; border-radius:10px;
-    margin:10px 0;
+    font-size:12px; padding:4px 12px; border-radius:12px;
+    margin:10px 0; font-weight:500;
   }
-  .msg-row { display:flex; margin:4px 0; }
+  body.theme-dark .date-divider, body.theme-darkblue .date-divider {
+    background:rgba(255,255,255,.15);
+  }
+
+  /* 气泡基础 */
+  .msg-row { display:flex; margin:2px 0; }
   .msg-row.me { justify-content:flex-end; }
   .msg-row.them { justify-content:flex-start; }
+  /* 连续消息缩小间距 */
   .msg-row.grouped { margin-top:2px; }
+  .msg-row:not(.grouped) { margin-top:8px; }
+
   .bubble {
-    max-width:78%;
-    padding:7px 10px 8px;
-    border-radius:14px;
+    max-width:80%;
+    padding:6px 10px;
+    border-radius:12px;
     position:relative;
     font-size:15px;
-    line-height:1.45;
+    line-height:1.4;
     word-break:break-word;
-    box-shadow:0 1px 1px rgba(0,0,0,.08);
+    box-shadow:0 1px 2px rgba(0,0,0,.1);
+    transition: background .3s;
   }
+  
+  /* 我方气泡（带小尾巴） */
   .msg-row.me .bubble {
-    background:#d6ecff; color:#1a1a1a;
+    background:var(--bubble-me); color:var(--text-color);
     border-bottom-right-radius:4px;
   }
+  /* 祂方气泡（带小尾巴） */
   .msg-row.them .bubble {
-    background:#ffffff; color:#1a1a1a;
+    background:var(--bubble-them); color:var(--text-color);
     border-bottom-left-radius:4px;
   }
-  .bubble .card-line { display:block; }
+
+  /* 气泡尾巴 */
+  .msg-row:not(.grouped) .bubble::after {
+    content:''; position:absolute; bottom:0; width:0; height:0;
+    border-style:solid;
+  }
+  .msg-row.me:not(.grouped) .bubble::after {
+    right:-6px; border-width:0 0 10px 10px;
+    border-color:transparent transparent var(--bubble-me) transparent;
+  }
+  .msg-row.them:not(.grouped) .bubble::after {
+    left:-6px; border-width:0 10px 10px 0;
+    border-color:transparent var(--bubble-them) transparent transparent;
+  }
+
+  /* 文本与图片排版 */
+  .bubble .card-line { display:block; margin-bottom:2px; }
+  .bubble .sticker-img {
+    display:block; max-width:160px; max-height:160px; border-radius:8px; margin-top:4px;
+  }
+  
+  /* 时间戳 */
   .bubble .meta {
     float:right;
-    font-size:11px; color:#8a8a8a;
-    margin:6px 0 -2px 8px;
+    font-size:11px; color:var(--time-color);
+    margin:8px 0 -2px 8px;
     line-height:1;
   }
-  .bubble .sticker-img {
-    display:block; max-width:160px; border-radius:10px; margin-top:6px;
-  }
-  .bubble.only-sticker { padding:4px; }
+  /* 为了让时间戳不挡住文字 */
+  .bubble::after { content:''; display:block; clear:both; }
 
-  /* 輸入區 */
+  /* ========== 输入区 ========== */
   .composer {
     flex:0 0 auto;
-    background:#ffffff;
-    border-top:1px solid #e4e6eb;
+    background:var(--topbar-bg);
+    border-top:1px solid var(--topbar-border);
     padding:6px 8px;
     padding-bottom:calc(6px + env(safe-area-inset-bottom));
     display:flex; align-items:flex-end; gap:6px;
+    transition: background .3s;
   }
-  .composer .icon-btn { color:#6a6a6a; font-size:22px; }
+  .composer .icon-btn { color:var(--text-secondary); font-size:22px; }
+  
+  /* 待发送的贴纸预览 */
+  .pending-sticker-box {
+    display:none; background:var(--input-bg); padding:6px 12px; border-top:1px solid var(--topbar-border);
+  }
+  .pending-sticker-box.show { display:flex; align-items:center; gap:10px; }
+  .pending-sticker-box img { height:40px; border-radius:4px; }
+  .pending-sticker-box .close-btn { font-size:18px; color:var(--text-secondary); cursor:pointer; margin-left:auto; }
+
   .composer input {
     flex:1; min-width:0;
     height:40px; border-radius:20px;
-    border:none; background:#f0f2f5;
-    padding:0 14px; font-size:15px; color:#1a1a1a;
-    outline:none;
+    border:none; background:var(--input-bg);
+    padding:0 14px; font-size:15px; color:var(--text-color);
+    outline:none; transition: background .3s;
   }
+  .composer input::placeholder { color:var(--text-secondary); }
+
   .send-btn {
     width:40px; height:40px; border-radius:50%;
-    background:#3390ec; color:#fff; border:none;
+    background:var(--primary); color:#fff; border:none;
     display:flex; align-items:center; justify-content:center;
-    font-size:18px; flex:0 0 40px; cursor:pointer;
+    flex:0 0 40px; cursor:pointer;
+    transition: opacity .2s, background .3s;
   }
-  .send-btn:disabled { background:#b8d4f0; }
+  .send-btn:disabled { background:var(--input-bg); color:var(--text-secondary); }
+  .send-btn svg { width:20px; height:20px; fill:currentColor; margin-left:2px; }
 
-  /* 遮罩選單 */
+  /* ========== 菜单 ========== */
   .menu-mask {
     position:fixed; inset:0; background:rgba(0,0,0,.25);
     display:none; z-index:50;
@@ -154,18 +257,18 @@
   .menu-mask.show { display:block; }
   .menu {
     position:absolute; top:56px; right:10px;
-    background:#fff; border-radius:10px;
+    background:var(--topbar-bg); border-radius:10px;
     box-shadow:0 4px 20px rgba(0,0,0,.18);
     min-width:150px; overflow:hidden;
   }
   .menu-item {
-    padding:12px 18px; font-size:15px; color:#1a1a1a;
+    padding:12px 18px; font-size:15px; color:var(--text-color);
     cursor:pointer; white-space:nowrap;
   }
-  .menu-item:active { background:#f0f2f5; }
+  .menu-item:active { background:var(--input-bg); }
   .menu-item.danger { color:#e53935; }
 
-  /* 提示 */
+  /* ========== 弹窗与提示 ========== */
   .toast {
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
     background:rgba(0,0,0,.75); color:#fff;
@@ -173,12 +276,27 @@
     z-index:100; opacity:0; transition:opacity .2s; pointer-events:none;
   }
   .toast.show { opacity:1; }
+
+  /* 选择器弹窗（供贴纸、主题选择等用） */
+  .dialog-mask {
+    position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .dialog-mask.show { display:flex; }
+  .dialog {
+    background:var(--topbar-bg); width:100%; max-width:320px;
+    border-radius:12px; overflow:hidden; color:var(--text-color);
+  }
+  .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
+  .dialog-list { max-height:300px; overflow-y:auto; }
+  .dialog-item { padding:12px 20px; border-bottom:1px solid var(--border-light); cursor:pointer; text-align:center; }
+  .dialog-item:active { background:var(--input-bg); }
 </style>
 </head>
-<body>
-<div id="app">
+<body class="theme-green">
 
-  <!-- 對話列表頁 -->
+<div id="app">
+  <!-- 列表页 -->
   <div class="page-list" id="pageList">
     <div class="topbar">
       <div class="title">南洲舊夢</div>
@@ -188,7 +306,7 @@
     <button class="fab" id="newChatBtn">＋</button>
   </div>
 
-  <!-- 聊天頁 -->
+  <!-- 聊天页 -->
   <div class="page-chat" id="pageChat">
     <div class="topbar">
       <button class="icon-btn" id="backBtn">←</button>
@@ -196,30 +314,70 @@
       <div class="title" id="chatTitle" style="font-size:16px;font-weight:500;">聊天室</div>
       <button class="icon-btn" id="menuBtnChat">⋮</button>
     </div>
+    
     <div class="messages" id="messages"></div>
+    
+    <!-- 待发送贴纸预览 -->
+    <div class="pending-sticker-box" id="pendingStickerBox">
+      <img id="pendingStickerImg" src="" alt="待發送貼紙">
+      <span style="font-size:13px;color:var(--text-secondary)">將隨文字發送</span>
+      <span class="close-btn" id="cancelStickerBtn">✕</span>
+    </div>
+
     <div class="composer">
-      <button class="icon-btn" id="stickerBtn">☺</button>
+      <!-- 贴纸入口 -->
+      <button class="icon-btn" id="stickerBtn">📎</button>
       <input type="text" id="msgInput" placeholder="輸入訊息…" autocomplete="off">
-      <button class="send-btn" id="sendBtn">➤</button>
+      <!-- 发送按钮 (纸飞机SVG) -->
+      <button class="send-btn" id="sendBtn" disabled>
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
     </div>
   </div>
-
 </div>
 
-<!-- 選單 -->
+<!-- 遮罩菜单 -->
 <div class="menu-mask" id="menuMask">
   <div class="menu" id="menuPanel">
     <div class="menu-item" data-act="pouch">驛囊</div>
+    <div class="menu-item" data-act="theme">燈號</div>
     <div class="menu-item" data-act="export">存檔</div>
     <div class="menu-item danger" data-act="clear">焚稿</div>
     <div class="menu-item" data-act="about">南洲誌</div>
   </div>
 </div>
 
+<!-- 贴纸选择器 -->
+<div class="dialog-mask" id="stickerDialogMask">
+  <div class="dialog">
+    <div class="dialog-title">選擇貼紙</div>
+    <div class="dialog-list" id="stickerList" style="display:flex;flex-wrap:wrap;padding:10px;justify-content:center;gap:10px;">
+      <!-- 动态渲染 -->
+    </div>
+    <div class="dialog-item" id="closeStickerDialog" style="color:var(--primary)">取消</div>
+  </div>
+</div>
+
+<!-- 燈號(主题)选择器 -->
+<div class="dialog-mask" id="themeDialogMask">
+  <div class="dialog">
+    <div class="dialog-title">選擇燈號</div>
+    <div class="dialog-list">
+      <div class="dialog-item" onclick="setTheme('theme-green')">淺綠</div>
+      <div class="dialog-item" onclick="setTheme('theme-blue')">淺藍</div>
+      <div class="dialog-item" onclick="setTheme('theme-purple')">淺紫</div>
+      <div class="dialog-item" onclick="setTheme('theme-pink')">淺粉</div>
+      <div class="dialog-item" onclick="setTheme('theme-dark')">深色</div>
+      <div class="dialog-item" onclick="setTheme('theme-darkblue')">深藍</div>
+    </div>
+    <div class="dialog-item" id="closeThemeDialog" style="color:var(--primary)">取消</div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============ 基礎工具 ============ */
+/* ============ 基础工具 ============ */
 const $ = s => document.querySelector(s);
 const toastEl = $('#toast');
 let toastTimer = null;
@@ -230,7 +388,19 @@ function toast(msg){
   toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800);
 }
 
-/* ============ IndexedDB 基礎 ============ */
+/* ============ 主题逻辑 ============ */
+function initTheme() {
+  let savedTheme = localStorage.getItem('nz_theme') || 'theme-green';
+  document.body.className = savedTheme;
+}
+function setTheme(themeName) {
+  document.body.className = themeName;
+  localStorage.setItem('nz_theme', themeName);
+  $('#themeDialogMask').classList.remove('show');
+}
+initTheme();
+
+/* ============ IndexedDB 基础 ============ */
 const DB_NAME = 'nanzhou_jiu_meng';
 const DB_VER = 1;
 let db = null;
@@ -240,28 +410,19 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if(!d.objectStoreNames.contains('chats')){
-        d.createObjectStore('chats', { keyPath:'id' });
-      }
+      if(!d.objectStoreNames.contains('chats')) d.createObjectStore('chats', { keyPath:'id' });
       if(!d.objectStoreNames.contains('messages')){
         const s = d.createObjectStore('messages', { keyPath:'id' });
         s.createIndex('chatId', 'chatId', { unique:false });
       }
-      if(!d.objectStoreNames.contains('cards')){
-        d.createObjectStore('cards', { keyPath:'id' });
-      }
-      if(!d.objectStoreNames.contains('stickers')){
-        d.createObjectStore('stickers', { keyPath:'id' });
-      }
+      if(!d.objectStoreNames.contains('cards')) d.createObjectStore('cards', { keyPath:'id' });
+      if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
   });
 }
-
-function tx(store, mode='readonly'){
-  return db.transaction(store, mode).objectStore(store);
-}
+function tx(store, mode='readonly'){ return db.transaction(store, mode).objectStore(store); }
 function reqToPromise(req){
   return new Promise((res, rej)=>{
     req.onsuccess = ()=>res(req.result);
@@ -269,10 +430,11 @@ function reqToPromise(req){
   });
 }
 
-/* ============ 狀態 ============ */
+/* ============ 全局状态 ============ */
 let chats = [];
 let currentChatId = null;
 let currentMessages = [];
+let pendingStickerData = null; // 当前准备发送的贴纸
 
 /* ============ 初始化 ============ */
 async function init(){
@@ -287,7 +449,7 @@ async function loadChats(){
   chats.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
 }
 
-/* ============ 對話列表渲染 ============ */
+/* ============ 列表页渲染 ============ */
 async function renderChatList(){
   const list = $('#chatList');
   if(!chats.length){
@@ -303,6 +465,7 @@ async function renderChatList(){
       if(last.type === 'sticker') preview = '[貼紙]';
       else if(last.cards && last.cards.length) preview = last.cards[0];
       else if(last.text) preview = last.text;
+      else if(last.stickerData) preview = '[圖片]';
     }
     const row = document.createElement('div');
     row.className = 'chat-row';
@@ -331,16 +494,14 @@ function fmtTime(ts){
 function fmtDate(ts){
   const d = new Date(ts);
   const now = new Date();
-  const sameDay = d.toDateString() === now.toDateString();
-  if(sameDay) return '今天';
-  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+  if(d.toDateString() === now.toDateString()) return '今天';
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
 }
 
-/* ============ 訊息讀取 ============ */
+/* ============ 消息相关 ============ */
 function getMessages(chatId){
   return new Promise((res, rej)=>{
-    const store = tx('messages');
-    const idx = store.index('chatId');
+    const idx = tx('messages').index('chatId');
     const req = idx.getAll(chatId);
     req.onsuccess = ()=>{
       const arr = req.result || [];
@@ -351,7 +512,6 @@ function getMessages(chatId){
   });
 }
 
-/* ============ 打開聊天 ============ */
 async function openChat(id){
   currentChatId = id;
   const c = chats.find(x=>x.id===id);
@@ -360,6 +520,13 @@ async function openChat(id){
   $('#chatAvatar').textContent = (c.name||'祂').charAt(0);
   currentMessages = await getMessages(id);
   renderMessages();
+  
+  // 清空输入区状态
+  $('#msgInput').value = '';
+  pendingStickerData = null;
+  updatePendingStickerUI();
+  updateSendBtnState();
+  
   $('#pageChat').classList.add('show');
 }
 
@@ -368,6 +535,7 @@ function renderMessages(){
   box.innerHTML = '';
   let lastDate = '';
   let prevSender = null;
+  
   for(const m of currentMessages){
     const dstr = fmtDate(m.time);
     if(dstr !== lastDate){
@@ -386,23 +554,23 @@ function renderMessages(){
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
 
-    if(m.type === 'sticker' && m.stickerId){
-      bubble.classList.add('only-sticker');
-      bubble.innerHTML = `<img class="sticker-img" src="${m.stickerData || ''}" alt="貼紙">`;
-    } else {
-      let html = '';
-      if(m.cards && m.cards.length){
-        html += m.cards.map(c=>`<span class="card-line">${escapeHtml(c)}</span>`).join('');
-      }
-      if(m.text){
-        html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
-      }
-      if(m.stickerData){
-        html += `<img class="sticker-img" src="${m.stickerData}" alt="貼紙">`;
-      }
-      html += `<span class="meta">${fmtTime(m.time)}</span>`;
-      bubble.innerHTML = html;
+    let html = '';
+    // 渲染字卡（祂的特有逻辑）
+    if(m.cards && m.cards.length){
+      html += m.cards.map(c=>`<span class="card-line">${escapeHtml(c)}</span>`).join('');
     }
+    // 渲染文本
+    if(m.text){
+      html += `<span class="card-line">${escapeHtml(m.text)}</span>`;
+    }
+    // 渲染图片（如果有）
+    if(m.stickerData){
+      html += `<img class="sticker-img" src="${m.stickerData}" alt="圖片">`;
+    }
+    // 时间戳
+    html += `<span class="meta">${fmtTime(m.time)}</span>`;
+    
+    bubble.innerHTML = html;
     row.appendChild(bubble);
     box.appendChild(row);
     prevSender = m.sender;
@@ -410,11 +578,37 @@ function renderMessages(){
   box.scrollTop = box.scrollHeight;
 }
 
-/* ============ 發送訊息 ============ */
+/* ============ 输入与发送逻辑 ============ */
+function updateSendBtnState() {
+  const text = $('#msgInput').value.trim();
+  const btn = $('#sendBtn');
+  if(text || pendingStickerData) {
+    btn.disabled = false;
+    btn.style.background = 'var(--primary)';
+    btn.style.color = '#fff';
+  } else {
+    btn.disabled = true;
+    btn.style.background = 'var(--input-bg)';
+    btn.style.color = 'var(--text-secondary)';
+  }
+}
+
+function updatePendingStickerUI() {
+  const box = $('#pendingStickerBox');
+  const img = $('#pendingStickerImg');
+  if(pendingStickerData) {
+    img.src = pendingStickerData;
+    box.classList.add('show');
+  } else {
+    box.classList.remove('show');
+    img.src = '';
+  }
+}
+
 async function sendMyMessage(){
   const input = $('#msgInput');
   const text = input.value.trim();
-  if(!text) return;
+  if(!text && !pendingStickerData) return;
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
 
   const msg = {
@@ -422,18 +616,26 @@ async function sendMyMessage(){
     chatId: currentChatId,
     sender: 'me',
     type: 'text',
-    text,
+    text: text,
     cards: [],
+    stickerData: pendingStickerData, // 存入图片
     time: Date.now()
   };
+  
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
+  
+  // 清空输入状态
   input.value = '';
+  pendingStickerData = null;
+  updatePendingStickerUI();
+  updateSendBtnState();
+  
   renderMessages();
   await touchChat(currentChatId);
 
-  // 觸發祂的回覆
-  await replyFromThem();
+  // 延迟一下让祂回复
+  setTimeout(replyFromThem, 600);
 }
 
 async function touchChat(id){
@@ -443,14 +645,19 @@ async function touchChat(id){
   await reqToPromise(tx('chats','readwrite').put(c));
 }
 
-/* ============ 祂的回覆 ============ */
+/* ============ 祂的回复逻辑 ============ */
 async function replyFromThem(){
+  if(!currentChatId) return;
+  
   const cards = await reqToPromise(tx('cards').getAll());
   if(!cards.length){
-    toast('驛囊中尚無字卡，請先新增字卡');
+    // 如果没字卡，提醒一下
+    toast('驛囊中尚無字卡，請先至「驛囊」新增字卡');
     return;
   }
-  const n = 3 + Math.floor(Math.random()*3); // 3~5
+  
+  // 抽 3~5 张字卡
+  const n = 3 + Math.floor(Math.random()*3); 
   const picked = [];
   const pool = [...cards];
   for(let i=0;i<n && pool.length;i++){
@@ -458,10 +665,10 @@ async function replyFromThem(){
     picked.push(pool.splice(idx,1)[0].text);
   }
 
-  // 隨機附加貼紙
+  // 随机决定是否附带贴纸（概率 40%）
   let stickerData = null;
   const stickers = await reqToPromise(tx('stickers').getAll());
-  if(stickers.length && Math.random() < 0.35){
+  if(stickers.length && Math.random() < 0.4){
     const s = stickers[Math.floor(Math.random()*stickers.length)];
     stickerData = s.data;
   }
@@ -473,16 +680,17 @@ async function replyFromThem(){
     type: 'cards',
     text: '',
     cards: picked,
-    stickerData,
+    stickerData: stickerData,
     time: Date.now()
   };
+  
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
   renderMessages();
   await touchChat(currentChatId);
 }
 
-/* ============ 事件綁定 ============ */
+/* ============ 事件绑定 ============ */
 function bindEvents(){
   $('#backBtn').onclick = ()=>{
     $('#pageChat').classList.remove('show');
@@ -491,34 +699,65 @@ function bindEvents(){
   };
 
   $('#sendBtn').onclick = sendMyMessage;
+  $('#msgInput').addEventListener('input', updateSendBtnState);
   $('#msgInput').addEventListener('keydown', e=>{
     if(e.key === 'Enter' && !e.isComposing) sendMyMessage();
   });
 
   $('#newChatBtn').onclick = createChat;
 
-  // 菜單
+  // 菜单
   const mask = $('#menuMask');
-  const panel = $('#menuPanel');
-  function openMenu(){
-    mask.classList.add('show');
-  }
-  function closeMenu(){
-    mask.classList.remove('show');
-  }
+  function openMenu(){ mask.classList.add('show'); }
+  function closeMenu(){ mask.classList.remove('show'); }
   $('#menuBtnList').onclick = openMenu;
   $('#menuBtnChat').onclick = openMenu;
   mask.onclick = e=>{ if(e.target === mask) closeMenu(); };
-  panel.onclick = e=>{
+  $('#menuPanel').onclick = e=>{
     const act = e.target.dataset.act;
     if(!act) return;
     closeMenu();
     handleMenu(act);
   };
+
+  // 取消待发送贴纸
+  $('#cancelStickerBtn').onclick = ()=>{
+    pendingStickerData = null;
+    updatePendingStickerUI();
+    updateSendBtnState();
+  };
+
+  // 打开贴纸选择器
+  $('#stickerBtn').onclick = async ()=>{
+    const stickers = await reqToPromise(tx('stickers').getAll());
+    const list = $('#stickerList');
+    if(!stickers.length) {
+      toast('驛囊中尚無貼紙，請先至「驛囊」新增');
+      return;
+    }
+    list.innerHTML = '';
+    stickers.forEach(s => {
+      const img = document.createElement('img');
+      img.src = s.data;
+      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;';
+      img.onclick = () => {
+        pendingStickerData = s.data;
+        updatePendingStickerUI();
+        updateSendBtnState();
+        $('#stickerDialogMask').classList.remove('show');
+      };
+      list.appendChild(img);
+    });
+    $('#stickerDialogMask').classList.add('show');
+  };
+  
+  $('#closeStickerDialog').onclick = ()=> $('#stickerDialogMask').classList.remove('show');
+  $('#closeThemeDialog').onclick = ()=> $('#themeDialogMask').classList.remove('show');
 }
 
 function handleMenu(act){
   if(act === 'pouch') toast('驛囊：字卡與貼紙管理（待實作）');
+  else if(act === 'theme') $('#themeDialogMask').classList.add('show');
   else if(act === 'export') toast('存檔：匯出備份（待實作）');
   else if(act === 'clear') toast('焚稿：清空記錄（待實作）');
   else if(act === 'about') toast('南洲誌：關於本網站（待實作）');
@@ -526,7 +765,7 @@ function handleMenu(act){
 
 /* ============ 新建聊天室 ============ */
 async function createChat(){
-  const name = prompt('聊天室名稱：');
+  const name = prompt('請輸入聊天室名稱：');
   if(!name || !name.trim()) return;
   const c = {
     id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
@@ -540,10 +779,10 @@ async function createChat(){
   toast('已建立聊天室');
 }
 
-/* ============ 啟動 ============ */
+/* ============ 启动 ============ */
 init().catch(err=>{
   console.error(err);
-  toast('資料庫初始化失敗');
+  toast('資料庫初始化失敗，請重新整理');
 });
 </script>
 </body>

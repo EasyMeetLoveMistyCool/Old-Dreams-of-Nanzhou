@@ -10,7 +10,6 @@
   html, body { height:100%; overflow:hidden; }
   body { font-family: -apple-system, "HarmonyOS Sans", "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg-color); color: var(--text-color); transition: background .3s, color .3s; }
   
-  /* 基础变量 (日常模式) */
   :root {
     --bg-color:#f0f2f5; --topbar-border:#e4e6eb; --bubble-me:#d6ecff; --bubble-them:rgba(255,255,255,.85);
     --bubble-action-me:rgba(255,230,235,.9); --bubble-action-them:rgba(255,235,240,.85);
@@ -19,7 +18,6 @@
     --pinned-bg:rgba(255,245,246,.9);
   }
   
-  /* 主题色 */
   body.theme-sky { --bg-color:#e6ebee; --bubble-me:#d6ecff; }
   body.theme-forest { --bg-color:#e8efe9; --bubble-me:#d4ebd9; --primary:#4caf50; }
   body.theme-sunset { --bg-color:#fdf5eb; --bubble-me:#ffe0b2; --primary:#ff9800; }
@@ -33,7 +31,6 @@
   body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --bubble-me:rgba(68,34,102,.85); --bubble-them:rgba(43,29,54,.85); --bubble-action-me:rgba(80,40,60,.85); --bubble-action-them:rgba(60,25,45,.85); --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
   body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --bubble-me:rgba(51,51,51,.85); --bubble-them:rgba(17,17,17,.85); --bubble-action-me:rgba(60,40,40,.85); --bubble-action-them:rgba(40,25,25,.85); --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
 
-  /* 撩撥模式专属变量 (覆盖) */
   body.is-night-mode {
     --bg-color: #1a1216 !important; 
     --topbar-border: #3a252b !important; 
@@ -55,15 +52,12 @@
   .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-snap { z-index:4; transform:translateX(100%); }
   .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-snap.show { transform:translateX(0); }
 
-  /* ========== 顶栏 ========== */
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
   
-  /* 顶栏头像区 (包含双人重叠) */
   .header-avatar-wrap { width:36px; height:36px; flex:0 0 36px; margin-right:10px; position:relative; display:flex; align-items:center; justify-content:center; }
   .avatar-sm { width:100%; height:100%; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden; }
   
-  /* 顶栏双人头像 (动态) */
   .header-dual-avatar { position:relative; width:36px; height:36px; }
   .header-dual-avatar .du-av { position:absolute; width:24px; height:24px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:#fff; top:6px; animation: nightDualBreath 3s ease-in-out infinite alternate, nightDualClose 3.5s ease-in-out infinite alternate; }
   .header-dual-avatar .du-av.me { left:0; z-index:1; }
@@ -75,7 +69,6 @@
   .header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-  /* ========== 列表页 ========== */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); }
   .chat-row.pinned { background:var(--pinned-bg); }
@@ -89,7 +82,6 @@
   .chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
   .fab { position:absolute; right:18px; bottom:22px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; font-size:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.2); z-index:5; border:none; }
 
-  /* ========== 聊天页 ========== */
   .page-chat { background-size:cover; background-position:center; }
   .chat-bg-mask { position:absolute; inset:0; pointer-events:none; z-index:1; transition: background .3s; }
   .page-chat .topbar { background:transparent !important; border-bottom:none; }
@@ -101,16 +93,12 @@
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
-  /* 日常头像 */
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
   
-  /* 消息流双人头像 (静态重叠) */
   .msg-dual-avatar { position:relative; width:36px; height:36px; margin-bottom:8px; }
   .msg-dual-avatar .du-av { position:absolute; width:24px; height:24px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.6); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:#fff; top:6px; }
-  /* 祂发的消息：祂在右(前) */
   .msg-group.them .msg-dual-avatar .du-av.them { right:0; z-index:2; }
   .msg-group.them .msg-dual-avatar .du-av.me { left:0; z-index:1; }
-  /* 我发的消息：我在右(前) */
   .msg-group.me .msg-dual-avatar .du-av.me { right:0; z-index:2; }
   .msg-group.me .msg-dual-avatar .du-av.them { left:0; z-index:1; }
 
@@ -126,7 +114,6 @@
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
   .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:right; width:100%; }
 
-  /* 输入区 */
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
   .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
   body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
@@ -139,7 +126,6 @@
   .pending-sticker-preview.show { display:block; }
   .pending-sticker-preview img { height:50px; border-radius:6px; border:2px solid var(--primary); }
 
-  /* ========== 邮电所与表单 ========== */
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); font-weight:500; }
@@ -176,7 +162,6 @@
   .music-title { font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .music-artist { font-size:13px; color:var(--text-secondary); margin-top:4px; }
 
-  /* ========== 菜单、弹窗与面板 ========== */
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
   .menu { position:absolute; top:56px; right:10px; background:var(--bg-color); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.18); min-width:150px; overflow:hidden; border:1px solid var(--topbar-border); }
@@ -223,7 +208,6 @@
 
   .theme-card.active { border-color:var(--text-color); box-shadow:0 0 0 3px rgba(128,128,128,.3); transform:scale(1.02); }
   
-  /* 音乐播放 */
   .music-player-float { position:fixed; bottom:100px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--input-bg); box-shadow:0 4px 15px rgba(0,0,0,.3); z-index:500; display:none; touch-action:none; }
   .music-player-float.show { display:block; }
   .music-disc { width:100%; height:100%; border-radius:50%; background-size:cover; background-position:center; border:2px solid rgba(255,255,255,.2); animation:spin 4s linear infinite; animation-play-state:paused; }
@@ -246,7 +230,6 @@
   .music-btn.play-btn svg { width:36px; height:36px; fill:var(--primary); }
   .mode-icon { width:20px; height:20px; fill:var(--text-secondary); }
 
-  /* 通话 */
   .call-panel { position:fixed; left:50%; top:50%; width:60vw; height:60vh; background:var(--bg-color); border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.4); z-index:600; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:clamp(16px,3.5vh,28px) clamp(12px,3vw,22px); transition:transform .3s cubic-bezier(.175,.885,.32,1.275),opacity .3s; transform:translate(-50%,-50%) scale(.85); opacity:0; pointer-events:none; background-size:cover; background-position:center; }
   .call-panel.show { transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto; }
   .call-panel.dragging { transition:none; }
@@ -275,7 +258,6 @@
   .call-float .breath-ring { border-color:rgba(76,175,80,.6); animation:breath-float 2.4s infinite ease-out; }
   @keyframes breath-float { 0%{width:56px;height:56px;opacity:.8} 100%{width:88px;height:88px;opacity:0} }
 
-  /* 相伴 */
   .accompany-panel { position:fixed; left:50%; top:50%; width:60vw; height:60vh; background:var(--bg-color); color:var(--text-color); border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.4); z-index:610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:clamp(16px,3.5vh,28px) clamp(12px,3vw,22px); transition:transform .3s cubic-bezier(.175,.885,.32,1.275),opacity .3s; transform:translate(-50%,-50%) scale(.85); opacity:0; pointer-events:none; background-size:cover; background-position:center; }
   .accompany-panel.show { transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto; }
   .accompany-panel.dragging { transition:none; }
@@ -312,7 +294,6 @@
   .accompany-float-av.me { left:6px; top:13px; }
   .accompany-float-av.them { right:6px; top:13px; z-index:3; }
 
-  /* 相伴选择窗口 */
   .accompany-select-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:300; display:none; align-items:center; justify-content:center; padding:16px; }
   .accompany-select-mask.show { display:flex; }
   .accompany-select { background:var(--bg-color); color:var(--text-color); width:100%; max-width:360px; max-height:86vh; border-radius:14px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.35); border:1px solid var(--topbar-border); }
@@ -341,7 +322,6 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:9000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問 */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:var(--bg-color); border:1px solid var(--border-light); color:var(--text-color); display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; }
   body.is-night-mode .ask-card { background: #2a1d24 !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   .ask-card-tag { font-size:12px; color:var(--primary); font-weight:600; }
@@ -393,7 +373,6 @@
   .ask-modal-footer { padding:12px 16px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; }
   .ask-send-btn { background:var(--primary); color:#fff; border:none; border-radius:8px; padding:10px 22px; font-size:15px; font-weight:600; }
 
-  /* 留影 */
   .snap-list { flex:1; overflow-y:auto; padding:10px 14px 20px; }
   .snap-date-header { font-size:12px; color:var(--text-secondary); margin:14px 0 8px; padding-left:2px; }
   .snap-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
@@ -403,7 +382,6 @@
   .snap-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
   .snap-toolbar { display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:10px 14px; border-radius:8px; margin-bottom:10px; }
   
-  /* 预览大图 (100%实心背景，无黑底) */
   .snap-preview-mask { position:fixed; inset:0; z-index:700; display:none; flex-direction:column; background-size:cover; background-position:center; }
   .snap-preview-mask.show { display:flex; }
   .snap-preview-bg-mask { position:absolute; inset:0; z-index:1; transition: background .3s; }
@@ -414,7 +392,6 @@
   .snap-save-btn { background:var(--primary); color:#fff; }
   .snap-del-btn { background:#e53935; color:#fff; }
   
-  /* 留影多选 */
   .snap-check-wrap { position:absolute; left:8px; top:8px; z-index:5; display:none; }
   .msg-group.snap-mode .snap-check-wrap { display:block; }
   .snap-check-wrap input { width:20px; height:20px; accent-color:var(--primary); }
@@ -691,7 +668,20 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
- const $ = s => document.querySelector(s);
+ // 拦截 null 报错，防止页面因为找不到按钮而卡死
+const originalQuerySelector = document.querySelector.bind(document);
+document.querySelector = function(selector) {
+  const el = originalQuerySelector(selector);
+  if (!el) {
+    return {
+      onclick: null, addEventListener: () => {}, classList: { add: ()=>{}, remove: ()=>{}, toggle: ()=>{}, contains: ()=>false },
+      style: {}, value: '', textContent: '', innerHTML: '', appendChild: ()=>{}, setAttribute: ()=>{}, getAttribute: ()=>'', closest: ()=>null, querySelectorAll: ()=>[], querySelector: ()=>null
+    };
+  }
+  return el;
+};
+
+const $ = s => document.querySelector(s);
 const toastEl = $('#toast');
 let toastTimer = null;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
@@ -730,8 +720,8 @@ function setTheme(themeName){
 
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
-const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 13;
+const DB_NAME = 'nanzhou_new_db';
+const DB_VER = 1;
 let db = null;
 
 function openDB(){
@@ -893,7 +883,7 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;',
 function fmtTime(ts){ const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 function fmtDate(ts){ const d = new Date(ts), now = new Date(); if(d.toDateString() === now.toDateString()) return '今天'; return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`; }
 
-function getMessages(chatId, mode){
+function getMessages(chatId){
   return new Promise((res, rej) => {
     const idx = tx('messages').index('chatId');
     const req = idx.getAll(chatId);
@@ -938,7 +928,7 @@ async function openChat(id){
   updateChatTopbarUI(c);
   updateChatBgUI();
   
-  currentMessages = await getMessages(id, c.isNightMode);
+  currentMessages = await getMessages(id);
   snapMode = false; snapSelectedIds.clear();
   renderMessages(true);
   $('#msgInput').value = ''; $('#msgInput').style.height = '44px';
@@ -956,7 +946,6 @@ function updateChatTopbarUI(c) {
     $('#chatSub').textContent = '帳暖香濃，此間只餘你我。';
     $('#msgInput').placeholder = '寫下此刻的私語…';
     
-    // 双人头像 (顶栏)
     const wrap = $('#headerAvatarWrap');
     wrap.innerHTML = `<div class="header-dual-avatar">
       <div class="du-av me" style="background-image:url('${c.myAvatar || ''}'); ${!c.myAvatar ? 'background: linear-gradient(135deg,#b99a6b,#d8c39a);' : ''}">${!c.myAvatar ? getMyDisplayChar(c) : ''}</div>
@@ -968,7 +957,6 @@ function updateChatTopbarUI(c) {
     $('#chatSub').textContent = c.theirSign || '最近曾上線';
     $('#msgInput').placeholder = '輸入訊息…';
     
-    // 单人头像 (顶栏)
     const wrap = $('#headerAvatarWrap');
     const avHtml = c.theirAvatar ? `<img src="${c.theirAvatar}" style="width:100%;height:100%;object-fit:cover;">` : getTheirDisplayChar(c);
     wrap.innerHTML = `<div class="avatar-sm">${avHtml}</div>`;
@@ -1271,7 +1259,6 @@ function showCustomDialog(title, text, showInput, okText, onOk){
   nok.onclick = () => { $('#dialogMask').classList.remove('show'); if(onOk) onOk($('#dialogInput').value); };
 }
 
-// ====== 邮电所管理 ======
 async function loadAndRenderCards(){
   const all = await reqToPromise(tx('cards').getAll());
   let f = all.filter(c => (c.category || 'normal') === currentSubTab);
@@ -1379,7 +1366,6 @@ async function loadAndRenderMusic(){
 window.toggleSelectMusic = id => { if(selectedMusicIds.has(id)) selectedMusicIds.delete(id); else selectedMusicIds.add(id); loadAndRenderMusic(); };
 window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷毀這首留聲嗎？',false,'作廢', async () => { await reqToPromise(tx('music','readwrite').delete(id)); toast('已作廢'); loadAndRenderMusic(); }); };
 
-// ====== 拖拽与音乐 ======
 function initPlayerDrag(){
   const float = $('#musicPlayerFloat');
   let dragging = false, sx, sy, il, it;
@@ -1456,7 +1442,6 @@ function updateModeIcon(showToast = true){
   if(showToast) toast(`當前模式：${name}`);
 }
 
-// ====== 通话与相伴系统 ======
 function applyCallBgMask(c){
   const mask = $('#callBgMask');
   const mv = c && c.chatBgMask !== undefined ? c.chatBgMask : 60;
@@ -1548,7 +1533,7 @@ function setupIncomingCallTimer(){
     if(!isGlobalCallActive && currentChatId && $('#pageChat').classList.contains('show')){
       if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
       const c = chats.find(x => x.id === currentChatId);
-      if(c && c.isNightMode) return; // 撩撥模式不随机来电，只在日常模式触发
+      if(c && c.isNightMode) return; 
       
       if(Math.random() < 0.05){
         openCallUI(true);
@@ -1682,7 +1667,6 @@ function startAccompanyInteraction(){
   loop();
 }
 
-// ====== 投問 ======
 function openAskModal(){
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
   askMode = 'wen'; askAttachData = null; askImgList = []; askSingleChecked = true; askMultiChecked = false;
@@ -1735,7 +1719,6 @@ async function sendAsk(){
   startAskThinking(msg.id, 8000 + Math.random()*7000);
 }
 
-// ====== 留影 ======
 function openSnapPage(){
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
   snapBatchMode = false; snapBatchSelected.clear();
@@ -1745,12 +1728,19 @@ function openSnapPage(){
   const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack');
   
   const maskColor = isDark ? `rgba(0,0,0,${maskVal/100})` : `rgba(255,255,255,${maskVal/100})`;
-  const page = $('#pageSnap');
-  if(bgImg) page.style.background = `linear-gradient(${maskColor},${maskColor}),url(${bgImg}) center/cover no-repeat`;
-  else { page.style.background = 'var(--bg-color)'; page.style.backgroundImage = 'none'; }
+  const page = document.getElementById('pageSnap');
+  if(page) {
+    if(bgImg) {
+      page.style.background = `linear-gradient(${maskColor},${maskColor}),url(${bgImg}) center/cover no-repeat`;
+      page.style.backgroundColor = 'transparent';
+    } else { 
+      page.style.background = 'var(--bg-color)'; 
+      page.style.backgroundImage = 'none'; 
+    }
+  }
   
   renderSnapList();
-  $('#pageSnap').classList.add('show');
+  document.getElementById('pageSnap').classList.add('show');
 }
 async function getSnaps(chatId){
   return new Promise((res, rej) => {
@@ -2196,7 +2186,7 @@ function bindEvents(){
     $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
     $('#pageCreate').classList.add('show');
   };
-  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id, activeChatForMenu.isNightMode); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }); };
+  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }); };
   $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }); };
 
   const msgMask = $('#msgActionMask');

@@ -94,13 +94,17 @@
   
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
   
-  /* 消息流双人头像 (重叠错开 5px) */
+  /* 消息流双人头像 (错开更大，不糊成一团，左右各露大脸) */
   .msg-dual-avatar { position:relative; width:36px; height:36px; margin-bottom:8px; }
-  .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.6); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
+  .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
+  
+  /* 他发的消息：他在右，我在左，错开露出两张脸 */
   .msg-group.them .msg-dual-avatar .du-av.them { right:0; z-index:2; }
-  .msg-group.them .msg-dual-avatar .du-av.me { left:-5px; z-index:1; }
+  .msg-group.them .msg-dual-avatar .du-av.me { left:-12px; z-index:1; }
+  
+  /* 我发的消息：我在右，他在左 */
   .msg-group.me .msg-dual-avatar .du-av.me { right:0; z-index:2; }
-  .msg-group.me .msg-dual-avatar .du-av.them { left:-5px; z-index:1; }
+  .msg-group.me .msg-dual-avatar .du-av.them { left:-12px; z-index:1; }
 
   .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.6; word-break:break-word; text-align:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; }
   .msg-group.them .bubble { background:var(--bubble-them); border:1px solid rgba(128,128,128,.1); }
@@ -172,16 +176,24 @@
   .action-sheet { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); }
   .action-item.danger { color:#e53935; }
+  
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
+  .dialog.danger-dialog { background: #ffebee; border-color: #ffcdd2; color: #b71c1c; }
+  body.is-night-mode .dialog.danger-dialog { background: #3e1a1a; border-color: #5a2020; color: #ffcdd2; }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
-  .dialog-content { padding:20px; font-size:15px; text-align:center; line-height: 1.6; }
+  .dialog.danger-dialog .dialog-title { border-bottom-color: #ffcdd2; color: #b71c1c; }
+  .dialog-content { padding:20px; font-size:15px; text-align:center; line-height:1.6; }
+  .dialog.danger-dialog .dialog-content { color: #d32f2f; }
   .dialog-input { width:100%; height:40px; border-radius:6px; border:1px solid var(--topbar-border); padding:0 10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); margin-bottom:10px; }
   .dialog-footer { display:flex; border-top:1px solid var(--border-light); }
-  .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; border:none; background:transparent; color:var(--primary); }
+  .dialog.danger-dialog .dialog-footer { border-top-color: #ffcdd2; }
+  .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; border:none; background:transparent; color:var(--primary); font-weight: 500; }
   .dialog-btn.cancel { color:var(--text-secondary); border-right:1px solid var(--border-light); }
-  .dialog-btn.danger { color:#e53935; }
+  .dialog.danger-dialog .dialog-btn.cancel { border-right-color: #ffcdd2; color: #b71c1c; }
+  .dialog-btn.danger { color:#e53935; font-weight: 600; }
+  
   .progress-dialog { padding:30px 20px; text-align:center; }
   .progress-text { font-size:15px; font-weight:500; margin-bottom:15px; }
   .progress-bar-bg { width:100%; height:6px; background:var(--input-bg); border-radius:3px; overflow:hidden; }
@@ -410,7 +422,8 @@
   .snap-preview-mask.show { display:flex; }
   .snap-preview-bg-mask { position:absolute; inset:0; z-index:1; transition: background .3s; }
   
-  .snap-preview-body { flex:1; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; padding:16px; position:relative; z-index:2; -webkit-overflow-scrolling: touch; }
+  /* 顺滑滚动 */
+  .snap-preview-body { flex:1; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; padding:16px; position:relative; z-index:2; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   .snap-preview-body img { max-width:100%; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,.1); }
 
   .snap-preview-actions { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 0 calc(20px + env(safe-area-inset-bottom)); position:relative; z-index:2; }
@@ -804,7 +817,6 @@ const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','�
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
-// 微調參數
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
 const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
@@ -932,7 +944,6 @@ async function init(){
     setupIncomingCallTimer();
     window.addEventListener('resize', handleResizeReposition);
     
-    // 初始化微調面板
     $('#adjReplyMin').value = config.replyMin; $('#adjReplyMax').value = config.replyMax;
     $('#adjCallMin').value = config.callMin; $('#adjCallMax').value = config.callMax;
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
@@ -1416,12 +1427,15 @@ async function replyFromThem(){
   if(!msg) toast('郵電所中尚無字卡，請先新增');
 }
 
-function showCustomDialog(title, text, showInput, okText, onOk){
+function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false){
   $('#dialogTitle').textContent = title; $('#dialogText').textContent = text;
   $('#dialogInput').style.display = showInput ? 'block' : 'none';
   if(showInput) $('#dialogInput').value = '';
   
-  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">${okText}</button>`;
+  const dlg = document.querySelector('#dialogMask .dialog');
+  if (isDanger) dlg.classList.add('danger-dialog'); else dlg.classList.remove('danger-dialog');
+
+  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn ${isDanger ? 'danger' : ''}" id="dialogOkBtn" style="color:${isDanger?'#e53935':'var(--primary)'};">${okText}</button>`;
   $('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
   $('#dialogOkBtn').onclick = () => { 
     $('#dialogMask').classList.remove('show'); 
@@ -1501,7 +1515,7 @@ async function loadAndRenderStamps(){
     div.innerHTML = `${ch}<img src="${s.data}" alt="印花">`;
     if(!isStampBatchMode){
       let pt;
-      div.addEventListener('touchstart', () => { pt = setTimeout(() => { showCustomDialog('作廢印花','確定要銷毀這張印花嗎？',false,'確定銷毀', async () => { await reqToPromise(tx('stickers','readwrite').delete(s.id)); toast('印花已銷毀'); loadAndRenderStamps(); }); }, 600); }, { passive:true });
+      div.addEventListener('touchstart', () => { pt = setTimeout(() => { showCustomDialog('作廢印花','確定要銷毀這張印花嗎？',false,'確定銷毀', async () => { await reqToPromise(tx('stickers','readwrite').delete(s.id)); toast('印花已銷毀'); loadAndRenderStamps(); }, true); }, 600); }, { passive:true });
       div.addEventListener('touchend', () => clearTimeout(pt));
       div.addEventListener('touchmove', () => clearTimeout(pt));
     } else div.onclick = () => toggleSelectStamp(s.id);
@@ -2308,7 +2322,7 @@ async function generateSnapImage(messages, chat, onProgress){
         }
       }
       const picked = askData.askDone ? (askData.askAnswer || []) : [];
-      const gold = isDark ? '#d47a8a' : '#3390ec';
+      const gold = isDark ? '#d47a8a' : '#c9a227';
       
       if(askData.askMode === 'tu'){
         const cols = 3, gap = 6, cellW = (bubbleW - 32 - gap*(cols-1))/cols;
@@ -2332,7 +2346,7 @@ async function generateSnapImage(messages, chat, onProgress){
       } else {
         (askData.askOptions||[]).forEach((opt, idx) => {
           const rowH = 30;
-          ctx.fillStyle = picked.includes(idx) ? (isDark ? 'rgba(212,122,138,.25)' : 'rgba(51,144,236,.15)') : (isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.04)');
+          ctx.fillStyle = picked.includes(idx) ? (isDark ? 'rgba(212,122,138,.25)' : 'rgba(201,162,39,.15)') : (isDark ? 'rgba(255,255,255,.05)' : 'rgba(214,178,80,.12)');
           roundedRect(ctx, bubbleX + 16, ay, bubbleW - 32, rowH, 8); ctx.fill();
           if(picked.includes(idx)){ ctx.strokeStyle = gold; ctx.lineWidth = 1.5; roundedRect(ctx, bubbleX + 16, ay, bubbleW - 32, rowH, 8); ctx.stroke(); }
           ctx.fillStyle = gold;
@@ -2342,7 +2356,7 @@ async function generateSnapImage(messages, chat, onProgress){
             ctx.fillText('✓', bubbleX + 16 + 15, ay + rowH/2);
             ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
           }
-          ctx.fillStyle = isDark ? '#f5e6e8' : '#1a1a1a'; ctx.font = bodyFont;
+          ctx.fillStyle = isDark ? '#f5e6e8' : '#4a3a12'; ctx.font = bodyFont;
           ctx.fillText(opt, bubbleX + 16 + 30, ay + rowH/2 + 5);
           ay += rowH + 6;
         });
@@ -2405,7 +2419,6 @@ function renderMessagesUI(forceBottom) {
 }
 
 function bindEvents(){
-  // 存檔與讀檔
   function exportData() {
     const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
     let result = {};
@@ -2458,7 +2471,7 @@ function bindEvents(){
               setTimeout(() => location.reload(), 1000);
             }, 1000);
           }, 500);
-        });
+        }, true);
       } catch(err) { toast('讀檔失敗：文件格式錯誤'); }
     };
     reader.readAsText(file);
@@ -2501,8 +2514,8 @@ function bindEvents(){
     $('#pageCreate').classList.add('show');
   };
   
-  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }); };
-  $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }); };
+  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }, true); };
+  $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }, true); };
 
   const msgMask = $('#msgActionMask');
   const closeMsgMask = () => msgMask.classList.remove('show');
@@ -2519,7 +2532,7 @@ function bindEvents(){
       if(el) el.remove();
       await touchChat(currentChatId);
       toast('已焚毀');
-    });
+    }, true);
     pendingBurnMsg = null;
   };
 
@@ -2553,9 +2566,9 @@ function bindEvents(){
   $('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
   $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
   $('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
-  $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }); };
+  $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }, true); };
   $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
-  $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }); };
+  $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }, true); };
   
   $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
   
@@ -2565,10 +2578,10 @@ function bindEvents(){
   if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { const store = tx('stickers','readwrite'); for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { store.add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() }); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
   $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
   $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
-  $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }); };
+  $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };
   $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
   $('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
-  $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }); };
+  $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
 
   $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
@@ -2576,9 +2589,9 @@ function bindEvents(){
   $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
   $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
   $('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
-  $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }); };
+  $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }, true); };
   $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
-  $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }); };
+  $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
   $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
   $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
 
@@ -2587,9 +2600,9 @@ function bindEvents(){
   $('#btnAddMusic').onclick = async () => { const title = $('#newMusicTitle').value.trim(), artist = $('#newMusicArtist').value.trim(); if(!title || !artist || !tempMusicFileData){ toast('請填寫歌名、歌手並上傳音檔'); return; } await reqToPromise(tx('music','readwrite').add({ id:'m_'+Date.now(), title, artist, data:tempMusicFileData, createdAt:Date.now() })); $('#newMusicTitle').value=''; $('#newMusicArtist').value=''; $('#musicFileName').textContent='點擊上傳音檔'; tempMusicFileData=null; toast('已留聲'); loadAndRenderMusic(); };
   $('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
   $('#btnMusicSelectAll').onclick = () => { const cbs = document.querySelectorAll('#musicListContainer input[type="checkbox"]'); if(selectedMusicIds.size === cbs.length && cbs.length > 0) selectedMusicIds.clear(); else cbs.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderMusic(); };
-  $('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }); };
+  $('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }, true); };
   $('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
-  $('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }); };
+  $('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }, true); };
 
   $('#stickerBtn').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent'); if(!stickers.length){ toast('尚無印花'); return; } content.innerHTML=''; content.style.display='grid'; $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none'; $('#stickerPanelHeader').innerHTML='選擇印花'; stickers.forEach(s => { const img = document.createElement('img'); img.src = s.data; img.onclick = () => { pendingStickerData = s.data; $('#pendingStickerImg').src = s.data; $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show'); updateSendBtnState(); }; content.appendChild(img); }); $('#stickerPanelMask').classList.add('show'); };
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
@@ -2632,7 +2645,7 @@ function bindEvents(){
   $('#snapGenerateBtn').onclick = () => { $('#pageSnap').classList.remove('show'); toggleSnapMode(); };
   $('#snapPreviewClose').onclick = () => { $('#snapPreviewMask').classList.remove('show'); };
   $('#snapPreviewSave').onclick = () => { if(!snapPreviewCurrent) return; const a = document.createElement('a'); a.href = snapPreviewCurrent.image; a.download = '留影_' + Date.now() + '.png'; a.click(); toast('已保存'); };
-  $('#snapPreviewDel').onclick = () => { if(!snapPreviewCurrent) return; const id = snapPreviewCurrent.id; showCustomDialog('焚毀','確定要焚毀這張留影嗎？',false,'焚毀', async () => { if(id !== 'preview') await reqToPromise(tx('snapshots','readwrite').delete(id)); $('#snapPreviewMask').classList.remove('show'); renderSnapList(); toast('已焚毀'); }); };
+  $('#snapPreviewDel').onclick = () => { if(!snapPreviewCurrent) return; const id = snapPreviewCurrent.id; showCustomDialog('焚毀','確定要焚毀這張留影嗎？',false,'焚毀', async () => { if(id !== 'preview') await reqToPromise(tx('snapshots','readwrite').delete(id)); $('#snapPreviewMask').classList.remove('show'); renderSnapList(); toast('已焚毀'); }, true); };
 
   $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
 
@@ -2705,13 +2718,24 @@ function bindEvents(){
     if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
     else if(act === 'settings') $('#pageSettings').classList.add('show');
     else if(act === 'adjust') $('#pageAdjust').classList.add('show');
-    else if(act === 'export') { exportData(); }
+    else if(act === 'export') { 
+      showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
+      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary); border-right:1px solid var(--border-light);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
+      $('#btnCancelArchive').onclick = () => $('#dialogMask').classList.remove('show');
+      $('#btnExportData').onclick = () => { $('#dialogMask').classList.remove('show'); exportData(); };
+      $('#btnImportData').onclick = () => { 
+        $('#dialogMask').classList.remove('show');
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; 
+        inp.onchange = ev => { const file = ev.target.files[0]; if(file) importData(file); };
+        inp.click();
+      };
+    }
     else if(act === 'clear') { 
       showCustomDialog('焚稿', '警告：這將徹底焚毀所有數據，且無法恢復。是否繼續？', false, '確認焚毀', async () => {
         const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
         for(let s of stores) { tx(s, 'readwrite').clear(); }
         setTimeout(() => location.reload(), 500);
-      });
+      }, true);
     }
     else if(act === 'about'){ const body = $('#aboutBody'); body.innerHTML = ABOUT_PARAGRAPHS.map(p => `<p>${escapeHtml(p)}</p>`).join(''); $('#aboutModalMask').classList.add('show'); }
     else if(act === 'letters') toast('郵局：功能籌備中...');

@@ -28,6 +28,7 @@
   body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --bubble-me:rgba(30,58,95,.85); --bubble-them:rgba(26,38,57,.85); --bubble-action-me:rgba(70,30,45,.85); --bubble-action-them:rgba(50,20,35,.85); --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
   body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --bubble-me:rgba(68,34,102,.85); --bubble-them:rgba(43,29,54,.85); --bubble-action-me:rgba(80,40,60,.85); --bubble-action-them:rgba(60,25,45,.85); --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
   body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --bubble-me:rgba(51,51,51,.85); --bubble-them:rgba(17,17,17,.85); --bubble-action-me:rgba(60,40,40,.85); --bubble-action-them:rgba(40,25,25,.85); --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
+
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
   .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-snap { z-index:4; transform:translateX(100%); }
@@ -35,6 +36,7 @@
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
   .avatar-sm { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 36px; margin-right:10px; overflow:hidden; position:relative; }
+  
   .header-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; padding:8px 0; }
   .header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; }
@@ -59,7 +61,6 @@
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; border:1px solid rgba(255,255,255,.5); position:relative; }
-  
   .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.6; word-break:break-word; text-align:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition:background .3s, border-color .3s, color .3s; }
   .msg-group.them .bubble { background:var(--bubble-them); border:1px solid rgba(128,128,128,.1); color:var(--text-color); }
   .msg-group.me .bubble { background:var(--bubble-me); border:1px solid rgba(128,128,128,.1); color:var(--text-color); }
@@ -347,7 +348,23 @@
   .snap-preview-actions button { border:none; border-radius:8px; padding:10px 20px; font-size:15px; font-weight:600; }
   .snap-save-btn { background:var(--primary); color:#fff; }
   .snap-del-btn { background:#e53935; color:#fff; }
-  .snap-preview-close { position:absolute; top:12px; right:14px; font-size:22px; color:#fff; background:rgba(0,0,0,.4); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:10; cursor:pointer; }
+  .snap-preview-close {
+    position: absolute;
+    top: 16px; 
+    right: 16px;
+    font-size: 18px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
   .snap-check-wrap { position:absolute; left:8px; top:8px; z-index:5; display:none; }
   .msg-group.snap-mode .snap-check-wrap { display:block; }
   .snap-check-wrap input { width:20px; height:20px; accent-color:var(--primary); }
@@ -361,7 +378,50 @@
   .about-body p { margin-bottom:12px; }
   .about-footer { padding:14px 20px calc(16px + env(safe-area-inset-bottom)); text-align:center; font-size:13px; color:var(--text-secondary); border-top:1px solid var(--border-light); }
   
-  /* 新增模式相关 (预留给 JS 加) */
+  /* 双人头像 (绝不加圈) */
+  .top-av-wrap { position:relative; width:44px; height:36px; margin-right:10px; display:none; align-items:center; justify-content:center; flex:0 0 44px; }
+  .top-av-wrap.show { display:flex; }
+  .top-av-item { position:absolute; width:26px; height:26px; border-radius:50%; background-size:cover; background-position:center; background-color:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; overflow:hidden; animation:topAvFloat 3s ease-in-out infinite, topAvFade 3s ease-in-out infinite; }
+  .top-av-item.me { left:0; top:8px; }
+  .top-av-item.them { right:0; top:2px; animation-delay:1.5s; }
+  @keyframes topAvFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+  @keyframes topAvFade { 0%,100%{opacity:1} 50%{opacity:.85} }
+
+  .msg-avatar-top.dual { background:transparent !important; border:none !important; box-shadow:none !important; overflow:visible !important; width:44px; }
+  .msg-av-inner { position:absolute; width:26px; height:26px; border-radius:50%; background-size:cover; background-position:center; background-color:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; overflow:hidden; top:5px; }
+  .msg-group.them .msg-av-inner.them { right:0; z-index:2; }
+  .msg-group.them .msg-av-inner.me { left:0; z-index:1; }
+  .msg-group.me .msg-av-inner.me { right:0; z-index:2; }
+  .msg-group.me .msg-av-inner.them { left:0; z-index:1; }
+
+  /* 🌑 撩拨模式专属 */
+  .chat-night-mode .chat-bg-mask { background-color: rgba(25, 10, 15, 0.7) !important; }
+  .chat-night-mode .msg-group.them .bubble { background:rgba(40, 35, 45, 0.85) !important; border-color:rgba(212, 122, 138, 0.2) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .msg-group.me .bubble { background:rgba(80, 30, 50, 0.85) !important; border-color:rgba(212, 122, 138, 0.3) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .msg-group.them .bubble.action-bubble { background:rgba(90, 40, 50, 0.8) !important; border-color:rgba(255, 150, 150, 0.2) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .msg-group.me .bubble.action-bubble { background:rgba(90, 40, 50, 0.8) !important; border-color:rgba(255, 150, 150, 0.2) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .msg-time-center { color:rgba(212, 122, 138, 0.6) !important; }
+  .chat-night-mode .date-divider { background:rgba(212, 122, 138, 0.2) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .composer textarea { background:rgba(0,0,0,0.3) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .composer textarea::placeholder { color:rgba(212, 122, 138, 0.6) !important; }
+  .chat-night-mode .send-btn { background:rgba(212, 122, 138, 0.2) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .send-btn:not(:disabled) { background:#d47a8a !important; color:#fff !important; }
+  .chat-night-mode .topbar .icon-btn { color:#f5e6e8 !important; }
+  .chat-night-mode .header-title { color:#f5e6e8 !important; }
+  .chat-night-mode .header-sub { color:rgba(212, 122, 138, 0.8) !important; }
+  .chat-night-mode .pending-sticker-preview img { border-color:#d47a8a !important; }
+  .chat-night-mode .ask-card { background:#2a1d24 !important; border-color:#5a3a42 !important; color:#f5e6e8 !important; }
+  .chat-night-mode .ask-card-tag { color:#d47a8a !important; }
+  .chat-night-mode .ask-option { background:rgba(212,122,138,0.1) !important; color:#f5e6e8 !important; }
+  .chat-night-mode .ask-option .ask-check { border-color:#d47a8a !important; }
+  .chat-night-mode .ask-option.picked { background:rgba(212,122,138,0.25) !important; border-color:#d47a8a !important; }
+  .chat-night-mode .ask-option.picked .ask-check { background:#d47a8a !important; color:#fff !important; border-color:#d47a8a !important; }
+  .chat-night-mode .ask-img-item.picked { border-color:#d47a8a !important; }
+  .chat-night-mode .ask-img-item.picked::after { background:#d47a8a !important; color:#fff !important; }
+  .chat-night-mode .ask-answer .ask-spinner { border-color:#5a3a42 !important; border-top-color:#d47a8a !important; }
+  .chat-night-mode .ask-answer .ask-thinking-text { color:#d47a8a !important; }
+  .chat-night-mode .ask-card-footer .ask-continue { color:#d47a8a !important; }
+  .chat-night-mode .ask-card-footer .ask-end { color:rgba(212, 122, 138, 0.6) !important; }
 </style>
 </head>
 <body class="theme-sky">
@@ -458,7 +518,7 @@
     <div class="topbar">
       <button class="icon-btn" id="backSnapBtn">←</button>
       <div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="snapTitle">留影</div>
-      <button class="icon-btn" id="snapGenerateBtn" style="color:var(--primary);font-size:20px;">＋</button>
+      <button class="icon-btn" id="snapGenerateBtn" style="color:var(--primary);font-size:15px;font-weight:600;width:auto;padding:0 12px;white-space:nowrap;">生成</button>
     </div>
     <div class="snap-list" id="snapList"></div>
   </div>
@@ -639,7 +699,7 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
-  const $ = s => document.querySelector(s);
+ const $ = s => document.querySelector(s);
 const toastEl = $('#toast');
 let toastTimer = null;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
@@ -659,7 +719,7 @@ function applyThemeAndBg(){
     const isDark = savedTheme.includes('cyber')||savedTheme.includes('space')||savedTheme.includes('purple')||savedTheme.includes('pureblack');
     const maskColor = isDark ? `rgba(0,0,0,${globalBgMask/100})` : `rgba(255,255,255,${globalBgMask/100})`;
     const bgStyle = `linear-gradient(${maskColor},${maskColor}),url(${globalBgImage}) center/cover no-repeat`;
-    bgPages.forEach(sel => { const el = document.querySelector(sel); if(el){ el.style.background = bgStyle; el.style.backgroundColor = 'transparent'; } });
+    bgPages.forEach(sel => { const el = document.querySelector(sel); if(el){ el.style.background = bgStyle; el.style.backgroundColor = 'transparent'; el.style.backgroundSize = 'cover'; } });
   } else {
     bgPages.forEach(sel => { const el = document.querySelector(sel); if(el) el.style.background = 'var(--bg-color)'; });
   }
@@ -683,7 +743,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 14;
+const DB_VER = 15;
 let db = null;
 
 function openDB(){
@@ -829,10 +889,11 @@ async function renderChatList(){
       else if(last.stickerData) preview = '[圖片]';
     }
     const avatarHtml = c.theirAvatar ? `<img src="${c.theirAvatar}" class="avatar-lg">` : `<div class="avatar-lg">${getTheirDisplayChar(c)}</div>`;
+    const modeIcon = c.mode === 'night' ? ' 🌑' : '';
     const row = document.createElement('div');
     row.className = 'chat-row' + (c.isPinned ? ' pinned' : '');
     row.dataset.id = c.id;
-    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-room-name">${escapeHtml(c.roomName || '未命名')}</span><span class="chat-their-name">${escapeHtml(c.theirName || '')}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
+    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-room-name">${escapeHtml(c.roomName || '未命名')}${modeIcon}</span><span class="chat-their-name">${escapeHtml(c.theirName || '')}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
     row.onclick = () => { if(!longPressTimer) openChat(c.id); };
     row.addEventListener('touchstart', () => {
       longPressTimer = setTimeout(() => {
@@ -874,9 +935,13 @@ function applyChatModeUI(mode, c){
     $('#chatSub').textContent = '褪去白日喧囂，此處只餘你我私語。';
     $('#chatAvatar').style.display = 'none';
     $('#chatDualAvatar').style.display = 'flex';
+    
     const meEl = $('#topAvMe'), themEl = $('#topAvThem');
-    if(c.myAvatar){ meEl.style.backgroundImage = `url(${c.myAvatar})`; meEl.textContent = ''; } else { meEl.style.backgroundImage = ''; meEl.textContent = getMyDisplayChar(c); }
-    if(c.theirAvatar){ themEl.style.backgroundImage = `url(${c.theirAvatar})`; themEl.textContent = ''; } else { themEl.style.backgroundImage = ''; themEl.textContent = getTheirDisplayChar(c); }
+    if(c.myAvatar){ meEl.style.backgroundImage = `url(${c.myAvatar})`; meEl.textContent = ''; } 
+    else { meEl.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; meEl.textContent = getMyDisplayChar(c); }
+    if(c.theirAvatar){ themEl.style.backgroundImage = `url(${c.theirAvatar})`; themEl.textContent = ''; } 
+    else { themEl.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; themEl.textContent = getTheirDisplayChar(c); }
+    
     $('#msgInput').placeholder = '寫下此刻的私語…';
     if(c.nightBgImage){ pChat.style.backgroundImage = `url(${c.nightBgImage})`; }
     else { pChat.style.backgroundImage = c.chatBgImage ? `url(${c.chatBgImage})` : 'none'; }
@@ -931,8 +996,8 @@ function renderMessages(forceBottom = false){
     g.dataset.msgId = m.id;
     
     if(currentMode === 'night'){
-      let meAv = c.myAvatar ? `<img src="${c.myAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : getMyDisplayChar(c);
-      let themAv = c.theirAvatar ? `<img src="${c.theirAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : getTheirDisplayChar(c);
+      let meAv = c.myAvatar ? `<img src="${c.myAvatar}" style="width:100%;height:100%;object-fit:cover;">` : getMyDisplayChar(c);
+      let themAv = c.theirAvatar ? `<img src="${c.theirAvatar}" style="width:100%;height:100%;object-fit:cover;">` : getTheirDisplayChar(c);
       g.innerHTML = `<div class="msg-avatar-top dual"><div class="msg-av-inner me">${meAv}</div><div class="msg-av-inner them">${themAv}</div></div>`;
     } else {
       let avHtml = '';
@@ -1124,7 +1189,7 @@ async function sendMyMessage(){
   await touchChat(currentChatId);
   setTimeout(replyFromThem, 8000 + Math.random() * 7000);
   
-  themHasRepliedSinceLastActive = false; // 你发了消息，重置祂的主动计时状态
+  themHasRepliedSinceLastActive = false; 
 }
 
 async function touchChat(id){
@@ -1143,13 +1208,10 @@ async function buildThemMessage(chatId, forceMode){
   const flirtCards = allCards.filter(c => c.category === 'flirt');
   
   if (forceMode === 'interact') {
-    // 通话/相伴 互动：常讯 85% / 撩拨 15%
     if (flirtCards.length && Math.random() < 0.15) pool = flirtCards;
   } else if (mode === 'night') {
-    // 撩拨模式日常聊天：常讯 80% / 撩拨 20%
     if (flirtCards.length && Math.random() < 0.20) pool = flirtCards;
   }
-  // 日常模式 (mode === 'day' 且非 interact) 只抽常讯，不做任何撩拨判断
 
   if(!pool.length) pool = allCards;
   if(!pool.length) return null;
@@ -1170,7 +1232,7 @@ async function buildThemMessage(chatId, forceMode){
   if(stickers.length && Math.random() < 0.1){ stickerData = stickers[Math.floor(Math.random()*stickers.length)].data; }
   const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'cards', text:'', cards:picked, stickerData, time:Date.now(), msgMode:currentMode };
   await reqToPromise(tx('messages','readwrite').add(msg));
-  if(currentChatId === chatId && currentMode === currentMode){ 
+  if(currentChatId === chatId){ 
     currentMessages.push(msg); 
     if($('#pageChat').classList.contains('show')) renderMessages(false); 
   }
@@ -1208,6 +1270,8 @@ function showCustomDialog(title, text, showInput, okText, onOk){
   const nok = ok.cloneNode(true); ok.parentNode.replaceChild(nok, ok);
   nok.onclick = () => { $('#dialogMask').classList.remove('show'); if(onOk) onOk($('#dialogInput').value); };
 }
+
+$('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
 
 async function loadAndRenderCards(){
   const all = await reqToPromise(tx('cards').getAll());
@@ -1464,15 +1528,15 @@ function startCallInteraction(){
   clearTimeout(callInteractTimer);
   const loop = () => {
     if(!isGlobalCallActive) return;
-    if(themHasRepliedSinceLastActive) return; // 防刷屏：如果没回复就不发了
+    if(themHasRepliedSinceLastActive) return; 
     
     const delay = 30000 + Math.random()*60000;
     callInteractTimer = setTimeout(async () => {
       if(!isGlobalCallActive || themHasRepliedSinceLastActive) return;
       const cid = currentChatId || (chats[0] && chats[0].id);
       if(cid) {
-        await buildThemMessage(cid, 'interact'); // 通话互动可能抽撩拨
-        themHasRepliedSinceLastActive = true; // 标记为已主动发过
+        await buildThemMessage(cid, 'interact'); 
+        themHasRepliedSinceLastActive = true; 
       }
       loop();
     }, delay);
@@ -1610,14 +1674,14 @@ function startAccompanyInteraction(){
   clearTimeout(accompanyInteractTimer);
   const loop = () => {
     if(!isAccompanyActive) return;
-    if(themHasRepliedSinceLastActive) return; // 防刷屏
+    if(themHasRepliedSinceLastActive) return; 
     
     const delay = 60000 + Math.random()*90000;
     accompanyInteractTimer = setTimeout(async () => {
       if(!isAccompanyActive || themHasRepliedSinceLastActive) return;
       const cid = currentChatId || (chats[0] && chats[0].id);
       if(cid) {
-        await buildThemMessage(cid, 'interact'); // 相伴互动可能抽撩拨
+        await buildThemMessage(cid, 'interact'); 
         themHasRepliedSinceLastActive = true;
       }
       loop();
@@ -1681,7 +1745,6 @@ function openSnapPage(){
   const c = chats.find(x => x.id === currentChatId);
   const pSnap = $('#pageSnap');
   
-  // 留影页背景完全同步聊天背景
   if(currentMode === 'night' && c.nightBgImage) pSnap.style.backgroundImage = `url(${c.nightBgImage})`;
   else if(c.chatBgImage) pSnap.style.backgroundImage = `url(${c.chatBgImage})`;
   else if(globalBgImage) pSnap.style.backgroundImage = `url(${globalBgImage})`;
@@ -1763,11 +1826,12 @@ function openSnapPreview(s){
   const c = chats.find(x => x.id === currentChatId);
   const bg = $('#snapPreviewBg'), bgMask = $('#snapPreviewBgMask');
   
-  // 完美同步比例和遮罩
   if(currentMode === 'night' && c.nightBgImage) bg.style.backgroundImage = `url(${c.nightBgImage})`;
   else if(c.chatBgImage) bg.style.backgroundImage = `url(${c.chatBgImage})`;
   else if(globalBgImage) bg.style.backgroundImage = `url(${globalBgImage})`;
   else bg.style.backgroundImage = 'none';
+  bg.style.backgroundSize = 'cover';
+  bg.style.backgroundPosition = 'center';
   
   const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack');
   const mv = c.chatBgMask !== undefined ? c.chatBgMask : 60;
@@ -1893,20 +1957,22 @@ async function generateSnapImage(messages, chat, isNight, onProgress){
       textBlockH = contentLines.length * lineH;
     }
     
-    // 核心：气泡宽度自适应，不强制拉满
-    let bubbleW = maxTextWidth + 32;
-    if(bubbleW < 60) bubbleW = 60; 
-    if(bubbleW > width*0.82) bubbleW = width*0.82;
-    
-    const stickerH = stickerImg ? 140 : 0;
-    if(stickerImg) {
-       bubbleW = Math.max(bubbleW, Math.min(stickerImg.width, width*0.6)); 
+    let bubbleW;
+    if (m.type === 'ask') {
+      bubbleW = width * 0.82; 
+    } else if (stickerImg) {
+      bubbleW = Math.max(maxTextWidth + 32, Math.min(stickerImg.width + 32, width * 0.82));
+    } else {
+      bubbleW = maxTextWidth + 32;
     }
+
+    if(bubbleW < 84) bubbleW = 84; 
+    if(bubbleW > width*0.82) bubbleW = width*0.82;
     
     const contentW = bubbleW - 32;
     let bubbleH;
     if(m.type === 'ask') bubbleH = textBlockH + askH + 34;
-    else bubbleH = textBlockH + (stickerImg ? stickerH + 6 : 0) + 28;
+    else bubbleH = textBlockH + (stickerImg ? 140 + 6 : 0) + 28;
     if(bubbleH < 54) bubbleH = 54;
     
     layout.push({ type:'msg', y: totalH, m, isMe, avSrc, avChar, name, contentLines, stickerImg, askData, bubbleW, bubbleH, textBlockH, lineH, contentW });

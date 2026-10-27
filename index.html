@@ -449,6 +449,16 @@
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">專屬通話背景</div>
+        <div id="callBgUploadBox" onclick="document.getElementById('callBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="callBgText">點擊上傳通話背景</span></div>
+        <input type="file" id="callBgFile" accept="image/*" style="display:none">
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">相伴背景</div>
+        <div id="accompanyBgUploadBox" onclick="document.getElementById('accompanyBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="accompanyBgText">點擊上傳相伴背景</span></div>
+        <input type="file" id="accompanyBgFile" accept="image/*" style="display:none">
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">專屬撩撥背景</div>
         <div id="nightBgUploadBox" onclick="document.getElementById('nightBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="nightBgText">點擊上傳撩撥背景</span></div>
         <input type="file" id="nightBgFile" accept="image/*" style="display:none">
@@ -668,7 +678,7 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
- // 拦截 null 报错，防止页面因为找不到按钮而卡死
+ // 安全锁：防止任何 null 报错导致白屏
 const originalQuerySelector = document.querySelector.bind(document);
 document.querySelector = function(selector) {
   const el = originalQuerySelector(selector);
@@ -745,7 +755,7 @@ function tx(store, mode='readonly'){ return db.transaction(store, mode).objectSt
 function reqToPromise(req){ return new Promise((res, rej) => { req.onsuccess = ()=>res(req.result); req.onerror = ()=>rej(req.error); }); }
 
 let chats = [], currentChatId = null, currentMessages = [], pendingStickerData = null;
-let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempChatBg = null, tempNightBg = null, tempChatBgMask = 60, isEditingChatId = null;
+let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempChatBg = null, tempNightBg = null, tempCallBg = null, tempAccompanyBg = null, tempChatBgMask = 60, isEditingChatId = null;
 let longPressTimer = null, activeChatForMenu = null;
 let currentSubTab = 'normal', currentSearchQuery = '', isBatchDeleteMode = false, selectedCardIds = new Set();
 let currentActionSubTab = 'to_them', currentActionSearchQuery = '', isActionBatchDeleteMode = false, selectedActionIds = new Set();
@@ -1462,7 +1472,7 @@ function openCallUI(isIncoming = false){
   const c = chats.find(x => x.id === currentChatId);
   if(!c) return;
   const p = $('#callPanel'), f = $('#callFloat');
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.chatBgImage || globalBgImage);
+  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.callBgImage || c.chatBgImage || globalBgImage);
   
   if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
   else { p.style.backgroundImage = 'none'; p.style.backgroundColor = 'var(--bg-color)'; }
@@ -1615,7 +1625,7 @@ function startAccompany(act, mode){
   const c = chats.find(x => x.id === currentChatId);
   if(!c) return;
   const p = $('#accompanyPanel');
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.chatBgImage || globalBgImage);
+  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.accompanyBgImage || c.chatBgImage || globalBgImage);
   if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
   else p.style.backgroundImage = 'none';
   applyAccompanyBgMask(c);
@@ -2174,7 +2184,7 @@ function bindEvents(){
     $('#inputMyName').value = activeChatForMenu.myName || '';
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
     $('#inputMySign').value = activeChatForMenu.mySign || '';
-    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null;
+    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
     tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
     
     const th = $('#theirAvatar'); if(activeChatForMenu.theirAvatar){ th.style.backgroundImage=`url(${activeChatForMenu.theirAvatar})`; th.textContent=''; } else { th.style.backgroundImage=''; th.textContent='祂'; }
@@ -2182,6 +2192,8 @@ function bindEvents(){
     const mc = $('#musicCoverUpload'); if(activeChatForMenu.musicCover){ mc.style.backgroundImage=`url(${activeChatForMenu.musicCover})`; mc.textContent=''; } else { mc.style.backgroundImage=''; mc.textContent='圖'; }
     const chb = $('#chatBgUploadBox'); if(activeChatForMenu.chatBgImage){ chb.style.backgroundImage=`url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent=''; } else { chb.style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景'; }
     const nb = $('#nightBgUploadBox'); if(activeChatForMenu.nightBgImage){ nb.style.backgroundImage=`url(${activeChatForMenu.nightBgImage})`; $('#nightBgText').textContent=''; } else { nb.style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景'; }
+    const cb = $('#callBgUploadBox'); if(activeChatForMenu.callBgImage){ cb.style.backgroundImage=`url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent=''; } else { cb.style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景'; }
+    const ab = $('#accompanyBgUploadBox'); if(activeChatForMenu.accompanyBgImage){ ab.style.backgroundImage=`url(${activeChatForMenu.accompanyBgImage})`; $('#accompanyBgText').textContent=''; } else { ab.style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景'; }
     
     $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
     $('#pageCreate').classList.add('show');
@@ -2309,8 +2321,10 @@ function bindEvents(){
     $('#musicCoverUpload').style.backgroundImage=''; $('#musicCoverUpload').textContent='圖';
     $('#chatBgUploadBox').style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景';
     $('#nightBgUploadBox').style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景';
+    $('#callBgUploadBox').style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景';
+    $('#accompanyBgUploadBox').style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景';
     $('#chatBgMaskRange').value=60; $('#chatBgMaskValue').textContent='60%';
-    tempTheirAvatar=null; tempMyAvatar=null; tempMusicCover=null; tempChatBg=null; tempNightBg=null; tempChatBgMask=60;
+    tempTheirAvatar=null; tempMyAvatar=null; tempMusicCover=null; tempChatBg=null; tempNightBg=null; tempCallBg=null; tempAccompanyBg=null; tempChatBgMask=60;
     $('#pageCreate').classList.add('show');
   };
   $('#cancelCreateBtn').onclick = () => $('#pageCreate').classList.remove('show');
@@ -2319,6 +2333,8 @@ function bindEvents(){
   if($('#musicCoverFile')) $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage=`url(${b})`; $('#musicCoverUpload').textContent=''; }); };
   if($('#chatBgFile')) $('#chatBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempChatBg = b; $('#chatBgUploadBox').style.backgroundImage=`url(${b})`; $('#chatBgText').textContent=''; }); };
   if($('#nightBgFile')) $('#nightBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempNightBg = b; $('#nightBgUploadBox').style.backgroundImage=`url(${b})`; $('#nightBgText').textContent=''; }); };
+  if($('#callBgFile')) $('#callBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempCallBg = b; $('#callBgUploadBox').style.backgroundImage=`url(${b})`; $('#callBgText').textContent=''; }); };
+  if($('#accompanyBgFile')) $('#accompanyBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempAccompanyBg = b; $('#accompanyBgUploadBox').style.backgroundImage=`url(${b})`; $('#accompanyBgText').textContent=''; }); };
   if($('#chatBgMaskRange')) $('#chatBgMaskRange').oninput = e => { tempChatBgMask = parseInt(e.target.value); $('#chatBgMaskValue').textContent = tempChatBgMask + '%'; };
 
   $('#saveChatBtn').onclick = async () => {
@@ -2333,12 +2349,14 @@ function bindEvents(){
         if(tempMusicCover !== null) c.musicCover = tempMusicCover;
         if(tempChatBg !== null) c.chatBgImage = tempChatBg;
         if(tempNightBg !== null) c.nightBgImage = tempNightBg;
+        if(tempCallBg !== null) c.callBgImage = tempCallBg;
+        if(tempAccompanyBg !== null) c.accompanyBgImage = tempAccompanyBg;
         c.chatBgMask = tempChatBgMask;
         await reqToPromise(tx('chats','readwrite').put(c));
         toast('資料已更新');
       }
     } else {
-      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, chatBgMask:tempChatBgMask, isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
+      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, callBgImage:tempCallBg, accompanyBgImage:tempAccompanyBg, chatBgMask:tempChatBgMask, isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
       await reqToPromise(tx('chats','readwrite').add(c));
       toast('已建立新對話');
     }

@@ -731,7 +731,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_jiu_meng';
-const DB_VER = 12;
+const DB_VER = 13;
 let db = null;
 
 function openDB(){

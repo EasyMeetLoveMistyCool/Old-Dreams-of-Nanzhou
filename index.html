@@ -15,7 +15,7 @@
     --bubble-action-me:rgba(255,230,235,.9); --bubble-action-them:rgba(255,235,240,.85);
     --text-color:#000000; --text-secondary:#707579; --time-color:#a0a0a0;
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
-    --pinned-bg:rgba(255,245,246,.9);
+    --pinned-bg:rgba(255,255,255,.6);
   }
   
   body.theme-sky { --bg-color:#e6ebee; --bubble-me:#d6ecff; }
@@ -26,10 +26,10 @@
   body.theme-rain { --bg-color:#eef4f4; --bubble-me:#b2dfdb; --primary:#009688; }
   body.theme-paper { --bg-color:#f5f1e6; --bubble-me:#f0e6d2; --primary:#8d6e63; }
   body.theme-ink { --bg-color:#f4f4f4; --bubble-me:#e0e0e0; --primary:#424242; }
-  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --bubble-me:rgba(0,51,102,.85); --bubble-them:rgba(26,26,26,.85); --bubble-action-me:rgba(80,30,40,.85); --bubble-action-them:rgba(60,20,30,.85); --text-color:#fff; --text-secondary:#888; --time-color:#555; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
-  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --bubble-me:rgba(30,58,95,.85); --bubble-them:rgba(26,38,57,.85); --bubble-action-me:rgba(70,30,45,.85); --bubble-action-them:rgba(50,20,35,.85); --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
-  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --bubble-me:rgba(68,34,102,.85); --bubble-them:rgba(43,29,54,.85); --bubble-action-me:rgba(80,40,60,.85); --bubble-action-them:rgba(60,25,45,.85); --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
-  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --bubble-me:rgba(51,51,51,.85); --bubble-them:rgba(17,17,17,.85); --bubble-action-me:rgba(60,40,40,.85); --bubble-action-them:rgba(40,25,25,.85); --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(43,31,36,.9); }
+  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --bubble-me:rgba(0,51,102,.85); --bubble-them:rgba(26,26,26,.85); --bubble-action-me:rgba(80,30,40,.85); --bubble-action-them:rgba(60,20,30,.85); --text-color:#fff; --text-secondary:#888; --time-color:#555; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(255,255,255,.1); }
+  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --bubble-me:rgba(30,58,95,.85); --bubble-them:rgba(26,38,57,.85); --bubble-action-me:rgba(70,30,45,.85); --bubble-action-them:rgba(50,20,35,.85); --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(255,255,255,.1); }
+  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --bubble-me:rgba(68,34,102,.85); --bubble-them:rgba(43,29,54,.85); --bubble-action-me:rgba(80,40,60,.85); --bubble-action-them:rgba(60,25,45,.85); --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(255,255,255,.1); }
+  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --bubble-me:rgba(51,51,51,.85); --bubble-them:rgba(17,17,17,.85); --bubble-action-me:rgba(60,40,40,.85); --bubble-action-them:rgba(40,25,25,.85); --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); --pinned-bg:rgba(255,255,255,.1); }
 
   body.is-night-mode {
     --bg-color: #1a1216 !important; 
@@ -72,6 +72,8 @@
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); }
   .chat-row.pinned { background:var(--pinned-bg); }
+  .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-time { color: #e57373; } /* 置顶文字变淡粉色 */
+  
   .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
   .chat-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
   .chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
@@ -172,7 +174,7 @@
   .action-sheet { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); }
   .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); }
   .action-item.danger { color:#e53935; }
-  .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; }
+  .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
   .dialog-title { padding:16px; font-weight:600; text-align:center; border-bottom:1px solid var(--border-light); }
@@ -213,18 +215,22 @@
   .music-disc { width:100%; height:100%; border-radius:50%; background-size:cover; background-position:center; border:2px solid rgba(255,255,255,.2); animation:spin 4s linear infinite; animation-play-state:paused; }
   .music-player-float.playing .music-disc { animation-play-state:running; }
   @keyframes spin { 100%{transform:rotate(360deg)} }
-  .music-player-panel { position:fixed; bottom:170px; right:20px; width:260px; background:var(--bg-color); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.4); z-index:499; display:none; flex-direction:column; padding:20px; align-items:center; border:1px solid var(--topbar-border); }
+  
+  .music-player-panel { position:fixed; bottom:170px; right:20px; width:260px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.4); z-index:499; display:none; flex-direction:column; padding:20px; align-items:center; border:1px solid var(--topbar-border); background-size:cover; background-position:center; overflow:hidden; }
   .music-player-panel.show { display:flex; }
+  .music-player-panel::before { content:''; position:absolute; inset:0; background:var(--bg-color); opacity:0.85; z-index:-1; }
+  body.is-night-mode .music-player-panel::before { background: #1a1216; opacity: 0.9; }
+  
   .music-player-panel .music-disc-large { width:120px; height:120px; border-radius:50%; background-size:cover; background-position:center; border:2px solid rgba(255,255,255,.2); margin-bottom:15px; animation:spin 4s linear infinite; animation-play-state:paused; }
   .music-player-panel.playing .music-disc-large { animation-play-state:running; }
-  .music-info-text { text-align:center; width:100%; margin-bottom:15px; position:relative; }
+  .music-info-text { text-align:center; width:100%; margin-bottom:15px; position:relative; z-index:1; }
   .music-title-text { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .music-artist-text { font-size:13px; color:var(--text-secondary); margin-top:4px; }
   .music-close-btn { position:absolute; right:-10px; top:-20px; font-size:20px; color:var(--text-secondary); padding:10px; }
-  .music-progress-bar { width:100%; height:4px; background:var(--input-bg); border-radius:2px; margin-bottom:10px; }
+  .music-progress-bar { width:100%; height:4px; background:var(--input-bg); border-radius:2px; margin-bottom:10px; position:relative; z-index:1; }
   .music-progress-fill { height:100%; background:var(--primary); width:0%; border-radius:2px; }
-  .music-time { display:flex; justify-content:space-between; width:100%; font-size:11px; color:var(--text-secondary); margin-bottom:15px; }
-  .music-controls { display:flex; align-items:center; justify-content:space-between; width:100%; }
+  .music-time { display:flex; justify-content:space-between; width:100%; font-size:11px; color:var(--text-secondary); margin-bottom:15px; position:relative; z-index:1; }
+  .music-controls { display:flex; align-items:center; justify-content:space-between; width:100%; position:relative; z-index:1; }
   .music-btn { background:none; border:none; display:flex; align-items:center; justify-content:center; }
   .music-btn svg { width:24px; height:24px; fill:var(--text-color); }
   .music-btn.play-btn svg { width:36px; height:36px; fill:var(--primary); }
@@ -319,16 +325,17 @@
   .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
 
   .draggable { transition:none !important; }
-  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:9000; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:var(--bg-color); border:1px solid var(--border-light); color:var(--text-color); display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; }
+  /* 投問卡片：日常金色 */
+  .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:#fbf3dd; border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; }
   body.is-night-mode .ask-card { background: #2a1d24 !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   .ask-card-tag { font-size:12px; color:var(--primary); font-weight:600; }
   .ask-question { font-size:15px; line-height:1.5; word-break:break-word; }
   .ask-question-img { max-width:100%; max-height:160px; border-radius:8px; object-fit:cover; }
   .ask-options { display:flex; flex-direction:column; gap:8px; }
-  .ask-option { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:var(--input-bg); border:1px solid transparent; font-size:14px; line-height:1.4; word-break:break-word; }
+  .ask-option { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:rgba(128,128,128,.08); border:1px solid transparent; font-size:14px; line-height:1.4; word-break:break-word; }
   .ask-option .ask-check { width:16px; height:16px; flex:0 0 16px; border-radius:50%; border:1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent; }
   .ask-option.picked { background:rgba(128,128,128,.2); border-color:var(--primary); }
   body.is-night-mode .ask-option.picked { background:rgba(212,122,138,.2) !important; border-color:#d47a8a !important; }
@@ -387,11 +394,15 @@
   .snap-preview-bg-mask { position:absolute; inset:0; z-index:1; transition: background .3s; }
   .snap-preview-body { flex:1; overflow:auto; display:flex; align-items:flex-start; justify-content:center; padding:16px; position:relative; z-index:2; }
   .snap-preview-body img { max-width:100%; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,.1); }
-  .snap-preview-actions { flex:0 0 auto; display:flex; justify-content:center; gap:20px; padding:16px 0 calc(20px + env(safe-area-inset-bottom)); position:relative; z-index:2; }
-  .snap-preview-actions button { border:none; border-radius:8px; padding:10px 20px; font-size:15px; font-weight:600; }
+  
+  /* 底部关闭、焚毁、保存 */
+  .snap-preview-actions { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 0 calc(20px + env(safe-area-inset-bottom)); position:relative; z-index:2; }
+  .snap-preview-actions .snap-close-btn { background:transparent; color:var(--text-secondary); border:none; font-size:15px; padding:8px 0; }
+  .snap-preview-actions .snap-btn-row { display:flex; gap:20px; }
+  .snap-preview-actions .snap-btn-row button { border:none; border-radius:8px; padding:10px 20px; font-size:15px; font-weight:600; }
   .snap-save-btn { background:var(--primary); color:#fff; }
   .snap-del-btn { background:#e53935; color:#fff; }
-  
+
   .snap-check-wrap { position:absolute; left:8px; top:8px; z-index:5; display:none; }
   .msg-group.snap-mode .snap-check-wrap { display:block; }
   .snap-check-wrap input { width:20px; height:20px; accent-color:var(--primary); }
@@ -439,30 +450,30 @@
         <div id="musicCoverUpload" onclick="document.getElementById('musicCoverFile').click()" style="width:56px;height:56px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">圖</div>
         <input type="file" id="musicCoverFile" accept="image/*" style="display:none">
       </div>
+      
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
-        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">聊天背景（日常與撩撥共用遮罩）</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">聊天背景</div>
         <div id="chatBgUploadBox" onclick="document.getElementById('chatBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="chatBgText">點擊上傳聊天背景</span></div>
         <input type="file" id="chatBgFile" accept="image/*" style="display:none">
-        <div style="width:100%;display:flex;flex-direction:column;gap:6px;margin-bottom:15px;">
-          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);"><span>背景遮罩</span><span id="chatBgMaskValue">60%</span></div>
+
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;margin-top:5px;">撩撥背景</div>
+        <div id="nightBgUploadBox" onclick="document.getElementById('nightBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="nightBgText">點擊上傳撩撥背景</span></div>
+        <input type="file" id="nightBgFile" accept="image/*" style="display:none">
+
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;margin-top:5px;">專屬通話背景</div>
+        <div id="callBgUploadBox" onclick="document.getElementById('callBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="callBgText">點擊上傳通話背景</span></div>
+        <input type="file" id="callBgFile" accept="image/*" style="display:none">
+
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;margin-top:5px;">相伴背景</div>
+        <div id="accompanyBgUploadBox" onclick="document.getElementById('accompanyBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="accompanyBgText">點擊上傳相伴背景</span></div>
+        <input type="file" id="accompanyBgFile" accept="image/*" style="display:none">
+
+        <div style="width:100%;display:flex;flex-direction:column;gap:6px;margin-bottom:15px;margin-top:10px;background:rgba(128,128,128,0.05);padding:10px;border-radius:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);"><span>全局背景遮罩（所有背景共用）</span><span id="chatBgMaskValue">60%</span></div>
           <input type="range" id="chatBgMaskRange" min="0" max="100" value="60" style="width:100%;accent-color:var(--primary);">
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
-        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">專屬通話背景</div>
-        <div id="callBgUploadBox" onclick="document.getElementById('callBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="callBgText">點擊上傳通話背景</span></div>
-        <input type="file" id="callBgFile" accept="image/*" style="display:none">
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
-        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">相伴背景</div>
-        <div id="accompanyBgUploadBox" onclick="document.getElementById('accompanyBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="accompanyBgText">點擊上傳相伴背景</span></div>
-        <input type="file" id="accompanyBgFile" accept="image/*" style="display:none">
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
-        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">專屬撩撥背景</div>
-        <div id="nightBgUploadBox" onclick="document.getElementById('nightBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="nightBgText">點擊上傳撩撥背景</span></div>
-        <input type="file" id="nightBgFile" accept="image/*" style="display:none">
-      </div>
+      
       <button id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">完成</button>
     </div>
   </div>
@@ -473,7 +484,7 @@
       <div class="header-avatar-wrap" id="headerAvatarWrap"></div>
       <div class="header-info"><div class="header-title" id="chatTitle">聊天室</div><div class="header-sub" id="chatSub">最近曾上線</div></div>
       <button class="icon-btn" id="modeToggleBtn" style="font-size:20px;">🌕</button>
-      <button class="icon-btn" id="snapBtn" style="color:var(--text-secondary);"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 4v16M18 4v16M6 8h2M6 12h2M6 16h2M16 8h2M16 12h2M16 16h2"></path></svg></button>
+      <button class="icon-btn" id="snapBtn" style="color:var(--text-secondary);font-size:20px;">🎞</button>
       <button class="icon-btn" id="callBtn"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
     </div>
     <div class="messages-wrap" id="messagesWrap"><div class="messages" id="messages"></div></div>
@@ -489,7 +500,7 @@
     <div class="topbar">
       <button class="icon-btn" id="backSnapBtn">←</button>
       <div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="snapTitle">留影</div>
-      <button class="icon-btn" id="snapGenerateBtn" style="color:var(--primary);font-size:16px;font-weight:600;width:auto;padding:0 10px;">生成</button>
+      <button class="icon-btn" id="snapGenerateBtn" style="color:var(--primary);font-size:16px;font-weight:600;width:auto;padding:0 10px;white-space:nowrap;">生成</button>
     </div>
     <div class="snap-list" id="snapList"></div>
   </div>
@@ -609,7 +620,7 @@
   <div class="accompany-info"><div class="accompany-title" id="accompanyTitle">相伴</div><div class="accompany-status">相伴中</div><div class="accompany-timer" id="accompanyTimer">00:00</div></div>
   <div class="accompany-actions">
     <button class="accompany-btn accompany-min-btn" id="btnMinimizeAccompany"><svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg></button>
-    <button class="accompany-btn accompany-end-btn" id="btnEndAccompany"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" transform="rotate(135 12 12)"/></svg></button>
+    <button class="accompany-btn accompany-end-btn" id="btnEndAccompany"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
   </div>
 </div>
 <div class="accompany-float" id="accompanyFloat">
@@ -638,7 +649,7 @@
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><input type="text" class="dialog-input" id="dialogInput" style="display:none;"><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
-<div class="dialog-mask" id="progressDialogMask" style="z-index:210;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
+<div class="dialog-mask" id="progressDialogMask" style="z-index:100000;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
 
 <div class="sticker-panel-mask" id="stickerPanelMask"><div class="sticker-panel"><div class="sticker-panel-header" id="stickerPanelHeader">選擇印花</div><div class="sticker-panel-content" id="stickerPanelContent"></div><div class="action-list-content" id="actionListContent" style="display:none;"></div><div class="action-list-content" id="musicSelectContent" style="display:none;"></div></div></div>
 <div class="flash-panel-mask" id="flashPanelMask"><div class="flash-panel"><div class="flash-panel-header">互動</div><div class="flash-grid"><div class="flash-item" id="flashPhoto">攝錄</div><div class="flash-item" id="flashAlbum">舊簿</div><div class="flash-item" id="flashAction">予祂</div><div class="flash-item" id="flashAsk">投問</div><div class="flash-item" id="flashMusic">留聲</div><div class="flash-item" id="flashAccompany">相伴</div></div></div></div>
@@ -661,7 +672,13 @@
 <div class="snap-preview-mask" id="snapPreviewMask">
   <div class="snap-preview-bg-mask" id="snapPreviewBgMask"></div>
   <div class="snap-preview-body"><img id="snapPreviewImg" src=""></div>
-  <div class="snap-preview-actions"><button class="snap-del-btn" id="snapPreviewDel">焚毀</button><button class="snap-save-btn" id="snapPreviewSave">保存到設備</button></div>
+  <div class="snap-preview-actions">
+    <button class="snap-close-btn" id="snapPreviewClose">關閉預覽</button>
+    <div class="snap-btn-row">
+      <button class="snap-del-btn" id="snapPreviewDel">焚毀</button>
+      <button class="snap-save-btn" id="snapPreviewSave">保存到設備</button>
+    </div>
+  </div>
 </div>
 
 <div class="about-modal-mask" id="aboutModalMask">
@@ -678,7 +695,7 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
- // 安全锁：防止任何 null 报错导致白屏
+ // 防报错安全锁
 const originalQuerySelector = document.querySelector.bind(document);
 document.querySelector = function(selector) {
   const el = originalQuerySelector(selector);
@@ -776,6 +793,10 @@ let askMode = 'wen', askAttachData = null, askImgList = [], askSingleChecked = t
 
 let snapMode = false, snapSelectedIds = new Set(), snapPreviewCurrent = null;
 let snapBatchMode = false, snapBatchSelected = new Set();
+
+// 懒加载状态
+let loadCardOffset = 0, loadActionOffset = 0;
+let allCardsCache = [], allActionsCache = [], allStickersCache = [], allMusicCache = [];
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -940,7 +961,11 @@ async function openChat(id){
   
   currentMessages = await getMessages(id);
   snapMode = false; snapSelectedIds.clear();
-  renderMessages(true);
+  
+  const box = $('#messages'); box.innerHTML = '';
+  currentMessages.forEach(m => appendMessageDOM(m, c, false));
+  setTimeout(() => { const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight; }, 50);
+
   $('#msgInput').value = ''; $('#msgInput').style.height = '44px';
   clearPendingSticker(); updateSendBtnState();
   $('#pageChat').classList.add('show');
@@ -976,98 +1001,113 @@ function updateChatTopbarUI(c) {
 async function toggleChatMode() {
   const c = chats.find(x => x.id === currentChatId);
   if(!c) return;
+  
+  // 瞬间切 UI 和背景，防止卡顿
   c.isNightMode = !c.isNightMode;
+  updateChatTopbarUI(c);
+  updateChatBgUI();
+  
+  const box = $('#messages'); box.innerHTML = '';
+  
   await reqToPromise(tx('chats','readwrite').put(c));
-  await openChat(currentChatId);
+  currentMessages = await getMessages(currentChatId);
+  
+  // 渲染新模式的数据
+  currentMessages.forEach(m => appendMessageDOM(m, c, false));
+  setTimeout(() => { const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight; }, 50);
+  
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
 }
 
-function renderMessages(forceBottom = false){
+// 增量渲染核心
+function appendMessageDOM(m, c, animate=true){
   const box = $('#messages'), wrap = $('#messagesWrap');
-  const nearBottom = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight < 150;
-  const prev = wrap.scrollTop;
-  box.innerHTML = ''; let lastDate = '';
-  const c = chats.find(x => x.id === currentChatId);
+  const isMe = m.sender === 'me';
   const isNight = c && c.isNightMode;
   
-  for(let i=0;i<currentMessages.length;i++){
-    const m = currentMessages[i];
-    const dstr = fmtDate(m.time);
-    if(dstr !== lastDate){ const div = document.createElement('div'); div.className = 'date-divider'; div.textContent = dstr; box.appendChild(div); lastDate = dstr; }
-    const isMe = m.sender === 'me';
-    const g = document.createElement('div');
-    g.className = 'msg-group ' + (isMe ? 'me' : 'them') + (snapMode ? ' snap-mode' : '');
-    g.dataset.msgId = m.id;
-    
-    let avHtml = '';
-    if (isNight) {
-      const meImg = c.myAvatar ? `background-image:url('${c.myAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
-      const meChar = !c.myAvatar ? getMyDisplayChar(c) : '';
-      const themImg = c.theirAvatar ? `background-image:url('${c.theirAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
-      const themChar = !c.theirAvatar ? getTheirDisplayChar(c) : '';
-      avHtml = `<div class="msg-dual-avatar">
-        <div class="du-av me" style="${meImg}">${meChar}</div>
-        <div class="du-av them" style="${themImg}">${themChar}</div>
-      </div>`;
-    } else {
-      if(isMe){
-        if(c && c.myAvatar) avHtml = `<img src="${c.myAvatar}" class="msg-avatar-top">`;
-        else avHtml = `<div class="msg-avatar-top" style="background:#999">${getMyDisplayChar(c)}</div>`;
-      } else {
-        if(c && c.theirAvatar) avHtml = `<img src="${c.theirAvatar}" class="msg-avatar-top">`;
-        else avHtml = `<div class="msg-avatar-top">${getTheirDisplayChar(c)}</div>`;
+  const dstr = fmtDate(m.time);
+  const lastChild = box.lastElementChild;
+  let needDate = true;
+  if (lastChild) {
+      if (lastChild.classList.contains('date-divider') && lastChild.textContent === dstr) needDate = false;
+      else {
+          const prevDivs = box.querySelectorAll('.date-divider');
+          if (prevDivs.length && prevDivs[prevDivs.length-1].textContent === dstr && lastChild !== prevDivs[prevDivs.length-1]) needDate = false;
       }
+  }
+  if (needDate) {
+      const div = document.createElement('div'); div.className = 'date-divider'; div.textContent = dstr; box.appendChild(div);
+  }
+
+  const g = document.createElement('div');
+  g.className = 'msg-group ' + (isMe ? 'me' : 'them') + (snapMode ? ' snap-mode' : '');
+  g.dataset.msgId = m.id;
+  
+  let avHtml = '';
+  if (isNight) {
+    const meImg = c.myAvatar ? `background-image:url('${c.myAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
+    const meChar = !c.myAvatar ? getMyDisplayChar(c) : '';
+    const themImg = c.theirAvatar ? `background-image:url('${c.theirAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
+    const themChar = !c.theirAvatar ? getTheirDisplayChar(c) : '';
+    avHtml = `<div class="msg-dual-avatar">
+      <div class="du-av me" style="${meImg}">${meChar}</div>
+      <div class="du-av them" style="${themImg}">${themChar}</div>
+    </div>`;
+  } else {
+    if(isMe){
+      if(c && c.myAvatar) avHtml = `<img src="${c.myAvatar}" class="msg-avatar-top">`;
+      else avHtml = `<div class="msg-avatar-top" style="background:#999">${getMyDisplayChar(c)}</div>`;
+    } else {
+      if(c && c.theirAvatar) avHtml = `<img src="${c.theirAvatar}" class="msg-avatar-top">`;
+      else avHtml = `<div class="msg-avatar-top">${getTheirDisplayChar(c)}</div>`;
     }
-    
-    g.innerHTML = avHtml;
-    if(snapMode){
-      const wrapCheck = document.createElement('div');
-      wrapCheck.className = 'snap-check-wrap';
-      wrapCheck.innerHTML = `<input type="checkbox" ${snapSelectedIds.has(m.id) ? 'checked' : ''}>`;
-      wrapCheck.querySelector('input').onchange = ev => {
-        if(ev.target.checked) snapSelectedIds.add(m.id); else snapSelectedIds.delete(m.id);
-        updateSnapTitle();
-      };
-      g.appendChild(wrapCheck);
-    }
-    
-    if(m.type === 'ask'){
-      g.appendChild(buildAskCard(m, c));
-      box.appendChild(g);
-      if(!snapMode) bindLongPressDelete(g, m);
-      continue;
-    }
-    
-    const b = document.createElement('div');
-    b.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
-    let lines = '';
-    const isLatest = (i === currentMessages.length - 1);
-    const useAnim = !forceBottom && isLatest && !isMe;
-    
-    if(m.cards && m.cards.length){
-      m.cards.forEach((t, idx) => {
-        const ac = useAnim ? '' : 'no-anim';
-        const dl = useAnim ? (idx * (1 + Math.random() * 2)) : 0;
-        lines += `<span class="card-line ${ac}" style="animation-delay:${dl}s">${escapeHtml(t)}</span>`;
-      });
-    } else if(m.text){
-      lines += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
-    }
-    let st = '';
-    if(m.stickerData){
-      const ac = useAnim ? '' : 'no-anim';
-      const dl = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
-      st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
-    }
-    const tac = useAnim ? '' : 'no-anim';
-    const tdl = useAnim ? ((m.cards ? m.cards.length : 1) * 2 + 1) : 0;
-    b.innerHTML = lines + st + `<span class="msg-time-center ${tac}" style="animation-delay:${tdl}s">${fmtTime(m.time)}</span>`;
-    g.appendChild(b);
+  }
+  
+  g.innerHTML = avHtml;
+  if(snapMode){
+    const wrapCheck = document.createElement('div');
+    wrapCheck.className = 'snap-check-wrap';
+    wrapCheck.innerHTML = `<input type="checkbox" ${snapSelectedIds.has(m.id) ? 'checked' : ''}>`;
+    wrapCheck.querySelector('input').onchange = ev => {
+      if(ev.target.checked) snapSelectedIds.add(m.id); else snapSelectedIds.delete(m.id);
+      updateSnapTitle();
+    };
+    g.appendChild(wrapCheck);
+  }
+  
+  if(m.type === 'ask'){
+    g.appendChild(buildAskCard(m, c));
     box.appendChild(g);
     if(!snapMode) bindLongPressDelete(g, m);
+    return;
   }
-  if(forceBottom || nearBottom) setTimeout(() => { wrap.scrollTop = wrap.scrollHeight; }, 50);
-  else wrap.scrollTop = prev;
+  
+  const b = document.createElement('div');
+  b.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
+  let lines = '';
+  const useAnim = animate && !isMe;
+  
+  if(m.cards && m.cards.length){
+    m.cards.forEach((t, idx) => {
+      const ac = useAnim ? '' : 'no-anim';
+      const dl = useAnim ? (idx * (1 + Math.random() * 2)) : 0;
+      lines += `<span class="card-line ${ac}" style="animation-delay:${dl}s">${escapeHtml(t)}</span>`;
+    });
+  } else if(m.text){
+    lines += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
+  }
+  let st = '';
+  if(m.stickerData){
+    const ac = useAnim ? '' : 'no-anim';
+    const dl = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
+    st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
+  }
+  const tac = useAnim ? '' : 'no-anim';
+  const tdl = useAnim ? ((m.cards ? m.cards.length : 1) * 2 + 1) : 0;
+  b.innerHTML = lines + st + `<span class="msg-time-center ${tac}" style="animation-delay:${tdl}s">${fmtTime(m.time)}</span>`;
+  g.appendChild(b);
+  box.appendChild(g);
+  if(!snapMode) bindLongPressDelete(g, m);
 }
 
 function bindLongPressDelete(el, msg){
@@ -1123,11 +1163,13 @@ function applyAskAnswer(card, m, c){
   const footer = card.querySelector('.ask-card-footer');
   const opts = card.querySelectorAll('.ask-option');
   const imgs = card.querySelectorAll('.ask-img-item');
+  const name = getDisplayName(c);
+  
   if(m.askDone){
     ans.innerHTML = '';
     if(m.askAnswer && m.askAnswer.length){
       const a = document.createElement('span');
-      a.textContent = '祂選了：' + (m.askMode === 'tu' ? m.askAnswer.length + ' 張圖' : m.askAnswer.map(i => m.askOptions[i]).join('、'));
+      a.textContent = name + '選了：' + (m.askMode === 'tu' ? m.askAnswer.length + ' 張圖' : m.askAnswer.map(i => m.askOptions[i]).join('、'));
       a.style.color = 'var(--primary)';
       ans.appendChild(a);
       if(m.askMode === 'tu') imgs.forEach(el => { if(m.askAnswer.includes(parseInt(el.dataset.idx))) el.classList.add('picked'); });
@@ -1135,7 +1177,6 @@ function applyAskAnswer(card, m, c){
     }
     footer.style.display = 'flex';
   } else {
-    const name = getDisplayName(c);
     ans.innerHTML = `<span class="ask-spinner"></span><span class="ask-thinking-text">${escapeHtml(name)} 正在思考…</span>`;
     footer.style.display = 'none';
     opts.forEach(el => el.classList.remove('picked'));
@@ -1188,12 +1229,15 @@ async function sendMyMessage(){
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
-  input.value = ''; input.style.height = '44px';
-  clearPendingSticker(); updateSendBtnState(); renderMessages(false);
-  await touchChat(currentChatId);
+  appendMessageDOM(msg, c, false);
   
+  input.value = ''; input.style.height = '44px';
+  clearPendingSticker(); updateSendBtnState();
+  const wrap = $('#messagesWrap'); wrap.scrollTop = wrap.scrollHeight;
+  
+  await touchChat(currentChatId);
   isWaitingForMyReply = false;
-  if(!isNight) setTimeout(replyFromThem, 8000 + Math.random() * 7000);
+  setTimeout(replyFromThem, 8000 + Math.random() * 7000);
 }
 
 async function touchChat(id){
@@ -1204,18 +1248,24 @@ async function touchChat(id){
   await loadChats();
 }
 
-async function buildThemMessage(chatId, forceFlirt = false){
+async function buildThemMessage(chatId, isSpecialScene = false){
   const allCards = await reqToPromise(tx('cards').getAll());
-  const normal = allCards.filter(c => (c.category || 'normal') === 'normal');
-  const flirt = allCards.filter(c => c.category === 'flirt');
-  let pool = normal;
+  const c = chats.find(x => x.id === chatId);
+  const isNight = c && c.isNightMode;
   
-  if(forceFlirt && flirt.length) pool = flirt;
-  else if(forceFlirt && !flirt.length) pool = normal;
-  else if(!forceFlirt && flirt.length && Math.random() < 0.15) pool = flirt;
+  let normal = allCards.filter(x => (x.category || 'normal') === 'normal');
+  let flirt = allCards.filter(x => x.category === 'flirt');
   
-  if(!pool.length) pool = allCards;
-  if(!pool.length) return null;
+  if(!normal.length && !flirt.length) return null;
+  
+  let pickedCategory = 'normal';
+  if (isNight || isSpecialScene) {
+    if (Math.random() < 0.2 && flirt.length) pickedCategory = 'flirt';
+  }
+  
+  let pool = pickedCategory === 'flirt' ? flirt : normal;
+  if (!pool.length) pool = normal.length ? normal : flirt;
+  if (!pool.length) return null;
   
   const n = 1 + Math.floor(Math.random() * 3);
   const picked = [], p = [...pool];
@@ -1232,21 +1282,36 @@ async function buildThemMessage(chatId, forceFlirt = false){
   const stickers = await reqToPromise(tx('stickers').getAll());
   if(stickers.length && Math.random() < 0.1){ stickerData = stickers[Math.floor(Math.random()*stickers.length)].data; }
   
-  const c = chats.find(x => x.id === chatId);
-  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'cards', text:'', cards:picked, stickerData, time:Date.now(), isNightMode: c.isNightMode };
+  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'cards', text:'', cards:picked, stickerData, time:Date.now(), isNightMode: isNight };
   
   await reqToPromise(tx('messages','readwrite').add(msg));
-  if(currentChatId === chatId){ currentMessages.push(msg); if($('#pageChat').classList.contains('show')) renderMessages(false); }
+  if(currentChatId === chatId){ 
+    currentMessages.push(msg); 
+    if($('#pageChat').classList.contains('show')) {
+      appendMessageDOM(msg, c, true);
+      const wrap = $('#messagesWrap'); 
+      const near = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight < 150;
+      if(near) setTimeout(()=>wrap.scrollTop = wrap.scrollHeight, 50);
+    }
+  }
   await touchChat(chatId);
   
   if(Math.random() < 0.15){
     const allA = await reqToPromise(tx('actions').getAll());
-    const toMe = allA.filter(a => a.category === 'to_me');
+    let toMe = allA.filter(a => a.category === 'to_me');
     if(toMe.length){
       const a = toMe[Math.floor(Math.random()*toMe.length)];
-      const am = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode };
+      const am = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: isNight };
       await reqToPromise(tx('messages','readwrite').add(am));
-      if(currentChatId === chatId){ currentMessages.push(am); if($('#pageChat').classList.contains('show')) renderMessages(false); }
+      if(currentChatId === chatId){ 
+        currentMessages.push(am); 
+        if($('#pageChat').classList.contains('show')) {
+          appendMessageDOM(am, c, true);
+          const wrap = $('#messagesWrap'); 
+          const near = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight < 150;
+          if(near) setTimeout(()=>wrap.scrollTop = wrap.scrollHeight, 50);
+        }
+      }
       await touchChat(chatId);
     }
   }
@@ -1256,38 +1321,68 @@ async function buildThemMessage(chatId, forceFlirt = false){
 async function replyFromThem(){
   if(!currentChatId) return;
   const msg = await buildThemMessage(currentChatId, false);
-  if(!msg) toast('郵電所中尚無常訊電文，請先新增');
+  if(!msg) toast('郵電所中尚無字卡，請先新增');
 }
 
 function showCustomDialog(title, text, showInput, okText, onOk){
   $('#dialogTitle').textContent = title; $('#dialogText').textContent = text;
   $('#dialogInput').style.display = showInput ? 'block' : 'none';
   if(showInput) $('#dialogInput').value = '';
-  const ok = $('#dialogOkBtn'); ok.textContent = okText;
+  
+  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">${okText}</button>`;
+  $('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
+  $('#dialogOkBtn').onclick = () => { 
+    $('#dialogMask').classList.remove('show'); 
+    if(onOk) onOk($('#dialogInput').value); 
+  };
+  
   $('#dialogMask').classList.add('show');
-  const nok = ok.cloneNode(true); ok.parentNode.replaceChild(nok, ok);
-  nok.onclick = () => { $('#dialogMask').classList.remove('show'); if(onOk) onOk($('#dialogInput').value); };
 }
 
+// --- 邮电所加载与去重逻辑优化 ---
 async function loadAndRenderCards(){
-  const all = await reqToPromise(tx('cards').getAll());
-  let f = all.filter(c => (c.category || 'normal') === currentSubTab);
+  allCardsCache = await reqToPromise(tx('cards').getAll());
+  let f = allCardsCache.filter(c => (c.category || 'normal') === currentSubTab);
   if(currentSearchQuery) f = f.filter(c => c.text.includes(currentSearchQuery));
   f.sort((a,b) => b.createdAt - a.createdAt);
+  
+  loadCardOffset = 0;
+  renderCardChunk(f);
+}
+function renderCardChunk(f) {
   const cat = currentSubTab === 'normal' ? '常訊' : '撩撥';
   $('#cardListHeader').textContent = `${cat}：共 ${f.length} 份`;
-  const box = $('#cardListContainer'); box.innerHTML = '';
-  if(!f.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無電文</div>'; }
-  else f.forEach(c => {
-    const div = document.createElement('div'); div.className = 'card-item';
-    const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
-    div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
-    box.appendChild(div);
-  });
+  const box = $('#cardListContainer'); 
+  
+  if(loadCardOffset === 0) box.innerHTML = '';
+  
+  if(!f.length){ 
+    if(loadCardOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無電文</div>'; 
+  } else {
+    const chunk = f.slice(loadCardOffset, loadCardOffset + 100);
+    chunk.forEach(c => {
+      const div = document.createElement('div'); div.className = 'card-item';
+      const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
+      box.appendChild(div);
+    });
+  }
+  
   $('#normalToolbar').style.display = isBatchDeleteMode ? 'none' : 'flex';
   $('#batchToolbar').style.display = isBatchDeleteMode ? 'flex' : 'none';
   if(isBatchDeleteMode) $('#batchCount').textContent = `已選 ${selectedCardIds.size} 份`;
+  
+  // 滚动加载
+  box.onscroll = () => {
+    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
+      if(loadCardOffset + 100 < f.length) {
+        loadCardOffset += 100;
+        renderCardChunk(f);
+      }
+    }
+  };
 }
+
 window.toggleSelectCard = id => { if(selectedCardIds.has(id)) selectedCardIds.delete(id); else selectedCardIds.add(id); loadAndRenderCards(); };
 window.editCard = (id, oldText) => {
   showCustomDialog('校對電文','請修改下方內容',true,'保存', async newText => {
@@ -1302,12 +1397,15 @@ window.editCard = (id, oldText) => {
 window.deleteSingleCard = id => { showCustomDialog('作廢確認','確定要作廢這份電文嗎？',false,'作廢', async () => { await reqToPromise(tx('cards','readwrite').delete(id)); toast('已作廢'); loadAndRenderCards(); }); };
 
 async function loadAndRenderStamps(){
-  const stickers = await reqToPromise(tx('stickers').getAll());
-  stickers.sort((a,b)=>b.createdAt-a.createdAt);
-  $('#stampListHeader').textContent = `印花：共 ${stickers.length} 張`;
+  allStickersCache = await reqToPromise(tx('stickers').getAll());
+  allStickersCache.sort((a,b)=>b.createdAt-a.createdAt);
   const grid = $('#stampGrid'); grid.innerHTML = ''; grid.className = 'stamp-grid' + (isStampBatchMode ? ' batch-mode' : '');
-  if(!stickers.length){ grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:var(--text-secondary);margin-top:20px;">尚無印花</div>'; }
-  else stickers.forEach(s => {
+  
+  const chunk = allStickersCache.slice(0, 100);
+  $('#stampListHeader').textContent = `印花：共 ${allStickersCache.length} 張`;
+  
+  if(!allStickersCache.length){ grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:var(--text-secondary);margin-top:20px;">尚無印花</div>'; }
+  else chunk.forEach(s => {
     const div = document.createElement('div'); div.className = 'stamp-item';
     const ch = isStampBatchMode ? `<input type="checkbox" class="stamp-checkbox" ${selectedStampIds.has(s.id)?'checked':''} onchange="toggleSelectStamp('${s.id}')">` : '';
     div.innerHTML = `${ch}<img src="${s.data}" alt="印花">`;
@@ -1326,24 +1424,48 @@ async function loadAndRenderStamps(){
 window.toggleSelectStamp = id => { if(selectedStampIds.has(id)) selectedStampIds.delete(id); else selectedStampIds.add(id); loadAndRenderStamps(); };
 
 async function loadAndRenderActions(){
-  const all = await reqToPromise(tx('actions').getAll());
-  let f = all.filter(c => (c.category || 'to_them') === currentActionSubTab);
+  allActionsCache = await reqToPromise(tx('actions').getAll());
+  let f = allActionsCache.filter(c => (c.category || 'to_them') === currentActionSubTab);
   if(currentActionSearchQuery) f = f.filter(c => c.text.includes(currentActionSearchQuery));
   f.sort((a,b)=>b.createdAt-a.createdAt);
+  
+  loadActionOffset = 0;
+  renderActionChunk(f);
+}
+
+function renderActionChunk(f) {
   const cat = currentActionSubTab === 'to_them' ? '予祂' : '予我';
   $('#actionListHeader').textContent = `${cat}：共 ${f.length} 份`;
-  const box = $('#actionListContainer'); box.innerHTML = '';
-  if(!f.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無暗語</div>'; }
-  else f.forEach(c => {
-    const div = document.createElement('div'); div.className = 'card-item';
-    const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
-    div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
-    box.appendChild(div);
-  });
+  const box = $('#actionListContainer'); 
+  
+  if(loadActionOffset === 0) box.innerHTML = '';
+  
+  if(!f.length){ 
+    if(loadActionOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無暗語</div>'; 
+  } else {
+    const chunk = f.slice(loadActionOffset, loadActionOffset + 100);
+    chunk.forEach(c => {
+      const div = document.createElement('div'); div.className = 'card-item';
+      const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
+      box.appendChild(div);
+    });
+  }
+  
   $('#actionNormalToolbar').style.display = isActionBatchDeleteMode ? 'none' : 'flex';
   $('#actionBatchToolbar').style.display = isActionBatchDeleteMode ? 'flex' : 'none';
   if(isActionBatchDeleteMode) $('#actionBatchCount').textContent = `已選 ${selectedActionIds.size} 份`;
+  
+  box.onscroll = () => {
+    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
+      if(loadActionOffset + 100 < f.length) {
+        loadActionOffset += 100;
+        renderActionChunk(f);
+      }
+    }
+  };
 }
+
 window.toggleSelectAction = id => { if(selectedActionIds.has(id)) selectedActionIds.delete(id); else selectedActionIds.add(id); loadAndRenderActions(); };
 window.editAction = (id, oldText) => {
   showCustomDialog('校對暗語','請修改下方內容',true,'保存', async newText => {
@@ -1358,17 +1480,21 @@ window.editAction = (id, oldText) => {
 window.deleteSingleAction = id => { showCustomDialog('作廢確認','確定要作廢這條暗語嗎？',false,'作廢', async () => { await reqToPromise(tx('actions','readwrite').delete(id)); toast('已作廢'); loadAndRenderActions(); }); };
 
 async function loadAndRenderMusic(){
-  const musics = await reqToPromise(tx('music').getAll());
-  musics.sort((a,b)=>b.createdAt-a.createdAt);
-  $('#musicListHeader').textContent = `留聲：共 ${musics.length} 首`;
+  allMusicCache = await reqToPromise(tx('music').getAll());
+  allMusicCache.sort((a,b)=>b.createdAt-a.createdAt);
+  
+  $('#musicListHeader').textContent = `留聲：共 ${allMusicCache.length} 首`;
   const box = $('#musicListContainer'); box.innerHTML = '';
-  if(!musics.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無留聲</div>'; }
-  else musics.forEach(m => {
+  
+  const chunk = allMusicCache.slice(0, 100);
+  if(!allMusicCache.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無留聲</div>'; }
+  else chunk.forEach(m => {
     const div = document.createElement('div'); div.className = 'music-list-item';
     const ch = isMusicBatchMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedMusicIds.has(m.id)?'checked':''} onchange="toggleSelectMusic('${m.id}')">` : '';
     div.innerHTML = `<div style="display:flex;align-items:center;flex:1;">${ch}<div class="music-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div></div><div class="card-actions" style="display:${isMusicBatchMode?'none':'flex'}"><button class="btn-del" onclick="deleteSingleMusic('${m.id}')">作廢</button></div>`;
     box.appendChild(div);
   });
+  
   $('#musicNormalToolbar').style.display = isMusicBatchMode ? 'none' : 'flex';
   $('#musicBatchToolbar').style.display = isMusicBatchMode ? 'flex' : 'none';
   if(isMusicBatchMode) $('#musicBatchCount').textContent = `已選 ${selectedMusicIds.size} 首`;
@@ -1376,6 +1502,7 @@ async function loadAndRenderMusic(){
 window.toggleSelectMusic = id => { if(selectedMusicIds.has(id)) selectedMusicIds.delete(id); else selectedMusicIds.add(id); loadAndRenderMusic(); };
 window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷毀這首留聲嗎？',false,'作廢', async () => { await reqToPromise(tx('music','readwrite').delete(id)); toast('已作廢'); loadAndRenderMusic(); }); };
 
+// --- 音乐播放器拖拽修复 ---
 function initPlayerDrag(){
   const float = $('#musicPlayerFloat');
   let dragging = false, sx, sy, il, it;
@@ -1384,6 +1511,7 @@ function initPlayerDrag(){
   float.addEventListener('touchend', () => { if(!dragging){ $('#musicPlayerPanel').classList.toggle('show'); if($('#musicPlayerPanel').classList.contains('show')){ const r = float.getBoundingClientRect(); const p = $('#musicPlayerPanel'); let pt = r.top - 180; if(pt < 10) pt = r.bottom + 10; let pl = r.left - 100; if(pl < 10) pl = 10; if(pl > window.innerWidth - 270) pl = window.innerWidth - 270; p.style.bottom='auto'; p.style.right='auto'; p.style.top=pt+'px'; p.style.left=pl+'px'; } } });
 }
 
+// --- 通话与相伴 ---
 function showCallPanel(){
   const p = $('#callPanel'); p.classList.add('show');
   if(callPanelPos){ const r = p.getBoundingClientRect(); const q = clampPos(callPanelPos.left, callPanelPos.top, r.width, r.height); callPanelPos = q; p.style.left=q.left+'px'; p.style.top=q.top+'px'; p.style.transform='none'; }
@@ -1429,10 +1557,21 @@ function loadTrack(){
   if(currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
   const track = playlist[currentTrackIndex];
   $('#playerTitle').textContent = track.title; $('#playerArtist').textContent = track.artist;
+  
   const c = chats.find(x => x.id === currentChatId);
   const cover = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
   $('#musicDiscFloat').style.backgroundImage = `url(${cover})`;
   $('#musicDiscLarge').style.backgroundImage = `url(${cover})`;
+  
+  // 音乐面板用专属留声底图
+  if(c && c.musicCover) {
+    $('#musicPlayerPanel').style.backgroundImage = `url(${c.musicCover})`;
+  } else if(c && c.chatBgImage) {
+    $('#musicPlayerPanel').style.backgroundImage = `url(${c.chatBgImage})`;
+  } else {
+    $('#musicPlayerPanel').style.backgroundImage = 'none';
+  }
+
   audioPlayer.src = track.data;
   audioPlayer.play().then(() => updatePlayState(true)).catch(() => { updatePlayState(false); toast('點擊播放按鈕開始'); });
 }
@@ -1553,7 +1692,7 @@ function setupIncomingCallTimer(){
             if(c){
               const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'them', type:'cards', text:'', cards:['怎麼不接我電話？'], stickerData:null, time:Date.now(), isNightMode: false };
               reqToPromise(tx('messages','readwrite').add(msg));
-              if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); renderMessages(false); }
+              if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); appendMessageDOM(msg, c, true); }
             }
           }
         }, 15000);
@@ -1606,20 +1745,26 @@ async function doInviteAccompany(){
     else toast(`${getDisplayName(c)}婉拒了這次相伴`);
   }, 1500 + Math.random()*2000);
 }
+
+// 问题20：由祂决定交互调整
 async function doThemChoose(){
   const c = chats.find(x => x.id === currentChatId); if(!c) return;
   $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在想…</div></div>`;
   setTimeout(() => {
     const act = ACCOMPANY_ACTS[Math.floor(Math.random()*ACCOMPANY_ACTS.length)];
     const footer = $('#accompanySelectFooter');
-    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button></div></div>`;
+    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">換一個</button></div></div>`;
+    
+    // 三个按钮事件
     $('#btnAcceptProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); startAccompany(act, 'fixed'); };
-    $('#btnRejectProposal').onclick = () => {
+    $('#btnRejectProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); }; // 直接关闭
+    $('#btnRetryProposal').onclick = () => {
       footer.innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在另想…</div></div>`;
       setTimeout(() => { doThemChoose(); }, 1200 + Math.random()*1200);
     };
   }, 1200 + Math.random()*1500);
 }
+
 function startAccompany(act, mode){
   isAccompanyActive = true; currentAccompanyAct = act; currentAccompanyActRaw = mode;
   const c = chats.find(x => x.id === currentChatId);
@@ -1722,8 +1867,11 @@ async function sendAsk(){
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
+  appendMessageDOM(msg, c, false);
+  
   $('#askModalMask').classList.remove('show');
-  renderMessages(false);
+  const wrap = $('#messagesWrap'); wrap.scrollTop = wrap.scrollHeight;
+  
   await touchChat(currentChatId);
   isWaitingForMyReply = false;
   startAskThinking(msg.id, 8000 + Math.random()*7000);
@@ -1850,7 +1998,7 @@ async function startSnapGenerate(){
   $('#progressDialogMask').classList.remove('show');
   snapMode = false; snapSelectedIds.clear();
   $('#snapBtn').style.color = 'var(--text-secondary)';
-  renderMessages(false);
+  renderMessagesUI(false); // 刷新页面状态
   openSnapPreview({ image:img, id:'preview', createdAt:Date.now() });
 }
 
@@ -2036,14 +2184,14 @@ async function generateSnapImage(messages, chat, onProgress){
     const bubbleY = avY + 22;
     const isAsk = m.type === 'ask';
     
-    if(isAsk){ ctx.fillStyle = isDark ? '#2a1d24' : '#fff'; }
+    if(isAsk){ ctx.fillStyle = isDark ? '#2a1d24' : '#fbf3dd'; }
     else if(m.type === 'action'){ ctx.fillStyle = isDark ? 'rgba(90,40,50,0.8)' : 'rgba(255,235,240,.92)'; }
     else { ctx.fillStyle = isDark ? (isMe ? 'rgba(80,30,50,0.85)' : 'rgba(40,35,45,0.85)') : (isMe ? 'rgba(214,236,255,.92)' : 'rgba(255,255,255,.92)'); }
     roundedRect(ctx, bubbleX, bubbleY, bubbleW, bubbleH, 14); ctx.fill();
     ctx.strokeStyle = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.06)';
     ctx.lineWidth = 1; ctx.stroke();
     
-    ctx.fillStyle = isAsk ? (isDark ? '#f5e6e8' : '#1a1a1a') : (isDark ? '#f5e6e8' : '#1a1a1a');
+    ctx.fillStyle = isAsk ? (isDark ? '#f5e6e8' : '#4a3a12') : (isDark ? '#f5e6e8' : '#1a1a1a');
     ctx.font = bodyFont;
     let ty = bubbleY + 14 + 14;
     
@@ -2117,7 +2265,7 @@ async function generateSnapImage(messages, chat, onProgress){
       if(askData.askDone){
         const pickedNames = picked.length ? (askData.askMode === 'tu' ? picked.length + ' 張圖' : picked.map(i => askData.askOptions[i]).join('、')) : '';
         ctx.fillStyle = gold; ctx.font = '13px sans-serif';
-        ctx.fillText('祂選了：' + (pickedNames || '無'), bubbleX + 16, ay + 14);
+        ctx.fillText(name + '選了：' + (pickedNames || '無'), bubbleX + 16, ay + 14);
         ay += 22;
       } else {
         ctx.fillStyle = gold; ctx.font = '13px sans-serif';
@@ -2145,9 +2293,9 @@ function toggleSnapMode(){
   if(snapMode){
     snapMode = false; snapSelectedIds.clear(); $('#snapBtn').style.color = 'var(--text-secondary)';
     const b = document.getElementById('snapModeBar'); if(b) b.remove();
-    renderMessages(false);
+    renderMessagesUI(false);
   } else {
-    snapMode = true; snapSelectedIds.clear(); $('#snapBtn').style.color = 'var(--primary)'; renderMessages(false);
+    snapMode = true; snapSelectedIds.clear(); $('#snapBtn').style.color = 'var(--primary)'; renderMessagesUI(false);
     const bar = document.createElement('div'); bar.id = 'snapModeBar';
     bar.style.cssText = 'position:fixed;left:0;right:0;bottom:calc(70px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:16px;z-index:120;';
     bar.innerHTML = `<button id="snapCancel" style="padding:10px 18px;border-radius:20px;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:14px;">取消</button><button id="snapConfirm" style="padding:10px 18px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:600;">生成留影</button>`;
@@ -2162,6 +2310,16 @@ function updateSnapTitle(){
   if(btn) btn.textContent = `生成留影(${snapSelectedIds.size})`;
 }
 
+// 重新渲染消息流（仅用于开关勾选框等需要全量重置的场景）
+function renderMessagesUI(forceBottom) {
+  const box = $('#messages'); box.innerHTML = '';
+  const c = chats.find(x => x.id === currentChatId);
+  if (c) currentMessages.forEach(m => appendMessageDOM(m, c, false));
+  if (forceBottom) {
+      const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
+  }
+}
+
 function bindEvents(){
   document.querySelectorAll('.tab-item').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); tab.classList.add('active'); $('#tabContentCards').style.display='none'; $('#tabContentStickers').style.display='none'; $('#tabContentActions').style.display='none'; $('#tabContentMusic').style.display='none'; if(tab.dataset.tab==='cards'){ $('#tabContentCards').style.display='block'; loadAndRenderCards(); } else if(tab.dataset.tab==='stickers'){ $('#tabContentStickers').style.display='block'; loadAndRenderStamps(); } else if(tab.dataset.tab==='actions'){ $('#tabContentActions').style.display='block'; loadAndRenderActions(); } else { $('#tabContentMusic').style.display='block'; loadAndRenderMusic(); } }; });
   document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
@@ -2173,6 +2331,7 @@ function bindEvents(){
   $('#actCancel').onclick = closeActionSheet;
   actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
   $('#actPin').onclick = async () => { closeActionSheet(); if(!activeChatForMenu) return; activeChatForMenu.isPinned = !activeChatForMenu.isPinned; await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); };
+  
   $('#actEdit').onclick = () => {
     closeActionSheet(); if(!activeChatForMenu) return;
     isEditingChatId = activeChatForMenu.id;
@@ -2198,6 +2357,7 @@ function bindEvents(){
     $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
     $('#pageCreate').classList.add('show');
   };
+  
   $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }); };
   $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }); };
 
@@ -2212,35 +2372,57 @@ function bindEvents(){
     showCustomDialog('焚毀','確定要焚毀這條消息嗎？',false,'焚毀', async () => {
       await reqToPromise(tx('messages','readwrite').delete(m.id));
       currentMessages = currentMessages.filter(x => x.id !== m.id);
-      renderMessages(false);
+      const el = document.querySelector(`.msg-group[data-msg-id="${m.id}"]`);
+      if(el) el.remove();
       await touchChat(currentChatId);
       toast('已焚毀');
     });
     pendingBurnMsg = null;
   };
 
-  $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').filter(l => l.trim() !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
+  $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
+  
+  // 定稿：批量、去空行
   $('#btnAddCards').onclick = async () => {
     const text = $('#newCardsInput').value.trim(); if(!text) return;
-    const lines = text.split('\n').filter(l => l.trim() !== '');
-    const all = await reqToPromise(tx('cards').getAll()); let added = 0, dup = 0;
-    for(let line of lines){ line = line.trim(); if(all.find(c => c.text === line)){ dup++; continue; } const nc = { id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }; await reqToPromise(tx('cards','readwrite').add(nc)); all.push(nc); added++; }
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
+    const all = await reqToPromise(tx('cards').getAll()); 
+    const existing = new Set(all.map(c => c.text));
+    let added = 0, dup = 0;
+    const newCards = [];
+    
+    for(let line of lines){ 
+      if(existing.has(line)){ dup++; continue; } 
+      existing.add(line);
+      newCards.push({ id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }); 
+      added++; 
+    }
+    
+    if (newCards.length > 0) {
+      const store = tx('cards','readwrite');
+      newCards.forEach(card => store.add(card));
+    }
+    
     $('#newCardsInput').value = ''; $('#draftCount').textContent = '待定稿：0 份';
     toast(`成功定稿 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : ''));
     loadAndRenderCards();
   };
+  
   $('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
   $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
   $('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
   $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }); };
   $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
   $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }); };
-  $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = [], added = 0, dup = 0; const all = await reqToPromise(tx('cards').getAll()); try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) nc.push({ text:it.text, category:it.category || currentSubTab }); }); } else { ev.target.result.split('\n').forEach(line => { if(line.trim()) nc.push({ text:line.trim(), category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } for(const card of nc){ if(all.find(c => c.text === card.text)) dup++; else { await reqToPromise(tx('cards','readwrite').add({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() })); added++; } } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
+  
+  // 导入：批量、去空行
+  $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
+  
   $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='電文.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='電文.txt'; a.click(); toast('已發報 (TXT)'); }; };
 
   if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
-  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { await reqToPromise(tx('stickers','readwrite').add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() })); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
-  $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)) for(const it of data) if(it.data) await reqToPromise(tx('stickers','readwrite').add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() })); toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
+  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { const store = tx('stickers','readwrite'); for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { store.add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() }); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
+  $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
   $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
   $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }); };
   $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
@@ -2248,15 +2430,15 @@ function bindEvents(){
   $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }); };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
 
-  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').filter(l => l.trim() !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
-  $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').filter(l => l.trim() !== ''); const all = await reqToPromise(tx('actions').getAll()); let added = 0, dup = 0; for(let line of lines){ line = line.trim(); if(all.find(c => c.text === line)){ dup++; continue; } await reqToPromise(tx('actions','readwrite').add({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() })); all.push({ text:line }); added++; } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
+  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
+  $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
   $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
   $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
   $('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
   $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }); };
   $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
   $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }); };
-  $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = [], added = 0, dup = 0; const all = await reqToPromise(tx('actions').getAll()); try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) na.push({ text:it.text, category:it.category || currentActionSubTab }); }); } else { ev.target.result.split('\n').forEach(line => { if(line.trim()) na.push({ text:line.trim(), category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } for(const act of na){ if(all.find(c => c.text === act.text)) dup++; else { await reqToPromise(tx('actions','readwrite').add({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() })); added++; } } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
+  $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
   $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='暗語.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='暗語.txt'; a.click(); toast('已投映'); }; };
 
   $('#musicFileBox').onclick = () => $('#musicFileInput').click();
@@ -2272,10 +2454,10 @@ function bindEvents(){
   $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
   $('#flashPanelMask').onclick = e => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
   $('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
-  $('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); renderMessages(false); touchChat(currentChatId); }); }); $('#cameraInput').value=''; } };
+  $('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, 8000 + Math.random()*7000); }); }); $('#cameraInput').value=''; } };
   $('#flashAlbum').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#albumInput').click(); };
-  $('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); renderMessages(false); touchChat(currentChatId); }); }); $('#albumInput').value=''; } };
-  $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); renderMessages(false); await touchChat(currentChatId); isWaitingForMyReply = false; if(!c.isNightMode) setTimeout(replyFromThem, 8000 + Math.random()*7000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+  $('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, 8000 + Math.random()*7000); }); }); $('#albumInput').value=''; } };
+  $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; await touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, 8000 + Math.random()*7000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
   $('#flashAsk').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAskModal(); };
   $('#flashMusic').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const musics = await reqToPromise(tx('music').getAll()); if(!musics.length){ toast('郵電所中尚無留聲'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'), ml = $('#musicSelectContent'); content.style.display='none'; list.style.display='none'; ml.style.display='flex'; ml.innerHTML=''; $('#stickerPanelHeader').innerHTML='選擇留聲'; musics.forEach((m, idx) => { const d = document.createElement('div'); d.className='music-select-item'; d.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div>`; d.onclick = () => { $('#stickerPanelMask').classList.remove('show'); playMusic(musics, idx); }; ml.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
   $('#flashAccompany').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAccompanySelect(); };
@@ -2337,9 +2519,13 @@ function bindEvents(){
   if($('#accompanyBgFile')) $('#accompanyBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempAccompanyBg = b; $('#accompanyBgUploadBox').style.backgroundImage=`url(${b})`; $('#accompanyBgText').textContent=''; }); };
   if($('#chatBgMaskRange')) $('#chatBgMaskRange').oninput = e => { tempChatBgMask = parseInt(e.target.value); $('#chatBgMaskValue').textContent = tempChatBgMask + '%'; };
 
+  let isSavingChat = false;
   $('#saveChatBtn').onclick = async () => {
+    if(isSavingChat) return;
     const roomName = $('#inputRoomName').value.trim(), theirName = $('#inputTheirName').value.trim(), theirNick = $('#inputTheirNick').value.trim(), theirSign = $('#inputTheirSign').value.trim(), myName = $('#inputMyName').value.trim(), myNick = $('#inputMyNick').value.trim(), mySign = $('#inputMySign').value.trim();
     if(!roomName){ toast('請輸入聊天室名稱'); return; }
+    isSavingChat = true;
+    
     if(isEditingChatId){
       const c = chats.find(x => x.id === isEditingChatId);
       if(c){
@@ -2361,6 +2547,7 @@ function bindEvents(){
       toast('已建立新對話');
     }
     await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
+    setTimeout(()=>{ isSavingChat = false; }, 500);
   };
 
   $('#backBtn').onclick = () => { $('#pageChat').classList.remove('show'); const b = document.getElementById('snapModeBar'); if(b) b.remove(); snapMode = false; snapSelectedIds.clear(); currentChatId = null; applyThemeAndBg(); renderChatList(); };

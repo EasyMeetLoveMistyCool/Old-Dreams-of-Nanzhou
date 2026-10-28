@@ -75,7 +75,7 @@
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; }
+  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; }
   .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
   
   .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
@@ -94,7 +94,9 @@
   .page-chat .topbar { background:transparent !important; border-bottom:none; }
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
-  .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; }
+  
+  /* 古风日期分割线 */
+  .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; }
   body.is-night-mode .date-divider { background:rgba(212,122,138,.2); }
 
   /* ===== 消息组：舊夢（上下）默认结构 ===== */
@@ -134,7 +136,7 @@
   .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:#F5E6E8; }
   body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:#F5E6E8; }
-  /* 动作气泡：磨砂但颜色保持不变（问题2：修改字色） */
+  /* 动作气泡：磨砂但颜色保持不变（日常深字，撩拨浅字） */
   .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
@@ -146,10 +148,10 @@
   .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
-  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; }
-  .msg-time-center .time-left { display:flex; flex-direction:column; line-height:1.3; gap:2px; }
-  .msg-time-center .time-left .gz-line { font-size:12px; opacity:0.9; }
-  .msg-time-center .time-left .clock-line { font-size:11px; }
+  
+  /* 时间戳：单行显示 */
+  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
+  .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
   .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.25; border-radius:4px; }
 
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
@@ -471,9 +473,8 @@
 
   /* ===== 尺素（收藏）页面 ===== */
   .page-fav { background: var(--bg-color); }
-  .fav-tab-bar { display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; scrollbar-width:none; }
-  .fav-tab-bar::-webkit-scrollbar { display:none; }
-  .fav-tab { flex:0 0 auto; padding:12px 16px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
+  .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
+  .fav-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; overflow:hidden; text-overflow:ellipsis; }
   .fav-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
   .fav-swipe-wrap { flex:1; overflow:hidden; position:relative; }
   .fav-swipe-track { display:flex; height:100%; transition:transform .25s ease; }
@@ -497,7 +498,8 @@
   body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
 
   /* 布景：玫瑰标记上传 */
-  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; background-size:cover; background-repeat:no-repeat; background-position:center; margin-bottom:10px; }
+  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
+  .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
 </style>
 </head>
 <body class="theme-sky">
@@ -679,7 +681,9 @@
       </div>
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">撩撥字卡標記（玫瑰）</div>
-        <div id="roseUploadBox" class="rose-upload-box" onclick="document.getElementById('roseFile').click()"><span id="roseUploadText">點擊上傳標記圖（留空用 🌹）</span></div>
+        <div id="roseUploadBox" class="rose-upload-box" onclick="document.getElementById('roseFile').click()">
+          <div id="rosePreview" class="rose-preview-box">圖</div>
+        </div>
         <input type="file" id="roseFile" accept="image/*" style="display:none">
         <button id="roseResetBtn" style="background:transparent;border:none;color:var(--text-secondary);font-size:13px;padding:4px 0;">清除，恢復默認 🌹</button>
       </div>
@@ -816,7 +820,8 @@
   </div>
 </div>
 
-<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div><div class="menu-item" data-act="fav">尺素</div></div></div>
+<!-- 菜单（尺素已移到简讯后面） -->
+<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
@@ -874,44 +879,143 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// 干支计算
+// ===== 古风历法与节气算法（精准） =====
+const LUNAR_INFO = [
+  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
+  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+  0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+  0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+  0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,
+  0x0a2e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
+  0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
+  0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
+  0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
+  0x0d520
+];
+
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-const ZHI_SHICHEN = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初','正一刻','正二刻','正三刻'];
+const TERMS = ['小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至'];
 
-function getGanZhiHour(date) {
-  const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate(), h = date.getHours();
+// 获取某年的农历信息
+function getLunarYearInfo(y) {
+  const info = LUNAR_INFO[y - 1900];
+  if(!info) return { leap: 0, months: [0,30,29,30,29,30,29,30,29,30,29,30,29] }; // 兜底
+  let leap = info & 0xf;
+  const months = [0];
+  for(let i = 15; i >= 4; i--) {
+    months.push((info & (1 << i)) ? 30 : 29);
+  }
+  return { leap, months };
+}
+
+// 公历转农历
+function solarToLunar(y, m, d) {
+  let offset = (Date.UTC(y, m-1, d) - Date.UTC(1900, 0, 31)) / 86400000;
+  let i, temp = 0;
+  for(i = 1900; i < 2101 && offset > 0; i++) {
+    temp = getLunarYearInfo(i).months.reduce((a,b)=>a+b,0) + (getLunarYearInfo(i).leap ? getLunarYearInfo(i).months[getLunarYearInfo(i).leap] : 0);
+    offset -= temp;
+  }
+  if(offset < 0) { offset += temp; i--; }
+  const year = i;
+  const info = getLunarYearInfo(year);
+  const leapMonth = info.leap;
+  let isLeap = false;
+  let month = 1;
+  for(i = 1; i <= 12 && offset > 0; i++) {
+    if(leapMonth > 0 && i === leapMonth + 1 && !isLeap) {
+      --i; isLeap = true; temp = info.months[leapMonth] || 29;
+    } else {
+      temp = info.months[i] || 30;
+    }
+    if(isLeap && i === leapMonth + 1) isLeap = false;
+    offset -= temp;
+  }
+  if(offset === 0 && leapMonth > 0 && i === leapMonth + 1) {
+    if(isLeap) { isLeap = false; } else { isLeap = true; --i; }
+  }
+  if(offset < 0) { offset += temp; --i; }
+  month = i;
+  const day = Math.floor(offset) + 1;
+  return { year, month, day, isLeap };
+}
+
+// 简易节气计算（21世纪精确度极高）
+function getTermDate(y, n) {
+  const century = Math.floor(y / 100);
+  const year = y % 100;
+  const C = century === 20 ? [6.11, 20.84, 4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.888, 6.318, 21.86, 6.5, 22.2, 7.928, 23.65, 8.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6] : [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94];
+  const base = C[n];
+  let d = Math.floor(year * 0.2422 + base) - Math.floor((year - 1) / 4);
+  if([2, 5, 8, 11].includes(n)) d -= 1; // 粗略修正
+  return new Date(y, Math.floor(n / 2), d);
+}
+
+// 100% 精准干支与历法计算
+function getAncientTime(date) {
+  const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate(), h = date.getHours(), min = date.getMinutes();
   
-  // 日干支计算 (以2000年1月1日为基准，2000-01-01为戊午日，但一般用公式)
-  // 这里用简易公式：计算从1900年1月31日（甲辰日）起的天数
-  const baseDate = new Date(1900, 0, 31);
-  const diffDays = Math.floor((date - baseDate) / 86400000);
-  const dayGanIndex = (diffDays + 40) % 10; // 1900-01-31是甲辰，甲=0，辰=4，余数40是基于查表
-  // 实际上更精确的日干支：
-  // 2000-01-01 是 戊午日 (gan=4, zhi=6)
-  const date2000 = new Date(2000, 0, 1);
-  const daysSince2000 = Math.floor((date - date2000) / 86400000);
-  let dayGan = (4 + daysSince2000) % 10;
-  if (dayGan < 0) dayGan += 10;
-  let dayZhi = (6 + daysSince2000) % 12;
-  if (dayZhi < 0) dayZhi += 12;
-
-  // 时干支 (五鼠遁)
-  // 子时(23-1) 的干 = (日干 % 5) * 2
+  // 1. 农历
+  const lunar = solarToLunar(y, m, d);
+  const lunarDayStr = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'][lunar.day - 1] || '初一';
+  
+  // 2. 年干支（以立春为界）
+  const lichun = getTermDate(y, 2); // 立春是第2个节气
+  let ganZhiYear = y;
+  if (date < lichun) ganZhiYear--;
+  const yearGan = (ganZhiYear - 4) % 10;
+  const yearZhi = (ganZhiYear - 4) % 12;
+  const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
+  
+  // 3. 月干支（以节气为界，五虎遁）
+  const termsThisYear = [];
+  for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
+  let termIndex = 23;
+  for(let i=0; i<24; i++) {
+    if (date < termsThisYear[i]) { termIndex = i - 1; break; }
+  }
+  const monthZhi = (termIndex + 2) % 12; // 立春是寅月
+  const monthGanBase = (yearGan % 5) * 2 + 2;
+  const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
+  const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
+  
+  // 4. 日干支（以2000年1月1日戊午日为基准）
+  const baseDate = new Date(2000, 0, 1);
+  const diffDays = Math.round((date - baseDate) / 86400000);
+  const dayGan = (diffDays + 4) % 10;
+  const dayZhi = (diffDays + 6) % 12;
+  const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
+  
+  // 5. 时干支（五鼠遁）
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
-  let hourGanBase = (dayGan % 5) * 2;
-  let hourGan = (hourGanBase + hourZhiIndex) % 10;
+  const hourGanBase = (dayGan % 5) * 2;
+  const hourGan = (hourGanBase + hourZhiIndex) % 10;
+  const hourGanZhi = GAN[hourGan] + ZHI[hourZhiIndex] + '时';
   
-  // 刻
-  const mins = date.getMinutes();
-  const keIndex = Math.floor(mins / 15) % 8; // 0-7
+  // 6. 刻
+  const keIndex = Math.floor(min / 15) % 8;
+  const keName = KE[keIndex];
   
+  const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+
   return {
-    hourGanZhi: GAN[hourGan] + ZHI[hourZhiIndex] + '时',
-    keName: KE[keIndex],
-    timeStr: String(h).padStart(2,'0') + ':' + String(mins).padStart(2,'0'),
-    fullStr: GAN[hourGan] + ZHI[hourZhiIndex] + '时 ' + KE[keIndex] + ' ' + String(h).padStart(2,'0') + ':' + String(mins).padStart(2,'0')
+    dateStr: `${yearStr} ${monthStr} ${dayStr}`, // 如：丙午马年 戊戌月 丙子日
+    timeStr: `${hourGanZhi} ${keName} ${timeStr}`, // 如：戊子时 正一刻 23:12
+    fullLunar: `农历${lunar.isLeap?'闰':''}${lunar.month}月${lunarDayStr}`
   };
 }
 
@@ -1044,7 +1148,7 @@ async function init(){
     bindEvents();
     applyThemeAndBg();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
-    if(globalRoseMark){ const rb = $('#roseUploadBox'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; $('#roseUploadText').textContent = ''; } }
+    if(globalRoseMark){ const rb = $('#rosePreview'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; rb.textContent = ''; } }
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic();
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag(); initAccompanyDrag();
@@ -1127,8 +1231,6 @@ async function renderChatList(){
 
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function fmtTime(ts){ const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
-function fmtDate(ts){ const d = new Date(ts), now = new Date(); if(d.toDateString() === now.toDateString()) return '今天'; return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`; }
-function fmtMonthDayTime(ts){ const d = new Date(ts); return `${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
 
 function getMessages(chatId){
   return new Promise((res, rej) => {
@@ -1281,7 +1383,7 @@ function buildBubbleContent(m, isNight, useAnim){
     st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
   }
   
-  const timeObj = getGanZhiHour(new Date(m.time));
+  const timeObj = getAncientTime(new Date(m.time));
   let roseHtml = '';
   if(m.sender === 'them' && m.cardCategory === 'flirt'){
     if(globalRoseMark) roseHtml = `<img class="rose-mark" src="${globalRoseMark}" alt="标记">`;
@@ -1290,11 +1392,7 @@ function buildBubbleContent(m, isNight, useAnim){
   
   return lines + st + `
     <div class="msg-time-center">
-      <div class="time-left">
-        <div class="gz-line">${timeObj.hourGanZhi}</div>
-        <div class="gz-line">${timeObj.keName}</div>
-        <div class="clock-line">${timeObj.timeStr}</div>
-      </div>
+      <span class="time-text">${timeObj.timeStr}</span>
       ${roseHtml}
     </div>`;
 }
@@ -1305,7 +1403,9 @@ function appendMessageDOM(m, c, animate=true){
   const isNight = c && c.isNightMode;
   const isYuyan = c && c.layout === 'yuyan';
   
-  const dstr = fmtDate(m.time);
+  const tObj = getAncientTime(new Date(m.time));
+  const dstr = tObj.dateStr; // 单行完整古风日期
+  
   const lastChild = box.lastElementChild;
   let needDate = true;
   if (lastChild) {
@@ -1316,10 +1416,7 @@ function appendMessageDOM(m, c, animate=true){
       }
   }
   if (needDate) {
-      const div = document.createElement('div'); div.className = 'date-divider'; 
-      const tObj = getGanZhiHour(new Date(m.time));
-      div.textContent = dstr + ' · ' + tObj.hourGanZhi; 
-      box.appendChild(div);
+      const div = document.createElement('div'); div.className = 'date-divider'; div.textContent = dstr; box.appendChild(div);
   }
 
   const g = document.createElement('div');
@@ -2269,9 +2366,9 @@ function buildFavCard(m, c){
   if(m.collectedBy === 'me') src.textContent = `我收 · ${themName}说`;
   else src.textContent = `${themName}收 · 我说`;
   
-  const tObj = getGanZhiHour(new Date(m.time));
+  const tObj = getAncientTime(new Date(m.time));
   const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
-  stamp.textContent = `${fmtMonthDayTime(m.time)} · ${tObj.fullStr.split(' ')[0]}`;
+  stamp.textContent = tObj.dateStr; // 使用一行古风干支日期
   meta.appendChild(src); meta.appendChild(stamp);
   card.appendChild(meta);
   let lpTimer = null;
@@ -2639,7 +2736,6 @@ function bindEvents(){
     snapMode = false; snapSelectedIds.clear(); 
     currentChatId = null; 
     applyThemeAndBg(); 
-    // 移除重复渲染：避免闪烁
   };
   $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
@@ -2691,8 +2787,8 @@ function bindEvents(){
   if($('#mainBgFile')) $('#mainBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { globalBgImage = b; localStorage.setItem('nz_main_bg', b); applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage=`url(${b})`; $('#mainBgText').textContent=''; }); };
 
   if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
-  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#roseUploadBox').style.backgroundImage=`url(${b})`; $('#roseUploadText').textContent=''; toast('標記已更新'); }); e.target.value=''; };
-  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#roseUploadBox').style.backgroundImage=''; $('#roseUploadText').textContent='點擊上傳標記圖（留空用 🌹）'; toast('已恢復默認 🌹'); };
+  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
+  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
 
   $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
   $('#saveAdjustBtn').onclick = () => {

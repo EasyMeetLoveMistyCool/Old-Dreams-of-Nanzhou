@@ -21,6 +21,7 @@
     --bubble-night-them: rgba(74,63,78,0.25);
     --bubble-night-me: rgba(142,68,81,0.25);
     --bubble-text-fixed: #F5F5F5;
+    --action-daily-text: #8a4a58;
   }
   
   body.theme-sky { --bg-color:#e6ebee; --bubble-me:#d6ecff; }
@@ -41,8 +42,8 @@
     --topbar-border: #3a252b !important; 
     --bubble-me: rgba(80, 30, 50, 0.85) !important; 
     --bubble-them: rgba(40, 35, 45, 0.85) !important;
-    --bubble-action-me: rgba(90, 40, 50, 0.8) !important;
-    --bubble-action-them: rgba(60, 30, 40, 0.8) !important;
+    --bubble-action-me: rgba(90, 40, 50, 0.85) !important;
+    --bubble-action-them: rgba(60, 30, 40, 0.85) !important;
     --text-color: #f5e6e8 !important; 
     --text-secondary: rgba(212, 122, 138, 0.6) !important; 
     --time-color: rgba(212, 122, 138, 0.5) !important;
@@ -119,8 +120,10 @@
   .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
   .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
   .layout-yuyan .msg-row { display:flex; align-items:flex-start; gap:8px; width:100%; }
+  /* 祂发：靠左 */
   .layout-yuyan .msg-group.them .msg-row { flex-direction:row; justify-content:flex-start; }
-  .layout-yuyan .msg-group.me .msg-row { flex-direction:row-reverse; justify-content:flex-start; }
+  /* 我发：靠右 */
+  .layout-yuyan .msg-group.me .msg-row { flex-direction:row; justify-content:flex-end; }
   .layout-yuyan .msg-group.them .msg-dual-avatar { margin-right:0; }
   .layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
   .layout-yuyan .msg-group .bubble { max-width:72%; }
@@ -131,9 +134,11 @@
   .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:#F5E6E8; }
   body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:#F5E6E8; }
-  /* 动作气泡：磨砂但颜色保持不变 */
-  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  /* 动作气泡：磨砂但颜色保持不变（问题2：修改字色） */
+  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
+  body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; }
   /* 深色主题下固定字色 */
   body.theme-cyber .msg-group .bubble, body.theme-space .msg-group .bubble, body.theme-nightpurple .msg-group .bubble, body.theme-pureblack .msg-group .bubble { color:var(--bubble-text-fixed); }
 
@@ -141,8 +146,11 @@
   .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
-  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:right; width:100%; display:flex; align-items:center; justify-content:flex-end; gap:4px; }
-  .msg-time-center .rose-mark { height:18px; width:auto; display:inline-block; object-fit:contain; opacity:0.25; }
+  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; }
+  .msg-time-center .time-left { display:flex; flex-direction:column; line-height:1.3; gap:2px; }
+  .msg-time-center .time-left .gz-line { font-size:12px; opacity:0.9; }
+  .msg-time-center .time-left .clock-line { font-size:11px; }
+  .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.25; border-radius:4px; }
 
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
   .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
@@ -489,7 +497,7 @@
   body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
 
   /* 布景：玫瑰标记上传 */
-  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; background-size:contain; background-repeat:no-repeat; background-position:center; margin-bottom:10px; }
+  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; background-size:cover; background-repeat:no-repeat; background-position:center; margin-bottom:10px; }
 </style>
 </head>
 <body class="theme-sky">
@@ -808,7 +816,7 @@
   </div>
 </div>
 
-<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
+<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div><div class="menu-item" data-act="fav">尺素</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
@@ -865,6 +873,47 @@ let toastTimer = null;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
+
+// 干支计算
+const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const ZHI_SHICHEN = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const KE = ['初刻','一刻','二刻','三刻','正初','正一刻','正二刻','正三刻'];
+
+function getGanZhiHour(date) {
+  const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate(), h = date.getHours();
+  
+  // 日干支计算 (以2000年1月1日为基准，2000-01-01为戊午日，但一般用公式)
+  // 这里用简易公式：计算从1900年1月31日（甲辰日）起的天数
+  const baseDate = new Date(1900, 0, 31);
+  const diffDays = Math.floor((date - baseDate) / 86400000);
+  const dayGanIndex = (diffDays + 40) % 10; // 1900-01-31是甲辰，甲=0，辰=4，余数40是基于查表
+  // 实际上更精确的日干支：
+  // 2000-01-01 是 戊午日 (gan=4, zhi=6)
+  const date2000 = new Date(2000, 0, 1);
+  const daysSince2000 = Math.floor((date - date2000) / 86400000);
+  let dayGan = (4 + daysSince2000) % 10;
+  if (dayGan < 0) dayGan += 10;
+  let dayZhi = (6 + daysSince2000) % 12;
+  if (dayZhi < 0) dayZhi += 12;
+
+  // 时干支 (五鼠遁)
+  // 子时(23-1) 的干 = (日干 % 5) * 2
+  const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
+  let hourGanBase = (dayGan % 5) * 2;
+  let hourGan = (hourGanBase + hourZhiIndex) % 10;
+  
+  // 刻
+  const mins = date.getMinutes();
+  const keIndex = Math.floor(mins / 15) % 8; // 0-7
+  
+  return {
+    hourGanZhi: GAN[hourGan] + ZHI[hourZhiIndex] + '时',
+    keName: KE[keIndex],
+    timeStr: String(h).padStart(2,'0') + ':' + String(mins).padStart(2,'0'),
+    fullStr: GAN[hourGan] + ZHI[hourZhiIndex] + '时 ' + KE[keIndex] + ' ' + String(h).padStart(2,'0') + ':' + String(mins).padStart(2,'0')
+  };
+}
 
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
@@ -954,7 +1003,7 @@ let loadCardOffset = 0, loadActionOffset = 0;
 let pendingBurnMsg = null;
 let currentMsgForAction = null;
 
-let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0;
+let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -1190,6 +1239,7 @@ async function toggleChatMode() {
   currentMessages.forEach(m => appendMessageDOM(m, c, false));
   setTimeout(() => { const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight; }, 50);
   
+  if (c.isNightMode) themCollectMyMessage(currentChatId, true);
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
 }
 
@@ -1230,15 +1280,23 @@ function buildBubbleContent(m, isNight, useAnim){
     const dl = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
     st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
   }
-  const tac = useAnim ? '' : 'no-anim';
-  const tdl = useAnim ? ((m.cards ? m.cards.length : 1) * 2 + 1) : 0;
+  
+  const timeObj = getGanZhiHour(new Date(m.time));
   let roseHtml = '';
-  if(m.isNightMode && globalRoseMark){
-    roseHtml = `<img class="rose-mark" src="${globalRoseMark}" alt="🌹">`;
-  } else if(m.isNightMode){
-    roseHtml = `<span class="rose-mark" style="opacity:0.25;font-size:14px;line-height:1;">🌹</span>`;
+  if(m.sender === 'them' && m.cardCategory === 'flirt'){
+    if(globalRoseMark) roseHtml = `<img class="rose-mark" src="${globalRoseMark}" alt="标记">`;
+    else roseHtml = `<div class="rose-mark" style="background:linear-gradient(135deg,#d47a8a,#b05a6a);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;">🌹</div>`;
   }
-  return lines + st + `<span class="msg-time-center ${tac}" style="animation-delay:${tdl}s">${roseHtml}<span>${fmtTime(m.time)}</span></span>`;
+  
+  return lines + st + `
+    <div class="msg-time-center">
+      <div class="time-left">
+        <div class="gz-line">${timeObj.hourGanZhi}</div>
+        <div class="gz-line">${timeObj.keName}</div>
+        <div class="clock-line">${timeObj.timeStr}</div>
+      </div>
+      ${roseHtml}
+    </div>`;
 }
 
 function appendMessageDOM(m, c, animate=true){
@@ -1258,7 +1316,10 @@ function appendMessageDOM(m, c, animate=true){
       }
   }
   if (needDate) {
-      const div = document.createElement('div'); div.className = 'date-divider'; div.textContent = dstr; box.appendChild(div);
+      const div = document.createElement('div'); div.className = 'date-divider'; 
+      const tObj = getGanZhiHour(new Date(m.time));
+      div.textContent = dstr + ' · ' + tObj.hourGanZhi; 
+      box.appendChild(div);
   }
 
   const g = document.createElement('div');
@@ -1266,18 +1327,15 @@ function appendMessageDOM(m, c, animate=true){
   g.dataset.msgId = m.id;
   
   const avHtml = buildAvatarHtml(m, c, isNight);
-  
   const useAnim = animate && !isMe;
-  const bubbleHtml = buildBubbleContent(m, isNight, useAnim);
-  
-  const bubbleEl = document.createElement('div');
-  bubbleEl.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
   
   let innerNode;
   if(m.type === 'ask'){
     innerNode = buildAskCard(m, c);
   } else {
-    bubbleEl.innerHTML = bubbleHtml;
+    const bubbleEl = document.createElement('div');
+    bubbleEl.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
+    bubbleEl.innerHTML = buildBubbleContent(m, isNight, useAnim);
     innerNode = bubbleEl;
   }
   
@@ -1285,9 +1343,11 @@ function appendMessageDOM(m, c, animate=true){
     const row = document.createElement('div');
     row.className = 'msg-row';
     if(isMe){
+      // 我发：气泡在左，头像在右
       row.appendChild(innerNode);
       row.appendChild(parseAvatarNode(avHtml));
     } else {
+      // 祂发：头像在左，气泡在右
       row.appendChild(parseAvatarNode(avHtml));
       row.appendChild(innerNode);
     }
@@ -1432,7 +1492,7 @@ async function sendMyMessage(){
   const isNight = c.isNightMode;
   
   const lines = text.split('\n').filter(l => l.trim() !== '');
-  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:lines, stickerData:pendingStickerData, time:Date.now(), isNightMode: isNight };
+  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:lines, cardCategory:'normal', stickerData:pendingStickerData, time:Date.now(), isNightMode: isNight };
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   currentMessages.push(msg);
@@ -1465,6 +1525,7 @@ async function themCollectMyMessage(chatId, isNight){
   const target = mine[Math.floor(Math.random() * mine.length)];
   target.collectedBy = 'them';
   await reqToPromise(tx('messages','readwrite').put(target));
+  if($('#pageFav').classList.contains('show')) openFavPage();
 }
 
 async function buildThemMessage(chatId, isSpecialScene = false){
@@ -1501,7 +1562,7 @@ async function buildThemMessage(chatId, isSpecialScene = false){
   const stickers = await reqToPromise(tx('stickers').getAll());
   if(stickers.length && Math.random() < (config.stickerRate / 100)){ stickerData = stickers[Math.floor(Math.random()*stickers.length)].data; }
   
-  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'cards', text:'', cards:picked, stickerData, time:Date.now(), isNightMode: isNight };
+  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId, sender:'them', type:'cards', text:'', cards:picked, cardCategory:pickedCategory, stickerData, time:Date.now(), isNightMode: isNight };
   
   await reqToPromise(tx('messages','readwrite').add(msg));
   if(currentChatId === chatId){ 
@@ -2207,8 +2268,10 @@ function buildFavCard(m, c){
   const themName = getDisplayName(c);
   if(m.collectedBy === 'me') src.textContent = `我收 · ${themName}说`;
   else src.textContent = `${themName}收 · 我说`;
+  
+  const tObj = getGanZhiHour(new Date(m.time));
   const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
-  stamp.textContent = fmtMonthDayTime(m.time);
+  stamp.textContent = `${fmtMonthDayTime(m.time)} · ${tObj.fullStr.split(' ')[0]}`;
   meta.appendChild(src); meta.appendChild(stamp);
   card.appendChild(meta);
   let lpTimer = null;
@@ -2510,7 +2573,7 @@ function bindEvents(){
   $('#backSnapBtn').onclick = () => { $('#pageSnap').classList.remove('show'); };
   $('#snapGenerateBtn').onclick = () => { toast('留影功能整理中'); };
 
-  $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); };
+  $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); if(favRefreshTimer) { clearInterval(favRefreshTimer); favRefreshTimer = null; } };
   bindFavSwipe();
 
   $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
@@ -2570,7 +2633,14 @@ function bindEvents(){
     setTimeout(()=>{ isSavingChat = false; }, 500);
   };
 
-  $('#backBtn').onclick = () => { $('#pageChat').classList.remove('show'); const b = document.getElementById('snapModeBar'); if(b) b.remove(); snapMode = false; snapSelectedIds.clear(); currentChatId = null; applyThemeAndBg(); renderChatList(); };
+  $('#backBtn').onclick = () => { 
+    $('#pageChat').classList.remove('show'); 
+    const b = document.getElementById('snapModeBar'); if(b) b.remove(); 
+    snapMode = false; snapSelectedIds.clear(); 
+    currentChatId = null; 
+    applyThemeAndBg(); 
+    // 移除重复渲染：避免闪烁
+  };
   $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
 
@@ -2584,6 +2654,14 @@ function bindEvents(){
     if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
     else if(act === 'settings') $('#pageSettings').classList.add('show');
     else if(act === 'adjust') $('#pageAdjust').classList.add('show');
+    else if(act === 'fav'){ 
+      openFavPage(); 
+      if(favRefreshTimer) clearInterval(favRefreshTimer);
+      favRefreshTimer = setInterval(() => {
+        if($('#pageFav').classList.contains('show')) openFavPage();
+        else { clearInterval(favRefreshTimer); favRefreshTimer = null; }
+      }, 5000);
+    }
     else if(act === 'export') { 
       showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
       $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary); border-right:1px solid var(--border-light);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;

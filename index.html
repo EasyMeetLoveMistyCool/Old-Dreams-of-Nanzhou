@@ -1113,6 +1113,9 @@ function getTheirDisplayChar(c){ return getDisplayName(c).charAt(0); }
 function getMyDisplayChar(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName).charAt(0) : '我'; }
 function getMyDisplayName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName) : '我'; }
 
+function playNext(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex+1)%playlist.length; loadTrack(); }
+function playPrev(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex-1+playlist.length)%playlist.length; loadTrack(); }
+
 async function init(){
   try {
     await openDB();

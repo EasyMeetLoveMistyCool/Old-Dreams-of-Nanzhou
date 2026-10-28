@@ -15,6 +15,12 @@
     --bubble-action-me:rgba(255,230,235,.9); --bubble-action-them:rgba(255,235,240,.85);
     --text-color:#000000; --text-secondary:#707579; --time-color:#a0a0a0;
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
+    --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
+    --bubble-daily-them: rgba(74,93,98,0.25);
+    --bubble-daily-me: rgba(142,134,160,0.25);
+    --bubble-night-them: rgba(74,63,78,0.25);
+    --bubble-night-me: rgba(142,68,81,0.25);
+    --bubble-text-fixed: #F5F5F5;
   }
   
   body.theme-sky { --bg-color:#e6ebee; --bubble-me:#d6ecff; }
@@ -47,8 +53,8 @@
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
-  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-snap { z-index:4; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); }
-  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-snap.show,.page-adjust.show { transform:translateX(0); }
+  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-snap { z-index:4; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); }
+  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-snap.show,.page-adjust.show,.page-fav.show { transform:translateX(0); }
 
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
@@ -76,6 +82,7 @@
   .chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
   .chat-room-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .chat-their-name { font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-mode-icon { font-size:13px; flex:0 0 auto; margin-left:2px; }
   .chat-preview { font-size:14px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; align-self:flex-start; margin-top:4px; }
   .chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
@@ -89,34 +96,53 @@
   .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; }
   body.is-night-mode .date-divider { background:rgba(212,122,138,.2); }
 
+  /* ===== 消息组：舊夢（上下）默认结构 ===== */
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
   
-  /* 消息流双人头像 (错开更大，不糊成一团，左右各露大脸) */
-  .msg-dual-avatar { position:relative; width:36px; height:36px; margin-bottom:8px; }
+  /* 撩拨模式消息流双人头像：位置永远祂左我右，叠压随发送方（拉开距离露出两张脸） */
+  .msg-dual-avatar { position:relative; width:52px; height:36px; margin-bottom:8px; }
   .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
-  
-  /* 他发的消息：他在右，我在左，错开露出两张脸 */
-  .msg-group.them .msg-dual-avatar .du-av.them { right:0; z-index:2; }
-  .msg-group.them .msg-dual-avatar .du-av.me { left:-12px; z-index:1; }
-  
-  /* 我发的消息：我在右，他在左 */
-  .msg-group.me .msg-dual-avatar .du-av.me { right:0; z-index:2; }
-  .msg-group.me .msg-dual-avatar .du-av.them { left:-12px; z-index:1; }
+  .msg-dual-avatar .du-av.them { left:0; }
+  .msg-dual-avatar .du-av.me { right:0; }
+  /* 祂发消息：祂（左）压住我（右） */
+  .msg-group.them .msg-dual-avatar .du-av.them { z-index:3; }
+  .msg-group.them .msg-dual-avatar .du-av.me { z-index:2; }
+  /* 我发消息：我（右）压住祂（左） */
+  .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
+  .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
-  .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.6; word-break:break-word; text-align:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; }
-  .msg-group.them .bubble { background:var(--bubble-them); border:1px solid rgba(128,128,128,.1); }
-  .msg-group.me .bubble { background:var(--bubble-me); border:1px solid rgba(128,128,128,.1); }
-  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); }
-  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); }
+  /* ===== 鱼雁（左右）排版 ===== */
+  .layout-yuyan .msg-group { align-items:stretch; }
+  .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
+  .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
+  .layout-yuyan .msg-row { display:flex; align-items:flex-start; gap:8px; width:100%; }
+  .layout-yuyan .msg-group.them .msg-row { flex-direction:row; justify-content:flex-start; }
+  .layout-yuyan .msg-group.me .msg-row { flex-direction:row-reverse; justify-content:flex-start; }
+  .layout-yuyan .msg-group.them .msg-dual-avatar { margin-right:0; }
+  .layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
+  .layout-yuyan .msg-group .bubble { max-width:72%; }
+
+  .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; }
+  /* 固定配色气泡（不跟主题色），半透明磨砂 */
+  .msg-group.them .bubble { background:var(--bubble-daily-them); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:#F5E6E8; }
+  body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:#F5E6E8; }
+  /* 动作气泡：磨砂但颜色保持不变 */
+  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  /* 深色主题下固定字色 */
+  body.theme-cyber .msg-group .bubble, body.theme-space .msg-group .bubble, body.theme-nightpurple .msg-group .bubble, body.theme-pureblack .msg-group .bubble { color:var(--bubble-text-fixed); }
 
   .card-line { display:block; opacity:0; transform:translateY(5px); animation:cardIn .5s ease forwards; }
   .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
-  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:right; width:100%; }
+  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:right; width:100%; display:flex; align-items:center; justify-content:flex-end; gap:4px; }
+  .msg-time-center .rose-mark { height:18px; width:auto; display:inline-block; object-fit:contain; opacity:0.25; }
 
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
   .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
@@ -177,6 +203,15 @@
   .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); }
   .action-item.danger { color:#e53935; }
   
+  /* 排版选择二级面板 */
+  .layout-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:160; align-items:center; justify-content:center; padding:20px; }
+  .layout-panel-mask.show { display:flex; }
+  .layout-panel { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
+  .layout-panel-title { padding:12px; text-align:center; font-size:15px; font-weight:600; border-bottom:1px solid var(--border-light); }
+  .layout-option { padding:16px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); color:var(--text-color); }
+  .layout-option:last-child { border-bottom:none; }
+  .layout-option.active { color:var(--primary); font-weight:600; }
+
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
@@ -338,9 +373,9 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問卡片：日常金色 */
-  .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:#fbf3dd; border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; }
-  body.is-night-mode .ask-card { background: #2a1d24 !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
+  /* 投問卡片：日常金色（磨砂） */
+  .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
+  body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
   .ask-card-tag { font-size:12px; color:#a8862f !important; font-weight:600; }
   body.is-night-mode .ask-card-tag { color:#d4af37 !important; }
@@ -350,7 +385,6 @@
   .ask-question-img { max-width:100%; max-height:160px; border-radius:8px; object-fit:cover; }
   .ask-options { display:flex; flex-direction:column; gap:8px; }
   
-  /* 投問選項與圈圈強制金色 */
   .ask-option { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:rgba(214,178,80,.12); border:1px solid transparent; font-size:14px; line-height:1.4; word-break:break-word; color: #4a3a12; }
   body.is-night-mode .ask-option { background:rgba(212,122,138,.1); color: #f5e6e8; }
   .ask-option .ask-check { width:16px; height:16px; flex:0 0 16px; border-radius:50%; border:1.5px solid #c9a227 !important; display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent; }
@@ -374,7 +408,6 @@
   .ask-answer .ask-spinner { width:16px; height:16px; border-radius:50%; border:2px solid #e6cf94; border-top-color:#b8860b; animation:spin .8s linear infinite; flex:0 0 16px; }
   .ask-answer .ask-thinking-text { color:#a8862f; }
   
-  /* 繼續投問強制金色 */
   .ask-card-footer { display:flex; justify-content:flex-end; gap:16px; padding-top:4px; }
   .ask-card-footer button { background:transparent; border:none; font-size:14px; font-weight:600; padding:4px 2px; }
   .ask-card-footer .ask-continue { color:#b8860b !important; }
@@ -408,34 +441,9 @@
   .ask-modal-footer { padding:12px 16px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; }
   .ask-send-btn { background:var(--primary); color:#fff; border:none; border-radius:8px; padding:10px 22px; font-size:15px; font-weight:600; }
 
-  /* 留影预览支持滚动与缩放 */
+  /* 留影入口保留（页面与预览实现已移除） */
   .snap-list { flex:1; overflow-y:auto; padding:10px 14px 20px; }
-  .snap-date-header { font-size:12px; color:var(--text-secondary); margin:14px 0 8px; padding-left:2px; }
-  .snap-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-  .snap-item { border-radius:10px; overflow:hidden; background:var(--input-bg); position:relative; cursor:pointer; }
-  .snap-item img { width:100%; display:block; aspect-ratio:3/4; object-fit:cover; }
-  .snap-item .snap-time { position:absolute; right:6px; bottom:6px; font-size:11px; color:#fff; background:rgba(0,0,0,.45); padding:2px 6px; border-radius:8px; }
   .snap-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
-  .snap-toolbar { display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:10px 14px; border-radius:8px; margin-bottom:10px; }
-  
-  .snap-preview-mask { position:fixed; inset:0; z-index:700; display:none; flex-direction:column; background-size:cover; background-position:center; }
-  .snap-preview-mask.show { display:flex; }
-  .snap-preview-bg-mask { position:absolute; inset:0; z-index:1; transition: background .3s; }
-  
-  /* 顺滑滚动 */
-  .snap-preview-body { flex:1; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; padding:16px; position:relative; z-index:2; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-  .snap-preview-body img { max-width:100%; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,.1); }
-
-  .snap-preview-actions { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 0 calc(20px + env(safe-area-inset-bottom)); position:relative; z-index:2; }
-  .snap-preview-actions .snap-close-btn { background:transparent; color:var(--text-secondary); border:none; font-size:15px; padding:8px 0; }
-  .snap-preview-actions .snap-btn-row { display:flex; gap:20px; }
-  .snap-preview-actions .snap-btn-row button { border:none; border-radius:8px; padding:10px 20px; font-size:15px; font-weight:600; }
-  .snap-save-btn { background:var(--primary); color:#fff; }
-  .snap-del-btn { background:#e53935; color:#fff; }
-
-  .snap-check-wrap { position:absolute; left:8px; top:8px; z-index:5; display:none; }
-  .msg-group.snap-mode .snap-check-wrap { display:block; }
-  .snap-check-wrap input { width:20px; height:20px; accent-color:var(--primary); }
 
   .about-modal-mask { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:400; display:none; align-items:center; justify-content:center; padding:18px; }
   .about-modal-mask.show { display:flex; }
@@ -452,6 +460,36 @@
   .adjust-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-size:14px; color:var(--text-color); }
   .adjust-inputs { display:flex; align-items:center; gap:6px; }
   .adjust-input { width:50px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
+
+  /* ===== 尺素（收藏）页面 ===== */
+  .page-fav { background: var(--bg-color); }
+  .fav-tab-bar { display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; scrollbar-width:none; }
+  .fav-tab-bar::-webkit-scrollbar { display:none; }
+  .fav-tab { flex:0 0 auto; padding:12px 16px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
+  .fav-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+  .fav-swipe-wrap { flex:1; overflow:hidden; position:relative; }
+  .fav-swipe-track { display:flex; height:100%; transition:transform .25s ease; }
+  .fav-pane { flex:0 0 100%; height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
+  .fav-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
+
+  /* 尺素卡片：书信/邮票/手帐风，不磨砂 */
+  .fav-card { position:relative; border-radius:10px; padding:16px 16px 12px; margin-bottom:16px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(180,160,120,.16) 27px, rgba(180,160,120,.16) 28px); background-size:100% 28px; overflow:hidden; }
+  body.theme-cyber .fav-card, body.theme-space .fav-card, body.theme-nightpurple .fav-card, body.theme-pureblack .fav-card, body.is-night-mode .fav-card { background:#2a2320; border-color:#4a3f36; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(200,170,130,.14) 27px, rgba(200,170,130,.14) 28px); }
+  .fav-card::after { content:''; position:absolute; right:-14px; top:-14px; width:46px; height:46px; transform:rotate(45deg); background:rgba(200,180,140,.22); border-left:1px dashed rgba(150,130,90,.5); }
+  body.theme-cyber .fav-card::after, body.theme-space .fav-card::after, body.theme-nightpurple .fav-card::after, body.theme-pureblack .fav-card::after, body.is-night-mode .fav-card::after { background:rgba(200,170,130,.18); border-left-color:rgba(200,170,130,.4); }
+  .fav-tape { position:absolute; left:14px; top:-9px; width:52px; height:18px; background:rgba(210,195,160,.55); transform:rotate(-4deg); border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+  body.theme-cyber .fav-tape, body.theme-space .fav-tape, body.theme-nightpurple .fav-tape, body.theme-pureblack .fav-tape, body.is-night-mode .fav-tape { background:rgba(200,170,130,.3); }
+  .fav-text { font-family: var(--bubble-font); font-size:15px; line-height:1.7; letter-spacing:0.03em; color:#3b3226; word-break:break-word; padding-top:4px; position:relative; z-index:1; }
+  body.theme-cyber .fav-text, body.theme-space .fav-text, body.theme-nightpurple .fav-text, body.theme-pureblack .fav-text, body.is-night-mode .fav-text { color:#e8dcc8; }
+  .fav-meta { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding-top:8px; border-top:1px dashed rgba(150,130,90,.35); position:relative; z-index:1; }
+  body.theme-cyber .fav-meta, body.theme-space .fav-meta, body.theme-nightpurple .fav-meta, body.theme-pureblack .fav-meta, body.is-night-mode .fav-meta { border-top-color:rgba(200,170,130,.25); }
+  .fav-source { font-family: var(--bubble-font); font-size:12px; color:#8a7a5a; letter-spacing:0.02em; }
+  body.theme-cyber .fav-source, body.theme-space .fav-source, body.theme-nightpurple .fav-source, body.theme-pureblack .fav-source, body.is-night-mode .fav-source { color:#b8a480; }
+  .fav-stamp { font-size:11px; color:#8a7a5a; border:1px dashed rgba(150,130,90,.55); border-radius:4px; padding:2px 7px; white-space:nowrap; }
+  body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
+
+  /* 布景：玫瑰标记上传 */
+  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; background-size:contain; background-repeat:no-repeat; background-position:center; margin-bottom:10px; }
 </style>
 </head>
 <body class="theme-sky">
@@ -542,6 +580,19 @@
     </div>
     <div class="snap-list" id="snapList"></div>
   </div>
+
+  <!-- 尺素（收藏）页 -->
+  <div class="page page-fav" id="pageFav">
+    <div class="topbar">
+      <button class="icon-btn" id="backFavBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">尺素</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="fav-tab-bar" id="favTabBar"></div>
+    <div class="fav-swipe-wrap" id="favSwipeWrap">
+      <div class="fav-swipe-track" id="favSwipeTrack"></div>
+    </div>
+  </div>
   
   <div class="page page-adjust" id="pageAdjust">
     <div class="topbar">
@@ -598,6 +649,12 @@
             <input type="number" id="adjActionRate" class="adjust-input">
           </div>
         </div>
+        <div class="adjust-row">
+          <span>尺素機率 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="adjCollectRate" class="adjust-input">
+          </div>
+        </div>
       </div>
       
       <button id="saveAdjustBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">保存設置</button>
@@ -611,6 +668,12 @@
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主頁背景</div>
         <div id="mainBgUploadBox" onclick="document.getElementById('mainBgFile').click()" style="width:100%;height:120px;border-radius:8px;background:var(--input-bg);border:1px dashed var(--topbar-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:14px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:15px;"><span id="mainBgText">點擊上傳主頁背景</span></div>
         <input type="file" id="mainBgFile" accept="image/*" style="display:none">
+      </div>
+      <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">撩撥字卡標記（玫瑰）</div>
+        <div id="roseUploadBox" class="rose-upload-box" onclick="document.getElementById('roseFile').click()"><span id="roseUploadText">點擊上傳標記圖（留空用 🌹）</span></div>
+        <input type="file" id="roseFile" accept="image/*" style="display:none">
+        <button id="roseResetBtn" style="background:transparent;border:none;color:var(--text-secondary);font-size:13px;padding:4px 0;">清除，恢復默認 🌹</button>
       </div>
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主題顏色</div>
@@ -746,8 +809,9 @@
 </div>
 
 <div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
-<div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
-<div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
+<div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
+<div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
+<div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
 <div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><input type="text" class="dialog-input" id="dialogInput" style="display:none;"><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
 <div class="dialog-mask" id="progressDialogMask" style="z-index:100000;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
 
@@ -766,18 +830,6 @@
       <div class="ask-pick-mode"><label><input type="checkbox" id="askSingleChk" checked> 單選</label><label><input type="checkbox" id="askMultiChk"> 多選</label></div>
     </div>
     <div class="ask-modal-footer"><button class="ask-send-btn" id="askSendBtn">譯出</button></div>
-  </div>
-</div>
-
-<div class="snap-preview-mask" id="snapPreviewMask">
-  <div class="snap-preview-bg-mask" id="snapPreviewBgMask"></div>
-  <div class="snap-preview-body" id="snapPreviewBody"><img id="snapPreviewImg" src=""></div>
-  <div class="snap-preview-actions">
-    <button class="snap-close-btn" id="snapPreviewClose">關閉預覽</button>
-    <div class="snap-btn-row">
-      <button class="snap-del-btn" id="snapPreviewDel">焚毀</button>
-      <button class="snap-save-btn" id="snapPreviewSave">保存到設備</button>
-    </div>
   </div>
 </div>
 
@@ -816,9 +868,10 @@ const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','�
 
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
+let globalRoseMark = localStorage.getItem('nz_rose_mark') || null;
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15 };
+const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
 
 function applyThemeAndBg(){
@@ -829,7 +882,7 @@ function applyThemeAndBg(){
     if(c && c.isNightMode) document.body.classList.add('is-night-mode');
   }
   document.querySelectorAll('.theme-card').forEach(card => card.classList.toggle('active', card.dataset.theme === savedTheme));
-  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageSnap','#pageAdjust'];
+  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageSnap','#pageAdjust','#pageFav'];
   const appEl = $('#app');
   if(globalBgImage){
     const isDark = savedTheme.includes('cyber')||savedTheme.includes('space')||savedTheme.includes('purple')||savedTheme.includes('pureblack');
@@ -894,10 +947,14 @@ let isWaitingForMyReply = false;
 
 let askMode = 'wen', askAttachData = null, askImgList = [], askSingleChecked = true, askMultiChecked = false;
 
-let snapMode = false, snapSelectedIds = new Set(), snapPreviewCurrent = null;
-let snapBatchMode = false, snapBatchSelected = new Set();
+let snapMode = false, snapSelectedIds = new Set();
 
 let loadCardOffset = 0, loadActionOffset = 0;
+
+let pendingBurnMsg = null;
+let currentMsgForAction = null;
+
+let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0;
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -938,6 +995,7 @@ async function init(){
     bindEvents();
     applyThemeAndBg();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
+    if(globalRoseMark){ const rb = $('#roseUploadBox'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; $('#roseUploadText').textContent = ''; } }
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic();
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag(); initAccompanyDrag();
@@ -948,6 +1006,7 @@ async function init(){
     $('#adjCallMin').value = config.callMin; $('#adjCallMax').value = config.callMax;
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
     $('#adjFlirtRate').value = config.flirtRate; $('#adjStickerRate').value = config.stickerRate; $('#adjActionRate').value = config.actionRate;
+    $('#adjCollectRate').value = config.collectRate;
   } catch(err){ console.error(err); toast('資料庫初始化失敗：' + err.message); }
 }
 
@@ -998,10 +1057,11 @@ async function renderChatList(){
       else if(last.stickerData) preview = '[圖片]';
     }
     const avatarHtml = c.theirAvatar ? `<img src="${c.theirAvatar}" class="avatar-lg">` : `<div class="avatar-lg">${getTheirDisplayChar(c)}</div>`;
+    const modeIcon = c.isNightMode ? '🌑' : '🌕';
     const row = document.createElement('div');
     row.className = 'chat-row' + (c.isPinned ? ' pinned' : '');
     row.dataset.id = c.id;
-    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-room-name">${escapeHtml(c.roomName || '未命名')}</span><span class="chat-their-name">${escapeHtml(c.theirName || '')}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
+    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-room-name">${escapeHtml(c.roomName || '未命名')}</span><span class="chat-their-name">${escapeHtml(c.theirName || '')}</span><span class="chat-mode-icon">${modeIcon}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
     row.onclick = () => { if(!longPressTimer) openChat(c.id); };
     row.addEventListener('touchstart', () => {
       longPressTimer = setTimeout(() => {
@@ -1019,6 +1079,7 @@ async function renderChatList(){
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function fmtTime(ts){ const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 function fmtDate(ts){ const d = new Date(ts), now = new Date(); if(d.toDateString() === now.toDateString()) return '今天'; return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`; }
+function fmtMonthDayTime(ts){ const d = new Date(ts); return `${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
 
 function getMessages(chatId){
   return new Promise((res, rej) => {
@@ -1057,6 +1118,13 @@ function updateChatBgUI() {
   }
 }
 
+function applyLayoutClass(c){
+  const box = $('#messages');
+  if(!box) return;
+  if(c && c.layout === 'yuyan') box.classList.add('layout-yuyan');
+  else box.classList.remove('layout-yuyan');
+}
+
 async function openChat(id){
   currentChatId = id;
   const c = chats.find(x => x.id === id);
@@ -1064,6 +1132,7 @@ async function openChat(id){
   
   updateChatTopbarUI(c);
   updateChatBgUI();
+  applyLayoutClass(c);
   
   currentMessages = await getMessages(id);
   snapMode = false; snapSelectedIds.clear();
@@ -1111,6 +1180,7 @@ async function toggleChatMode() {
   c.isNightMode = !c.isNightMode;
   updateChatTopbarUI(c);
   updateChatBgUI();
+  applyLayoutClass(c);
   
   const box = $('#messages'); box.innerHTML = '';
   
@@ -1123,10 +1193,59 @@ async function toggleChatMode() {
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
 }
 
+function buildAvatarHtml(m, c, isNight){
+  const isMe = m.sender === 'me';
+  if (isNight) {
+    const meImg = c.myAvatar ? `background-image:url('${c.myAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
+    const meChar = !c.myAvatar ? getMyDisplayChar(c) : '';
+    const themImg = c.theirAvatar ? `background-image:url('${c.theirAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
+    const themChar = !c.theirAvatar ? getTheirDisplayChar(c) : '';
+    return `<div class="msg-dual-avatar">
+      <div class="du-av them" style="${themImg}">${themChar}</div>
+      <div class="du-av me" style="${meImg}">${meChar}</div>
+    </div>`;
+  }
+  if(isMe){
+    if(c && c.myAvatar) return `<img src="${c.myAvatar}" class="msg-avatar-top">`;
+    return `<div class="msg-avatar-top" style="background:#999">${getMyDisplayChar(c)}</div>`;
+  }
+  if(c && c.theirAvatar) return `<img src="${c.theirAvatar}" class="msg-avatar-top">`;
+  return `<div class="msg-avatar-top">${getTheirDisplayChar(c)}</div>`;
+}
+
+function buildBubbleContent(m, isNight, useAnim){
+  let lines = '';
+  if(m.cards && m.cards.length){
+    m.cards.forEach((t, idx) => {
+      const ac = useAnim ? '' : 'no-anim';
+      const dl = useAnim ? (idx * (1 + Math.random() * 2)) : 0;
+      lines += `<span class="card-line ${ac}" style="animation-delay:${dl}s">${escapeHtml(t)}</span>`;
+    });
+  } else if(m.text){
+    lines += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
+  }
+  let st = '';
+  if(m.stickerData){
+    const ac = useAnim ? '' : 'no-anim';
+    const dl = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
+    st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
+  }
+  const tac = useAnim ? '' : 'no-anim';
+  const tdl = useAnim ? ((m.cards ? m.cards.length : 1) * 2 + 1) : 0;
+  let roseHtml = '';
+  if(m.isNightMode && globalRoseMark){
+    roseHtml = `<img class="rose-mark" src="${globalRoseMark}" alt="🌹">`;
+  } else if(m.isNightMode){
+    roseHtml = `<span class="rose-mark" style="opacity:0.25;font-size:14px;line-height:1;">🌹</span>`;
+  }
+  return lines + st + `<span class="msg-time-center ${tac}" style="animation-delay:${tdl}s">${roseHtml}<span>${fmtTime(m.time)}</span></span>`;
+}
+
 function appendMessageDOM(m, c, animate=true){
-  const box = $('#messages'), wrap = $('#messagesWrap');
+  const box = $('#messages');
   const isMe = m.sender === 'me';
   const isNight = c && c.isNightMode;
+  const isYuyan = c && c.layout === 'yuyan';
   
   const dstr = fmtDate(m.time);
   const lastChild = box.lastElementChild;
@@ -1146,71 +1265,46 @@ function appendMessageDOM(m, c, animate=true){
   g.className = 'msg-group ' + (isMe ? 'me' : 'them') + (snapMode ? ' snap-mode' : '');
   g.dataset.msgId = m.id;
   
-  let avHtml = '';
-  if (isNight) {
-    const meImg = c.myAvatar ? `background-image:url('${c.myAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
-    const meChar = !c.myAvatar ? getMyDisplayChar(c) : '';
-    const themImg = c.theirAvatar ? `background-image:url('${c.theirAvatar}');` : 'background: linear-gradient(135deg,#b99a6b,#d8c39a);';
-    const themChar = !c.theirAvatar ? getTheirDisplayChar(c) : '';
-    avHtml = `<div class="msg-dual-avatar">
-      <div class="du-av me" style="${meImg}">${meChar}</div>
-      <div class="du-av them" style="${themImg}">${themChar}</div>
-    </div>`;
-  } else {
-    if(isMe){
-      if(c && c.myAvatar) avHtml = `<img src="${c.myAvatar}" class="msg-avatar-top">`;
-      else avHtml = `<div class="msg-avatar-top" style="background:#999">${getMyDisplayChar(c)}</div>`;
-    } else {
-      if(c && c.theirAvatar) avHtml = `<img src="${c.theirAvatar}" class="msg-avatar-top">`;
-      else avHtml = `<div class="msg-avatar-top">${getTheirDisplayChar(c)}</div>`;
-    }
-  }
+  const avHtml = buildAvatarHtml(m, c, isNight);
   
-  g.innerHTML = avHtml;
-  if(snapMode){
-    const wrapCheck = document.createElement('div');
-    wrapCheck.className = 'snap-check-wrap';
-    wrapCheck.innerHTML = `<input type="checkbox" ${snapSelectedIds.has(m.id) ? 'checked' : ''}>`;
-    wrapCheck.querySelector('input').onchange = ev => {
-      if(ev.target.checked) snapSelectedIds.add(m.id); else snapSelectedIds.delete(m.id);
-      updateSnapTitle();
-    };
-    g.appendChild(wrapCheck);
-  }
-  
-  if(m.type === 'ask'){
-    g.appendChild(buildAskCard(m, c));
-    box.appendChild(g);
-    if(!snapMode) bindMessageClickAction(g, m);
-    return;
-  }
-  
-  const b = document.createElement('div');
-  b.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
-  let lines = '';
   const useAnim = animate && !isMe;
+  const bubbleHtml = buildBubbleContent(m, isNight, useAnim);
   
-  if(m.cards && m.cards.length){
-    m.cards.forEach((t, idx) => {
-      const ac = useAnim ? '' : 'no-anim';
-      const dl = useAnim ? (idx * (1 + Math.random() * 2)) : 0;
-      lines += `<span class="card-line ${ac}" style="animation-delay:${dl}s">${escapeHtml(t)}</span>`;
-    });
-  } else if(m.text){
-    lines += `<span class="card-line no-anim">${escapeHtml(m.text)}</span>`;
+  const bubbleEl = document.createElement('div');
+  bubbleEl.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
+  
+  let innerNode;
+  if(m.type === 'ask'){
+    innerNode = buildAskCard(m, c);
+  } else {
+    bubbleEl.innerHTML = bubbleHtml;
+    innerNode = bubbleEl;
   }
-  let st = '';
-  if(m.stickerData){
-    const ac = useAnim ? '' : 'no-anim';
-    const dl = useAnim ? ((m.cards ? m.cards.length : 1) * 2) : 0;
-    st = `<img class="sticker-img ${ac}" src="${m.stickerData}" style="animation-delay:${dl}s">`;
+  
+  if(isYuyan){
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    if(isMe){
+      row.appendChild(innerNode);
+      row.appendChild(parseAvatarNode(avHtml));
+    } else {
+      row.appendChild(parseAvatarNode(avHtml));
+      row.appendChild(innerNode);
+    }
+    g.appendChild(row);
+  } else {
+    g.insertAdjacentHTML('beforeend', avHtml);
+    g.appendChild(innerNode);
   }
-  const tac = useAnim ? '' : 'no-anim';
-  const tdl = useAnim ? ((m.cards ? m.cards.length : 1) * 2 + 1) : 0;
-  b.innerHTML = lines + st + `<span class="msg-time-center ${tac}" style="animation-delay:${tdl}s">${fmtTime(m.time)}</span>`;
-  g.appendChild(b);
+  
   box.appendChild(g);
   if(!snapMode) bindMessageClickAction(g, m);
+}
+
+function parseAvatarNode(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.firstElementChild;
 }
 
 function bindMessageClickAction(el, msg){
@@ -1220,8 +1314,18 @@ function bindMessageClickAction(el, msg){
   });
 }
 
-let pendingBurnMsg = null;
-function showMsgActionSheet(msg){ pendingBurnMsg = msg; $('#msgActionMask').classList.add('show'); }
+function showMsgActionSheet(msg){
+  pendingBurnMsg = msg;
+  currentMsgForAction = msg;
+  const collectItem = $('#msgActCollect');
+  if(msg.sender === 'them' && msg.type !== 'ask' && msg.cards && msg.cards.length){
+    collectItem.style.display = 'block';
+    collectItem.textContent = msg.collectedBy === 'me' ? '出素' : '入素';
+  } else {
+    collectItem.style.display = 'none';
+  }
+  $('#msgActionMask').classList.add('show');
+}
 
 function buildAskCard(m, c){
   const card = document.createElement('div');
@@ -1273,7 +1377,7 @@ function applyAskAnswer(card, m, c){
     if(m.askAnswer && m.askAnswer.length){
       const a = document.createElement('span');
       a.textContent = name + '選了：' + (m.askMode === 'tu' ? m.askAnswer.length + ' 張圖' : m.askAnswer.map(i => m.askOptions[i]).join('、'));
-      a.style.color = '#a8862f'; // 強制金色
+      a.style.color = '#a8862f';
       ans.appendChild(a);
       if(m.askMode === 'tu') imgs.forEach(el => { if(m.askAnswer.includes(parseInt(el.dataset.idx))) el.classList.add('picked'); });
       else opts.forEach(el => { if(m.askAnswer.includes(parseInt(el.dataset.idx))) el.classList.add('picked'); });
@@ -1351,6 +1455,18 @@ async function touchChat(id){
   await loadChats();
 }
 
+async function themCollectMyMessage(chatId, isNight){
+  if(Math.random() * 100 >= config.collectRate) return;
+  const c = chats.find(x => x.id === chatId);
+  if(!c) return;
+  const msgs = await reqToPromise((() => { const idx = tx('messages').index('chatId'); return idx.getAll(chatId); })());
+  const mine = (msgs || []).filter(m => m.sender === 'me' && m.type !== 'ask' && m.cards && m.cards.length && !m.collectedBy && m.isNightMode === isNight);
+  if(!mine.length) return;
+  const target = mine[Math.floor(Math.random() * mine.length)];
+  target.collectedBy = 'them';
+  await reqToPromise(tx('messages','readwrite').put(target));
+}
+
 async function buildThemMessage(chatId, isSpecialScene = false){
   const allCards = await reqToPromise(tx('cards').getAll());
   const c = chats.find(x => x.id === chatId);
@@ -1418,6 +1534,7 @@ async function buildThemMessage(chatId, isSpecialScene = false){
       await touchChat(chatId);
     }
   }
+  await themCollectMyMessage(chatId, isNight);
   return msg;
 }
 
@@ -1753,10 +1870,15 @@ function answerCall(){
   }, 1000);
 }
 function hangupCall(){
+  const wasActive = isGlobalCallActive;
   isGlobalCallActive = false;
   clearTimeout(callTimer); clearTimeout(incomingCallTimeout); clearInterval(callInterval); clearTimeout(callInteractTimer);
   hideCallPanel(); $('#callPanel').classList.remove('active'); $('#callFloat').classList.remove('show');
   toast('通話已掛斷');
+  if(wasActive && currentChatId){
+    const c = chats.find(x => x.id === currentChatId);
+    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
+  }
 }
 function startCallInteraction(){
   clearTimeout(callInteractTimer);
@@ -1895,10 +2017,15 @@ function startAccompany(act, mode){
   startAccompanyInteraction();
 }
 function endAccompany(){
+  const wasActive = isAccompanyActive;
   isAccompanyActive = false;
   clearInterval(accompanyInterval); clearTimeout(accompanyInteractTimer);
   hideAccompanyPanel(); $('#accompanyFloat').classList.remove('show');
   toast('相伴已結束');
+  if(wasActive && currentChatId){
+    const c = chats.find(x => x.id === currentChatId);
+    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
+  }
 }
 function startAccompanyInteraction(){
   clearTimeout(accompanyInteractTimer);
@@ -1976,7 +2103,6 @@ async function sendAsk(){
 
 function openSnapPage(){
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
-  snapBatchMode = false; snapBatchSelected.clear();
   const c = chats.find(x => x.id === currentChatId);
   const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.chatBgImage || globalBgImage);
   const maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
@@ -1994,428 +2120,132 @@ function openSnapPage(){
     }
   }
   
-  renderSnapList();
-  document.getElementById('pageSnap').classList.add('show');
-}
-async function getSnaps(chatId){
-  return new Promise((res, rej) => {
-    const idx = tx('snapshots').index('chatId');
-    const req = idx.getAll(chatId);
-    req.onsuccess = () => { const arr = req.result || []; arr.sort((a,b)=>b.createdAt-a.createdAt); res(arr); };
-    req.onerror = () => rej(req.error);
-  });
-}
-async function renderSnapList(){
   const list = $('#snapList');
-  if(snapBatchMode){
-    const bar = document.createElement('div'); bar.className = 'snap-toolbar';
-    bar.innerHTML = `<span style="font-size:14px;" id="snapBatchCount">已選 ${snapBatchSelected.size} 張</span><div style="display:flex;gap:14px;"><button class="batch-btn" id="snapSelectAll">全選</button><button class="batch-btn danger" id="snapBatchBurn">確認焚毀</button><button class="batch-btn" id="snapBatchCancel" style="color:var(--text-secondary);">取消</button></div>`;
-    list.innerHTML = ''; list.appendChild(bar);
-    bar.querySelector('#snapSelectAll').onclick = () => {
-      const all = document.querySelectorAll('#snapList .snap-item');
-      if(snapBatchSelected.size === all.length && all.length > 0) snapBatchSelected.clear();
-      else all.forEach(it => snapBatchSelected.add(it.dataset.sid));
-      renderSnapList();
-    };
-    bar.querySelector('#snapBatchBurn').onclick = () => {
-      if(!snapBatchSelected.size) return;
-      showCustomDialog('焚毀', `確定焚毀這 ${snapBatchSelected.size} 張留影？`, false, '焚毀', async () => {
-        for(const id of snapBatchSelected) await reqToPromise(tx('snapshots','readwrite').delete(id));
-        toast('已焚毀'); snapBatchMode = false; snapBatchSelected.clear(); renderSnapList();
-      });
-    };
-    bar.querySelector('#snapBatchCancel').onclick = () => { snapBatchMode = false; snapBatchSelected.clear(); renderSnapList(); };
-  } else {
-    list.innerHTML = '';
-  }
-  const snaps = await getSnaps(currentChatId);
-  if(!snaps.length){
-    const e = document.createElement('div'); e.className = 'snap-empty'; e.textContent = '尚無留影';
-    list.appendChild(e);
-    return;
-  }
-  let lastDate = '';
-  let grid = null;
-  snaps.forEach(s => {
-    const dstr = fmtDate(s.createdAt);
-    if(dstr !== lastDate){
-      const h = document.createElement('div'); h.className = 'snap-date-header'; h.textContent = dstr;
-      list.appendChild(h);
-      grid = document.createElement('div'); grid.className = 'snap-grid'; list.appendChild(grid);
-      lastDate = dstr;
-    }
-    const item = document.createElement('div');
-    item.className = 'snap-item'; item.dataset.sid = s.id;
-    item.innerHTML = `<img src="${s.image}"><div class="snap-time">${fmtTime(s.createdAt)}</div>`;
-    item.onclick = () => {
-      if(snapBatchMode){
-        if(snapBatchSelected.has(s.id)) snapBatchSelected.delete(s.id); else snapBatchSelected.add(s.id);
-        const cnt = $('#snapBatchCount'); if(cnt) cnt.textContent = `已選 ${snapBatchSelected.size} 張`;
-      } else {
-        openSnapPreview(s);
-      }
-    };
-    let lt = null;
-    item.addEventListener('touchstart', () => { lt = setTimeout(() => { lt = null; if(!snapBatchMode){ snapBatchMode = true; snapBatchSelected.clear(); snapBatchSelected.add(s.id); renderSnapList(); } }, 600); }, { passive:true });
-    item.addEventListener('touchend', () => { clearTimeout(lt); lt = null; });
-    item.addEventListener('touchmove', () => { clearTimeout(lt); lt = null; });
-    grid.appendChild(item);
-  });
-}
-function openSnapPreview(s){
-  snapPreviewCurrent = s;
-  const img = $('#snapPreviewImg');
-  img.src = s.image;
-  
-  const c = chats.find(x => x.id === currentChatId);
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.chatBgImage || globalBgImage);
-  const maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack');
-  
-  const page = $('#snapPreviewMask');
-  if(bgImg) page.style.backgroundImage = `url(${bgImg})`;
-  else page.style.backgroundColor = 'var(--bg-color)';
-  
-  const mask = $('#snapPreviewBgMask');
-  mask.style.backgroundColor = isDark ? `rgba(0,0,0,${maskVal/100})` : `rgba(255,255,255,${maskVal/100})`;
-  
-  $('#snapPreviewMask').classList.add('show');
-}
-async function startSnapGenerate(){
-  if(!snapSelectedIds.size){ toast('請先選擇要留影的消息'); return; }
-  const selected = currentMessages.filter(m => snapSelectedIds.has(m.id));
-  if(!selected.length){ toast('請先選擇要留影的消息'); return; }
-  const chat = chats.find(x => x.id === currentChatId);
-  $('#progressDialogMask').classList.add('show');
-  $('#progressBarFill').style.width = '0%';
-  $('#progressText').textContent = '正在生成... 0%';
-  const img = await generateSnapImage(selected, chat, p => {
-    $('#progressBarFill').style.width = p + '%';
-    $('#progressText').textContent = `正在生成... ${p}%`;
-  });
-  await reqToPromise(tx('snapshots','readwrite').add({ id:'snap_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId:currentChatId, image:img, createdAt:Date.now() }));
-  $('#progressDialogMask').classList.remove('show');
-  snapMode = false; snapSelectedIds.clear();
-  $('#snapBtn').style.color = 'var(--text-secondary)';
-  renderMessagesUI(false);
-  openSnapPreview({ image:img, id:'preview', createdAt:Date.now() });
-}
-
-async function generateSnapImage(messages, chat, onProgress){
-  const width = 720;
-  const pad = 24;
-  const dpr = 2;
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  let y = pad;
-  const items = [];
-  let lastDate = '';
-  for(const m of messages){
-    const dstr = fmtDate(m.time);
-    if(dstr !== lastDate){ items.push({ type:'date', text:dstr }); lastDate = dstr; }
-    items.push({ type:'msg', m });
-  }
-  const temp = document.createElement('canvas');
-  temp.width = width * dpr;
-  const tctx = temp.getContext('2d');
-  tctx.scale(dpr, dpr);
-  const bodyFont = '15px -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif';
-  const nameFont = '13px -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif';
-  const timeFont = '12px -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif';
-  tctx.font = bodyFont;
-  function wrapText(text, maxW, font){
-    tctx.font = font;
-    const lines = [];
-    String(text).split('\n').forEach(par => {
-      if(!par){ lines.push(''); return; }
-      let line = '';
-      for(const ch of par){
-        const test = line + ch;
-        if(tctx.measureText(test).width > maxW && line){ lines.push(line); line = ch; }
-        else line = test;
-      }
-      if(line) lines.push(line);
-    });
-    return lines;
-  }
-  function getImg(src){
-    return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
-  }
-  function roundedRect(c, x, y2, w, h, r){ c.beginPath(); c.moveTo(x+r,y2); c.arcTo(x+w,y2,x+w,y2+h,r); c.arcTo(x+w,y2+h,x,y2+h,r); c.arcTo(x,y2+h,x,y2,r); c.arcTo(x,y2,x+w,y2,r); c.closePath(); }
-  
-  const layout = [];
-  let totalH = pad;
-  const isNight = chat.isNightMode;
-  
-  for(const it of items){
-    if(it.type === 'date'){ layout.push({ type:'date', y: totalH, text: it.text }); totalH += 34; continue; }
-    const m = it.m;
-    const isMe = m.sender === 'me';
-    const avSrc = isMe ? (chat && chat.myAvatar) : (chat && chat.theirAvatar);
-    const avChar = isMe ? getMyDisplayChar(chat) : getTheirDisplayChar(chat);
-    const name = isMe ? ((chat && (chat.myNick || chat.myName)) || '我') : ((chat && (chat.theirNick || chat.theirName)) || '祂');
-    
-    let contentLines = [];
-    let stickerImg = null;
-    let askData = null;
-    if(m.type === 'ask'){ askData = m; }
-    else {
-      if(m.cards && m.cards.length){ 
-        m.cards.forEach(t => { 
-          const lines = wrapText(t, width*0.68, bodyFont);
-          let maxLineW = 0;
-          tctx.font = bodyFont;
-          lines.forEach(l => { maxLineW = Math.max(maxLineW, tctx.measureText(l).width); });
-          contentLines.push({ lines: lines, maxW: maxLineW }); 
-        }); 
-      }
-      if(m.stickerData) stickerImg = await getImg(m.stickerData);
-    }
-    
-    const lineH = 24;
-    let textBlockH = 0;
-    let askH = 0;
-    let bubbleW = 0;
-    
-    if(m.type === 'ask'){
-      const qLines = wrapText(m.askQuestion || '', width - pad*2 - 60 - 32, bodyFont);
-      let maxQ = 0;
-      tctx.font = bodyFont;
-      qLines.forEach(l => { maxQ = Math.max(maxQ, tctx.measureText(l).width); });
-      bubbleW = Math.max(maxQ + 32, 200);
-      textBlockH = qLines.length * lineH;
-      askH += 8;
-      if(askData.askAttach) askH += 120 + 8;
-      if(askData.askMode === 'tu'){
-        const cols = 3, gap = 6, cellW = (bubbleW - 32 - gap*(cols-1))/cols;
-        const rows = Math.ceil((askData.askImages||[]).length / cols);
-        askH += rows * (cellW + gap);
-      } else {
-        askH += ((askData.askOptions||[]).length) * 36;
-      }
-      askH += 26;
-    } else {
-      let maxW = 0;
-      contentLines.forEach(block => {
-        bubbleW = Math.max(bubbleW, block.maxW + 32);
-        textBlockH += block.lines.length * lineH;
-        maxW = Math.max(maxW, block.maxW);
-      });
-      if(stickerImg) {
-        bubbleW = Math.max(bubbleW, stickerImg.width + 32);
-        if(stickerImg.width > width*0.6) bubbleW = width*0.6 + 32;
-      }
-      if(bubbleW < 60) bubbleW = 60;
-    }
-    
-    const stickerH = stickerImg ? (stickerImg.height > 140 ? 140 : stickerImg.height) : 0;
-    let bubbleH;
-    if(m.type === 'ask') bubbleH = textBlockH + askH + 34;
-    else bubbleH = textBlockH + (stickerImg ? stickerH + 6 : 0) + 28;
-    if(bubbleH < 54) bubbleH = 54;
-    
-    layout.push({ type:'msg', y: totalH, m, isMe, avSrc, avChar, name, contentLines, stickerImg, askData, bubbleW, bubbleH, textBlockH, lineH });
-    totalH += bubbleH + 40;
-  }
-  totalH += pad;
-  canvas.width = width * dpr;
-  canvas.height = totalH * dpr;
-  ctx.scale(dpr, dpr);
-  
-  const bgImg = await getImg((chat.isNightMode ? chat.nightBgImage : null) || chat.chatBgImage || globalBgImage || '');
-  if(bgImg){ ctx.drawImage(bgImg, 0, 0, width, totalH); }
-  else { ctx.fillStyle = isNight ? '#1a1216' : '#e6ebee'; ctx.fillRect(0, 0, width, totalH); }
-  
-  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack') || isNight;
-  const maskAlpha = chat.chatBgMask !== undefined ? chat.chatBgMask/100 : (globalBgMask/100);
-  ctx.fillStyle = isDark ? `rgba(0,0,0,${maskAlpha})` : `rgba(255,255,255,${maskAlpha})`;
-  ctx.fillRect(0, 0, width, totalH);
-  
-  let step = 0;
-  const totalSteps = layout.length;
-  for(const it of layout){
-    step++;
-    onProgress(Math.min(99, Math.floor(step/totalSteps*100)));
-    if(it.type === 'date'){
-      ctx.font = '12px -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif';
-      const w2 = ctx.measureText(it.text).width + 24;
-      ctx.fillStyle = isDark ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.18)';
-      roundedRect(ctx, (width - w2)/2, it.y, w2, 24, 12); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(it.text, width/2, it.y + 12);
-      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-      continue;
-    }
-    const { m, isMe, avSrc, avChar, name, contentLines, stickerImg, askData, bubbleW, bubbleH, textBlockH, lineH } = it;
-    const avSize = 36;
-    const avX = isMe ? width - pad - avSize : pad;
-    const avY = it.y;
-    
-    if(isNight && chat.myAvatar && chat.theirAvatar){
-       const meX = isMe ? width - pad - 24 : pad;
-       const themX = isMe ? width - pad - 24 - 12 : pad + 12;
-       const meIm = await getImg(chat.myAvatar);
-       const thIm = await getImg(chat.theirAvatar);
-       if(thIm){ ctx.save(); ctx.beginPath(); ctx.arc(themX + 12, avY + 18, 12, 0, Math.PI*2); ctx.clip(); ctx.drawImage(thIm, themX, avY+6, 24, 24); ctx.restore(); }
-       if(meIm){ ctx.save(); ctx.beginPath(); ctx.arc(meX + 12, avY + 18, 12, 0, Math.PI*2); ctx.clip(); ctx.drawImage(meIm, meX, avY+6, 24, 24); ctx.restore(); }
-    } else {
-      if(avSrc){
-        const im = await getImg(avSrc);
-        if(im){ ctx.save(); ctx.beginPath(); ctx.arc(avX + avSize/2, avY + avSize/2, avSize/2, 0, Math.PI*2); ctx.clip(); ctx.drawImage(im, avX, avY, avSize, avSize); ctx.restore(); }
-        else { ctx.fillStyle = '#3390ec'; ctx.beginPath(); ctx.arc(avX + avSize/2, avY + avSize/2, avSize/2, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(avChar, avX + avSize/2, avY + avSize/2); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; }
-      } else {
-        ctx.fillStyle = isMe ? '#999' : '#3390ec';
-        ctx.beginPath(); ctx.arc(avX + avSize/2, avY + avSize/2, avSize/2, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(avChar, avX + avSize/2, avY + avSize/2);
-        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-      }
-    }
-    
-    ctx.fillStyle = isDark ? 'rgba(230,230,230,.75)' : 'rgba(80,80,80,.85)';
-    ctx.font = nameFont;
-    ctx.textAlign = isMe ? 'right' : 'left';
-    const nameX = isMe ? width - pad - avSize - 6 : pad + avSize + 6;
-    ctx.fillText(name, nameX, avY + 14);
-    ctx.textAlign = 'left';
-    
-    const bubbleX = isMe ? width - pad - avSize - 8 - bubbleW : pad + avSize + 8;
-    const bubbleY = avY + 22;
-    const isAsk = m.type === 'ask';
-    
-    if(isAsk){ ctx.fillStyle = isDark ? '#2a1d24' : '#fbf3dd'; }
-    else if(m.type === 'action'){ ctx.fillStyle = isDark ? 'rgba(90,40,50,0.8)' : 'rgba(255,235,240,.92)'; }
-    else { ctx.fillStyle = isDark ? (isMe ? 'rgba(80,30,50,0.85)' : 'rgba(40,35,45,0.85)') : (isMe ? 'rgba(214,236,255,.92)' : 'rgba(255,255,255,.92)'); }
-    roundedRect(ctx, bubbleX, bubbleY, bubbleW, bubbleH, 14); ctx.fill();
-    ctx.strokeStyle = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.06)';
-    ctx.lineWidth = 1; ctx.stroke();
-    
-    ctx.fillStyle = isAsk ? (isDark ? '#f5e6e8' : '#4a3a12') : (isDark ? '#f5e6e8' : '#1a1a1a');
-    ctx.font = bodyFont;
-    let ty = bubbleY + 14 + 14;
-    
-    if(m.type !== 'ask'){
-      contentLines.forEach(block => {
-        block.lines.forEach(line => {
-          ctx.fillText(line, bubbleX + 16, ty);
-          ty += lineH;
-        });
-      });
-    } else {
-      const qLines = wrapText(m.askQuestion || '', bubbleW - 32, bodyFont);
-      qLines.forEach(line => {
-        ctx.fillText(line, bubbleX + 16, ty);
-        ty += lineH;
-      });
-    }
-    
-    if(askData){
-      let ay = ty + 2;
-      if(askData.askAttach){
-        const im = await getImg(askData.askAttach);
-        if(im){
-          const maxW2 = bubbleW - 32, maxH2 = 120;
-          const sc = Math.min(maxW2/im.width, maxH2/im.height, 1);
-          const dw = im.width*sc, dh = im.height*sc;
-          ctx.save(); roundedRect(ctx, bubbleX + 16, ay, dw, dh, 8); ctx.clip(); ctx.drawImage(im, bubbleX + 16, ay, dw, dh); ctx.restore();
-          ay += dh + 8;
-        }
-      }
-      const picked = askData.askDone ? (askData.askAnswer || []) : [];
-      const gold = isDark ? '#d47a8a' : '#c9a227';
-      
-      if(askData.askMode === 'tu'){
-        const cols = 3, gap = 6, cellW = (bubbleW - 32 - gap*(cols-1))/cols;
-        let gy = ay;
-        for(let idx=0; idx<(askData.askImages||[]).length; idx++){
-          const col = idx % cols;
-          if(col === 0 && idx !== 0){ gy += cellW + gap; }
-          const cx = bubbleX + 16 + col*(cellW+gap);
-          const im = await getImg(askData.askImages[idx]);
-          if(im){ ctx.save(); roundedRect(ctx, cx, gy, cellW, cellW, 8); ctx.clip(); ctx.drawImage(im, cx, gy, cellW, cellW); ctx.restore(); }
-          if(picked.includes(idx)){
-            ctx.strokeStyle = gold; ctx.lineWidth = 3; roundedRect(ctx, cx, gy, cellW, cellW, 8); ctx.stroke();
-            ctx.fillStyle = gold; ctx.beginPath(); ctx.arc(cx + cellW - 12, gy + 12, 9, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText('✓', cx + cellW - 12, gy + 12);
-            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-          }
-        }
-        const rows = Math.ceil((askData.askImages||[]).length / cols);
-        ay += rows * (cellW + gap);
-      } else {
-        (askData.askOptions||[]).forEach((opt, idx) => {
-          const rowH = 30;
-          ctx.fillStyle = picked.includes(idx) ? (isDark ? 'rgba(212,122,138,.25)' : 'rgba(201,162,39,.15)') : (isDark ? 'rgba(255,255,255,.05)' : 'rgba(214,178,80,.12)');
-          roundedRect(ctx, bubbleX + 16, ay, bubbleW - 32, rowH, 8); ctx.fill();
-          if(picked.includes(idx)){ ctx.strokeStyle = gold; ctx.lineWidth = 1.5; roundedRect(ctx, bubbleX + 16, ay, bubbleW - 32, rowH, 8); ctx.stroke(); }
-          ctx.fillStyle = gold;
-          ctx.beginPath(); ctx.arc(bubbleX + 16 + 15, ay + rowH/2, 8, 0, Math.PI*2); ctx.fill();
-          if(picked.includes(idx)){
-            ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText('✓', bubbleX + 16 + 15, ay + rowH/2);
-            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-          }
-          ctx.fillStyle = isDark ? '#f5e6e8' : '#4a3a12'; ctx.font = bodyFont;
-          ctx.fillText(opt, bubbleX + 16 + 30, ay + rowH/2 + 5);
-          ay += rowH + 6;
-        });
-      }
-      if(askData.askDone){
-        const pickedNames = picked.length ? (askData.askMode === 'tu' ? picked.length + ' 張圖' : picked.map(i => askData.askOptions[i]).join('、')) : '';
-        ctx.fillStyle = gold; ctx.font = '13px sans-serif';
-        ctx.fillText(name + '選了：' + (pickedNames || '無'), bubbleX + 16, ay + 14);
-        ay += 22;
-      } else {
-        ctx.fillStyle = gold; ctx.font = '13px sans-serif';
-        ctx.fillText(name + ' 正在思考…', bubbleX + 16, ay + 14);
-        ay += 22;
-      }
-    } else if(stickerImg){
-      const maxW2 = bubbleW - 32, maxH2 = 140;
-      const sc = Math.min(maxW2/stickerImg.width, maxH2/stickerImg.height, 1);
-      const dw = stickerImg.width*sc, dh = stickerImg.height*sc;
-      const sx = bubbleX + (bubbleW - dw)/2;
-      ctx.save(); roundedRect(ctx, sx, ty + 2, dw, dh, 8); ctx.clip(); ctx.drawImage(stickerImg, sx, ty + 2, dw, dh); ctx.restore();
-    }
-    
-    ctx.fillStyle = isDark ? 'rgba(160,160,160,.9)' : 'rgba(140,140,140,.95)';
-    ctx.font = timeFont; ctx.textAlign = 'right';
-    ctx.fillText(fmtTime(m.time), bubbleX + bubbleW - 14, bubbleY + bubbleH - 10);
-    ctx.textAlign = 'left';
-  }
-  onProgress(100);
-  return canvas.toDataURL('image/png');
-}
-
-function toggleSnapMode(){
-  if(snapMode){
-    snapMode = false; snapSelectedIds.clear(); $('#snapBtn').style.color = 'var(--text-secondary)';
-    const b = document.getElementById('snapModeBar'); if(b) b.remove();
-    renderMessagesUI(false);
-  } else {
-    snapMode = true; snapSelectedIds.clear(); $('#snapBtn').style.color = 'var(--primary)'; renderMessagesUI(false);
-    const bar = document.createElement('div'); bar.id = 'snapModeBar';
-    bar.style.cssText = 'position:fixed;left:0;right:0;bottom:calc(70px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:16px;z-index:120;';
-    bar.innerHTML = `<button id="snapCancel" style="padding:10px 18px;border-radius:20px;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:14px;">取消</button><button id="snapConfirm" style="padding:10px 18px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:600;">生成留影</button>`;
-    document.body.appendChild(bar);
-    bar.querySelector('#snapCancel').onclick = () => { bar.remove(); toggleSnapMode(); };
-    bar.querySelector('#snapConfirm').onclick = () => { const b2 = document.getElementById('snapModeBar'); if(b2) b2.remove(); startSnapGenerate(); };
-    updateSnapTitle();
-  }
-}
-function updateSnapTitle(){
-  const btn = document.getElementById('snapConfirm');
-  if(btn) btn.textContent = `生成留影(${snapSelectedIds.size})`;
+  if(list) list.innerHTML = '<div class="snap-empty">留影功能整理中</div>';
+  document.getElementById('pageSnap').classList.add('show');
 }
 
 function renderMessagesUI(forceBottom) {
   const box = $('#messages'); box.innerHTML = '';
   const c = chats.find(x => x.id === currentChatId);
+  applyLayoutClass(c);
   if (c) currentMessages.forEach(m => appendMessageDOM(m, c, false));
   if (forceBottom) {
       const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
   }
+}
+
+/* ===== 尺素（收藏）功能 ===== */
+async function getAllCollectedMessages(chatId){
+  return new Promise((res, rej) => {
+    const idx = tx('messages').index('chatId');
+    const req = idx.getAll(chatId);
+    req.onsuccess = () => {
+      const arr = (req.result || []).filter(m => m.collectedBy === 'me' || m.collectedBy === 'them');
+      arr.sort((a,b) => b.time - a.time);
+      res(arr);
+    };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function getFavTabName(c){
+  return getDisplayName(c) || (c.roomName || '未命名');
+}
+
+async function openFavPage(){
+  const withData = [];
+  for(const c of chats){
+    const arr = await getAllCollectedMessages(c.id);
+    if(arr.length) withData.push(c);
+  }
+  favTabChatIds = withData.map(c => c.id);
+  const bar = $('#favTabBar'), track = $('#favSwipeTrack');
+  bar.innerHTML = ''; track.innerHTML = '';
+  if(!withData.length){
+    bar.innerHTML = '';
+    track.innerHTML = '<div class="fav-pane"><div class="fav-empty">尚無尺素</div></div>';
+    $('#pageFav').classList.add('show');
+    return;
+  }
+  withData.forEach((c, i) => {
+    const t = document.createElement('div');
+    t.className = 'fav-tab' + (i === 0 ? ' active' : '');
+    t.dataset.chatId = c.id;
+    t.textContent = getFavTabName(c);
+    t.onclick = () => goFavTab(i);
+    bar.appendChild(t);
+  });
+  for(const c of withData){
+    const pane = document.createElement('div');
+    pane.className = 'fav-pane';
+    pane.dataset.chatId = c.id;
+    const arr = await getAllCollectedMessages(c.id);
+    if(!arr.length){ pane.innerHTML = '<div class="fav-empty">尚無尺素</div>'; }
+    else {
+      arr.forEach(m => {
+        pane.appendChild(buildFavCard(m, c));
+      });
+    }
+    track.appendChild(pane);
+  }
+  favCurrentIndex = 0;
+  track.style.transform = 'translateX(0%)';
+  $('#pageFav').classList.add('show');
+}
+
+function buildFavCard(m, c){
+  const card = document.createElement('div');
+  card.className = 'fav-card';
+  const tape = document.createElement('div'); tape.className = 'fav-tape'; card.appendChild(tape);
+  const text = document.createElement('div');
+  text.className = 'fav-text';
+  text.textContent = (m.cards || []).join('\n');
+  card.appendChild(text);
+  const meta = document.createElement('div'); meta.className = 'fav-meta';
+  const src = document.createElement('div'); src.className = 'fav-source';
+  const themName = getDisplayName(c);
+  if(m.collectedBy === 'me') src.textContent = `我收 · ${themName}说`;
+  else src.textContent = `${themName}收 · 我说`;
+  const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
+  stamp.textContent = fmtMonthDayTime(m.time);
+  meta.appendChild(src); meta.appendChild(stamp);
+  card.appendChild(meta);
+  let lpTimer = null;
+  card.addEventListener('touchstart', () => { lpTimer = setTimeout(() => { showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => { m.collectedBy = null; await reqToPromise(tx('messages','readwrite').put(m)); toast('已移出尺素'); openFavPage(); }, true); }, 600); }, { passive:true });
+  card.addEventListener('touchend', () => clearTimeout(lpTimer));
+  card.addEventListener('touchmove', () => clearTimeout(lpTimer));
+  return card;
+}
+
+function goFavTab(index){
+  if(index < 0 || index >= favTabChatIds.length) return;
+  favCurrentIndex = index;
+  const track = $('#favSwipeTrack');
+  track.style.transform = `translateX(-${index * 100}%)`;
+  document.querySelectorAll('.fav-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+}
+
+function bindFavSwipe(){
+  const wrap = $('#favSwipeWrap');
+  if(!wrap) return;
+  wrap.addEventListener('touchstart', e => {
+    if(!e.touches[0]) return;
+    favTouchStartX = e.touches[0].clientX; favTouchStartY = e.touches[0].clientY; favDragging = false;
+  }, { passive:true });
+  wrap.addEventListener('touchmove', e => {
+    if(!e.touches[0]) return;
+    const dx = e.touches[0].clientX - favTouchStartX;
+    const dy = e.touches[0].clientY - favTouchStartY;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) favDragging = true;
+  }, { passive:true });
+  wrap.addEventListener('touchend', e => {
+    if(!favDragging) return;
+    const dx = e.changedTouches[0].clientX - favTouchStartX;
+    if(dx < -50) goFavTab(favCurrentIndex + 1);
+    else if(dx > 50) goFavTab(favCurrentIndex - 1);
+    favDragging = false;
+  });
 }
 
 function bindEvents(){
@@ -2487,6 +2317,27 @@ function bindEvents(){
   $('#actCancel').onclick = closeActionSheet;
   actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
   $('#actPin').onclick = async () => { closeActionSheet(); if(!activeChatForMenu) return; activeChatForMenu.isPinned = !activeChatForMenu.isPinned; await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); };
+
+  $('#actLayout').onclick = () => {
+    closeActionSheet(); if(!activeChatForMenu) return;
+    const mask = $('#layoutPanelMask');
+    document.querySelectorAll('.layout-option').forEach(o => o.classList.toggle('active', (o.dataset.layout === (activeChatForMenu.layout || 'jiuumeng'))));
+    mask.classList.add('show');
+  };
+  $('#layoutPanelMask').onclick = async e => {
+    if(e.target === $('#layoutPanelMask')){ $('#layoutPanelMask').classList.remove('show'); return; }
+    const opt = e.target.closest('.layout-option');
+    if(!opt) return;
+    const layout = opt.dataset.layout;
+    if(!activeChatForMenu) return;
+    activeChatForMenu.layout = layout;
+    await reqToPromise(tx('chats','readwrite').put(activeChatForMenu));
+    await loadChats();
+    $('#layoutPanelMask').classList.remove('show');
+    const c = chats.find(x => x.id === currentChatId);
+    if(c && c.id === activeChatForMenu.id) applyLayoutClass(c);
+    toast(layout === 'yuyan' ? '已切換：魚雁' : '已切換：舊夢');
+  };
   
   $('#actEdit').onclick = () => {
     closeActionSheet(); if(!activeChatForMenu) return;
@@ -2521,6 +2372,21 @@ function bindEvents(){
   const closeMsgMask = () => msgMask.classList.remove('show');
   $('#msgActCancel').onclick = closeMsgMask;
   msgMask.onclick = e => { if(e.target === msgMask) closeMsgMask(); };
+  $('#msgActCollect').onclick = async () => {
+    closeMsgMask();
+    if(!currentMsgForAction) return;
+    const m = currentMsgForAction;
+    if(m.collectedBy === 'me'){
+      m.collectedBy = null;
+      await reqToPromise(tx('messages','readwrite').put(m));
+      toast('已出素');
+    } else {
+      m.collectedBy = 'me';
+      await reqToPromise(tx('messages','readwrite').put(m));
+      toast('已入素');
+    }
+    currentMsgForAction = null;
+  };
   $('#msgActBurn').onclick = () => {
     closeMsgMask();
     if(!pendingBurnMsg) return;
@@ -2642,10 +2508,10 @@ function bindEvents(){
   $('#modeToggleBtn').onclick = toggleChatMode;
   $('#snapBtn').onclick = openSnapPage;
   $('#backSnapBtn').onclick = () => { $('#pageSnap').classList.remove('show'); };
-  $('#snapGenerateBtn').onclick = () => { $('#pageSnap').classList.remove('show'); toggleSnapMode(); };
-  $('#snapPreviewClose').onclick = () => { $('#snapPreviewMask').classList.remove('show'); };
-  $('#snapPreviewSave').onclick = () => { if(!snapPreviewCurrent) return; const a = document.createElement('a'); a.href = snapPreviewCurrent.image; a.download = '留影_' + Date.now() + '.png'; a.click(); toast('已保存'); };
-  $('#snapPreviewDel').onclick = () => { if(!snapPreviewCurrent) return; const id = snapPreviewCurrent.id; showCustomDialog('焚毀','確定要焚毀這張留影嗎？',false,'焚毀', async () => { if(id !== 'preview') await reqToPromise(tx('snapshots','readwrite').delete(id)); $('#snapPreviewMask').classList.remove('show'); renderSnapList(); toast('已焚毀'); }, true); };
+  $('#snapGenerateBtn').onclick = () => { toast('留影功能整理中'); };
+
+  $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); };
+  bindFavSwipe();
 
   $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
 
@@ -2696,7 +2562,7 @@ function bindEvents(){
         toast('資料已更新');
       }
     } else {
-      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, callBgImage:tempCallBg, accompanyBgImage:tempAccompanyBg, chatBgMask:tempChatBgMask, isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
+      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, callBgImage:tempCallBg, accompanyBgImage:tempAccompanyBg, chatBgMask:tempChatBgMask, layout:'jiuumeng', isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
       await reqToPromise(tx('chats','readwrite').add(c));
       toast('已建立新對話');
     }
@@ -2746,6 +2612,10 @@ function bindEvents(){
   document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
   if($('#mainBgFile')) $('#mainBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { globalBgImage = b; localStorage.setItem('nz_main_bg', b); applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage=`url(${b})`; $('#mainBgText').textContent=''; }); };
 
+  if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
+  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#roseUploadBox').style.backgroundImage=`url(${b})`; $('#roseUploadText').textContent=''; toast('標記已更新'); }); e.target.value=''; };
+  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#roseUploadBox').style.backgroundImage=''; $('#roseUploadText').textContent='點擊上傳標記圖（留空用 🌹）'; toast('已恢復默認 🌹'); };
+
   $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
   $('#saveAdjustBtn').onclick = () => {
     let rMin = parseInt($('#adjReplyMin').value) || 8; if(rMin < 1) rMin = 1; if(rMin > 120) rMin = 120;
@@ -2758,6 +2628,7 @@ function bindEvents(){
     config.flirtRate = parseInt($('#adjFlirtRate').value) || 20;
     config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
     config.actionRate = parseInt($('#adjActionRate').value) || 15;
+    config.collectRate = parseInt($('#adjCollectRate').value) || 10;
     localStorage.setItem('nz_config', JSON.stringify(config));
     toast('設置已保存');
     $('#pageAdjust').classList.remove('show');

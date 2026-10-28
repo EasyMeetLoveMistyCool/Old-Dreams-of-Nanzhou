@@ -929,7 +929,6 @@ const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','�
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 const TERMS = ['小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至'];
 
-// 精确的节气偏移数据表 (2000-2099 精度极高)
 const TERM_INFO = [
   5,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,22,
   6,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,8,23,8,23,8,23,8,23,
@@ -1023,7 +1022,6 @@ for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfi
 
 function applyBubbleOpacity(){
   document.documentElement.style.setProperty('--bubble-opacity', globalBubbleOpacity / 100);
-  // 动态更新气泡底色透明度
   const root = document.documentElement;
   root.style.setProperty('--bubble-daily-them', `rgba(255, 249, 249, ${globalBubbleOpacity/100})`);
   root.style.setProperty('--bubble-daily-me', `rgba(247, 217, 223, ${globalBubbleOpacity/100})`);
@@ -1061,7 +1059,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_new_db';
-const DB_VER = 2; // 升级版本以加入 notes 表
+const DB_VER = 2; // 升级以加入 notes 表
 let db = null;
 
 function openDB(){
@@ -1069,13 +1067,20 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
+      
+      // 兼容旧结构，自动清理不需要的 snapshots 表，保留所有其他表
+      if (d.objectStoreNames.contains('snapshots')) {
+        d.deleteObjectStore('snapshots');
+      }
+
       if(!d.objectStoreNames.contains('chats')) d.createObjectStore('chats', { keyPath:'id' });
       if(!d.objectStoreNames.contains('messages')){ const s = d.createObjectStore('messages', { keyPath:'id' }); s.createIndex('chatId','chatId',{ unique:false }); }
       if(!d.objectStoreNames.contains('cards')){ const s = d.createObjectStore('cards', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
       if(!d.objectStoreNames.contains('actions')){ const s = d.createObjectStore('actions', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('music')) d.createObjectStore('music', { keyPath:'id' });
-      // 彻底废弃 snapshots，新建 notes 存简讯
+      
+      // 新建简讯专用 notes 表
       if(!d.objectStoreNames.contains('notes')) d.createObjectStore('notes', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -1156,7 +1161,7 @@ async function init(){
     renderChatList();
     bindEvents();
     applyThemeAndBg();
-    applyBubbleOpacity(); // 应用初始透明度
+    applyBubbleOpacity();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
     if(globalRoseMark){ const rb = $('#rosePreview'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; rb.textContent = ''; } }
     $('#bubbleOpacityInput').value = globalBubbleOpacity;
@@ -1354,7 +1359,6 @@ async function toggleChatMode() {
     if(Math.random() < 0.5) triggerThemNote(currentChatId);
   }
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
-  // 静默更新主页图标
   loadChats().then(() => renderChatList());
 }
 
@@ -2047,7 +2051,7 @@ function hangupCall(){
     const c = chats.find(x => x.id === currentChatId);
     if(c) {
       themCollectMyMessage(currentChatId, c.isNightMode);
-      if(Math.random() < 0.5) triggerThemNote(currentChatId); // 互动余韵触发留言
+      if(Math.random() < 0.5) triggerThemNote(currentChatId);
     }
   }
 }
@@ -2197,7 +2201,7 @@ function endAccompany(){
     const c = chats.find(x => x.id === currentChatId);
     if(c) {
       themCollectMyMessage(currentChatId, c.isNightMode);
-      if(Math.random() < 0.5) triggerThemNote(currentChatId); // 互动余韵触发留言
+      if(Math.random() < 0.5) triggerThemNote(currentChatId);
     }
   }
 }
@@ -2288,7 +2292,7 @@ function renderMessagesUI(forceBottom) {
 /* ===== 簡訊（留言匣）功能 ===== */
 async function loadNotes(){
   const notes = await reqToPromise(tx('notes').getAll());
-  notes.sort((a,b) => b.createdAt - a.createdAt); // 最新的在上面
+  notes.sort((a,b) => b.createdAt - a.createdAt);
   const list = $('#noteList');
   list.innerHTML = '';
   if(!notes.length){
@@ -2300,7 +2304,7 @@ async function loadNotes(){
     let name = '';
     if(n.sender === 'me'){
       name = (c && (c.myNick || c.myName)) ? (c.myNick || c.myName) : '我';
-      if(!c) name = '我'; // 无名纸条
+      if(!c) name = '我';
     } else {
       name = getDisplayName(c);
     }
@@ -2314,7 +2318,6 @@ async function loadNotes(){
       activeNoteId = n.id;
       noteReplyTargetChatId = n.chatId;
       $('#noteInput').placeholder = `回给 ${name}...`;
-      // 弹出操作菜单
       $('#noteActCollect').style.display = (n.sender === 'them') ? 'block' : 'none';
       $('#noteActionMask').classList.add('show');
     };
@@ -2328,7 +2331,7 @@ async function triggerThemNote(chatId){
   const normalCards = allCards.filter(x => (x.category || 'normal') === 'normal');
   if(!normalCards.length) return;
   
-  const count = 3 + Math.floor(Math.random() * 3); // 3~5张
+  const count = 3 + Math.floor(Math.random() * 3);
   const p = [...normalCards];
   const picked = [];
   for(let i=0; i<count && p.length; i++){
@@ -2336,14 +2339,12 @@ async function triggerThemNote(chatId){
     picked.push(p.splice(idx, 1)[0].text);
   }
   
-  // 智能拼接
   let finalText = '';
   picked.forEach((t, i) => {
     t = t.trim();
     finalText += t;
     if(i < picked.length - 1) {
       if(/[,.!?;:\u3001\u3002\uff0c\uff01\uff1f\uff1b\uff1a]$/.test(t)) {
-        // 本来就有标点
       } else {
         finalText += '，';
       }
@@ -2746,13 +2747,11 @@ function bindEvents(){
     $('#noteInput').value = '';
     loadNotes();
     
-    // 回复留言的概率触发
     if(noteReplyTargetChatId && Math.random() < 0.8){
       setTimeout(() => triggerThemNote(noteReplyTargetChatId), 5000 + Math.random()*10000);
     }
   };
 
-  // 简讯操作菜单
   const noteMask = $('#noteActionMask');
   const closeNoteMask = () => noteMask.classList.remove('show');
   $('#noteActCancel').onclick = closeNoteMask;
@@ -2770,12 +2769,6 @@ function bindEvents(){
     closeNoteMask();
     if(!activeNoteId) return;
     toast('已收入尺素（此功能将在后续版本完善）');
-    // 简讯收入尺素比较复杂，因为尺素目前只显示 messages。
-    // 为了兼容，可以动态生成一条不可见的 message，或者这里先做提示。
-    // 根据你的需求，简讯主要是独立的。如果强求收入尺素，可以：
-    // 1. 存入 messages 表，挂上 collectedBy。
-    // 2. 但这就变成聊天记录了。
-    // 为了安全起见，这里简讯只做撕下和查看。
   };
 
   $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
@@ -2840,7 +2833,7 @@ function bindEvents(){
     snapMode = false; snapSelectedIds.clear(); 
     currentChatId = null; 
     applyThemeAndBg(); 
-    loadChats().then(() => renderChatList()); // 静默刷新一下主页，保证模式图标同步
+    loadChats().then(() => renderChatList());
   };
   $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
@@ -2895,7 +2888,6 @@ function bindEvents(){
   if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
   if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
 
-  // 气泡透明度输入框
   if($('#bubbleOpacityInput')){
     $('#bubbleOpacityInput').value = globalBubbleOpacity;
     $('#bubbleOpacityInput').addEventListener('change', function(){
@@ -2908,7 +2900,6 @@ function bindEvents(){
       applyBubbleOpacity();
       toast('已更新透明度');
     });
-    // 点击空白处生效
     document.addEventListener('click', function(e){
       if(e.target.id !== 'bubbleOpacityInput' && document.activeElement.id === 'bubbleOpacityInput') {
         document.activeElement.blur();

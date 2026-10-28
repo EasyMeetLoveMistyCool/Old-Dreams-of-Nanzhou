@@ -903,32 +903,31 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
- const originalQuerySelector = document.querySelector.bind(document);
-document.querySelector = function(selector) {
-  const el = originalQuerySelector(selector);
-  if (!el) {
-    return {
-      onclick: null, addEventListener: () => {}, classList: { add: ()=>{}, remove: ()=>{}, toggle: ()=>{}, contains: ()=>false },
-      style: {}, value: '', textContent: '', innerHTML: '', appendChild: ()=>{}, setAttribute: ()=>{}, getAttribute: ()=>'', closest: ()=>null, querySelectorAll: ()=>[], querySelector: ()=>null
-    };
-  }
-  return el;
-};
+document.querySelector = (function(original) {
+  return function(selector) {
+    var el = original.call(document, selector);
+    if (!el) {
+      return {
+        onclick: null, addEventListener: function(){}, classList: { add: function(){}, remove: function(){}, toggle: function(){}, contains: function(){ return false; } },
+        style: {}, value: '', textContent: '', innerHTML: '', appendChild: function(){}, setAttribute: function(){}, getAttribute: function(){ return ''; }, closest: function(){ return null; }, querySelectorAll: function(){ return []; }, querySelector: function(){ return null; }
+      };
+    }
+    return el;
+  };
+})(document.querySelector.bind(document));
 
 const $ = s => document.querySelector(s);
 const toastEl = $('#toast');
 let toastTimer = null;
-function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
+function toast(msg){ if(!toastEl) return; toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
+// ===== 古风历法与节气算法 =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
-const TERMS = ['小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至'];
-
 const TERM_INFO = [
   5,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,22,
   6,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,8,23,8,23,8,23,8,23,
@@ -947,67 +946,53 @@ function getTermDate(y, n) {
   let base = TERM_INFO[(y - 2000) * 24 + n];
   let d = new Date(y, 0, 1);
   d.setDate(base);
-  let century = Math.floor(y / 100);
-  let year = y % 100;
-  let C = century === 20 ? (n===0?5.4055:(n===1?20.12:(n===2?3.87:(n===3?18.73:(n===4?5.63:(n===5?20.646:(n===6?4.81:(n===7?20.1:(n===8?5.52:(n===9?21.04:(n===10?5.678:(n===11?21.37:(n===12?7.108:(n===13?22.83:(n===14?7.5:(n===15?23.13:(n===16?7.646:(n===17?23.042:(n===18?8.318:(n===19?23.438:(n===20?7.438:(n===21?22.36:(n===22?7.18:21.94)))))))))))))))))))))))) : (n===0?5.4055:(n===1?20.12:(n===2?3.87:(n===3?18.73:(n===4?5.63:(n===5?20.646:(n===6?4.81:(n===7?20.1:(n===8?5.52:(n===9?21.04:(n===10?5.678:(n===11?21.37:(n===12?7.108:(n===13?22.83:(n===14?7.5:(n===15?23.13:(n===16?7.646:(n===17?23.042:(n===18?8.318:(n===19?23.438:(n===20?7.438:(n===21?22.36:(n===22?7.18:21.94))))))))))))))))))))))));
-  let calcD = Math.floor(year * 0.2422 + C) - Math.floor(year / 4);
+  let C = [5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94][n];
+  let calcD = Math.floor((y % 100) * 0.2422 + C) - Math.floor((y % 100) / 4);
   if(n===2 || n===5 || n===8 || n===11) calcD -= 1; 
   d.setDate(calcD);
   return d;
 }
 
 function getAncientTime(date) {
-  const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
-  const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
+  const utc8 = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
+  const y = utc8.getFullYear(), m = utc8.getMonth() + 1, d = utc8.getDate(), h = utc8.getHours(), min = utc8.getMinutes();
   
-  const lichun = getTermDate(y, 2);
-  let ganZhiYear = y;
-  if (utc8Date < lichun) ganZhiYear--;
-  const yearGan = (ganZhiYear - 4) % 10;
-  const yearZhi = (ganZhiYear - 4) % 12;
-  const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
+  let lichun = getTermDate(y, 2);
+  let gzY = y;
+  if (utc8 < lichun) gzY--;
+  let yearGan = (gzY - 4) % 10;
+  let yearZhi = (gzY - 4) % 12;
+  let yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  const termsThisYear = [];
-  for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
-  let termIndex = 23;
-  for(let i=0; i<24; i++) {
-    if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
-  }
-  if(termIndex < 0) termIndex = 23;
+  let terms = [];
+  for(let i=0; i<24; i++) terms.push(getTermDate(y, i));
+  let termIdx = 23;
+  for(let i=0; i<24; i++) { if (utc8 < terms[i]) { termIdx = i - 1; break; } }
+  if(termIdx < 0) termIdx = 23;
   
-  const monthZhi = (termIndex + 2) % 12;
-  const monthGanBase = (yearGan % 5) * 2 + 2;
-  const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
-  const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
+  let monthZhi = (termIdx + 2) % 12;
+  let monthGanBase = (yearGan % 5) * 2 + 2;
+  let monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
+  let monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
-  const baseDate = Date.UTC(2000, 0, 1);
-  const currentDate = Date.UTC(y, m-1, d);
-  const diffDays = Math.round((currentDate - baseDate) / 86400000);
-  const dayGan = (diffDays + 4) % 10;
-  const dayZhi = (diffDays + 6) % 12;
-  const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
+  let base = Date.UTC(2000, 0, 1);
+  let cur = Date.UTC(y, m-1, d);
+  let diff = Math.round((cur - base) / 86400000);
+  let dGan = (diff + 4) % 10;
+  let dZhi = (diff + 6) % 12;
+  let dayStr = GAN[(dGan+10)%10] + ZHI[(dZhi+12)%12] + '日';
   
-  const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
-  const hourGanBase = (dayGan % 5) * 2;
-  const hourGan = (hourGanBase + hourZhiIndex) % 10;
-  const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
+  let hZhiIdx = Math.floor(((h + 1) % 24) / 2);
+  let hGanBase = (dGan % 5) * 2;
+  let hGan = (hGanBase + hZhiIdx) % 10;
+  let hGz = GAN[(hGan+10)%10] + ZHI[hZhiIdx] + '时';
   
-  const keIndex = Math.floor(min / 15);
-  let keName = '';
-  if (keIndex === 0) keName = '初刻';
-  else if (keIndex === 1) keName = '一刻';
-  else if (keIndex === 2) keName = '二刻';
-  else if (keIndex === 3) keName = '三刻';
-  else if (keIndex === 4) keName = '正初刻';
-  else if (keIndex === 5) keName = '正一刻';
-  else if (keIndex === 6) keName = '正二刻';
-  else if (keIndex === 7) keName = '正三刻';
+  let keIdx = Math.floor(min / 15);
+  let keName = KE[keIdx];
   
-  const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
-
   return {
     dateStr: `${yearStr} ${monthStr} ${dayStr}`,
-    timeStr: `${hourGanZhi} ${keName} ${timeStr}`
+    timeStr: `${hGz} ${keName} ${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`
   };
 }
 
@@ -1059,7 +1044,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_new_db';
-const DB_VER = 2; // 升级以加入 notes 表
+const DB_VER = 2; 
 let db = null;
 
 function openDB(){
@@ -1067,20 +1052,13 @@ function openDB(){
     const req = indexedDB.open(DB_NAME, DB_VER);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      
-      // 兼容旧结构，自动清理不需要的 snapshots 表，保留所有其他表
-      if (d.objectStoreNames.contains('snapshots')) {
-        d.deleteObjectStore('snapshots');
-      }
-
+      if (d.objectStoreNames.contains('snapshots')) d.deleteObjectStore('snapshots');
       if(!d.objectStoreNames.contains('chats')) d.createObjectStore('chats', { keyPath:'id' });
       if(!d.objectStoreNames.contains('messages')){ const s = d.createObjectStore('messages', { keyPath:'id' }); s.createIndex('chatId','chatId',{ unique:false }); }
       if(!d.objectStoreNames.contains('cards')){ const s = d.createObjectStore('cards', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
       if(!d.objectStoreNames.contains('actions')){ const s = d.createObjectStore('actions', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('music')) d.createObjectStore('music', { keyPath:'id' });
-      
-      // 新建简讯专用 notes 表
       if(!d.objectStoreNames.contains('notes')) d.createObjectStore('notes', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -1117,7 +1095,6 @@ let currentMsgForAction = null;
 
 let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
 
-// 简讯相关全局变量
 let activeNoteId = null;
 let noteReplyTargetChatId = null;
 

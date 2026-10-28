@@ -16,34 +16,32 @@
     --text-color:#000000; --text-secondary:#707579; --time-color:#a0a0a0;
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
-    --bubble-daily-them: rgba(74,93,98,0.25);
-    --bubble-daily-me: rgba(142,134,160,0.25);
-    --bubble-night-them: rgba(74,63,78,0.25);
-    --bubble-night-me: rgba(142,68,81,0.25);
-    --bubble-text-fixed: #F5F5F5;
-    --action-daily-text: #8a4a58;
+    
+    /* 气泡固定底色（少女心事系列） */
+    --bubble-daily-them: #FFF9F9;
+    --bubble-daily-me: #F7D9DF;
+    --bubble-daily-text: #4A3E3E;
+    --bubble-night-them: #4A3B4C;
+    --bubble-night-me: #A34A60;
+    --bubble-night-text: #F7F2F2;
   }
   
-  body.theme-sky { --bg-color:#e6ebee; --bubble-me:#d6ecff; }
-  body.theme-forest { --bg-color:#e8efe9; --bubble-me:#d4ebd9; --primary:#4caf50; }
-  body.theme-sunset { --bg-color:#fdf5eb; --bubble-me:#ffe0b2; --primary:#ff9800; }
-  body.theme-twilight { --bg-color:#e0e0e0; --bubble-me:#cfd8dc; --primary:#607d8b; }
-  body.theme-crabapple { --bg-color:#fcf2f3; --bubble-me:#ffcdd2; --primary:#e57373; }
-  body.theme-rain { --bg-color:#eef4f4; --bubble-me:#b2dfdb; --primary:#009688; }
-  body.theme-paper { --bg-color:#f5f1e6; --bubble-me:#f0e6d2; --primary:#8d6e63; }
-  body.theme-ink { --bg-color:#f4f4f4; --bubble-me:#e0e0e0; --primary:#424242; }
-  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --bubble-me:rgba(0,51,102,.85); --bubble-them:rgba(26,26,26,.85); --bubble-action-me:rgba(80,30,40,.85); --bubble-action-them:rgba(60,20,30,.85); --text-color:#fff; --text-secondary:#888; --time-color:#555; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); }
-  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --bubble-me:rgba(30,58,95,.85); --bubble-them:rgba(26,38,57,.85); --bubble-action-me:rgba(70,30,45,.85); --bubble-action-them:rgba(50,20,35,.85); --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); }
-  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --bubble-me:rgba(68,34,102,.85); --bubble-them:rgba(43,29,54,.85); --bubble-action-me:rgba(80,40,60,.85); --bubble-action-them:rgba(60,25,45,.85); --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); }
-  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --bubble-me:rgba(51,51,51,.85); --bubble-them:rgba(17,17,17,.85); --bubble-action-me:rgba(60,40,40,.85); --bubble-action-them:rgba(40,25,25,.85); --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); }
+  body.theme-sky { --bg-color:#e6ebee; }
+  body.theme-forest { --bg-color:#e8efe9; --primary:#4caf50; }
+  body.theme-sunset { --bg-color:#fdf5eb; --primary:#ff9800; }
+  body.theme-twilight { --bg-color:#e0e0e0; --primary:#607d8b; }
+  body.theme-crabapple { --bg-color:#fcf2f3; --primary:#e57373; }
+  body.theme-rain { --bg-color:#eef4f4; --primary:#009688; }
+  body.theme-paper { --bg-color:#f5f1e6; --primary:#8d6e63; }
+  body.theme-ink { --bg-color:#f4f4f4; --primary:#424242; }
+  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --text-color:#fff; --text-secondary:#888; --time-color:#555; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); }
+  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); }
+  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); }
+  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); }
 
   body.is-night-mode {
     --bg-color: #1a1216 !important; 
     --topbar-border: #3a252b !important; 
-    --bubble-me: rgba(80, 30, 50, 0.85) !important; 
-    --bubble-them: rgba(40, 35, 45, 0.85) !important;
-    --bubble-action-me: rgba(90, 40, 50, 0.85) !important;
-    --bubble-action-them: rgba(60, 30, 40, 0.85) !important;
     --text-color: #f5e6e8 !important; 
     --text-secondary: rgba(212, 122, 138, 0.6) !important; 
     --time-color: rgba(212, 122, 138, 0.5) !important;
@@ -54,8 +52,8 @@
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
-  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-snap { z-index:4; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); }
-  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-snap.show,.page-adjust.show,.page-fav.show { transform:translateX(0); }
+  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-fav { z-index:4; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-msg { z-index:6; transform:translateX(100%); }
+  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-adjust.show,.page-fav.show,.page-msg.show { transform:translateX(0); }
 
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
@@ -75,7 +73,10 @@
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; }
+  /* 彻底去闪烁 */
+  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; outline: none; -webkit-touch-callout: none; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
+  
   .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
   
   .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
@@ -95,61 +96,52 @@
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
   
-  /* 古风日期分割线 */
   .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; }
   body.is-night-mode .date-divider { background:rgba(212,122,138,.2); }
 
-  /* ===== 消息组：舊夢（上下）默认结构 ===== */
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
   
-  /* 撩拨模式消息流双人头像：位置永远祂左我右，叠压随发送方（拉开距离露出两张脸） */
   .msg-dual-avatar { position:relative; width:52px; height:36px; margin-bottom:8px; }
   .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
   .msg-dual-avatar .du-av.them { left:0; }
   .msg-dual-avatar .du-av.me { right:0; }
-  /* 祂发消息：祂（左）压住我（右） */
   .msg-group.them .msg-dual-avatar .du-av.them { z-index:3; }
   .msg-group.them .msg-dual-avatar .du-av.me { z-index:2; }
-  /* 我发消息：我（右）压住祂（左） */
   .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
   .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
-  /* ===== 鱼雁（左右）排版 ===== */
   .layout-yuyan .msg-group { align-items:stretch; }
   .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
   .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
   .layout-yuyan .msg-row { display:flex; align-items:flex-start; gap:8px; width:100%; }
-  /* 祂发：靠左 */
   .layout-yuyan .msg-group.them .msg-row { flex-direction:row; justify-content:flex-start; }
-  /* 我发：靠右 */
   .layout-yuyan .msg-group.me .msg-row { flex-direction:row; justify-content:flex-end; }
   .layout-yuyan .msg-group.them .msg-dual-avatar { margin-right:0; }
   .layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
   .layout-yuyan .msg-group .bubble { max-width:72%; }
 
-  .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; }
-  /* 固定配色气泡（不跟主题色），半透明磨砂 */
-  .msg-group.them .bubble { background:var(--bubble-daily-them); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-  .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--bubble-text-fixed); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-  body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:#F5E6E8; }
-  body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:#F5E6E8; }
-  /* 动作气泡：磨砂但颜色保持不变（日常深字，撩拨浅字） */
-  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-  body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
-  body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; }
-  /* 深色主题下固定字色 */
-  body.theme-cyber .msg-group .bubble, body.theme-space .msg-group .bubble, body.theme-nightpurple .msg-group .bubble, body.theme-pureblack .msg-group .bubble { color:var(--bubble-text-fixed); }
+  /* 气泡样式（磨砂、固定色） */
+  .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  
+  .msg-group.them .bubble { border:1px solid rgba(128,128,128,.1); color:var(--bubble-daily-text); }
+  .msg-group.me .bubble { border:1px solid rgba(128,128,128,.1); color:var(--bubble-daily-text); }
+  body.is-night-mode .msg-group.them .bubble { color:var(--bubble-night-text); }
+  body.is-night-mode .msg-group.me .bubble { color:var(--bubble-night-text); }
+  
+  /* 动作气泡 */
+  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
+  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
+  body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; background:rgba(90, 40, 50, 0.85); }
+  body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; background:rgba(60, 30, 40, 0.85); }
 
   .card-line { display:block; opacity:0; transform:translateY(5px); animation:cardIn .5s ease forwards; }
   .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
   
-  /* 时间戳：单行显示 */
   .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
   .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
   .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.25; border-radius:4px; }
@@ -213,7 +205,6 @@
   .action-item { padding:14px 20px; font-size:16px; text-align:center; border-bottom:1px solid var(--border-light); }
   .action-item.danger { color:#e53935; }
   
-  /* 排版选择二级面板 */
   .layout-panel-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:160; align-items:center; justify-content:center; padding:20px; }
   .layout-panel-mask.show { display:flex; }
   .layout-panel { background:var(--bg-color); width:100%; max-width:260px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
@@ -383,7 +374,6 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問卡片：日常金色（磨砂） */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
   body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
@@ -451,10 +441,6 @@
   .ask-modal-footer { padding:12px 16px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; }
   .ask-send-btn { background:var(--primary); color:#fff; border:none; border-radius:8px; padding:10px 22px; font-size:15px; font-weight:600; }
 
-  /* 留影入口保留（页面与预览实现已移除） */
-  .snap-list { flex:1; overflow-y:auto; padding:10px 14px 20px; }
-  .snap-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
-
   .about-modal-mask { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:400; display:none; align-items:center; justify-content:center; padding:18px; }
   .about-modal-mask.show { display:flex; }
   .about-modal { background:var(--bg-color); color:var(--text-color); width:100%; max-width:360px; max-height:82vh; border-radius:14px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.35); }
@@ -463,7 +449,6 @@
   .about-body p { margin-bottom:12px; }
   .about-footer { padding:14px 20px calc(16px + env(safe-area-inset-bottom)); text-align:center; font-size:13px; color:var(--text-secondary); border-top:1px solid var(--border-light); }
 
-  /* 微調頁面 */
   .page-adjust { z-index:5; background: var(--bg-color); }
   .adjust-section { background:rgba(128,128,128,.08); border-radius:10px; padding:15px; margin-bottom:15px; }
   .adjust-title { font-size:15px; font-weight:600; margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; color:var(--text-color); }
@@ -481,7 +466,6 @@
   .fav-pane { flex:0 0 100%; height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
   .fav-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
 
-  /* 尺素卡片：书信/邮票/手帐风，不磨砂 */
   .fav-card { position:relative; border-radius:10px; padding:16px 16px 12px; margin-bottom:16px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(180,160,120,.16) 27px, rgba(180,160,120,.16) 28px); background-size:100% 28px; overflow:hidden; }
   body.theme-cyber .fav-card, body.theme-space .fav-card, body.theme-nightpurple .fav-card, body.theme-pureblack .fav-card, body.is-night-mode .fav-card { background:#2a2320; border-color:#4a3f36; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(200,170,130,.14) 27px, rgba(200,170,130,.14) 28px); }
   .fav-card::after { content:''; position:absolute; right:-14px; top:-14px; width:46px; height:46px; transform:rotate(45deg); background:rgba(200,180,140,.22); border-left:1px dashed rgba(150,130,90,.5); }
@@ -497,9 +481,26 @@
   .fav-stamp { font-size:11px; color:#8a7a5a; border:1px dashed rgba(150,130,90,.55); border-radius:4px; padding:2px 7px; white-space:nowrap; }
   body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
 
-  /* 布景：玫瑰标记上传 */
   .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
   .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
+
+  /* ===== 简讯（留言匣）页面 ===== */
+  .page-msg { background: var(--bg-color); }
+  .msg-box-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px; display:flex; flex-direction:column; gap:16px; }
+  .msg-box-card { position:relative; border-radius:8px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,.05); max-width:85%; border:1px solid rgba(128,128,128,.1); }
+  .msg-box-card.mine { align-self:flex-end; background:#fcf5f6; }
+  .msg-box-card.theirs { align-self:flex-start; background:#ffffff; }
+  body.theme-cyber .msg-box-card.mine, body.theme-space .msg-box-card.mine, body.theme-nightpurple .msg-box-card.mine, body.theme-pureblack .msg-box-card.mine, body.is-night-mode .msg-box-card.mine { background:#3a252b; border-color:#5a3a42; }
+  body.theme-cyber .msg-box-card.theirs, body.theme-space .msg-box-card.theirs, body.theme-nightpurple .msg-box-card.theirs, body.theme-pureblack .msg-box-card.theirs, body.is-night-mode .msg-box-card.theirs { background:#2a2a2a; border-color:#444; }
+  .msg-box-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed rgba(150,130,90,.3); padding-bottom:6px; }
+  .msg-box-name { font-size:13px; font-weight:600; color:var(--text-secondary); }
+  .msg-box-time { font-size:11px; color:#a0a0a0; }
+  .msg-box-text { font-size:15px; line-height:1.6; color:var(--text-color); font-family: var(--bubble-font); letter-spacing:0.02em; word-break:break-word; }
+  .msg-box-footer { margin-top:8px; text-align:right; font-size:11px; color:var(--text-secondary); opacity:0.7; }
+  
+  .msg-composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; background:transparent; border-top:1px solid var(--topbar-border); }
+  .msg-composer input { flex:1; height:40px; border-radius:20px; border:none; background:var(--input-bg); padding:0 16px; font-size:14px; color:var(--text-color); outline:none; }
+  .msg-composer button { width:60px; height:40px; border-radius:20px; background:var(--primary); color:#fff; border:none; font-size:14px; font-weight:500; }
 </style>
 </head>
 <body class="theme-sky">
@@ -563,6 +564,7 @@
       <button id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">完成</button>
     </div>
   </div>
+  
   <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
@@ -570,7 +572,6 @@
       <div class="header-avatar-wrap" id="headerAvatarWrap"></div>
       <div class="header-info"><div class="header-title" id="chatTitle">聊天室</div><div class="header-sub" id="chatSub">最近曾上線</div></div>
       <button class="icon-btn" id="modeToggleBtn" style="font-size:20px;">🌕</button>
-      <button class="icon-btn" id="snapBtn" style="color:var(--text-secondary);font-size:20px;">🎞</button>
       <button class="icon-btn" id="callBtn"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
     </div>
     <div class="messages-wrap" id="messagesWrap"><div class="messages" id="messages"></div></div>
@@ -582,13 +583,19 @@
       <button class="send-btn" id="sendBtn" disabled><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
   </div>
-  <div class="page page-snap" id="pageSnap">
+
+  <!-- 简讯（留言匣）页 -->
+  <div class="page page-msg" id="pageMsg">
     <div class="topbar">
-      <button class="icon-btn" id="backSnapBtn">←</button>
-      <div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="snapTitle">留影</div>
-      <button class="icon-btn" id="snapGenerateBtn" style="color:var(--primary);font-size:16px;font-weight:600;width:auto;padding:0 10px;white-space:nowrap;">生成</button>
+      <button class="icon-btn" id="backMsgBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">簡訊</div>
+      <div style="width:40px;"></div>
     </div>
-    <div class="snap-list" id="snapList"></div>
+    <div class="msg-box-list" id="msgBoxList"></div>
+    <div class="msg-composer">
+      <input type="text" id="msgBoxInput" placeholder="随便写点什么…" autocomplete="off">
+      <button id="msgBoxSendBtn">塞入</button>
+    </div>
   </div>
 
   <!-- 尺素（收藏）页 -->
@@ -665,6 +672,12 @@
             <input type="number" id="adjCollectRate" class="adjust-input">
           </div>
         </div>
+        <div class="adjust-row">
+          <span>留言匣機率 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="adjMsgBoxRate" class="adjust-input">
+          </div>
+        </div>
       </div>
       
       <button id="saveAdjustBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">保存設置</button>
@@ -686,6 +699,15 @@
         </div>
         <input type="file" id="roseFile" accept="image/*" style="display:none">
         <button id="roseResetBtn" style="background:transparent;border:none;color:var(--text-secondary);font-size:13px;padding:4px 0;">清除，恢復默認 🌹</button>
+      </div>
+      <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">氣泡透明度</div>
+        <div class="adjust-row">
+          <span>百分比 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="bubbleOpacityInput" class="adjust-input" min="0" max="100" placeholder="45">
+          </div>
+        </div>
       </div>
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主題顏色</div>
@@ -820,10 +842,10 @@
   </div>
 </div>
 
-<!-- 菜单（尺素已移到简讯后面） -->
 <div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
+<div class="action-sheet-mask" id="msgBoxActionMask"><div class="action-sheet"><div class="action-item" id="msgBoxActCollect" style="display:none;">收入尺素</div><div class="action-item danger" id="msgBoxActBurn">撕下</div><div class="action-item" style="color:var(--text-secondary)" id="msgBoxActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
 <div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><input type="text" class="dialog-input" id="dialogInput" style="display:none;"><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
 <div class="dialog-mask" id="progressDialogMask" style="z-index:100000;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
@@ -879,143 +901,82 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准） =====
-const LUNAR_INFO = [
-  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
-  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
-  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
-  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
-  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
-  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
-  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
-  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
-  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
-  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
-  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
-  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
-  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
-  0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
-  0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
-  0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,
-  0x0a2e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
-  0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
-  0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
-  0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
-  0x0d520
-];
-
+// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-const KE = ['初刻','一刻','二刻','三刻','正初','正一刻','正二刻','正三刻'];
-const TERMS = ['小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至'];
+const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 
-// 获取某年的农历信息
-function getLunarYearInfo(y) {
-  const info = LUNAR_INFO[y - 1900];
-  if(!info) return { leap: 0, months: [0,30,29,30,29,30,29,30,29,30,29,30,29] }; // 兜底
-  let leap = info & 0xf;
-  const months = [0];
-  for(let i = 15; i >= 4; i--) {
-    months.push((info & (1 << i)) ? 30 : 29);
-  }
-  return { leap, months };
-}
+const TERM_INFO = [
+  5,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,22,
+  6,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,8,23,8,23,8,23,8,23,
+  6,21,5,20,5,20,6,21,6,21,6,21,7,22,8,23,8,23,8,23,8,23,8,23,
+  6,21,5,20,6,21,6,21,6,21,6,21,7,22,8,23,8,23,9,24,9,23,9,23,
+  6,21,6,20,6,21,6,21,6,21,7,22,7,22,8,23,8,23,9,23,9,23,9,23,
+  6,21,6,21,6,21,6,21,7,22,7,22,7,22,8,23,9,23,9,23,9,23,9,24,
+  6,21,6,21,6,21,7,22,7,22,7,22,8,23,9,23,9,23,9,23,10,24,10,24,
+  6,21,6,21,7,22,7,22,7,22,8,23,9,23,9,23,10,24,10,24,10,24,10,24,
+  5,20,6,21,7,22,7,22,7,22,8,23,9,23,9,23,10,24,10,24,10,24,10,23,
+  5,20,5,20,6,21,7,22,7,22,8,23,8,23,9,23,10,24,10,24,10,24,10,23
+];
 
-// 公历转农历
-function solarToLunar(y, m, d) {
-  let offset = (Date.UTC(y, m-1, d) - Date.UTC(1900, 0, 31)) / 86400000;
-  let i, temp = 0;
-  for(i = 1900; i < 2101 && offset > 0; i++) {
-    temp = getLunarYearInfo(i).months.reduce((a,b)=>a+b,0) + (getLunarYearInfo(i).leap ? getLunarYearInfo(i).months[getLunarYearInfo(i).leap] : 0);
-    offset -= temp;
-  }
-  if(offset < 0) { offset += temp; i--; }
-  const year = i;
-  const info = getLunarYearInfo(year);
-  const leapMonth = info.leap;
-  let isLeap = false;
-  let month = 1;
-  for(i = 1; i <= 12 && offset > 0; i++) {
-    if(leapMonth > 0 && i === leapMonth + 1 && !isLeap) {
-      --i; isLeap = true; temp = info.months[leapMonth] || 29;
-    } else {
-      temp = info.months[i] || 30;
-    }
-    if(isLeap && i === leapMonth + 1) isLeap = false;
-    offset -= temp;
-  }
-  if(offset === 0 && leapMonth > 0 && i === leapMonth + 1) {
-    if(isLeap) { isLeap = false; } else { isLeap = true; --i; }
-  }
-  if(offset < 0) { offset += temp; --i; }
-  month = i;
-  const day = Math.floor(offset) + 1;
-  return { year, month, day, isLeap };
-}
-
-// 简易节气计算（21世纪精确度极高）
 function getTermDate(y, n) {
-  const century = Math.floor(y / 100);
-  const year = y % 100;
-  const C = century === 20 ? [6.11, 20.84, 4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.888, 6.318, 21.86, 6.5, 22.2, 7.928, 23.65, 8.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6] : [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94];
-  const base = C[n];
-  let d = Math.floor(year * 0.2422 + base) - Math.floor((year - 1) / 4);
-  if([2, 5, 8, 11].includes(n)) d -= 1; // 粗略修正
-  return new Date(y, Math.floor(n / 2), d);
+  if (y < 2000 || y >= 2100) return new Date(y, Math.floor(n/2), 15);
+  let base = TERM_INFO[(y - 2000) * 24 + n];
+  let d = new Date(y, 0, 1);
+  d.setDate(base);
+  let century = Math.floor(y / 100);
+  let year = y % 100;
+  let C = century === 20 ? [6.11,20.84,4.6295,19.4599,6.3826,21.4155,5.59,20.888,6.318,21.86,6.5,22.2,7.928,23.65,8.35,23.95,8.44,23.822,9.098,24.218,8.218,23.08,7.9,22.6] : [5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94];
+  let calcD = Math.floor(year * 0.2422 + C[n]) - Math.floor(year / 4);
+  if(n===2 || n===5 || n===8 || n===11) calcD -= 1;
+  d.setDate(calcD);
+  return d;
 }
 
-// 100% 精准干支与历法计算
 function getAncientTime(date) {
-  const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate(), h = date.getHours(), min = date.getMinutes();
+  const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
+  const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
-  // 1. 农历
-  const lunar = solarToLunar(y, m, d);
-  const lunarDayStr = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'][lunar.day - 1] || '初一';
-  
-  // 2. 年干支（以立春为界）
-  const lichun = getTermDate(y, 2); // 立春是第2个节气
+  const lichun = getTermDate(y, 2);
   let ganZhiYear = y;
-  if (date < lichun) ganZhiYear--;
+  if (utc8Date < lichun) ganZhiYear--;
   const yearGan = (ganZhiYear - 4) % 10;
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  // 3. 月干支（以节气为界，五虎遁）
   const termsThisYear = [];
   for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
   let termIndex = 23;
   for(let i=0; i<24; i++) {
-    if (date < termsThisYear[i]) { termIndex = i - 1; break; }
+    if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
   }
-  const monthZhi = (termIndex + 2) % 12; // 立春是寅月
+  if(termIndex < 0) termIndex = 23;
+  const monthZhi = (termIndex + 2) % 12;
   const monthGanBase = (yearGan % 5) * 2 + 2;
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
   const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
-  // 4. 日干支（以2000年1月1日戊午日为基准）
-  const baseDate = new Date(2000, 0, 1);
-  const diffDays = Math.round((date - baseDate) / 86400000);
+  const baseDate = Date.UTC(2000, 0, 1);
+  const currentDate = Date.UTC(y, m-1, d);
+  const diffDays = Math.round((currentDate - baseDate) / 86400000);
   const dayGan = (diffDays + 4) % 10;
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
-  // 5. 时干支（五鼠遁）
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
-  const hourGanZhi = GAN[hourGan] + ZHI[hourZhiIndex] + '时';
+  const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
-  // 6. 刻
-  const keIndex = Math.floor(min / 15) % 8;
+  const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
-  
   const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
 
   return {
-    dateStr: `${yearStr} ${monthStr} ${dayStr}`, // 如：丙午马年 戊戌月 丙子日
-    timeStr: `${hourGanZhi} ${keName} ${timeStr}`, // 如：戊子时 正一刻 23:12
-    fullLunar: `农历${lunar.isLeap?'闰':''}${lunar.month}月${lunarDayStr}`
+    dateStr: `${yearStr} ${monthStr} ${dayStr}`,
+    timeStr: `${hourGanZhi} ${keName} ${timeStr}`,
+    fullLunar: '' 
   };
 }
 
@@ -1024,8 +985,16 @@ let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 let globalRoseMark = localStorage.getItem('nz_rose_mark') || null;
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10 };
+const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, msgBoxRate: 20, bubbleOpacity: 45 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
+
+function applyBubbleOpacity(){
+  const op = config.bubbleOpacity / 100;
+  document.documentElement.style.setProperty('--bubble-daily-them', `rgba(255, 249, 249, ${op})`);
+  document.documentElement.style.setProperty('--bubble-daily-me', `rgba(247, 217, 223, ${op})`);
+  document.documentElement.style.setProperty('--bubble-night-them', `rgba(74, 59, 76, ${op})`);
+  document.documentElement.style.setProperty('--bubble-night-me', `rgba(163, 74, 96, ${op})`);
+}
 
 function applyThemeAndBg(){
   let savedTheme = localStorage.getItem('nz_theme') || 'theme-sky';
@@ -1035,7 +1004,7 @@ function applyThemeAndBg(){
     if(c && c.isNightMode) document.body.classList.add('is-night-mode');
   }
   document.querySelectorAll('.theme-card').forEach(card => card.classList.toggle('active', card.dataset.theme === savedTheme));
-  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageSnap','#pageAdjust','#pageFav'];
+  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageAdjust','#pageFav','#pageMsg'];
   const appEl = $('#app');
   if(globalBgImage){
     const isDark = savedTheme.includes('cyber')||savedTheme.includes('space')||savedTheme.includes('purple')||savedTheme.includes('pureblack');
@@ -1046,6 +1015,7 @@ function applyThemeAndBg(){
     bgPages.forEach(sel => { const el = document.querySelector(sel); if(el) { el.style.background = 'var(--bg-color)'; el.style.backgroundImage = 'none'; } });
   }
   appEl.style.background = 'var(--bg-color)';
+  applyBubbleOpacity();
 }
 
 function setTheme(themeName){
@@ -1072,6 +1042,7 @@ function openDB(){
       if(!d.objectStoreNames.contains('actions')){ const s = d.createObjectStore('actions', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('music')) d.createObjectStore('music', { keyPath:'id' });
       if(!d.objectStoreNames.contains('snapshots')){ const s = d.createObjectStore('snapshots', { keyPath:'id' }); s.createIndex('chatId','chatId',{ unique:false }); }
+      if(!d.objectStoreNames.contains('msgbox')){ const s = d.createObjectStore('msgbox', { keyPath:'id' }); s.createIndex('sender','sender',{ unique:false }); }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -1100,14 +1071,15 @@ let isWaitingForMyReply = false;
 
 let askMode = 'wen', askAttachData = null, askImgList = [], askSingleChecked = true, askMultiChecked = false;
 
-let snapMode = false, snapSelectedIds = new Set();
-
 let loadCardOffset = 0, loadActionOffset = 0;
 
 let pendingBurnMsg = null;
 let currentMsgForAction = null;
 
 let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
+
+let currentMsgBoxForAction = null;
+let lastMsgBoxTargetId = null; 
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -1139,6 +1111,7 @@ function fmtDur(totalSec){
 function getDisplayName(c){ return (c && (c.theirNick || c.theirName)) ? (c.theirNick || c.theirName) : '祂'; }
 function getTheirDisplayChar(c){ return getDisplayName(c).charAt(0); }
 function getMyDisplayChar(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName).charAt(0) : '我'; }
+function getMyDisplayName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName) : '我'; }
 
 async function init(){
   try {
@@ -1149,6 +1122,7 @@ async function init(){
     applyThemeAndBg();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
     if(globalRoseMark){ const rb = $('#rosePreview'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; rb.textContent = ''; } }
+    if($('#bubbleOpacityInput')) $('#bubbleOpacityInput').value = config.bubbleOpacity;
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic();
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag(); initAccompanyDrag();
@@ -1160,6 +1134,14 @@ async function init(){
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
     $('#adjFlirtRate').value = config.flirtRate; $('#adjStickerRate').value = config.stickerRate; $('#adjActionRate').value = config.actionRate;
     $('#adjCollectRate').value = config.collectRate;
+    if($('#adjMsgBoxRate')) $('#adjMsgBoxRate').value = config.msgBoxRate;
+    
+    setInterval(() => {
+      if (Math.random() * 100 < config.msgBoxRate) {
+        generateThemMsgBox();
+      }
+    }, 3600000); // 每小时判定一次
+    
   } catch(err){ console.error(err); toast('資料庫初始化失敗：' + err.message); }
 }
 
@@ -1286,7 +1268,6 @@ async function openChat(id){
   applyLayoutClass(c);
   
   currentMessages = await getMessages(id);
-  snapMode = false; snapSelectedIds.clear();
   
   const box = $('#messages'); box.innerHTML = '';
   currentMessages.forEach(m => appendMessageDOM(m, c, false));
@@ -1342,6 +1323,7 @@ async function toggleChatMode() {
   setTimeout(() => { const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight; }, 50);
   
   if (c.isNightMode) themCollectMyMessage(currentChatId, true);
+  if (Math.random() < 0.5) generateThemMsgBox(c);
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
 }
 
@@ -1404,7 +1386,7 @@ function appendMessageDOM(m, c, animate=true){
   const isYuyan = c && c.layout === 'yuyan';
   
   const tObj = getAncientTime(new Date(m.time));
-  const dstr = tObj.dateStr; // 单行完整古风日期
+  const dstr = tObj.dateStr;
   
   const lastChild = box.lastElementChild;
   let needDate = true;
@@ -1420,7 +1402,7 @@ function appendMessageDOM(m, c, animate=true){
   }
 
   const g = document.createElement('div');
-  g.className = 'msg-group ' + (isMe ? 'me' : 'them') + (snapMode ? ' snap-mode' : '');
+  g.className = 'msg-group ' + (isMe ? 'me' : 'them');
   g.dataset.msgId = m.id;
   
   const avHtml = buildAvatarHtml(m, c, isNight);
@@ -1440,11 +1422,9 @@ function appendMessageDOM(m, c, animate=true){
     const row = document.createElement('div');
     row.className = 'msg-row';
     if(isMe){
-      // 我发：气泡在左，头像在右
       row.appendChild(innerNode);
       row.appendChild(parseAvatarNode(avHtml));
     } else {
-      // 祂发：头像在左，气泡在右
       row.appendChild(parseAvatarNode(avHtml));
       row.appendChild(innerNode);
     }
@@ -1455,7 +1435,7 @@ function appendMessageDOM(m, c, animate=true){
   }
   
   box.appendChild(g);
-  if(!snapMode) bindMessageClickAction(g, m);
+  bindMessageClickAction(g, m);
 }
 
 function parseAvatarNode(html){
@@ -1581,7 +1561,6 @@ function updateSendBtnState(){ const t = $('#msgInput').value.trim(), b = $('#se
 function clearPendingSticker(){ pendingStickerData = null; $('#pendingStickerPreview').classList.remove('show'); updateSendBtnState(); }
 
 async function sendMyMessage(){
-  if(snapMode){ toast('留影選取中，請先完成或取消'); return; }
   const input = $('#msgInput'), text = input.value.trim();
   if(!text){ toast('請輸入文字，不能只發印花'); return; }
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
@@ -1702,595 +1681,84 @@ async function replyFromThem(){
   if(!msg) toast('郵電所中尚無字卡，請先新增');
 }
 
-function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false){
-  $('#dialogTitle').textContent = title; $('#dialogText').textContent = text;
-  $('#dialogInput').style.display = showInput ? 'block' : 'none';
-  if(showInput) $('#dialogInput').value = '';
+/* ===== 简讯（留言匣）功能 ===== */
+async function generateThemMsgBox(targetChat) {
+  const allCards = await reqToPromise(tx('cards').getAll());
+  const normalCards = allCards.filter(c => (c.category || 'normal') === 'normal');
+  if (!normalCards.length) return;
   
-  const dlg = document.querySelector('#dialogMask .dialog');
-  if (isDanger) dlg.classList.add('danger-dialog'); else dlg.classList.remove('danger-dialog');
-
-  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn ${isDanger ? 'danger' : ''}" id="dialogOkBtn" style="color:${isDanger?'#e53935':'var(--primary)'};">${okText}</button>`;
-  $('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
-  $('#dialogOkBtn').onclick = () => { 
-    $('#dialogMask').classList.remove('show'); 
-    if(onOk) onOk($('#dialogInput').value); 
+  let c = targetChat;
+  if (!c) {
+    if (chats.length === 0) return;
+    c = chats[Math.floor(Math.random() * chats.length)];
+  }
+  
+  const count = 3 + Math.floor(Math.random() * 3); // 3~5
+  const picked = [];
+  const pool = [...normalCards];
+  for (let i = 0; i < count && pool.length > 0; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(idx, 1)[0].text);
+  }
+  
+  let fullText = '';
+  picked.forEach(t => {
+    if (/[，。！？、,.!?]$/.test(t)) fullText += t;
+    else fullText += t + '，';
+  });
+  fullText = fullText.replace(/，$/, '。');
+  
+  const msg = {
+    id: 'mb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    sender: 'them',
+    targetId: c.id,
+    targetName: getDisplayName(c),
+    text: fullText,
+    time: Date.now()
   };
-  
-  $('#dialogMask').classList.add('show');
+  await reqToPromise(tx('msgbox', 'readwrite').add(msg));
+  if ($('#pageMsg').classList.contains('show')) renderMsgBox();
 }
 
-async function loadAndRenderCards(){
-  const all = await reqToPromise(tx('cards').getAll());
-  let f = all.filter(c => (c.category || 'normal') === currentSubTab);
-  if(currentSearchQuery) f = f.filter(c => c.text.includes(currentSearchQuery));
-  f.sort((a,b) => b.createdAt - a.createdAt);
-  
-  loadCardOffset = 0;
-  renderCardChunk(f);
-}
-function renderCardChunk(f) {
-  const cat = currentSubTab === 'normal' ? '常訊' : '撩撥';
-  $('#cardListHeader').textContent = `${cat}：共 ${f.length} 份`;
-  const box = $('#cardListContainer'); 
-  
-  if(loadCardOffset === 0) box.innerHTML = '';
-  
-  if(!f.length){ 
-    if(loadCardOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無電文</div>'; 
-  } else {
-    const chunk = f.slice(loadCardOffset, loadCardOffset + 100);
-    chunk.forEach(c => {
-      const div = document.createElement('div'); div.className = 'card-item';
-      const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
-      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
-      box.appendChild(div);
-    });
+async function renderMsgBox() {
+  const list = $('#msgBoxList');
+  if (!list) return;
+  const all = await reqToPromise(tx('msgbox').getAll());
+  all.sort((a, b) => b.time - a.time);
+  list.innerHTML = '';
+  if (!all.length) {
+    list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:40px;">匣子空空如也</div>';
+    return;
   }
-  
-  $('#normalToolbar').style.display = isBatchDeleteMode ? 'none' : 'flex';
-  $('#batchToolbar').style.display = isBatchDeleteMode ? 'flex' : 'none';
-  if(isBatchDeleteMode) $('#batchCount').textContent = `已選 ${selectedCardIds.size} 份`;
-  
-  box.onscroll = () => {
-    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
-      if(loadCardOffset + 100 < f.length) {
-        loadCardOffset += 100;
-        renderCardChunk(f);
-      }
-    }
-  };
-}
-
-window.toggleSelectCard = id => { if(selectedCardIds.has(id)) selectedCardIds.delete(id); else selectedCardIds.add(id); loadAndRenderCards(); };
-window.editCard = (id, oldText) => {
-  showCustomDialog('校對電文','請修改下方內容',true,'保存', async newText => {
-    newText = newText.trim(); if(!newText || newText === oldText) return;
-    const all = await reqToPromise(tx('cards').getAll());
-    if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有電文重複！'); return; }
-    const t = all.find(c => c.id === id);
-    if(t){ t.text = newText; await reqToPromise(tx('cards','readwrite').put(t)); toast('已保存修改'); loadAndRenderCards(); }
-  });
-  $('#dialogInput').value = oldText;
-};
-window.deleteSingleCard = id => { showCustomDialog('作廢確認','確定要作廢這份電文嗎？',false,'作廢', async () => { await reqToPromise(tx('cards','readwrite').delete(id)); toast('已作廢'); loadAndRenderCards(); }); };
-
-async function loadAndRenderStamps(){
-  const stickers = await reqToPromise(tx('stickers').getAll());
-  stickers.sort((a,b)=>b.createdAt-a.createdAt);
-  const grid = $('#stampGrid'); grid.innerHTML = ''; grid.className = 'stamp-grid' + (isStampBatchMode ? ' batch-mode' : '');
-  
-  const chunk = stickers.slice(0, 100);
-  $('#stampListHeader').textContent = `印花：共 ${stickers.length} 張`;
-  
-  if(!stickers.length){ grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:var(--text-secondary);margin-top:20px;">尚無印花</div>'; }
-  else chunk.forEach(s => {
-    const div = document.createElement('div'); div.className = 'stamp-item';
-    const ch = isStampBatchMode ? `<input type="checkbox" class="stamp-checkbox" ${selectedStampIds.has(s.id)?'checked':''} onchange="toggleSelectStamp('${s.id}')">` : '';
-    div.innerHTML = `${ch}<img src="${s.data}" alt="印花">`;
-    if(!isStampBatchMode){
-      let pt;
-      div.addEventListener('touchstart', () => { pt = setTimeout(() => { showCustomDialog('作廢印花','確定要銷毀這張印花嗎？',false,'確定銷毀', async () => { await reqToPromise(tx('stickers','readwrite').delete(s.id)); toast('印花已銷毀'); loadAndRenderStamps(); }, true); }, 600); }, { passive:true });
-      div.addEventListener('touchend', () => clearTimeout(pt));
-      div.addEventListener('touchmove', () => clearTimeout(pt));
-    } else div.onclick = () => toggleSelectStamp(s.id);
-    grid.appendChild(div);
-  });
-  $('#stampNormalToolbar').style.display = isStampBatchMode ? 'none' : 'flex';
-  $('#stampBatchToolbar').style.display = isStampBatchMode ? 'flex' : 'none';
-  if(isStampBatchMode) $('#stampBatchCount').textContent = `已選 ${selectedStampIds.size} 張`;
-}
-window.toggleSelectStamp = id => { if(selectedStampIds.has(id)) selectedStampIds.delete(id); else selectedStampIds.add(id); loadAndRenderStamps(); };
-
-async function loadAndRenderActions(){
-  const all = await reqToPromise(tx('actions').getAll());
-  let f = all.filter(c => (c.category || 'to_them') === currentActionSubTab);
-  if(currentActionSearchQuery) f = f.filter(c => c.text.includes(currentActionSearchQuery));
-  f.sort((a,b)=>b.createdAt-a.createdAt);
-  
-  loadActionOffset = 0;
-  renderActionChunk(f);
-}
-
-function renderActionChunk(f) {
-  const cat = currentActionSubTab === 'to_them' ? '予祂' : '予我';
-  $('#actionListHeader').textContent = `${cat}：共 ${f.length} 份`;
-  const box = $('#actionListContainer'); 
-  
-  if(loadActionOffset === 0) box.innerHTML = '';
-  
-  if(!f.length){ 
-    if(loadActionOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無暗語</div>'; 
-  } else {
-    const chunk = f.slice(loadActionOffset, loadActionOffset + 100);
-    chunk.forEach(c => {
-      const div = document.createElement('div'); div.className = 'card-item';
-      const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
-      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
-      box.appendChild(div);
-    });
-  }
-  
-  $('#actionNormalToolbar').style.display = isActionBatchDeleteMode ? 'none' : 'flex';
-  $('#actionBatchToolbar').style.display = isActionBatchDeleteMode ? 'flex' : 'none';
-  if(isActionBatchDeleteMode) $('#actionBatchCount').textContent = `已選 ${selectedActionIds.size} 份`;
-  
-  box.onscroll = () => {
-    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
-      if(loadActionOffset + 100 < f.length) {
-        loadActionOffset += 100;
-        renderActionChunk(f);
-      }
-    }
-  };
-}
-
-window.toggleSelectAction = id => { if(selectedActionIds.has(id)) selectedActionIds.delete(id); else selectedActionIds.add(id); loadAndRenderActions(); };
-window.editAction = (id, oldText) => {
-  showCustomDialog('校對暗語','請修改下方內容',true,'保存', async newText => {
-    newText = newText.trim(); if(!newText || newText === oldText) return;
-    const all = await reqToPromise(tx('actions').getAll());
-    if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有暗語重複！'); return; }
-    const t = all.find(c => c.id === id);
-    if(t){ t.text = newText; await reqToPromise(tx('actions','readwrite').put(t)); toast('已保存修改'); loadAndRenderActions(); }
-  });
-  $('#dialogInput').value = oldText;
-};
-window.deleteSingleAction = id => { showCustomDialog('作廢確認','確定要作廢這條暗語嗎？',false,'作廢', async () => { await reqToPromise(tx('actions','readwrite').delete(id)); toast('已作廢'); loadAndRenderActions(); }); };
-
-async function loadAndRenderMusic(){
-  const musics = await reqToPromise(tx('music').getAll());
-  musics.sort((a,b)=>b.createdAt-a.createdAt);
-  
-  $('#musicListHeader').textContent = `留聲：共 ${musics.length} 首`;
-  const box = $('#musicListContainer'); box.innerHTML = '';
-  
-  const chunk = musics.slice(0, 100);
-  if(!musics.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無留聲</div>'; }
-  else chunk.forEach(m => {
-    const div = document.createElement('div'); div.className = 'music-list-item';
-    const ch = isMusicBatchMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedMusicIds.has(m.id)?'checked':''} onchange="toggleSelectMusic('${m.id}')">` : '';
-    div.innerHTML = `<div style="display:flex;align-items:center;flex:1;">${ch}<div class="music-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div></div><div class="card-actions" style="display:${isMusicBatchMode?'none':'flex'}"><button class="btn-del" onclick="deleteSingleMusic('${m.id}')">作廢</button></div>`;
-    box.appendChild(div);
-  });
-  
-  $('#musicNormalToolbar').style.display = isMusicBatchMode ? 'none' : 'flex';
-  $('#musicBatchToolbar').style.display = isMusicBatchMode ? 'flex' : 'none';
-  if(isMusicBatchMode) $('#musicBatchCount').textContent = `已選 ${selectedMusicIds.size} 首`;
-}
-window.toggleSelectMusic = id => { if(selectedMusicIds.has(id)) selectedMusicIds.delete(id); else selectedMusicIds.add(id); loadAndRenderMusic(); };
-window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷毀這首留聲嗎？',false,'作廢', async () => { await reqToPromise(tx('music','readwrite').delete(id)); toast('已作廢'); loadAndRenderMusic(); }); };
-
-function initPlayerDrag(){
-  const float = $('#musicPlayerFloat');
-  let dragging = false, sx, sy, il, it;
-  float.addEventListener('touchstart', e => { dragging = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = float.getBoundingClientRect(); il = r.left; it = r.top; float.style.bottom='auto'; float.style.right='auto'; float.style.left=il+'px'; float.style.top=it+'px'; }, { passive:true });
-  float.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) dragging = true; if(dragging){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); float.style.left=l+'px'; float.style.top=tp+'px'; } }, { passive:false });
-  float.addEventListener('touchend', () => { if(!dragging){ $('#musicPlayerPanel').classList.toggle('show'); if($('#musicPlayerPanel').classList.contains('show')){ const r = float.getBoundingClientRect(); const p = $('#musicPlayerPanel'); let pt = r.top - 180; if(pt < 10) pt = r.bottom + 10; let pl = r.left - 100; if(pl < 10) pl = 10; if(pl > window.innerWidth - 270) pl = window.innerWidth - 270; p.style.bottom='auto'; p.style.right='auto'; p.style.top=pt+'px'; p.style.left=pl+'px'; } } });
-}
-
-function showCallPanel(){
-  const p = $('#callPanel'); p.classList.add('show');
-  if(callPanelPos){ const r = p.getBoundingClientRect(); const q = clampPos(callPanelPos.left, callPanelPos.top, r.width, r.height); callPanelPos = q; p.style.left=q.left+'px'; p.style.top=q.top+'px'; p.style.transform='none'; }
-  else { p.style.left='50%'; p.style.top='50%'; p.style.transform=''; }
-}
-function hideCallPanel(){ $('#callPanel').classList.remove('show'); }
-
-function initCallDrag(){
-  const p = $('#callPanel');
-  let drag = false, sx, sy, il, it;
-  p.addEventListener('touchstart', e => { if(e.target.closest('.call-btn')) return; drag = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = p.getBoundingClientRect(); il = r.left; it = r.top; }, { passive:true });
-  p.addEventListener('touchmove', e => { if(e.target.closest('.call-btn')) return; const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) drag = true; if(drag){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - p.offsetWidth, mh = window.innerHeight - p.offsetHeight; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); p.style.left=l+'px'; p.style.top=tp+'px'; p.style.transform='none'; p.classList.add('dragging'); } }, { passive:false });
-  p.addEventListener('touchend', () => { if(drag){ const r = p.getBoundingClientRect(); callPanelPos = { left:r.left, top:r.top }; } p.classList.remove('dragging'); });
-  const f = $('#callFloat');
-  let df = false, fsx, fsy, fil, fit;
-  f.addEventListener('touchstart', e => { df = false; const t = e.touches[0]; fsx = t.clientX; fsy = t.clientY; const r = f.getBoundingClientRect(); fil = r.left; fit = r.top; f.style.bottom='auto'; f.style.right='auto'; f.style.left=fil+'px'; f.style.top=fit+'px'; }, { passive:true });
-  f.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - fsx, dy = t.clientY - fsy; if(Math.abs(dx)>5||Math.abs(dy)>5) df = true; if(df){ e.preventDefault(); let l = fil + dx, tp = fit + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); f.style.left=l+'px'; f.style.top=tp+'px'; } }, { passive:false });
-  f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); callFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showCallPanel(); } });
-}
-
-function showAccompanyPanel(){
-  const p = $('#accompanyPanel'); p.classList.add('show');
-  if(accompanyPanelPos){ const r = p.getBoundingClientRect(); const q = clampPos(accompanyPanelPos.left, accompanyPanelPos.top, r.width, r.height); accompanyPanelPos = q; p.style.left=q.left+'px'; p.style.top=q.top+'px'; p.style.transform='none'; }
-  else { p.style.left='50%'; p.style.top='50%'; p.style.transform=''; }
-}
-function hideAccompanyPanel(){ $('#accompanyPanel').classList.remove('show'); }
-
-function initAccompanyDrag(){
-  const p = $('#accompanyPanel');
-  let drag = false, sx, sy, il, it;
-  p.addEventListener('touchstart', e => { if(e.target.closest('.accompany-btn')) return; drag = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = p.getBoundingClientRect(); il = r.left; it = r.top; }, { passive:true });
-  p.addEventListener('touchmove', e => { if(e.target.closest('.accompany-btn')) return; const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) drag = true; if(drag){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - p.offsetWidth, mh = window.innerHeight - p.offsetHeight; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); p.style.left=l+'px'; p.style.top=tp+'px'; p.style.transform='none'; p.classList.add('dragging'); } }, { passive:false });
-  p.addEventListener('touchend', () => { if(drag){ const r = p.getBoundingClientRect(); accompanyPanelPos = { left:r.left, top:r.top }; } p.classList.remove('dragging'); });
-  const f = $('#accompanyFloat');
-  let df = false, fsx, fsy, fil, fit;
-  f.addEventListener('touchstart', e => { df = false; const t = e.touches[0]; fsx = t.clientX; fsy = t.clientY; const r = f.getBoundingClientRect(); fil = r.left; fit = r.top; f.style.bottom='auto'; f.style.right='auto'; f.style.left=fil+'px'; f.style.top=fit+'px'; }, { passive:true });
-  f.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - fsx, dy = t.clientY - fsy; if(Math.abs(dx)>5||Math.abs(dy)>5) df = true; if(df){ e.preventDefault(); let l = fil + dx, tp = fit + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); f.style.left=l+'px'; f.style.top=tp+'px'; } }, { passive:false });
-  f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); accompanyFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showAccompanyPanel(); } });
-}
-
-function playMusic(musics, index){ playlist = musics; currentTrackIndex = index; loadTrack(); $('#musicPlayerFloat').classList.add('show'); }
-function loadTrack(){
-  if(currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
-  const track = playlist[currentTrackIndex];
-  $('#playerTitle').textContent = track.title; $('#playerArtist').textContent = track.artist;
-  
-  const c = chats.find(x => x.id === currentChatId);
-  const cover = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
-  $('#musicDiscFloat').style.backgroundImage = `url(${cover})`;
-  $('#musicDiscLarge').style.backgroundImage = `url(${cover})`;
-  
-  if(c && c.musicCover) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.musicCover})`;
-  } else if(c && c.chatBgImage) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.chatBgImage})`;
-  } else {
-    $('#musicPlayerPanel').style.backgroundImage = 'none';
-  }
-
-  audioPlayer.src = track.data;
-  audioPlayer.play().then(() => updatePlayState(true)).catch(() => { updatePlayState(false); toast('點擊播放按鈕開始'); });
-}
-audioPlayer.addEventListener('timeupdate', () => { if(!audioPlayer.duration) return; const pc = (audioPlayer.currentTime/audioPlayer.duration)*100; $('#progressFill').style.width = pc + '%'; $('#timeCurrent').textContent = formatTime(audioPlayer.currentTime); });
-audioPlayer.addEventListener('loadedmetadata', () => { $('#timeTotal').textContent = formatTime(audioPlayer.duration); });
-audioPlayer.addEventListener('ended', () => { if(playMode === 1){ audioPlayer.currentTime = 0; audioPlayer.play(); } else if(playMode === 3){ updatePlayState(false); } else playNext(); });
-function formatTime(sec){ const m = Math.floor(sec/60), s = Math.floor(sec%60); return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
-function updatePlayState(p){ const f = $('#musicPlayerFloat'), pn = $('#musicPlayerPanel'); if(p){ f.classList.add('playing'); pn.classList.add('playing'); $('#iconPlay').style.display='none'; $('#iconPause').style.display='block'; } else { f.classList.remove('playing'); pn.classList.remove('playing'); $('#iconPlay').style.display='block'; $('#iconPause').style.display='none'; } }
-function playNext(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex+1)%playlist.length; loadTrack(); }
-function playPrev(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex-1+playlist.length)%playlist.length; loadTrack(); }
-function updateModeIcon(showToast = true){
-  const icon = $('#iconMode'); let name = '';
-  if(playMode === 0){ icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>'; name = '列表循環'; }
-  else if(playMode === 1){ icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>'; name = '單曲循環'; }
-  else if(playMode === 2){ icon.innerHTML = '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>'; name = '隨機播放'; }
-  else if(playMode === 3){ icon.innerHTML = '<path d="M6 6h12v12H6z"/>'; name = '播完即停'; }
-  if(showToast) toast(`當前模式：${name}`);
-}
-
-function applyCallBgMask(c){
-  const mask = $('#callBgMask');
-  const mv = c && c.chatBgMask !== undefined ? c.chatBgMask : 60;
-  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack') || (c && c.isNightMode);
-  mask.style.backgroundColor = isDark ? `rgba(0,0,0,${mv/100})` : `rgba(255,255,255,${mv/100})`;
-}
-function applyAccompanyBgMask(c){
-  const mask = document.querySelector('#accompanyPanel .accompany-bg-mask');
-  if(!mask) return;
-  const mv = c && c.chatBgMask !== undefined ? c.chatBgMask : 60;
-  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack') || (c && c.isNightMode);
-  mask.style.backgroundColor = isDark ? `rgba(0,0,0,${mv/100})` : `rgba(255,255,255,${mv/100})`;
-}
-
-function openCallUI(isIncoming = false){
-  if(isGlobalCallActive){ toast('請先掛斷當前通話'); return; }
-  isGlobalCallActive = true;
-  const c = chats.find(x => x.id === currentChatId);
-  if(!c) return;
-  const p = $('#callPanel'), f = $('#callFloat');
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.callBgImage || c.chatBgImage || globalBgImage);
-  
-  if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
-  else { p.style.backgroundImage = 'none'; p.style.backgroundColor = 'var(--bg-color)'; }
-  
-  applyCallBgMask(c);
-  const av = $('#callAvatar'), fa = $('#callFloatAvatar');
-  const ch = getTheirDisplayChar(c);
-  if(c.theirAvatar){ av.style.backgroundImage = `url(${c.theirAvatar})`; av.textContent = ''; fa.style.backgroundImage = `url(${c.theirAvatar})`; fa.textContent = ''; }
-  else { av.style.backgroundImage = 'linear-gradient(135deg,var(--primary),#5aa9f0)'; av.textContent = ch; fa.style.backgroundImage = 'linear-gradient(135deg,var(--primary),#5aa9f0)'; fa.textContent = ch; }
-  $('#callNickname').textContent = getDisplayName(c);
-  showCallPanel(); f.classList.remove('show');
-  
-  if(isIncoming){
-    $('#callStatus').textContent = '邀請你進行語音通話...';
-    p.classList.remove('active');
-    $('#btnAnswerCall').style.display = 'flex';
-    $('#btnHangupCall').style.display = 'flex';
-    $('#btnMinimizeCall').style.display = 'flex';
-  } else {
-    $('#callStatus').textContent = '正在呼叫...';
-    p.classList.remove('active');
-    $('#btnAnswerCall').style.display = 'none';
-    $('#btnHangupCall').style.display = 'flex';
-    $('#btnMinimizeCall').style.display = 'flex';
-    callTimer = setTimeout(() => { if(!isGlobalCallActive) return; answerCall(); }, 3000 + Math.random()*7000);
-  }
-  startCallInteraction();
-}
-function answerCall(){
-  clearTimeout(callTimer); clearTimeout(incomingCallTimeout);
-  $('#callStatus').textContent = '00:00';
-  $('#btnAnswerCall').style.display = 'none';
-  $('#callPanel').classList.add('active');
-  callStartTime = Date.now(); clearInterval(callInterval);
-  callInterval = setInterval(() => {
-    const d = Math.floor((Date.now() - callStartTime)/1000);
-    $('#callStatus').textContent = fmtDur(d);
-  }, 1000);
-}
-function hangupCall(){
-  const wasActive = isGlobalCallActive;
-  isGlobalCallActive = false;
-  clearTimeout(callTimer); clearTimeout(incomingCallTimeout); clearInterval(callInterval); clearTimeout(callInteractTimer);
-  hideCallPanel(); $('#callPanel').classList.remove('active'); $('#callFloat').classList.remove('show');
-  toast('通話已掛斷');
-  if(wasActive && currentChatId){
-    const c = chats.find(x => x.id === currentChatId);
-    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
-  }
-}
-function startCallInteraction(){
-  clearTimeout(callInteractTimer);
-  if (isWaitingForMyReply) return;
-  const loop = () => {
-    if(!isGlobalCallActive) return;
-    const delay = config.callMin * 1000 + Math.random() * (config.callMax - config.callMin) * 1000;
-    callInteractTimer = setTimeout(async () => {
-      if(!isGlobalCallActive) return;
-      const cid = currentChatId || (chats[0] && chats[0].id);
-      if(cid && !isWaitingForMyReply) { 
-        await buildThemMessage(cid, true); 
-        isWaitingForMyReply = true;
-      }
-      loop();
-    }, delay);
-  };
-  loop();
-}
-
-function setupIncomingCallTimer(){
-  clearInterval(checkIncomingInterval);
-  checkIncomingInterval = setInterval(() => {
-    if(!isGlobalCallActive && currentChatId && $('#pageChat').classList.contains('show')){
-      if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
-      const c = chats.find(x => x.id === currentChatId);
-      if(c && c.isNightMode) return; 
-      
-      if(Math.random() < 0.05){
-        openCallUI(true);
-        incomingCallTimeout = setTimeout(() => {
-          if(isGlobalCallActive && $('#btnAnswerCall').style.display !== 'none'){
-            hangupCall(); toast('未接來電');
-            if(c){
-              const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'them', type:'cards', text:'', cards:['怎麼不接我電話？'], stickerData:null, time:Date.now(), isNightMode: false };
-              reqToPromise(tx('messages','readwrite').add(msg));
-              if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); appendMessageDOM(msg, c, true); }
-            }
-          }
-        }, 15000);
-      }
-    }
-  }, 300000);
-}
-
-function renderAccompanyActs(){
-  const box = $('#accompanyActs'); box.innerHTML = '';
-  ACCOMPANY_ACTS.forEach(act => {
-    const d = document.createElement('div');
-    d.className = 'accompany-act'; d.textContent = act; d.dataset.act = act;
-    d.onclick = () => {
-      document.querySelectorAll('.accompany-act').forEach(x => x.classList.remove('active'));
-      d.classList.add('active');
-      currentAccompanyAct = act; currentAccompanyActRaw = '';
-      $('#accompanyCustomInput').value = '';
-    };
-    box.appendChild(d);
-  });
-}
-function openAccompanySelect(){
-  if(!currentChatId){ toast('請先選擇聊天室'); return; }
-  if(isAccompanyActive){ toast('請先結束當前相伴'); return; }
-  const c = chats.find(x => x.id === currentChatId);
-  if(!c) return;
-  currentAccompanyAct = ''; currentAccompanyActRaw = '';
-  $('#accompanyHint').textContent = `與${getDisplayName(c)}相伴，一同做些什麼`;
-  $('#accompanyCustomInput').value = '';
-  renderAccompanyActs();
-  $('#accompanySelectFooter').innerHTML = `<button class="accompany-invite-btn" id="btnInviteAccompany">我來邀約</button><button class="accompany-them-btn" id="btnThemChoose">由祂決定</button>`;
-  bindAccompanyFooter();
-  $('#accompanySelectMask').classList.add('show');
-}
-function bindAccompanyFooter(){
-  const inv = $('#btnInviteAccompany'); if(inv) inv.onclick = doInviteAccompany;
-  const th = $('#btnThemChoose'); if(th) th.onclick = doThemChoose;
-}
-async function doInviteAccompany(){
-  const c = chats.find(x => x.id === currentChatId); if(!c) return;
-  const custom = $('#accompanyCustomInput').value.trim();
-  const act = custom || currentAccompanyAct;
-  if(!act){ toast('請選擇或填寫相伴之事'); return; }
-  $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">等待${getDisplayName(c)}應允…</div></div>`;
-  setTimeout(() => {
-    const agree = Math.random() < 0.85;
-    $('#accompanySelectMask').classList.remove('show');
-    if(agree) startAccompany(act, custom ? 'custom' : 'fixed');
-    else toast(`${getDisplayName(c)}婉拒了這次相伴`);
-  }, 1500 + Math.random()*2000);
-}
-async function doThemChoose(){
-  const c = chats.find(x => x.id === currentChatId); if(!c) return;
-  $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在想…</div></div>`;
-  setTimeout(() => {
-    const act = ACCOMPANY_ACTS[Math.floor(Math.random()*ACCOMPANY_ACTS.length)];
-    const footer = $('#accompanySelectFooter');
-    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">換一個</button></div></div>`;
+  all.forEach(m => {
+    const c = chats.find(x => x.id === m.targetId);
+    const themName = c ? getDisplayName(c) : '祂';
+    const myName = c ? getMyDisplayName(c) : '我';
     
-    $('#btnAcceptProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); startAccompany(act, 'fixed'); };
-    $('#btnRejectProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); }; 
-    $('#btnRetryProposal').onclick = () => {
-      footer.innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在另想…</div></div>`;
-      setTimeout(() => { doThemChoose(); }, 1200 + Math.random()*1200);
+    const card = document.createElement('div');
+    card.className = 'msg-box-card ' + (m.sender === 'me' ? 'mine' : 'theirs');
+    const timeObj = getAncientTime(new Date(m.time));
+    
+    let nameStr = m.sender === 'me' ? myName : themName;
+    let targetStr = m.sender === 'me' ? (c ? ' 给 ' + themName : '') : '';
+    
+    card.innerHTML = `
+      <div class="msg-box-header">
+        <span class="msg-box-name">${escapeHtml(nameStr)}${targetStr}</span>
+        <span class="msg-box-time">${timeObj.dateStr} · ${timeObj.timeStr}</span>
+      </div>
+      <div class="msg-box-text">${escapeHtml(m.text).replace(/\n/g, '<br>')}</div>
+    `;
+    
+    card.onclick = () => {
+      currentMsgBoxForAction = m;
+      const collectItem = $('#msgBoxActCollect');
+      collectItem.style.display = m.sender === 'them' ? 'block' : 'none';
+      $('#msgBoxActionMask').classList.add('show');
     };
-  }, 1200 + Math.random()*1500);
-}
-function startAccompany(act, mode){
-  isAccompanyActive = true; currentAccompanyAct = act; currentAccompanyActRaw = mode;
-  const c = chats.find(x => x.id === currentChatId);
-  if(!c) return;
-  const p = $('#accompanyPanel');
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.accompanyBgImage || c.chatBgImage || globalBgImage);
-  if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
-  else p.style.backgroundImage = 'none';
-  applyAccompanyBgMask(c);
-  
-  const me = $('#accompanyAvMe'), them = $('#accompanyAvThem');
-  if(c.myAvatar){ me.style.backgroundImage = `url(${c.myAvatar})`; me.textContent = ''; }
-  else { me.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; me.textContent = getMyDisplayChar(c); }
-  if(c.theirAvatar){ them.style.backgroundImage = `url(${c.theirAvatar})`; them.textContent = ''; }
-  else { them.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; them.textContent = getTheirDisplayChar(c); }
-  
-  const fm = $('#accompanyFloatMe'), ft = $('#accompanyFloatThem');
-  if(c.myAvatar){ fm.style.backgroundImage = `url(${c.myAvatar})`; fm.textContent = ''; }
-  else { fm.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; fm.textContent = getMyDisplayChar(c); }
-  if(c.theirAvatar){ ft.style.backgroundImage = `url(${c.theirAvatar})`; ft.textContent = ''; }
-  else { ft.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; ft.textContent = getTheirDisplayChar(c); }
-  
-  $('#accompanyTitle').textContent = `與${getDisplayName(c)}一起${act}`;
-  $('#accompanyTimer').textContent = '00:00';
-  showAccompanyPanel(); $('#accompanyFloat').classList.remove('show');
-  accompanyStartTime = Date.now(); clearInterval(accompanyInterval);
-  accompanyInterval = setInterval(() => {
-    const d = Math.floor((Date.now() - accompanyStartTime)/1000);
-    $('#accompanyTimer').textContent = fmtDur(d);
-  }, 1000);
-  startAccompanyInteraction();
-}
-function endAccompany(){
-  const wasActive = isAccompanyActive;
-  isAccompanyActive = false;
-  clearInterval(accompanyInterval); clearTimeout(accompanyInteractTimer);
-  hideAccompanyPanel(); $('#accompanyFloat').classList.remove('show');
-  toast('相伴已結束');
-  if(wasActive && currentChatId){
-    const c = chats.find(x => x.id === currentChatId);
-    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
-  }
-}
-function startAccompanyInteraction(){
-  clearTimeout(accompanyInteractTimer);
-  if (isWaitingForMyReply) return;
-  const loop = () => {
-    if(!isAccompanyActive) return;
-    const delay = config.accMin * 1000 + Math.random() * (config.accMax - config.accMin) * 1000;
-    accompanyInteractTimer = setTimeout(async () => {
-      if(!isAccompanyActive) return;
-      const cid = currentChatId || (chats[0] && chats[0].id);
-      if(cid && !isWaitingForMyReply) { 
-        await buildThemMessage(cid, true); 
-        isWaitingForMyReply = true;
-      }
-      loop();
-    }, delay);
-  };
-  loop();
-}
-
-function openAskModal(){
-  if(!currentChatId){ toast('請先選擇聊天室'); return; }
-  askMode = 'wen'; askAttachData = null; askImgList = []; askSingleChecked = true; askMultiChecked = false;
-  $('#askQuestionInput').value = ''; $('#askOptsInput').value = ''; $('#askAttachPreviewWrap').innerHTML = '';
-  $('#askSingleChk').checked = true; $('#askMultiChk').checked = false;
-  document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.toggle('active', t.dataset.asktab === 'wen'));
-  $('#askWenSection').style.display = 'block'; $('#askTuSection').style.display = 'none';
-  renderAskImgGrid(); $('#askModalMask').classList.add('show');
-}
-function renderAskImgGrid(){
-  const grid = $('#askImgGrid'); grid.innerHTML = '';
-  askImgList.forEach((src, idx) => {
-    const it = document.createElement('div');
-    it.className = 'ask-img-upload-item';
-    it.innerHTML = `<img src="${src}"><div class="ask-attach-del" data-idx="${idx}">✕</div>`;
-    grid.appendChild(it);
+    
+    list.appendChild(card);
   });
-  const add = document.createElement('div');
-  add.className = 'ask-add-img-box'; add.id = 'askAddImgBox'; add.textContent = '＋';
-  add.onclick = () => $('#askImgFile').click();
-  grid.appendChild(add);
-  grid.querySelectorAll('.ask-attach-del').forEach(btn => {
-    btn.onclick = () => { askImgList.splice(parseInt(btn.dataset.idx), 1); renderAskImgGrid(); };
-  });
-}
-async function sendAsk(){
-  const question = $('#askQuestionInput').value.trim();
-  if(!question){ toast('請寫下問題'); return; }
-  let options = [], images = [];
-  if(askMode === 'wen'){
-    options = $('#askOptsInput').value.split('\n').map(s => s.trim()).filter(s => s !== '');
-    if(options.length < 2){ toast('請至少填寫兩個選項'); return; }
-  } else {
-    images = askImgList.slice();
-    if(images.length < 2){ toast('請至少上傳兩張圖片選項'); return; }
-  }
-  let pickMode = 'single';
-  if(askMultiChecked && !askSingleChecked) pickMode = 'multi';
-  else if(askSingleChecked && !askMultiChecked) pickMode = 'single';
-  
-  const c = chats.find(x => x.id === currentChatId);
-  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId:currentChatId, sender:'me', type:'ask', askMode, askQuestion:question, askAttach:askAttachData, askOptions:options, askImages:images, askPickMode:pickMode, askDone:false, askAnswer:[], time:Date.now(), isNightMode: c.isNightMode };
-  
-  await reqToPromise(tx('messages','readwrite').add(msg));
-  currentMessages.push(msg);
-  appendMessageDOM(msg, c, false);
-  
-  $('#askModalMask').classList.remove('show');
-  const wrap = $('#messagesWrap'); wrap.scrollTop = wrap.scrollHeight;
-  
-  await touchChat(currentChatId);
-  isWaitingForMyReply = false;
-  startAskThinking(msg.id, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000);
-}
-
-function openSnapPage(){
-  if(!currentChatId){ toast('請先選擇聊天室'); return; }
-  const c = chats.find(x => x.id === currentChatId);
-  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.chatBgImage || globalBgImage);
-  const maskVal = c.chatBgMask !== undefined ? c.chatBgMask : 60;
-  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack');
-  
-  const maskColor = isDark ? `rgba(0,0,0,${maskVal/100})` : `rgba(255,255,255,${maskVal/100})`;
-  const page = document.getElementById('pageSnap');
-  if(page) {
-    if(bgImg) {
-      page.style.background = `linear-gradient(${maskColor},${maskColor}),url(${bgImg}) center/cover no-repeat`;
-      page.style.backgroundColor = 'transparent';
-    } else { 
-      page.style.background = 'var(--bg-color)'; 
-      page.style.backgroundImage = 'none'; 
-    }
-  }
-  
-  const list = $('#snapList');
-  if(list) list.innerHTML = '<div class="snap-empty">留影功能整理中</div>';
-  document.getElementById('pageSnap').classList.add('show');
-}
-
-function renderMessagesUI(forceBottom) {
-  const box = $('#messages'); box.innerHTML = '';
-  const c = chats.find(x => x.id === currentChatId);
-  applyLayoutClass(c);
-  if (c) currentMessages.forEach(m => appendMessageDOM(m, c, false));
-  if (forceBottom) {
-      const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
-  }
 }
 
 /* ===== 尺素（收藏）功能 ===== */
@@ -2307,9 +1775,7 @@ async function getAllCollectedMessages(chatId){
   });
 }
 
-function getFavTabName(c){
-  return getDisplayName(c) || (c.roomName || '未命名');
-}
+function getFavTabName(c){ return getDisplayName(c) || (c.roomName || '未命名'); }
 
 async function openFavPage(){
   const withData = [];
@@ -2368,7 +1834,7 @@ function buildFavCard(m, c){
   
   const tObj = getAncientTime(new Date(m.time));
   const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
-  stamp.textContent = tObj.dateStr; // 使用一行古风干支日期
+  stamp.textContent = tObj.dateStr;
   meta.appendChild(src); meta.appendChild(stamp);
   card.appendChild(meta);
   let lpTimer = null;
@@ -2410,7 +1876,7 @@ function bindFavSwipe(){
 
 function bindEvents(){
   function exportData() {
-    const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+    const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
     let result = {};
     let completed = 0;
     $('#progressDialogMask').classList.add('show');
@@ -2442,7 +1908,7 @@ function bindEvents(){
           $('#progressDialogMask').classList.add('show');
           $('#progressText').textContent = '正在恢復數據...';
           
-          const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+          const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
           for(let s of stores) {
              const store = tx(s, 'readwrite');
              store.clear();
@@ -2562,6 +2028,26 @@ function bindEvents(){
     pendingBurnMsg = null;
   };
 
+  const msgBoxMask = $('#msgBoxActionMask');
+  const closeMsgBoxMask = () => msgBoxMask.classList.remove('show');
+  $('#msgBoxActCancel').onclick = closeMsgBoxMask;
+  msgBoxMask.onclick = e => { if(e.target === msgBoxMask) closeMsgBoxMask(); };
+  $('#msgBoxActBurn').onclick = () => {
+    closeMsgBoxMask();
+    if(!currentMsgBoxForAction) return;
+    const m = currentMsgBoxForAction;
+    showCustomDialog('撕下', '確定要撕下這張紙條嗎？', false, '撕下', async () => {
+      await reqToPromise(tx('msgbox','readwrite').delete(m.id));
+      renderMsgBox();
+      toast('已撕下');
+    }, true);
+  };
+  $('#msgBoxActCollect').onclick = () => {
+    closeMsgBoxMask();
+    if(!currentMsgBoxForAction) return;
+    toast('暂不支持此操作');
+  };
+
   $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
   
   $('#btnAddCards').onclick = async () => {
@@ -2666,9 +2152,6 @@ function bindEvents(){
   $('#askSendBtn').onclick = sendAsk;
 
   $('#modeToggleBtn').onclick = toggleChatMode;
-  $('#snapBtn').onclick = openSnapPage;
-  $('#backSnapBtn').onclick = () => { $('#pageSnap').classList.remove('show'); };
-  $('#snapGenerateBtn').onclick = () => { toast('留影功能整理中'); };
 
   $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); if(favRefreshTimer) { clearInterval(favRefreshTimer); favRefreshTimer = null; } };
   bindFavSwipe();
@@ -2732,10 +2215,9 @@ function bindEvents(){
 
   $('#backBtn').onclick = () => { 
     $('#pageChat').classList.remove('show'); 
-    const b = document.getElementById('snapModeBar'); if(b) b.remove(); 
-    snapMode = false; snapSelectedIds.clear(); 
     currentChatId = null; 
     applyThemeAndBg(); 
+    loadChats().then(() => renderChatList());
   };
   $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
@@ -2750,6 +2232,10 @@ function bindEvents(){
     if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
     else if(act === 'settings') $('#pageSettings').classList.add('show');
     else if(act === 'adjust') $('#pageAdjust').classList.add('show');
+    else if(act === 'messages'){
+      $('#pageMsg').classList.add('show');
+      renderMsgBox();
+    }
     else if(act === 'fav'){ 
       openFavPage(); 
       if(favRefreshTimer) clearInterval(favRefreshTimer);
@@ -2772,14 +2258,50 @@ function bindEvents(){
     }
     else if(act === 'clear') { 
       showCustomDialog('焚稿', '警告：這將徹底焚毀所有數據，且無法恢復。是否繼續？', false, '確認焚毀', async () => {
-        const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+        const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
         for(let s of stores) { tx(s, 'readwrite').clear(); }
         setTimeout(() => location.reload(), 500);
       }, true);
     }
     else if(act === 'about'){ const body = $('#aboutBody'); body.innerHTML = ABOUT_PARAGRAPHS.map(p => `<p>${escapeHtml(p)}</p>`).join(''); $('#aboutModalMask').classList.add('show'); }
     else if(act === 'letters') toast('郵局：功能籌備中...');
-    else if(act === 'messages') toast('簡訊：功能籌備中...');
+  };
+
+  $('#backMsgBtn').onclick = () => { $('#pageMsg').classList.remove('show'); };
+  $('#msgBoxSendBtn').onclick = async () => {
+    const val = $('#msgBoxInput').value.trim();
+    if(!val){ toast('请先写点什么'); return; }
+    
+    let targetId = null, targetName = '';
+    if(currentMsgBoxForAction && currentMsgBoxForAction.sender === 'them') {
+      targetId = currentMsgBoxForAction.targetId;
+      const c = chats.find(x => x.id === targetId);
+      if(c) targetName = getDisplayName(c);
+    }
+    
+    const msg = {
+      id: 'mb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      sender: 'me',
+      targetId: targetId,
+      targetName: targetName,
+      text: val,
+      time: Date.now()
+    };
+    await reqToPromise(tx('msgbox', 'readwrite').add(msg));
+    
+    $('#msgBoxInput').value = '';
+    $('#msgBoxInput').placeholder = '随便写点什么…';
+    currentMsgBoxForAction = null;
+    
+    renderMsgBox();
+    toast('已塞入匣子');
+    
+    if(Math.random() < 0.8) {
+      setTimeout(() => {
+        let c = targetId ? chats.find(x => x.id === targetId) : (chats.length > 0 ? chats[Math.floor(Math.random()*chats.length)] : null);
+        if(c) generateThemMsgBox(c);
+      }, 3000 + Math.random() * 5000);
+    }
   };
 
   $('#backSettingsBtn').onclick = () => $('#pageSettings').classList.remove('show');
@@ -2789,6 +2311,19 @@ function bindEvents(){
   if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
   if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
   if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
+
+  if($('#bubbleOpacityInput')) {
+    $('#bubbleOpacityInput').onchange = e => {
+      let v = parseInt(e.target.value);
+      if(isNaN(v)) v = 45;
+      v = Math.min(100, Math.max(0, v));
+      e.target.value = v;
+      config.bubbleOpacity = v;
+      localStorage.setItem('nz_config', JSON.stringify(config));
+      applyBubbleOpacity();
+      toast(`氣泡透明度：${v}%`);
+    };
+  }
 
   $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
   $('#saveAdjustBtn').onclick = () => {
@@ -2803,6 +2338,7 @@ function bindEvents(){
     config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
     config.actionRate = parseInt($('#adjActionRate').value) || 15;
     config.collectRate = parseInt($('#adjCollectRate').value) || 10;
+    if($('#adjMsgBoxRate')) config.msgBoxRate = parseInt($('#adjMsgBoxRate').value) || 20;
     localStorage.setItem('nz_config', JSON.stringify(config));
     toast('設置已保存');
     $('#pageAdjust').classList.remove('show');

@@ -17,12 +17,11 @@
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
-    /* 气泡固定底色（少女心事系列） */
-    --bubble-daily-them: #FFF9F9;
-    --bubble-daily-me: #F7D9DF;
+    --bubble-daily-them: rgba(255, 249, 249, 0.45);
+    --bubble-daily-me: rgba(247, 217, 223, 0.45);
     --bubble-daily-text: #4A3E3E;
-    --bubble-night-them: #4A3B4C;
-    --bubble-night-me: #A34A60;
+    --bubble-night-them: rgba(74, 59, 76, 0.45);
+    --bubble-night-me: rgba(163, 74, 96, 0.45);
     --bubble-night-text: #F7F2F2;
   }
   
@@ -73,7 +72,6 @@
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  /* 彻底去闪烁 */
   .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; outline: none; -webkit-touch-callout: none; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
   .chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
   
@@ -123,7 +121,6 @@
   .layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
   .layout-yuyan .msg-group .bubble { max-width:72%; }
 
-  /* 气泡样式（磨砂、固定色） */
   .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   
   .msg-group.them .bubble { border:1px solid rgba(128,128,128,.1); color:var(--bubble-daily-text); }
@@ -131,7 +128,6 @@
   body.is-night-mode .msg-group.them .bubble { color:var(--bubble-night-text); }
   body.is-night-mode .msg-group.me .bubble { color:var(--bubble-night-text); }
   
-  /* 动作气泡 */
   .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
   .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
   body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; background:rgba(90, 40, 50, 0.85); }
@@ -456,7 +452,6 @@
   .adjust-inputs { display:flex; align-items:center; gap:6px; }
   .adjust-input { width:50px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 
-  /* ===== 尺素（收藏）页面 ===== */
   .page-fav { background: var(--bg-color); }
   .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
   .fav-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; overflow:hidden; text-overflow:ellipsis; }
@@ -484,7 +479,6 @@
   .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
   .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
 
-  /* ===== 简讯（留言匣）页面 ===== */
   .page-msg { background: var(--bg-color); }
   .msg-box-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px; display:flex; flex-direction:column; gap:16px; }
   .msg-box-card { position:relative; border-radius:8px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,.05); max-width:85%; border:1px solid rgba(128,128,128,.1); }
@@ -2348,6 +2342,326 @@ function bindEvents(){
     const el = document.querySelector(id);
     if(el){ el.addEventListener('click', e => { if(e.target === el && id !== '#progressDialogMask'){ el.classList.remove('show'); if(id === '#dialogMask'){ setTimeout(() => { $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button>`; $('#dialogCancelBtn').onclick = () => $('#dialogMask').classList.remove('show'); }, 100); } } }); }
   });
+}
+
+function playNext(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex+1)%playlist.length; loadTrack(); }
+function playPrev(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex-1+playlist.length)%playlist.length; loadTrack(); }
+
+function updateModeIcon(showToast = true){
+  const icon = $('#iconMode'); let name = '';
+  if(playMode === 0){ icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>'; name = '列表循環'; }
+  else if(playMode === 1){ icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>'; name = '單曲循環'; }
+  else if(playMode === 2){ icon.innerHTML = '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>'; name = '隨機播放'; }
+  else if(playMode === 3){ icon.innerHTML = '<path d="M6 6h12v12H6z"/>'; name = '播完即停'; }
+  if(showToast) toast(`當前模式：${name}`);
+}
+
+function applyCallBgMask(c){
+  const mask = $('#callBgMask');
+  const mv = c && c.chatBgMask !== undefined ? c.chatBgMask : 60;
+  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack') || (c && c.isNightMode);
+  mask.style.backgroundColor = isDark ? `rgba(0,0,0,${mv/100})` : `rgba(255,255,255,${mv/100})`;
+}
+function applyAccompanyBgMask(c){
+  const mask = document.querySelector('#accompanyPanel .accompany-bg-mask');
+  if(!mask) return;
+  const mv = c && c.chatBgMask !== undefined ? c.chatBgMask : 60;
+  const isDark = document.body.className.includes('cyber')||document.body.className.includes('space')||document.body.className.includes('purple')||document.body.className.includes('pureblack') || (c && c.isNightMode);
+  mask.style.backgroundColor = isDark ? `rgba(0,0,0,${mv/100})` : `rgba(255,255,255,${mv/100})`;
+}
+
+function openCallUI(isIncoming = false){
+  if(isGlobalCallActive){ toast('請先掛斷當前通話'); return; }
+  isGlobalCallActive = true;
+  const c = chats.find(x => x.id === currentChatId);
+  if(!c) return;
+  const p = $('#callPanel'), f = $('#callFloat');
+  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.callBgImage || c.chatBgImage || globalBgImage);
+  
+  if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
+  else { p.style.backgroundImage = 'none'; p.style.backgroundColor = 'var(--bg-color)'; }
+  
+  applyCallBgMask(c);
+  const av = $('#callAvatar'), fa = $('#callFloatAvatar');
+  const ch = getTheirDisplayChar(c);
+  if(c.theirAvatar){ av.style.backgroundImage = `url(${c.theirAvatar})`; av.textContent = ''; fa.style.backgroundImage = `url(${c.theirAvatar})`; fa.textContent = ''; }
+  else { av.style.backgroundImage = 'linear-gradient(135deg,var(--primary),#5aa9f0)'; av.textContent = ch; fa.style.backgroundImage = 'linear-gradient(135deg,var(--primary),#5aa9f0)'; fa.textContent = ch; }
+  $('#callNickname').textContent = getDisplayName(c);
+  showCallPanel(); f.classList.remove('show');
+  
+  if(isIncoming){
+    $('#callStatus').textContent = '邀請你進行語音通話...';
+    p.classList.remove('active');
+    $('#btnAnswerCall').style.display = 'flex';
+    $('#btnHangupCall').style.display = 'flex';
+    $('#btnMinimizeCall').style.display = 'flex';
+  } else {
+    $('#callStatus').textContent = '正在呼叫...';
+    p.classList.remove('active');
+    $('#btnAnswerCall').style.display = 'none';
+    $('#btnHangupCall').style.display = 'flex';
+    $('#btnMinimizeCall').style.display = 'flex';
+    callTimer = setTimeout(() => { if(!isGlobalCallActive) return; answerCall(); }, 3000 + Math.random()*7000);
+  }
+  startCallInteraction();
+}
+function answerCall(){
+  clearTimeout(callTimer); clearTimeout(incomingCallTimeout);
+  $('#callStatus').textContent = '00:00';
+  $('#btnAnswerCall').style.display = 'none';
+  $('#callPanel').classList.add('active');
+  callStartTime = Date.now(); clearInterval(callInterval);
+  callInterval = setInterval(() => {
+    const d = Math.floor((Date.now() - callStartTime)/1000);
+    $('#callStatus').textContent = fmtDur(d);
+  }, 1000);
+}
+function hangupCall(){
+  const wasActive = isGlobalCallActive;
+  isGlobalCallActive = false;
+  clearTimeout(callTimer); clearTimeout(incomingCallTimeout); clearInterval(callInterval); clearTimeout(callInteractTimer);
+  hideCallPanel(); $('#callPanel').classList.remove('active'); $('#callFloat').classList.remove('show');
+  toast('通話已掛斷');
+  if(wasActive && currentChatId){
+    const c = chats.find(x => x.id === currentChatId);
+    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
+    if (Math.random() < 0.5) generateThemMsgBox(c);
+  }
+}
+function startCallInteraction(){
+  clearTimeout(callInteractTimer);
+  if (isWaitingForMyReply) return;
+  const loop = () => {
+    if(!isGlobalCallActive) return;
+    const delay = config.callMin * 1000 + Math.random() * (config.callMax - config.callMin) * 1000;
+    callInteractTimer = setTimeout(async () => {
+      if(!isGlobalCallActive) return;
+      const cid = currentChatId || (chats[0] && chats[0].id);
+      if(cid && !isWaitingForMyReply) { 
+        await buildThemMessage(cid, true); 
+        isWaitingForMyReply = true;
+      }
+      loop();
+    }, delay);
+  };
+  loop();
+}
+
+function setupIncomingCallTimer(){
+  clearInterval(checkIncomingInterval);
+  checkIncomingInterval = setInterval(() => {
+    if(!isGlobalCallActive && currentChatId && $('#pageChat').classList.contains('show')){
+      if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+      const c = chats.find(x => x.id === currentChatId);
+      if(c && c.isNightMode) return; 
+      
+      if(Math.random() < 0.05){
+        openCallUI(true);
+        incomingCallTimeout = setTimeout(() => {
+          if(isGlobalCallActive && $('#btnAnswerCall').style.display !== 'none'){
+            hangupCall(); toast('未接來電');
+            if(c){
+              const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'them', type:'cards', text:'', cards:['怎麼不接我電話？'], stickerData:null, time:Date.now(), isNightMode: false };
+              reqToPromise(tx('messages','readwrite').add(msg));
+              if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); appendMessageDOM(msg, c, true); }
+            }
+          }
+        }, 15000);
+      }
+    }
+  }, 300000);
+}
+
+function renderAccompanyActs(){
+  const box = $('#accompanyActs'); box.innerHTML = '';
+  ACCOMPANY_ACTS.forEach(act => {
+    const d = document.createElement('div');
+    d.className = 'accompany-act'; d.textContent = act; d.dataset.act = act;
+    d.onclick = () => {
+      document.querySelectorAll('.accompany-act').forEach(x => x.classList.remove('active'));
+      d.classList.add('active');
+      currentAccompanyAct = act; currentAccompanyActRaw = '';
+      $('#accompanyCustomInput').value = '';
+    };
+    box.appendChild(d);
+  });
+}
+function openAccompanySelect(){
+  if(!currentChatId){ toast('請先選擇聊天室'); return; }
+  if(isAccompanyActive){ toast('請先結束當前相伴'); return; }
+  const c = chats.find(x => x.id === currentChatId);
+  if(!c) return;
+  currentAccompanyAct = ''; currentAccompanyActRaw = '';
+  $('#accompanyHint').textContent = `與${getDisplayName(c)}相伴，一同做些什麼`;
+  $('#accompanyCustomInput').value = '';
+  renderAccompanyActs();
+  $('#accompanySelectFooter').innerHTML = `<button class="accompany-invite-btn" id="btnInviteAccompany">我來邀約</button><button class="accompany-them-btn" id="btnThemChoose">由祂決定</button>`;
+  bindAccompanyFooter();
+  $('#accompanySelectMask').classList.add('show');
+}
+function bindAccompanyFooter(){
+  const inv = $('#btnInviteAccompany'); if(inv) inv.onclick = doInviteAccompany;
+  const th = $('#btnThemChoose'); if(th) th.onclick = doThemChoose;
+}
+async function doInviteAccompany(){
+  const c = chats.find(x => x.id === currentChatId); if(!c) return;
+  const custom = $('#accompanyCustomInput').value.trim();
+  const act = custom || currentAccompanyAct;
+  if(!act){ toast('請選擇或填寫相伴之事'); return; }
+  $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">等待${getDisplayName(c)}應允…</div></div>`;
+  setTimeout(() => {
+    const agree = Math.random() < 0.85;
+    $('#accompanySelectMask').classList.remove('show');
+    if(agree) startAccompany(act, custom ? 'custom' : 'fixed');
+    else toast(`${getDisplayName(c)}婉拒了這次相伴`);
+  }, 1500 + Math.random()*2000);
+}
+async function doThemChoose(){
+  const c = chats.find(x => x.id === currentChatId); if(!c) return;
+  $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在想…</div></div>`;
+  setTimeout(() => {
+    const act = ACCOMPANY_ACTS[Math.floor(Math.random()*ACCOMPANY_ACTS.length)];
+    const footer = $('#accompanySelectFooter');
+    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">換一個</button></div></div>`;
+    
+    $('#btnAcceptProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); startAccompany(act, 'fixed'); };
+    $('#btnRejectProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); }; 
+    $('#btnRetryProposal').onclick = () => {
+      footer.innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在另想…</div></div>`;
+      setTimeout(() => { doThemChoose(); }, 1200 + Math.random()*1200);
+    };
+  }, 1200 + Math.random()*1500);
+}
+function startAccompany(act, mode){
+  isAccompanyActive = true; currentAccompanyAct = act; currentAccompanyActRaw = mode;
+  const c = chats.find(x => x.id === currentChatId);
+  if(!c) return;
+  const p = $('#accompanyPanel');
+  const bgImg = c.isNightMode ? (c.nightBgImage || c.chatBgImage || globalBgImage) : (c.accompanyBgImage || c.chatBgImage || globalBgImage);
+  if(bgImg) p.style.backgroundImage = `url(${bgImg})`;
+  else p.style.backgroundImage = 'none';
+  applyAccompanyBgMask(c);
+  
+  const me = $('#accompanyAvMe'), them = $('#accompanyAvThem');
+  if(c.myAvatar){ me.style.backgroundImage = `url(${c.myAvatar})`; me.textContent = ''; }
+  else { me.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; me.textContent = getMyDisplayChar(c); }
+  if(c.theirAvatar){ them.style.backgroundImage = `url(${c.theirAvatar})`; them.textContent = ''; }
+  else { them.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; them.textContent = getTheirDisplayChar(c); }
+  
+  const fm = $('#accompanyFloatMe'), ft = $('#accompanyFloatThem');
+  if(c.myAvatar){ fm.style.backgroundImage = `url(${c.myAvatar})`; fm.textContent = ''; }
+  else { fm.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; fm.textContent = getMyDisplayChar(c); }
+  if(c.theirAvatar){ ft.style.backgroundImage = `url(${c.theirAvatar})`; ft.textContent = ''; }
+  else { ft.style.backgroundImage = 'linear-gradient(135deg,#b99a6b,#d8c39a)'; ft.textContent = getTheirDisplayChar(c); }
+  
+  $('#accompanyTitle').textContent = `與${getDisplayName(c)}一起${act}`;
+  $('#accompanyTimer').textContent = '00:00';
+  showAccompanyPanel(); $('#accompanyFloat').classList.remove('show');
+  accompanyStartTime = Date.now(); clearInterval(accompanyInterval);
+  accompanyInterval = setInterval(() => {
+    const d = Math.floor((Date.now() - accompanyStartTime)/1000);
+    $('#accompanyTimer').textContent = fmtDur(d);
+  }, 1000);
+  startAccompanyInteraction();
+}
+function endAccompany(){
+  const wasActive = isAccompanyActive;
+  isAccompanyActive = false;
+  clearInterval(accompanyInterval); clearTimeout(accompanyInteractTimer);
+  hideAccompanyPanel(); $('#accompanyFloat').classList.remove('show');
+  toast('相伴已結束');
+  if(wasActive && currentChatId){
+    const c = chats.find(x => x.id === currentChatId);
+    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
+    if(c && Math.random() < 0.5) generateThemMsgBox(c);
+  }
+}
+function startAccompanyInteraction(){
+  clearTimeout(accompanyInteractTimer);
+  if (isWaitingForMyReply) return;
+  const loop = () => {
+    if(!isAccompanyActive) return;
+    const delay = config.accMin * 1000 + Math.random() * (config.accMax - config.accMin) * 1000;
+    accompanyInteractTimer = setTimeout(async () => {
+      if(!isAccompanyActive) return;
+      const cid = currentChatId || (chats[0] && chats[0].id);
+      if(cid && !isWaitingForMyReply) { 
+        await buildThemMessage(cid, true); 
+        isWaitingForMyReply = true;
+      }
+      loop();
+    }, delay);
+  };
+  loop();
+}
+
+function openAskModal(){
+  if(!currentChatId){ toast('請先選擇聊天室'); return; }
+  askMode = 'wen'; askAttachData = null; askImgList = []; askSingleChecked = true; askMultiChecked = false;
+  $('#askQuestionInput').value = ''; $('#askOptsInput').value = ''; $('#askAttachPreviewWrap').innerHTML = '';
+  $('#askSingleChk').checked = true; $('#askMultiChk').checked = false;
+  document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.toggle('active', t.dataset.asktab === 'wen'));
+  $('#askWenSection').style.display = 'block'; $('#askTuSection').style.display = 'none';
+  renderAskImgGrid(); $('#askModalMask').classList.add('show');
+}
+function renderAskImgGrid(){
+  const grid = $('#askImgGrid'); grid.innerHTML = '';
+  askImgList.forEach((src, idx) => {
+    const it = document.createElement('div');
+    it.className = 'ask-img-upload-item';
+    it.innerHTML = `<img src="${src}"><div class="ask-attach-del" data-idx="${idx}">✕</div>`;
+    grid.appendChild(it);
+  });
+  const add = document.createElement('div');
+  add.className = 'ask-add-img-box'; add.id = 'askAddImgBox'; add.textContent = '＋';
+  add.onclick = () => $('#askImgFile').click();
+  grid.appendChild(add);
+  grid.querySelectorAll('.ask-attach-del').forEach(btn => {
+    btn.onclick = () => { askImgList.splice(parseInt(btn.dataset.idx), 1); renderAskImgGrid(); };
+  });
+}
+async function sendAsk(){
+  const question = $('#askQuestionInput').value.trim();
+  if(!question){ toast('請寫下問題'); return; }
+  let options = [], images = [];
+  if(askMode === 'wen'){
+    options = $('#askOptsInput').value.split('\n').map(s => s.trim()).filter(s => s !== '');
+    if(options.length < 2){ toast('請至少填寫兩個選項'); return; }
+  } else {
+    images = askImgList.slice();
+    if(images.length < 2){ toast('請至少上傳兩張圖片選項'); return; }
+  }
+  let pickMode = 'single';
+  if(askMultiChecked && !askSingleChecked) pickMode = 'multi';
+  else if(askSingleChecked && !askMultiChecked) pickMode = 'single';
+  
+  const c = chats.find(x => x.id === currentChatId);
+  const msg = { id:'m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId:currentChatId, sender:'me', type:'ask', askMode, askQuestion:question, askAttach:askAttachData, askOptions:options, askImages:images, askPickMode:pickMode, askDone:false, askAnswer:[], time:Date.now(), isNightMode: c.isNightMode };
+  
+  await reqToPromise(tx('messages','readwrite').add(msg));
+  currentMessages.push(msg);
+  appendMessageDOM(msg, c, false);
+  
+  $('#askModalMask').classList.remove('show');
+  const wrap = $('#messagesWrap'); wrap.scrollTop = wrap.scrollHeight;
+  
+  await touchChat(currentChatId);
+  isWaitingForMyReply = false;
+  startAskThinking(msg.id, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000);
+}
+
+function openSnapPage(){
+  toast('留影功能整理中');
+}
+
+function renderMessagesUI(forceBottom) {
+  const box = $('#messages'); box.innerHTML = '';
+  const c = chats.find(x => x.id === currentChatId);
+  applyLayoutClass(c);
+  if (c) currentMessages.forEach(m => appendMessageDOM(m, c, false));
+  if (forceBottom) {
+      const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
+  }
 }
 
 init().catch(err => { console.error(err); toast('資料庫初始化失敗：' + err.message); });

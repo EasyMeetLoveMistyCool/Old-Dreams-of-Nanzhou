@@ -11,18 +11,19 @@
   body { font-family: -apple-system, "HarmonyOS Sans", "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg-color); color: var(--text-color); transition: background .3s, color .3s; }
   
   :root {
-    --bg-color:#f0f2f5; --topbar-border:#e4e6eb; --bubble-me:#d6ecff; --bubble-them:rgba(255,255,255,.85);
-    --bubble-action-me:rgba(255,230,235,.9); --bubble-action-them:rgba(255,235,240,.85);
+    --bg-color:#f0f2f5; --topbar-border:#e4e6eb;
     --text-color:#000000; --text-secondary:#707579; --time-color:#a0a0a0;
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
+    /* 少女心事 气泡配色（透明度由 JS 动态控制） */
     --bubble-daily-them: rgba(255, 249, 249, 0.45);
     --bubble-daily-me: rgba(247, 217, 223, 0.45);
-    --bubble-daily-text: #4A3E3E;
     --bubble-night-them: rgba(74, 59, 76, 0.45);
     --bubble-night-me: rgba(163, 74, 96, 0.45);
-    --bubble-night-text: #F7F2F2;
+    
+    --text-daily: #4A3E3E;
+    --text-night: #F7F2F2;
   }
   
   body.theme-sky { --bg-color:#e6ebee; }
@@ -51,8 +52,8 @@
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
-  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-fav { z-index:4; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-msg { z-index:6; transform:translateX(100%); }
-  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-adjust.show,.page-fav.show,.page-msg.show { transform:translateX(0); }
+  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); } .page-notes { z-index:7; transform:translateX(100%); }
+  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-adjust.show,.page-fav.show,.page-notes.show { transform:translateX(0); }
 
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
@@ -71,10 +72,10 @@
   .header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
+  /* 主页聊天列表，彻底去除点击闪烁 */
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; outline: none; -webkit-touch-callout: none; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; outline: none; -webkit-touch-callout: none; touch-action: manipulation; }
   .chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
-  
   .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
   
   .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
@@ -94,14 +95,17 @@
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
   
+  /* 日期分割线：单行古风 */
   .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; }
   body.is-night-mode .date-divider { background:rgba(212,122,138,.2); }
 
+  /* ===== 消息组：舊夢（上下）默认结构 ===== */
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
   .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
   
+  /* 撩拨模式消息流双人头像：位置永远祂左我右，叠压随发送方 */
   .msg-dual-avatar { position:relative; width:52px; height:36px; margin-bottom:8px; }
   .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
   .msg-dual-avatar .du-av.them { left:0; }
@@ -111,6 +115,7 @@
   .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
   .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
+  /* ===== 鱼雁（左右）排版 ===== */
   .layout-yuyan .msg-group { align-items:stretch; }
   .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
   .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
@@ -122,25 +127,30 @@
   .layout-yuyan .msg-group .bubble { max-width:72%; }
 
   .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  /* 固定配色气泡（少女心事） */
+  .msg-group.them .bubble { background:var(--bubble-daily-them); border:1px solid rgba(255,255,255,.2); color:var(--text-daily); }
+  .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.2); color:var(--text-daily); }
+  body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:var(--text-night); border-color:rgba(255,255,255,.08); }
+  body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:var(--text-night); border-color:rgba(255,255,255,.08); }
   
-  .msg-group.them .bubble { border:1px solid rgba(128,128,128,.1); color:var(--bubble-daily-text); }
-  .msg-group.me .bubble { border:1px solid rgba(128,128,128,.1); color:var(--bubble-daily-text); }
-  body.is-night-mode .msg-group.them .bubble { color:var(--bubble-night-text); }
-  body.is-night-mode .msg-group.me .bubble { color:var(--bubble-night-text); }
+  /* 动作气泡 */
+  .msg-group.them .bubble.action-bubble { background:rgba(255,235,240,.85); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
+  .msg-group.me .bubble.action-bubble { background:rgba(255,230,235,.85); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
+  body.is-night-mode .msg-group.them .bubble.action-bubble { background:rgba(60,30,40,.85); color:#F5E6E8; }
+  body.is-night-mode .msg-group.me .bubble.action-bubble { background:rgba(90,40,50,.85); color:#F5E6E8; }
   
-  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
-  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:#8a4a58; }
-  body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; background:rgba(90, 40, 50, 0.85); }
-  body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; background:rgba(60, 30, 40, 0.85); }
+  /* 深色主题下：日常气泡的固定深字色 */
+  body.theme-cyber .msg-group .bubble:not(.action-bubble), body.theme-space .msg-group .bubble:not(.action-bubble), body.theme-nightpurple .msg-group .bubble:not(.action-bubble), body.theme-pureblack .msg-group .bubble:not(.action-bubble) { color:var(--text-daily); }
 
   .card-line { display:block; opacity:0; transform:translateY(5px); animation:cardIn .5s ease forwards; }
   .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
   
+  /* 时间戳：单行干支 */
   .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
   .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
-  .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.25; border-radius:4px; }
+  .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.45; border-radius:4px; }
 
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
   .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
@@ -370,6 +380,7 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
+  /* 投問卡片：日常金色（磨砂） */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
   body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
@@ -445,6 +456,7 @@
   .about-body p { margin-bottom:12px; }
   .about-footer { padding:14px 20px calc(16px + env(safe-area-inset-bottom)); text-align:center; font-size:13px; color:var(--text-secondary); border-top:1px solid var(--border-light); }
 
+  /* 微調頁面 */
   .page-adjust { z-index:5; background: var(--bg-color); }
   .adjust-section { background:rgba(128,128,128,.08); border-radius:10px; padding:15px; margin-bottom:15px; }
   .adjust-title { font-size:15px; font-weight:600; margin-bottom:15px; border-left:3px solid var(--primary); padding-left:8px; color:var(--text-color); }
@@ -452,6 +464,7 @@
   .adjust-inputs { display:flex; align-items:center; gap:6px; }
   .adjust-input { width:50px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 
+  /* ===== 尺素（收藏）页面 ===== */
   .page-fav { background: var(--bg-color); }
   .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
   .fav-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; overflow:hidden; text-overflow:ellipsis; }
@@ -461,6 +474,7 @@
   .fav-pane { flex:0 0 100%; height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
   .fav-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
 
+  /* 尺素卡片：书信/邮票/手帐风，不磨砂 */
   .fav-card { position:relative; border-radius:10px; padding:16px 16px 12px; margin-bottom:16px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(180,160,120,.16) 27px, rgba(180,160,120,.16) 28px); background-size:100% 28px; overflow:hidden; }
   body.theme-cyber .fav-card, body.theme-space .fav-card, body.theme-nightpurple .fav-card, body.theme-pureblack .fav-card, body.is-night-mode .fav-card { background:#2a2320; border-color:#4a3f36; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(200,170,130,.14) 27px, rgba(200,170,130,.14) 28px); }
   .fav-card::after { content:''; position:absolute; right:-14px; top:-14px; width:46px; height:46px; transform:rotate(45deg); background:rgba(200,180,140,.22); border-left:1px dashed rgba(150,130,90,.5); }
@@ -476,25 +490,28 @@
   .fav-stamp { font-size:11px; color:#8a7a5a; border:1px dashed rgba(150,130,90,.55); border-radius:4px; padding:2px 7px; white-space:nowrap; }
   body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
 
+  /* ===== 简讯（留言匣）页面 ===== */
+  .page-notes { background: var(--bg-color); }
+  .notes-list { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:16px; }
+  .note-card { position:relative; padding:14px 16px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.05); font-family:var(--bubble-font); line-height:1.6; font-size:15px; letter-spacing:0.03em; word-break:break-word; border:1px solid rgba(0,0,0,.04); }
+  .note-card.me { align-self:flex-end; background:#FFF5F6; color:#4A3E3E; transform:rotate(1deg); border-left:3px solid #F7D9DF; }
+  .note-card.them { align-self:flex-start; background:#FFFFFF; color:#4A3E3E; transform:rotate(-1deg); border-left:3px solid #E0E0E0; }
+  body.is-night-mode .note-card.me { background:#3A2D31; color:#F7F2F2; border-color:rgba(255,255,255,.05); }
+  body.is-night-mode .note-card.them { background:#2A2528; color:#F7F2F2; border-color:rgba(255,255,255,.05); }
+  
+  .note-header { display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary); margin-bottom:6px; }
+  .note-name { font-weight:600; }
+  .note-time { font-size:11px; opacity:0.8; }
+  
+  .notes-composer { flex:0 0 auto; padding:12px; padding-bottom:calc(12px + env(safe-area-inset-bottom)); background:var(--input-bg); border-top:1px solid var(--topbar-border); display:flex; flex-direction:column; gap:8px; }
+  .notes-input-wrap { display:flex; align-items:center; gap:8px; }
+  .notes-input { flex:1; height:44px; border-radius:8px; border:1px solid var(--topbar-border); background:rgba(255,255,255,.7); padding:0 12px; font-size:15px; color:var(--text-color); outline:none; font-family:var(--bubble-font); }
+  body.is-night-mode .notes-input { background:rgba(0,0,0,.3); }
+  .notes-send-btn { background:var(--primary); color:#fff; border:none; border-radius:8px; padding:0 16px; height:44px; font-size:15px; font-weight:500; }
+  
+  /* 布景：玫瑰标记上传 */
   .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
   .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
-
-  .page-msg { background: var(--bg-color); }
-  .msg-box-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px; display:flex; flex-direction:column; gap:16px; }
-  .msg-box-card { position:relative; border-radius:8px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,.05); max-width:85%; border:1px solid rgba(128,128,128,.1); }
-  .msg-box-card.mine { align-self:flex-end; background:#fcf5f6; }
-  .msg-box-card.theirs { align-self:flex-start; background:#ffffff; }
-  body.theme-cyber .msg-box-card.mine, body.theme-space .msg-box-card.mine, body.theme-nightpurple .msg-box-card.mine, body.theme-pureblack .msg-box-card.mine, body.is-night-mode .msg-box-card.mine { background:#3a252b; border-color:#5a3a42; }
-  body.theme-cyber .msg-box-card.theirs, body.theme-space .msg-box-card.theirs, body.theme-nightpurple .msg-box-card.theirs, body.theme-pureblack .msg-box-card.theirs, body.is-night-mode .msg-box-card.theirs { background:#2a2a2a; border-color:#444; }
-  .msg-box-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed rgba(150,130,90,.3); padding-bottom:6px; }
-  .msg-box-name { font-size:13px; font-weight:600; color:var(--text-secondary); }
-  .msg-box-time { font-size:11px; color:#a0a0a0; }
-  .msg-box-text { font-size:15px; line-height:1.6; color:var(--text-color); font-family: var(--bubble-font); letter-spacing:0.02em; word-break:break-word; }
-  .msg-box-footer { margin-top:8px; text-align:right; font-size:11px; color:var(--text-secondary); opacity:0.7; }
-  
-  .msg-composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; background:transparent; border-top:1px solid var(--topbar-border); }
-  .msg-composer input { flex:1; height:40px; border-radius:20px; border:none; background:var(--input-bg); padding:0 16px; font-size:14px; color:var(--text-color); outline:none; }
-  .msg-composer button { width:60px; height:40px; border-radius:20px; background:var(--primary); color:#fff; border:none; font-size:14px; font-weight:500; }
 </style>
 </head>
 <body class="theme-sky">
@@ -558,7 +575,6 @@
       <button id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">完成</button>
     </div>
   </div>
-  
   <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
@@ -578,20 +594,6 @@
     </div>
   </div>
 
-  <!-- 简讯（留言匣）页 -->
-  <div class="page page-msg" id="pageMsg">
-    <div class="topbar">
-      <button class="icon-btn" id="backMsgBtn">←</button>
-      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">簡訊</div>
-      <div style="width:40px;"></div>
-    </div>
-    <div class="msg-box-list" id="msgBoxList"></div>
-    <div class="msg-composer">
-      <input type="text" id="msgBoxInput" placeholder="随便写点什么…" autocomplete="off">
-      <button id="msgBoxSendBtn">塞入</button>
-    </div>
-  </div>
-
   <!-- 尺素（收藏）页 -->
   <div class="page page-fav" id="pageFav">
     <div class="topbar">
@@ -602,6 +604,22 @@
     <div class="fav-tab-bar" id="favTabBar"></div>
     <div class="fav-swipe-wrap" id="favSwipeWrap">
       <div class="fav-swipe-track" id="favSwipeTrack"></div>
+    </div>
+  </div>
+
+  <!-- 简讯（留言匣）页 -->
+  <div class="page page-notes" id="pageNotes">
+    <div class="topbar">
+      <button class="icon-btn" id="backNotesBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">簡訊</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="notes-list" id="notesList"></div>
+    <div class="notes-composer">
+      <div class="notes-input-wrap">
+        <input type="text" class="notes-input" id="noteInput" placeholder="随便写点什么…">
+        <button class="notes-send-btn" id="noteSendBtn">塞入</button>
+      </div>
     </div>
   </div>
   
@@ -669,7 +687,7 @@
         <div class="adjust-row">
           <span>留言匣機率 (%)</span>
           <div class="adjust-inputs">
-            <input type="number" id="adjMsgBoxRate" class="adjust-input">
+            <input type="number" id="adjNoteRate" class="adjust-input">
           </div>
         </div>
       </div>
@@ -695,11 +713,11 @@
         <button id="roseResetBtn" style="background:transparent;border:none;color:var(--text-secondary);font-size:13px;padding:4px 0;">清除，恢復默認 🌹</button>
       </div>
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
-        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">氣泡透明度</div>
-        <div class="adjust-row">
-          <span>百分比 (%)</span>
+        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">气泡透明度</div>
+        <div class="adjust-row" style="margin-bottom:0;">
+          <span>透明度 (%)</span>
           <div class="adjust-inputs">
-            <input type="number" id="bubbleOpacityInput" class="adjust-input" min="0" max="100" placeholder="45">
+            <input type="number" id="bubbleOpacityInput" class="adjust-input" min="0" max="100" value="45">
           </div>
         </div>
       </div>
@@ -836,10 +854,11 @@
   </div>
 </div>
 
-<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
+<!-- 菜单（尺素在简讯后面，简讯存在） -->
+<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="notes">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
-<div class="action-sheet-mask" id="msgBoxActionMask"><div class="action-sheet"><div class="action-item" id="msgBoxActCollect" style="display:none;">收入尺素</div><div class="action-item danger" id="msgBoxActBurn">撕下</div><div class="action-item" style="color:var(--text-secondary)" id="msgBoxActCancel">取消</div></div></div>
+<div class="action-sheet-mask" id="noteActionMask"><div class="action-sheet"><div class="action-item" id="noteActCollect">收入尺素</div><div class="action-item danger" id="noteActTear">撕下</div><div class="action-item" style="color:var(--text-secondary)" id="noteActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
 <div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><input type="text" class="dialog-input" id="dialogInput" style="display:none;"><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
 <div class="dialog-mask" id="progressDialogMask" style="z-index:100000;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
@@ -895,11 +914,12 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
+// ===== 古风历法与节气算法（精准北京时间与万年历） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
+const TERMS = ['小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至'];
 
 const TERM_INFO = [
   5,20,4,19,5,20,5,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,22,
@@ -921,8 +941,8 @@ function getTermDate(y, n) {
   d.setDate(base);
   let century = Math.floor(y / 100);
   let year = y % 100;
-  let C = century === 20 ? [6.11,20.84,4.6295,19.4599,6.3826,21.4155,5.59,20.888,6.318,21.86,6.5,22.2,7.928,23.65,8.35,23.95,8.44,23.822,9.098,24.218,8.218,23.08,7.9,22.6] : [5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94];
-  let calcD = Math.floor(year * 0.2422 + C[n]) - Math.floor(year / 4);
+  let C = century === 20 ? [6.11, 20.84, 4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.888, 6.318, 21.86, 6.5, 22.2, 7.928, 23.65, 8.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6][n] : [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94][n];
+  let calcD = Math.floor(year * 0.2422 + C) - Math.floor(year / 4);
   if(n===2 || n===5 || n===8 || n===11) calcD -= 1;
   d.setDate(calcD);
   return d;
@@ -945,7 +965,11 @@ function getAncientTime(date) {
   for(let i=0; i<24; i++) {
     if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
   }
-  if(termIndex < 0) termIndex = 23;
+  if(termIndex < 0) {
+    const lastYearTerms = [];
+    for(let i=0; i<24; i++) lastYearTerms.push(getTermDate(y-1, i));
+    termIndex = 23;
+  }
   const monthZhi = (termIndex + 2) % 12;
   const monthGanBase = (yearGan % 5) * 2 + 2;
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
@@ -965,12 +989,12 @@ function getAncientTime(date) {
   
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
+  
   const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
 
   return {
     dateStr: `${yearStr} ${monthStr} ${dayStr}`,
-    timeStr: `${hourGanZhi} ${keName} ${timeStr}`,
-    fullLunar: '' 
+    timeStr: `${hourGanZhi} ${keName} ${timeStr}`
   };
 }
 
@@ -979,16 +1003,8 @@ let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 let globalRoseMark = localStorage.getItem('nz_rose_mark') || null;
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, msgBoxRate: 20, bubbleOpacity: 45 };
+const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, noteRate: 20, bubbleOpacity: 45 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
-
-function applyBubbleOpacity(){
-  const op = config.bubbleOpacity / 100;
-  document.documentElement.style.setProperty('--bubble-daily-them', `rgba(255, 249, 249, ${op})`);
-  document.documentElement.style.setProperty('--bubble-daily-me', `rgba(247, 217, 223, ${op})`);
-  document.documentElement.style.setProperty('--bubble-night-them', `rgba(74, 59, 76, ${op})`);
-  document.documentElement.style.setProperty('--bubble-night-me', `rgba(163, 74, 96, ${op})`);
-}
 
 function applyThemeAndBg(){
   let savedTheme = localStorage.getItem('nz_theme') || 'theme-sky';
@@ -997,8 +1013,16 @@ function applyThemeAndBg(){
     const c = chats.find(x => x.id === currentChatId);
     if(c && c.isNightMode) document.body.classList.add('is-night-mode');
   }
+  
+  // 动态控制气泡透明度
+  const op = config.bubbleOpacity / 100;
+  document.documentElement.style.setProperty('--bubble-daily-them', `rgba(255, 249, 249, ${op})`);
+  document.documentElement.style.setProperty('--bubble-daily-me', `rgba(247, 217, 223, ${op})`);
+  document.documentElement.style.setProperty('--bubble-night-them', `rgba(74, 59, 76, ${op})`);
+  document.documentElement.style.setProperty('--bubble-night-me', `rgba(163, 74, 96, ${op})`);
+
   document.querySelectorAll('.theme-card').forEach(card => card.classList.toggle('active', card.dataset.theme === savedTheme));
-  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageAdjust','#pageFav','#pageMsg'];
+  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageAdjust','#pageFav','#pageNotes'];
   const appEl = $('#app');
   if(globalBgImage){
     const isDark = savedTheme.includes('cyber')||savedTheme.includes('space')||savedTheme.includes('purple')||savedTheme.includes('pureblack');
@@ -1009,7 +1033,6 @@ function applyThemeAndBg(){
     bgPages.forEach(sel => { const el = document.querySelector(sel); if(el) { el.style.background = 'var(--bg-color)'; el.style.backgroundImage = 'none'; } });
   }
   appEl.style.background = 'var(--bg-color)';
-  applyBubbleOpacity();
 }
 
 function setTheme(themeName){
@@ -1021,7 +1044,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_new_db';
-const DB_VER = 2;
+const DB_VER = 1;
 let db = null;
 
 function openDB(){
@@ -1035,8 +1058,6 @@ function openDB(){
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
       if(!d.objectStoreNames.contains('actions')){ const s = d.createObjectStore('actions', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('music')) d.createObjectStore('music', { keyPath:'id' });
-      if(!d.objectStoreNames.contains('snapshots')){ const s = d.createObjectStore('snapshots', { keyPath:'id' }); s.createIndex('chatId','chatId',{ unique:false }); }
-      if(!d.objectStoreNames.contains('msgbox')){ const s = d.createObjectStore('msgbox', { keyPath:'id' }); s.createIndex('sender','sender',{ unique:false }); }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -1065,15 +1086,18 @@ let isWaitingForMyReply = false;
 
 let askMode = 'wen', askAttachData = null, askImgList = [], askSingleChecked = true, askMultiChecked = false;
 
+let snapMode = false, snapSelectedIds = new Set();
+
 let loadCardOffset = 0, loadActionOffset = 0;
 
 let pendingBurnMsg = null;
 let currentMsgForAction = null;
+let currentNoteForAction = null;
 
 let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
 
-let currentMsgBoxForAction = null;
-let lastMsgBoxTargetId = null; 
+let notesData = JSON.parse(localStorage.getItem('nz_notes') || '[]');
+let currentNoteReceiverId = null;
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -1088,8 +1112,6 @@ const ABOUT_PARAGRAPHS = [
   '来也好，去也好，往来都记着。',
   '心意不必说尽，留一点，才长久。',
   '有人陪，是热闹；有人等，是安心。这里等你。',
-  '留影留住样子，留声留住声音，电文留住话——留不住的，是当时的心跳。',
-  '若有一天不再来了，也希望你记得，这里曾替你收过一些心事。',
   '所有内容都存在本机，不上传、不同步。清理缓存、更换设备都会丢失，请记得备份。',
   '不必着急，這裡一直開著。'
 ];
@@ -1105,7 +1127,9 @@ function fmtDur(totalSec){
 function getDisplayName(c){ return (c && (c.theirNick || c.theirName)) ? (c.theirNick || c.theirName) : '祂'; }
 function getTheirDisplayChar(c){ return getDisplayName(c).charAt(0); }
 function getMyDisplayChar(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName).charAt(0) : '我'; }
-function getMyDisplayName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName) : '我'; }
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function fmtTime(ts){ const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 
 async function init(){
   try {
@@ -1116,7 +1140,7 @@ async function init(){
     applyThemeAndBg();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
     if(globalRoseMark){ const rb = $('#rosePreview'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; rb.textContent = ''; } }
-    if($('#bubbleOpacityInput')) $('#bubbleOpacityInput').value = config.bubbleOpacity;
+    $('#bubbleOpacityInput').value = config.bubbleOpacity;
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic();
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag(); initAccompanyDrag();
@@ -1127,39 +1151,8 @@ async function init(){
     $('#adjCallMin').value = config.callMin; $('#adjCallMax').value = config.callMax;
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
     $('#adjFlirtRate').value = config.flirtRate; $('#adjStickerRate').value = config.stickerRate; $('#adjActionRate').value = config.actionRate;
-    $('#adjCollectRate').value = config.collectRate;
-    if($('#adjMsgBoxRate')) $('#adjMsgBoxRate').value = config.msgBoxRate;
-    
-    setInterval(() => {
-      if (Math.random() * 100 < config.msgBoxRate) {
-        generateThemMsgBox();
-      }
-    }, 3600000); // 每小时判定一次
-    
+    $('#adjCollectRate').value = config.collectRate; $('#adjNoteRate').value = config.noteRate;
   } catch(err){ console.error(err); toast('資料庫初始化失敗：' + err.message); }
-}
-
-function handleResizeReposition(){
-  const cp = $('#callPanel');
-  if(callPanelPos && cp.classList.contains('show')){
-    const r = cp.getBoundingClientRect(); const p = clampPos(callPanelPos.left, callPanelPos.top, r.width, r.height);
-    callPanelPos = p; cp.style.left = p.left + 'px'; cp.style.top = p.top + 'px'; cp.style.transform = 'none';
-  }
-  const cf = $('#callFloat');
-  if(callFloatPos && cf.classList.contains('show')){
-    const p = clampPos(callFloatPos.left, callFloatPos.top, 56, 56);
-    callFloatPos = p; cf.style.left = p.left + 'px'; cf.style.top = p.top + 'px';
-  }
-  const ap = $('#accompanyPanel');
-  if(accompanyPanelPos && ap.classList.contains('show')){
-    const r = ap.getBoundingClientRect(); const p = clampPos(accompanyPanelPos.left, accompanyPanelPos.top, r.width, r.height);
-    accompanyPanelPos = p; ap.style.left = p.left + 'px'; ap.style.top = p.top + 'px'; ap.style.transform = 'none';
-  }
-  const af = $('#accompanyFloat');
-  if(accompanyFloatPos && af.classList.contains('show')){
-    const p = clampPos(accompanyFloatPos.left, accompanyFloatPos.top, 56, 56);
-    accompanyFloatPos = p; af.style.left = p.left + 'px'; af.style.top = p.top + 'px';
-  }
 }
 
 async function loadChats(){
@@ -1204,9 +1197,6 @@ async function renderChatList(){
     list.appendChild(row);
   }
 }
-
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function fmtTime(ts){ const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 
 function getMessages(chatId){
   return new Promise((res, rej) => {
@@ -1262,6 +1252,7 @@ async function openChat(id){
   applyLayoutClass(c);
   
   currentMessages = await getMessages(id);
+  snapMode = false; snapSelectedIds.clear();
   
   const box = $('#messages'); box.innerHTML = '';
   currentMessages.forEach(m => appendMessageDOM(m, c, false));
@@ -1316,8 +1307,7 @@ async function toggleChatMode() {
   currentMessages.forEach(m => appendMessageDOM(m, c, false));
   setTimeout(() => { const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight; }, 50);
   
-  if (c.isNightMode) themCollectMyMessage(currentChatId, true);
-  if (Math.random() < 0.5) generateThemMsgBox(c);
+  if (c.isNightMode) triggerThemWriteNote(0.5);
   toast(c.isNightMode ? '已進入撩撥' : '已回到日常');
 }
 
@@ -1396,7 +1386,7 @@ function appendMessageDOM(m, c, animate=true){
   }
 
   const g = document.createElement('div');
-  g.className = 'msg-group ' + (isMe ? 'me' : 'them');
+  g.className = 'msg-group ' + (isMe ? 'me' : 'them') + (snapMode ? ' snap-mode' : '');
   g.dataset.msgId = m.id;
   
   const avHtml = buildAvatarHtml(m, c, isNight);
@@ -1429,7 +1419,7 @@ function appendMessageDOM(m, c, animate=true){
   }
   
   box.appendChild(g);
-  bindMessageClickAction(g, m);
+  if(!snapMode) bindMessageClickAction(g, m);
 }
 
 function parseAvatarNode(html){
@@ -1555,6 +1545,7 @@ function updateSendBtnState(){ const t = $('#msgInput').value.trim(), b = $('#se
 function clearPendingSticker(){ pendingStickerData = null; $('#pendingStickerPreview').classList.remove('show'); updateSendBtnState(); }
 
 async function sendMyMessage(){
+  if(snapMode){ toast('留影選取中，請先完成或取消'); return; }
   const input = $('#msgInput'), text = input.value.trim();
   if(!text){ toast('請輸入文字，不能只發印花'); return; }
   if(!currentChatId){ toast('請先選擇聊天室'); return; }
@@ -1675,678 +1666,262 @@ async function replyFromThem(){
   if(!msg) toast('郵電所中尚無字卡，請先新增');
 }
 
-/* ===== 简讯（留言匣）功能 ===== */
-async function generateThemMsgBox(targetChat) {
-  const allCards = await reqToPromise(tx('cards').getAll());
-  const normalCards = allCards.filter(c => (c.category || 'normal') === 'normal');
-  if (!normalCards.length) return;
+function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false){
+  $('#dialogTitle').textContent = title; $('#dialogText').textContent = text;
+  $('#dialogInput').style.display = showInput ? 'block' : 'none';
+  if(showInput) $('#dialogInput').value = '';
   
-  let c = targetChat;
-  if (!c) {
-    if (chats.length === 0) return;
-    c = chats[Math.floor(Math.random() * chats.length)];
-  }
-  
-  const count = 3 + Math.floor(Math.random() * 3); // 3~5
-  const picked = [];
-  const pool = [...normalCards];
-  for (let i = 0; i < count && pool.length > 0; i++) {
-    const idx = Math.floor(Math.random() * pool.length);
-    picked.push(pool.splice(idx, 1)[0].text);
-  }
-  
-  let fullText = '';
-  picked.forEach(t => {
-    if (/[，。！？、,.!?]$/.test(t)) fullText += t;
-    else fullText += t + '，';
-  });
-  fullText = fullText.replace(/，$/, '。');
-  
-  const msg = {
-    id: 'mb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-    sender: 'them',
-    targetId: c.id,
-    targetName: getDisplayName(c),
-    text: fullText,
-    time: Date.now()
+  const dlg = document.querySelector('#dialogMask .dialog');
+  if (isDanger) dlg.classList.add('danger-dialog'); else dlg.classList.remove('danger-dialog');
+
+  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn ${isDanger ? 'danger' : ''}" id="dialogOkBtn" style="color:${isDanger?'#e53935':'var(--primary)'};">${okText}</button>`;
+  $('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
+  $('#dialogOkBtn').onclick = () => { 
+    $('#dialogMask').classList.remove('show'); 
+    if(onOk) onOk($('#dialogInput').value); 
   };
-  await reqToPromise(tx('msgbox', 'readwrite').add(msg));
-  if ($('#pageMsg').classList.contains('show')) renderMsgBox();
-}
-
-async function renderMsgBox() {
-  const list = $('#msgBoxList');
-  if (!list) return;
-  const all = await reqToPromise(tx('msgbox').getAll());
-  all.sort((a, b) => b.time - a.time);
-  list.innerHTML = '';
-  if (!all.length) {
-    list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:40px;">匣子空空如也</div>';
-    return;
-  }
-  all.forEach(m => {
-    const c = chats.find(x => x.id === m.targetId);
-    const themName = c ? getDisplayName(c) : '祂';
-    const myName = c ? getMyDisplayName(c) : '我';
-    
-    const card = document.createElement('div');
-    card.className = 'msg-box-card ' + (m.sender === 'me' ? 'mine' : 'theirs');
-    const timeObj = getAncientTime(new Date(m.time));
-    
-    let nameStr = m.sender === 'me' ? myName : themName;
-    let targetStr = m.sender === 'me' ? (c ? ' 给 ' + themName : '') : '';
-    
-    card.innerHTML = `
-      <div class="msg-box-header">
-        <span class="msg-box-name">${escapeHtml(nameStr)}${targetStr}</span>
-        <span class="msg-box-time">${timeObj.dateStr} · ${timeObj.timeStr}</span>
-      </div>
-      <div class="msg-box-text">${escapeHtml(m.text).replace(/\n/g, '<br>')}</div>
-    `;
-    
-    card.onclick = () => {
-      currentMsgBoxForAction = m;
-      const collectItem = $('#msgBoxActCollect');
-      collectItem.style.display = m.sender === 'them' ? 'block' : 'none';
-      $('#msgBoxActionMask').classList.add('show');
-    };
-    
-    list.appendChild(card);
-  });
-}
-
-/* ===== 尺素（收藏）功能 ===== */
-async function getAllCollectedMessages(chatId){
-  return new Promise((res, rej) => {
-    const idx = tx('messages').index('chatId');
-    const req = idx.getAll(chatId);
-    req.onsuccess = () => {
-      const arr = (req.result || []).filter(m => m.collectedBy === 'me' || m.collectedBy === 'them');
-      arr.sort((a,b) => b.time - a.time);
-      res(arr);
-    };
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function getFavTabName(c){ return getDisplayName(c) || (c.roomName || '未命名'); }
-
-async function openFavPage(){
-  const withData = [];
-  for(const c of chats){
-    const arr = await getAllCollectedMessages(c.id);
-    if(arr.length) withData.push(c);
-  }
-  favTabChatIds = withData.map(c => c.id);
-  const bar = $('#favTabBar'), track = $('#favSwipeTrack');
-  bar.innerHTML = ''; track.innerHTML = '';
-  if(!withData.length){
-    bar.innerHTML = '';
-    track.innerHTML = '<div class="fav-pane"><div class="fav-empty">尚無尺素</div></div>';
-    $('#pageFav').classList.add('show');
-    return;
-  }
-  withData.forEach((c, i) => {
-    const t = document.createElement('div');
-    t.className = 'fav-tab' + (i === 0 ? ' active' : '');
-    t.dataset.chatId = c.id;
-    t.textContent = getFavTabName(c);
-    t.onclick = () => goFavTab(i);
-    bar.appendChild(t);
-  });
-  for(const c of withData){
-    const pane = document.createElement('div');
-    pane.className = 'fav-pane';
-    pane.dataset.chatId = c.id;
-    const arr = await getAllCollectedMessages(c.id);
-    if(!arr.length){ pane.innerHTML = '<div class="fav-empty">尚無尺素</div>'; }
-    else {
-      arr.forEach(m => {
-        pane.appendChild(buildFavCard(m, c));
-      });
-    }
-    track.appendChild(pane);
-  }
-  favCurrentIndex = 0;
-  track.style.transform = 'translateX(0%)';
-  $('#pageFav').classList.add('show');
-}
-
-function buildFavCard(m, c){
-  const card = document.createElement('div');
-  card.className = 'fav-card';
-  const tape = document.createElement('div'); tape.className = 'fav-tape'; card.appendChild(tape);
-  const text = document.createElement('div');
-  text.className = 'fav-text';
-  text.textContent = (m.cards || []).join('\n');
-  card.appendChild(text);
-  const meta = document.createElement('div'); meta.className = 'fav-meta';
-  const src = document.createElement('div'); src.className = 'fav-source';
-  const themName = getDisplayName(c);
-  if(m.collectedBy === 'me') src.textContent = `我收 · ${themName}说`;
-  else src.textContent = `${themName}收 · 我说`;
   
-  const tObj = getAncientTime(new Date(m.time));
-  const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
-  stamp.textContent = tObj.dateStr;
-  meta.appendChild(src); meta.appendChild(stamp);
-  card.appendChild(meta);
-  let lpTimer = null;
-  card.addEventListener('touchstart', () => { lpTimer = setTimeout(() => { showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => { m.collectedBy = null; await reqToPromise(tx('messages','readwrite').put(m)); toast('已移出尺素'); openFavPage(); }, true); }, 600); }, { passive:true });
-  card.addEventListener('touchend', () => clearTimeout(lpTimer));
-  card.addEventListener('touchmove', () => clearTimeout(lpTimer));
-  return card;
+  $('#dialogMask').classList.add('show');
 }
 
-function goFavTab(index){
-  if(index < 0 || index >= favTabChatIds.length) return;
-  favCurrentIndex = index;
-  const track = $('#favSwipeTrack');
-  track.style.transform = `translateX(-${index * 100}%)`;
-  document.querySelectorAll('.fav-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+async function loadAndRenderCards(){
+  const all = await reqToPromise(tx('cards').getAll());
+  let f = all.filter(c => (c.category || 'normal') === currentSubTab);
+  if(currentSearchQuery) f = f.filter(c => c.text.includes(currentSearchQuery));
+  f.sort((a,b) => b.createdAt - a.createdAt);
+  
+  loadCardOffset = 0;
+  renderCardChunk(f);
 }
-
-function bindFavSwipe(){
-  const wrap = $('#favSwipeWrap');
-  if(!wrap) return;
-  wrap.addEventListener('touchstart', e => {
-    if(!e.touches[0]) return;
-    favTouchStartX = e.touches[0].clientX; favTouchStartY = e.touches[0].clientY; favDragging = false;
-  }, { passive:true });
-  wrap.addEventListener('touchmove', e => {
-    if(!e.touches[0]) return;
-    const dx = e.touches[0].clientX - favTouchStartX;
-    const dy = e.touches[0].clientY - favTouchStartY;
-    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) favDragging = true;
-  }, { passive:true });
-  wrap.addEventListener('touchend', e => {
-    if(!favDragging) return;
-    const dx = e.changedTouches[0].clientX - favTouchStartX;
-    if(dx < -50) goFavTab(favCurrentIndex + 1);
-    else if(dx > 50) goFavTab(favCurrentIndex - 1);
-    favDragging = false;
-  });
-}
-
-function bindEvents(){
-  function exportData() {
-    const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
-    let result = {};
-    let completed = 0;
-    $('#progressDialogMask').classList.add('show');
-    $('#progressText').textContent = '正在打包數據...';
-    $('#progressBarFill').style.width = '0%';
-    
-    stores.forEach(storeName => {
-      const req = tx(storeName).getAll();
-      req.onsuccess = () => {
-        result[storeName] = req.result;
-        completed++;
-        $('#progressBarFill').style.width = (completed / stores.length * 100) + '%';
-        if(completed === stores.length) {
-          const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
-          const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
-          $('#progressDialogMask').classList.remove('show');
-          toast('存檔成功');
-        }
-      };
+function renderCardChunk(f) {
+  const cat = currentSubTab === 'normal' ? '常訊' : '撩撥';
+  $('#cardListHeader').textContent = `${cat}：共 ${f.length} 份`;
+  const box = $('#cardListContainer'); 
+  
+  if(loadCardOffset === 0) box.innerHTML = '';
+  
+  if(!f.length){ 
+    if(loadCardOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無電文</div>'; 
+  } else {
+    const chunk = f.slice(loadCardOffset, loadCardOffset + 100);
+    chunk.forEach(c => {
+      const div = document.createElement('div'); div.className = 'card-item';
+      const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
+      box.appendChild(div);
     });
   }
-
-  function importData(file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        showCustomDialog('警告', '讀檔將覆蓋當前所有數據，是否繼續？', false, '確認覆蓋', async () => {
-          $('#progressDialogMask').classList.add('show');
-          $('#progressText').textContent = '正在恢復數據...';
-          
-          const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
-          for(let s of stores) {
-             const store = tx(s, 'readwrite');
-             store.clear();
-          }
-          
-          setTimeout(async () => {
-            for(let s of stores) {
-               if(data[s] && Array.isArray(data[s])) {
-                 const store = tx(s, 'readwrite');
-                 data[s].forEach(item => store.add(item));
-               }
-            }
-            setTimeout(() => {
-              $('#progressDialogMask').classList.remove('show');
-              toast('讀檔成功，即將刷新');
-              setTimeout(() => location.reload(), 1000);
-            }, 1000);
-          }, 500);
-        }, true);
-      } catch(err) { toast('讀檔失敗：文件格式錯誤'); }
-    };
-    reader.readAsText(file);
-  }
-
-  document.querySelectorAll('.tab-item').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); tab.classList.add('active'); $('#tabContentCards').style.display='none'; $('#tabContentStickers').style.display='none'; $('#tabContentActions').style.display='none'; $('#tabContentMusic').style.display='none'; if(tab.dataset.tab==='cards'){ $('#tabContentCards').style.display='block'; loadAndRenderCards(); } else if(tab.dataset.tab==='stickers'){ $('#tabContentStickers').style.display='block'; loadAndRenderStamps(); } else if(tab.dataset.tab==='actions'){ $('#tabContentActions').style.display='block'; loadAndRenderActions(); } else { $('#tabContentMusic').style.display='block'; loadAndRenderMusic(); } }; });
-  document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
-  document.querySelectorAll('.action-sub-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.action-sub-tab').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); }; });
-  $('#backPostOfficeBtn').onclick = () => $('#pagePostOffice').classList.remove('show');
-
-  const actionMask = $('#actionSheetMask');
-  const closeActionSheet = () => actionMask.classList.remove('show');
-  $('#actCancel').onclick = closeActionSheet;
-  actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
-  $('#actPin').onclick = async () => { closeActionSheet(); if(!activeChatForMenu) return; activeChatForMenu.isPinned = !activeChatForMenu.isPinned; await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); };
-
-  $('#actLayout').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    const mask = $('#layoutPanelMask');
-    document.querySelectorAll('.layout-option').forEach(o => o.classList.toggle('active', (o.dataset.layout === (activeChatForMenu.layout || 'jiuumeng'))));
-    mask.classList.add('show');
-  };
-  $('#layoutPanelMask').onclick = async e => {
-    if(e.target === $('#layoutPanelMask')){ $('#layoutPanelMask').classList.remove('show'); return; }
-    const opt = e.target.closest('.layout-option');
-    if(!opt) return;
-    const layout = opt.dataset.layout;
-    if(!activeChatForMenu) return;
-    activeChatForMenu.layout = layout;
-    await reqToPromise(tx('chats','readwrite').put(activeChatForMenu));
-    await loadChats();
-    $('#layoutPanelMask').classList.remove('show');
-    const c = chats.find(x => x.id === currentChatId);
-    if(c && c.id === activeChatForMenu.id) applyLayoutClass(c);
-    toast(layout === 'yuyan' ? '已切換：魚雁' : '已切換：舊夢');
-  };
   
-  $('#actEdit').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    isEditingChatId = activeChatForMenu.id;
-    $('#createPageTitle').textContent = '編輯資料';
-    $('#inputRoomName').value = activeChatForMenu.roomName || '';
-    $('#inputTheirName').value = activeChatForMenu.theirName || '';
-    $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
-    $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
-    $('#inputMyName').value = activeChatForMenu.myName || '';
-    $('#inputMyNick').value = activeChatForMenu.myNick || '';
-    $('#inputMySign').value = activeChatForMenu.mySign || '';
-    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
-    tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
-    
-    const th = $('#theirAvatar'); if(activeChatForMenu.theirAvatar){ th.style.backgroundImage=`url(${activeChatForMenu.theirAvatar})`; th.textContent=''; } else { th.style.backgroundImage=''; th.textContent='祂'; }
-    const me = $('#myAvatar'); if(activeChatForMenu.myAvatar){ me.style.backgroundImage=`url(${activeChatForMenu.myAvatar})`; me.textContent=''; } else { me.style.backgroundImage=''; me.textContent='我'; }
-    const mc = $('#musicCoverUpload'); if(activeChatForMenu.musicCover){ mc.style.backgroundImage=`url(${activeChatForMenu.musicCover})`; mc.textContent=''; } else { mc.style.backgroundImage=''; mc.textContent='圖'; }
-    const chb = $('#chatBgUploadBox'); if(activeChatForMenu.chatBgImage){ chb.style.backgroundImage=`url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent=''; } else { chb.style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景'; }
-    const nb = $('#nightBgUploadBox'); if(activeChatForMenu.nightBgImage){ nb.style.backgroundImage=`url(${activeChatForMenu.nightBgImage})`; $('#nightBgText').textContent=''; } else { nb.style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景'; }
-    const cb = $('#callBgUploadBox'); if(activeChatForMenu.callBgImage){ cb.style.backgroundImage=`url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent=''; } else { cb.style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景'; }
-    const ab = $('#accompanyBgUploadBox'); if(activeChatForMenu.accompanyBgImage){ ab.style.backgroundImage=`url(${activeChatForMenu.accompanyBgImage})`; $('#accompanyBgText').textContent=''; } else { ab.style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景'; }
-    
-    $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
-    $('#pageCreate').classList.add('show');
-  };
+  $('#normalToolbar').style.display = isBatchDeleteMode ? 'none' : 'flex';
+  $('#batchToolbar').style.display = isBatchDeleteMode ? 'flex' : 'none';
+  if(isBatchDeleteMode) $('#batchCount').textContent = `已選 ${selectedCardIds.size} 份`;
   
-  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }, true); };
-  $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }, true); };
-
-  const msgMask = $('#msgActionMask');
-  const closeMsgMask = () => msgMask.classList.remove('show');
-  $('#msgActCancel').onclick = closeMsgMask;
-  msgMask.onclick = e => { if(e.target === msgMask) closeMsgMask(); };
-  $('#msgActCollect').onclick = async () => {
-    closeMsgMask();
-    if(!currentMsgForAction) return;
-    const m = currentMsgForAction;
-    if(m.collectedBy === 'me'){
-      m.collectedBy = null;
-      await reqToPromise(tx('messages','readwrite').put(m));
-      toast('已出素');
-    } else {
-      m.collectedBy = 'me';
-      await reqToPromise(tx('messages','readwrite').put(m));
-      toast('已入素');
-    }
-    currentMsgForAction = null;
-  };
-  $('#msgActBurn').onclick = () => {
-    closeMsgMask();
-    if(!pendingBurnMsg) return;
-    const m = pendingBurnMsg;
-    showCustomDialog('焚毀','確定要焚毀這條消息嗎？',false,'焚毀', async () => {
-      await reqToPromise(tx('messages','readwrite').delete(m.id));
-      currentMessages = currentMessages.filter(x => x.id !== m.id);
-      const el = document.querySelector(`.msg-group[data-msg-id="${m.id}"]`);
-      if(el) el.remove();
-      await touchChat(currentChatId);
-      toast('已焚毀');
-    }, true);
-    pendingBurnMsg = null;
-  };
-
-  const msgBoxMask = $('#msgBoxActionMask');
-  const closeMsgBoxMask = () => msgBoxMask.classList.remove('show');
-  $('#msgBoxActCancel').onclick = closeMsgBoxMask;
-  msgBoxMask.onclick = e => { if(e.target === msgBoxMask) closeMsgBoxMask(); };
-  $('#msgBoxActBurn').onclick = () => {
-    closeMsgBoxMask();
-    if(!currentMsgBoxForAction) return;
-    const m = currentMsgBoxForAction;
-    showCustomDialog('撕下', '確定要撕下這張紙條嗎？', false, '撕下', async () => {
-      await reqToPromise(tx('msgbox','readwrite').delete(m.id));
-      renderMsgBox();
-      toast('已撕下');
-    }, true);
-  };
-  $('#msgBoxActCollect').onclick = () => {
-    closeMsgBoxMask();
-    if(!currentMsgBoxForAction) return;
-    toast('暂不支持此操作');
-  };
-
-  $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
-  
-  $('#btnAddCards').onclick = async () => {
-    const text = $('#newCardsInput').value.trim(); if(!text) return;
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
-    const all = await reqToPromise(tx('cards').getAll()); 
-    const existing = new Set(all.map(c => c.text));
-    let added = 0, dup = 0;
-    const newCards = [];
-    
-    for(let line of lines){ 
-      if(existing.has(line)){ dup++; continue; } 
-      existing.add(line);
-      newCards.push({ id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }); 
-      added++; 
-    }
-    
-    if (newCards.length > 0) {
-      const store = tx('cards','readwrite');
-      newCards.forEach(card => store.add(card));
-    }
-    
-    $('#newCardsInput').value = ''; $('#draftCount').textContent = '待定稿：0 份';
-    toast(`成功定稿 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : ''));
-    loadAndRenderCards();
-  };
-  
-  $('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
-  $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
-  $('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
-  $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }, true); };
-  $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
-  $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }, true); };
-  
-  $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
-  
-  $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
-
-  if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
-  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { const store = tx('stickers','readwrite'); for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { store.add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() }); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
-  $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
-  $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
-  $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };
-  $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
-  $('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
-  $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
-  $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
-
-  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
-  $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
-  $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
-  $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
-  $('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
-  $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }, true); };
-  $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
-  $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
-  $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
-  $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
-
-  $('#musicFileBox').onclick = () => $('#musicFileInput').click();
-  $('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file){ $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
-  $('#btnAddMusic').onclick = async () => { const title = $('#newMusicTitle').value.trim(), artist = $('#newMusicArtist').value.trim(); if(!title || !artist || !tempMusicFileData){ toast('請填寫歌名、歌手並上傳音檔'); return; } await reqToPromise(tx('music','readwrite').add({ id:'m_'+Date.now(), title, artist, data:tempMusicFileData, createdAt:Date.now() })); $('#newMusicTitle').value=''; $('#newMusicArtist').value=''; $('#musicFileName').textContent='點擊上傳音檔'; tempMusicFileData=null; toast('已留聲'); loadAndRenderMusic(); };
-  $('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
-  $('#btnMusicSelectAll').onclick = () => { const cbs = document.querySelectorAll('#musicListContainer input[type="checkbox"]'); if(selectedMusicIds.size === cbs.length && cbs.length > 0) selectedMusicIds.clear(); else cbs.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderMusic(); };
-  $('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }, true); };
-  $('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
-  $('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }, true); };
-
-  $('#stickerBtn').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent'); if(!stickers.length){ toast('尚無印花'); return; } content.innerHTML=''; content.style.display='grid'; $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none'; $('#stickerPanelHeader').innerHTML='選擇印花'; stickers.forEach(s => { const img = document.createElement('img'); img.src = s.data; img.onclick = () => { pendingStickerData = s.data; $('#pendingStickerImg').src = s.data; $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show'); updateSendBtnState(); }; content.appendChild(img); }); $('#stickerPanelMask').classList.add('show'); };
-  $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
-  $('#flashPanelMask').onclick = e => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
-  $('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
-  $('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#cameraInput').value=''; } };
-  $('#flashAlbum').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#albumInput').click(); };
-  $('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#albumInput').value=''; } };
-  $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; await touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
-  $('#flashAsk').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAskModal(); };
-  $('#flashMusic').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const musics = await reqToPromise(tx('music').getAll()); if(!musics.length){ toast('郵電所中尚無留聲'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'), ml = $('#musicSelectContent'); content.style.display='none'; list.style.display='none'; ml.style.display='flex'; ml.innerHTML=''; $('#stickerPanelHeader').innerHTML='選擇留聲'; musics.forEach((m, idx) => { const d = document.createElement('div'); d.className='music-select-item'; d.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div>`; d.onclick = () => { $('#stickerPanelMask').classList.remove('show'); playMusic(musics, idx); }; ml.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
-  $('#flashAccompany').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAccompanySelect(); };
-
-  $('#btnPlayPause').onclick = () => { if(audioPlayer.paused){ audioPlayer.play(); updatePlayState(true); } else { audioPlayer.pause(); updatePlayState(false); } };
-  $('#btnNext').onclick = playNext; $('#btnPrev').onclick = playPrev;
-  $('#btnMode').onclick = () => { playMode = (playMode+1)%4; updateModeIcon(true); };
-  $('#progressBar').onclick = e => { const bar = e.currentTarget; const r = bar.getBoundingClientRect(); const pc = (e.clientX-r.left)/r.width; if(audioPlayer.duration) audioPlayer.currentTime = pc*audioPlayer.duration; };
-  if($('#btnClosePlayer')) $('#btnClosePlayer').onclick = () => { audioPlayer.pause(); audioPlayer.currentTime = 0; updatePlayState(false); $('#musicPlayerFloat').classList.remove('show'); $('#musicPlayerPanel').classList.remove('show'); $('#musicPlayerFloat').style.bottom='100px'; $('#musicPlayerFloat').style.right='20px'; $('#musicPlayerFloat').style.left='auto'; $('#musicPlayerFloat').style.top='auto'; toast('已關閉留聲'); };
-
-  $('#callBtn').onclick = () => openCallUI(false);
-  $('#btnHangupCall').onclick = hangupCall;
-  $('#btnAnswerCall').onclick = answerCall;
-  $('#btnMinimizeCall').onclick = () => { hideCallPanel(); const f = $('#callFloat'); f.classList.add('show'); if(callFloatPos){ const q = clampPos(callFloatPos.left, callFloatPos.top, 56, 56); callFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
-  $('#btnMinimizeAccompany').onclick = () => { hideAccompanyPanel(); const f = $('#accompanyFloat'); f.classList.add('show'); if(accompanyFloatPos){ const q = clampPos(accompanyFloatPos.left, accompanyFloatPos.top, 56, 56); accompanyFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
-  $('#btnEndAccompany').onclick = endAccompany;
-  $('#accompanySelectMask').onclick = e => { if(e.target === $('#accompanySelectMask')) $('#accompanySelectMask').classList.remove('show'); };
-  $('#askModalMask').onclick = e => { if(e.target === $('#askModalMask')) $('#askModalMask').classList.remove('show'); };
-
-  document.querySelectorAll('.ask-modal-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); askMode = tab.dataset.asktab; if(askMode === 'wen'){ $('#askWenSection').style.display='block'; $('#askTuSection').style.display='none'; } else { $('#askWenSection').style.display='none'; $('#askTuSection').style.display='block'; } }; });
-  $('#askAttachBtn').onclick = () => $('#askAttachFile').click();
-  $('#askAttachFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { askAttachData = b; $('#askAttachPreviewWrap').innerHTML = `<div class="ask-attach-preview"><img src="${b}"><div class="ask-attach-del" id="askAttachDel">✕</div></div>`; $('#askAttachDel').onclick = () => { askAttachData = null; $('#askAttachPreviewWrap').innerHTML=''; }; }); e.target.value=''; };
-  $('#askImgFile').onchange = e => { const files = Array.from(e.target.files); if(!files.length) return; let pending = files.length; files.forEach(f => fileToBase64(f, b => { askImgList.push(b); pending--; if(pending === 0) renderAskImgGrid(); })); e.target.value=''; };
-  $('#askSingleChk').onchange = () => { if($('#askSingleChk').checked) $('#askMultiChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
-  $('#askMultiChk').onchange = () => { if($('#askMultiChk').checked) $('#askSingleChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
-  $('#askSendBtn').onclick = sendAsk;
-
-  $('#modeToggleBtn').onclick = toggleChatMode;
-
-  $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); if(favRefreshTimer) { clearInterval(favRefreshTimer); favRefreshTimer = null; } };
-  bindFavSwipe();
-
-  $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
-
-  $('#newChatBtn').onclick = () => {
-    isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
-    $('#inputRoomName').value=''; $('#inputTheirName').value=''; $('#inputTheirNick').value=''; $('#inputTheirSign').value=''; $('#inputMyName').value=''; $('#inputMyNick').value=''; $('#inputMySign').value='';
-    $('#theirAvatar').style.backgroundImage=''; $('#theirAvatar').textContent='祂';
-    $('#myAvatar').style.backgroundImage=''; $('#myAvatar').textContent='我';
-    $('#musicCoverUpload').style.backgroundImage=''; $('#musicCoverUpload').textContent='圖';
-    $('#chatBgUploadBox').style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景';
-    $('#nightBgUploadBox').style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景';
-    $('#callBgUploadBox').style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景';
-    $('#accompanyBgUploadBox').style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景';
-    $('#chatBgMaskRange').value=60; $('#chatBgMaskValue').textContent='60%';
-    tempTheirAvatar=null; tempMyAvatar=null; tempMusicCover=null; tempChatBg=null; tempNightBg=null; tempCallBg=null; tempAccompanyBg=null; tempChatBgMask=60;
-    $('#pageCreate').classList.add('show');
-  };
-  $('#cancelCreateBtn').onclick = () => $('#pageCreate').classList.remove('show');
-  if($('#theirFile')) $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage=`url(${b})`; $('#theirAvatar').textContent=''; }); };
-  if($('#myFile')) $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage=`url(${b})`; $('#myAvatar').textContent=''; }); };
-  if($('#musicCoverFile')) $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage=`url(${b})`; $('#musicCoverUpload').textContent=''; }); };
-  if($('#chatBgFile')) $('#chatBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempChatBg = b; $('#chatBgUploadBox').style.backgroundImage=`url(${b})`; $('#chatBgText').textContent=''; }); };
-  if($('#nightBgFile')) $('#nightBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempNightBg = b; $('#nightBgUploadBox').style.backgroundImage=`url(${b})`; $('#nightBgText').textContent=''; }); };
-  if($('#callBgFile')) $('#callBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempCallBg = b; $('#callBgUploadBox').style.backgroundImage=`url(${b})`; $('#callBgText').textContent=''; }); };
-  if($('#accompanyBgFile')) $('#accompanyBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempAccompanyBg = b; $('#accompanyBgUploadBox').style.backgroundImage=`url(${b})`; $('#accompanyBgText').textContent=''; }); };
-  if($('#chatBgMaskRange')) $('#chatBgMaskRange').oninput = e => { tempChatBgMask = parseInt(e.target.value); $('#chatBgMaskValue').textContent = tempChatBgMask + '%'; };
-
-  let isSavingChat = false;
-  $('#saveChatBtn').onclick = async () => {
-    if(isSavingChat) return;
-    const roomName = $('#inputRoomName').value.trim(), theirName = $('#inputTheirName').value.trim(), theirNick = $('#inputTheirNick').value.trim(), theirSign = $('#inputTheirSign').value.trim(), myName = $('#inputMyName').value.trim(), myNick = $('#inputMyNick').value.trim(), mySign = $('#inputMySign').value.trim();
-    if(!roomName){ toast('請輸入聊天室名稱'); return; }
-    isSavingChat = true;
-    
-    if(isEditingChatId){
-      const c = chats.find(x => x.id === isEditingChatId);
-      if(c){
-        c.roomName = roomName; c.theirName = theirName; c.theirNick = theirNick; c.theirSign = theirSign; c.myName = myName; c.myNick = myNick; c.mySign = mySign;
-        if(tempTheirAvatar !== null) c.theirAvatar = tempTheirAvatar;
-        if(tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
-        if(tempMusicCover !== null) c.musicCover = tempMusicCover;
-        if(tempChatBg !== null) c.chatBgImage = tempChatBg;
-        if(tempNightBg !== null) c.nightBgImage = tempNightBg;
-        if(tempCallBg !== null) c.callBgImage = tempCallBg;
-        if(tempAccompanyBg !== null) c.accompanyBgImage = tempAccompanyBg;
-        c.chatBgMask = tempChatBgMask;
-        await reqToPromise(tx('chats','readwrite').put(c));
-        toast('資料已更新');
+  box.onscroll = () => {
+    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
+      if(loadCardOffset + 100 < f.length) {
+        loadCardOffset += 100;
+        renderCardChunk(f);
       }
-    } else {
-      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, callBgImage:tempCallBg, accompanyBgImage:tempAccompanyBg, chatBgMask:tempChatBgMask, layout:'jiuumeng', isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
-      await reqToPromise(tx('chats','readwrite').add(c));
-      toast('已建立新對話');
-    }
-    await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
-    setTimeout(()=>{ isSavingChat = false; }, 500);
-  };
-
-  $('#backBtn').onclick = () => { 
-    $('#pageChat').classList.remove('show'); 
-    currentChatId = null; 
-    applyThemeAndBg(); 
-    loadChats().then(() => renderChatList());
-  };
-  $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
-  $('#sendBtn').onclick = sendMyMessage;
-
-  const mask = $('#menuMask');
-  const openMenu = () => mask.classList.add('show');
-  const closeMenu = () => mask.classList.remove('show');
-  $('#menuBtnList').onclick = openMenu;
-  mask.onclick = e => { if(e.target === mask) closeMenu(); };
-  $('#menuPanel').onclick = e => {
-    const act = e.target.dataset.act; if(!act) return; closeMenu();
-    if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
-    else if(act === 'settings') $('#pageSettings').classList.add('show');
-    else if(act === 'adjust') $('#pageAdjust').classList.add('show');
-    else if(act === 'messages'){
-      $('#pageMsg').classList.add('show');
-      renderMsgBox();
-    }
-    else if(act === 'fav'){ 
-      openFavPage(); 
-      if(favRefreshTimer) clearInterval(favRefreshTimer);
-      favRefreshTimer = setInterval(() => {
-        if($('#pageFav').classList.contains('show')) openFavPage();
-        else { clearInterval(favRefreshTimer); favRefreshTimer = null; }
-      }, 5000);
-    }
-    else if(act === 'export') { 
-      showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
-      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary); border-right:1px solid var(--border-light);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
-      $('#btnCancelArchive').onclick = () => $('#dialogMask').classList.remove('show');
-      $('#btnExportData').onclick = () => { $('#dialogMask').classList.remove('show'); exportData(); };
-      $('#btnImportData').onclick = () => { 
-        $('#dialogMask').classList.remove('show');
-        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; 
-        inp.onchange = ev => { const file = ev.target.files[0]; if(file) importData(file); };
-        inp.click();
-      };
-    }
-    else if(act === 'clear') { 
-      showCustomDialog('焚稿', '警告：這將徹底焚毀所有數據，且無法恢復。是否繼續？', false, '確認焚毀', async () => {
-        const stores = ['chats','messages','cards','stickers','actions','music','snapshots','msgbox'];
-        for(let s of stores) { tx(s, 'readwrite').clear(); }
-        setTimeout(() => location.reload(), 500);
-      }, true);
-    }
-    else if(act === 'about'){ const body = $('#aboutBody'); body.innerHTML = ABOUT_PARAGRAPHS.map(p => `<p>${escapeHtml(p)}</p>`).join(''); $('#aboutModalMask').classList.add('show'); }
-    else if(act === 'letters') toast('郵局：功能籌備中...');
-  };
-
-  $('#backMsgBtn').onclick = () => { $('#pageMsg').classList.remove('show'); };
-  $('#msgBoxSendBtn').onclick = async () => {
-    const val = $('#msgBoxInput').value.trim();
-    if(!val){ toast('请先写点什么'); return; }
-    
-    let targetId = null, targetName = '';
-    if(currentMsgBoxForAction && currentMsgBoxForAction.sender === 'them') {
-      targetId = currentMsgBoxForAction.targetId;
-      const c = chats.find(x => x.id === targetId);
-      if(c) targetName = getDisplayName(c);
-    }
-    
-    const msg = {
-      id: 'mb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-      sender: 'me',
-      targetId: targetId,
-      targetName: targetName,
-      text: val,
-      time: Date.now()
-    };
-    await reqToPromise(tx('msgbox', 'readwrite').add(msg));
-    
-    $('#msgBoxInput').value = '';
-    $('#msgBoxInput').placeholder = '随便写点什么…';
-    currentMsgBoxForAction = null;
-    
-    renderMsgBox();
-    toast('已塞入匣子');
-    
-    if(Math.random() < 0.8) {
-      setTimeout(() => {
-        let c = targetId ? chats.find(x => x.id === targetId) : (chats.length > 0 ? chats[Math.floor(Math.random()*chats.length)] : null);
-        if(c) generateThemMsgBox(c);
-      }, 3000 + Math.random() * 5000);
     }
   };
-
-  $('#backSettingsBtn').onclick = () => $('#pageSettings').classList.remove('show');
-  document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
-  if($('#mainBgFile')) $('#mainBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { globalBgImage = b; localStorage.setItem('nz_main_bg', b); applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage=`url(${b})`; $('#mainBgText').textContent=''; }); };
-
-  if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
-  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
-  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
-
-  if($('#bubbleOpacityInput')) {
-    $('#bubbleOpacityInput').onchange = e => {
-      let v = parseInt(e.target.value);
-      if(isNaN(v)) v = 45;
-      v = Math.min(100, Math.max(0, v));
-      e.target.value = v;
-      config.bubbleOpacity = v;
-      localStorage.setItem('nz_config', JSON.stringify(config));
-      applyBubbleOpacity();
-      toast(`氣泡透明度：${v}%`);
-    };
-  }
-
-  $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
-  $('#saveAdjustBtn').onclick = () => {
-    let rMin = parseInt($('#adjReplyMin').value) || 8; if(rMin < 1) rMin = 1; if(rMin > 120) rMin = 120;
-    let rMax = parseInt($('#adjReplyMax').value) || 15; if(rMax < 1) rMax = 1; if(rMax > 120) rMax = 120;
-    config.replyMin = rMin; config.replyMax = rMax;
-    config.callMin = parseInt($('#adjCallMin').value) || 30;
-    config.callMax = parseInt($('#adjCallMax').value) || 90;
-    config.accMin = parseInt($('#adjAccompanyMin').value) || 60;
-    config.accMax = parseInt($('#adjAccompanyMax').value) || 150;
-    config.flirtRate = parseInt($('#adjFlirtRate').value) || 20;
-    config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
-    config.actionRate = parseInt($('#adjActionRate').value) || 15;
-    config.collectRate = parseInt($('#adjCollectRate').value) || 10;
-    if($('#adjMsgBoxRate')) config.msgBoxRate = parseInt($('#adjMsgBoxRate').value) || 20;
-    localStorage.setItem('nz_config', JSON.stringify(config));
-    toast('設置已保存');
-    $('#pageAdjust').classList.remove('show');
-  };
-
-  ['#dialogMask','#progressDialogMask','#menuMask','#actionSheetMask','#stickerPanelMask','#flashPanelMask'].forEach(id => {
-    const el = document.querySelector(id);
-    if(el){ el.addEventListener('click', e => { if(e.target === el && id !== '#progressDialogMask'){ el.classList.remove('show'); if(id === '#dialogMask'){ setTimeout(() => { $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button>`; $('#dialogCancelBtn').onclick = () => $('#dialogMask').classList.remove('show'); }, 100); } } }); }
-  });
 }
 
+window.toggleSelectCard = id => { if(selectedCardIds.has(id)) selectedCardIds.delete(id); else selectedCardIds.add(id); loadAndRenderCards(); };
+window.editCard = (id, oldText) => {
+  showCustomDialog('校對電文','請修改下方內容',true,'保存', async newText => {
+    newText = newText.trim(); if(!newText || newText === oldText) return;
+    const all = await reqToPromise(tx('cards').getAll());
+    if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有電文重複！'); return; }
+    const t = all.find(c => c.id === id);
+    if(t){ t.text = newText; await reqToPromise(tx('cards','readwrite').put(t)); toast('已保存修改'); loadAndRenderCards(); }
+  });
+  $('#dialogInput').value = oldText;
+};
+window.deleteSingleCard = id => { showCustomDialog('作廢確認','確定要作廢這份電文嗎？',false,'作廢', async () => { await reqToPromise(tx('cards','readwrite').delete(id)); toast('已作廢'); loadAndRenderCards(); }); };
+
+async function loadAndRenderStamps(){
+  const stickers = await reqToPromise(tx('stickers').getAll());
+  stickers.sort((a,b)=>b.createdAt-a.createdAt);
+  const grid = $('#stampGrid'); grid.innerHTML = ''; grid.className = 'stamp-grid' + (isStampBatchMode ? ' batch-mode' : '');
+  
+  const chunk = stickers.slice(0, 100);
+  $('#stampListHeader').textContent = `印花：共 ${stickers.length} 張`;
+  
+  if(!stickers.length){ grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:var(--text-secondary);margin-top:20px;">尚無印花</div>'; }
+  else chunk.forEach(s => {
+    const div = document.createElement('div'); div.className = 'stamp-item';
+    const ch = isStampBatchMode ? `<input type="checkbox" class="stamp-checkbox" ${selectedStampIds.has(s.id)?'checked':''} onchange="toggleSelectStamp('${s.id}')">` : '';
+    div.innerHTML = `${ch}<img src="${s.data}" alt="印花">`;
+    if(!isStampBatchMode){
+      let pt;
+      div.addEventListener('touchstart', () => { pt = setTimeout(() => { showCustomDialog('作廢印花','確定要銷毀這張印花嗎？',false,'確定銷毀', async () => { await reqToPromise(tx('stickers','readwrite').delete(s.id)); toast('印花已銷毀'); loadAndRenderStamps(); }, true); }, 600); }, { passive:true });
+      div.addEventListener('touchend', () => clearTimeout(pt));
+      div.addEventListener('touchmove', () => clearTimeout(pt));
+    } else div.onclick = () => toggleSelectStamp(s.id);
+    grid.appendChild(div);
+  });
+  $('#stampNormalToolbar').style.display = isStampBatchMode ? 'none' : 'flex';
+  $('#stampBatchToolbar').style.display = isStampBatchMode ? 'flex' : 'none';
+  if(isStampBatchMode) $('#stampBatchCount').textContent = `已選 ${selectedStampIds.size} 張`;
+}
+window.toggleSelectStamp = id => { if(selectedStampIds.has(id)) selectedStampIds.delete(id); else selectedStampIds.add(id); loadAndRenderStamps(); };
+
+async function loadAndRenderActions(){
+  const all = await reqToPromise(tx('actions').getAll());
+  let f = all.filter(c => (c.category || 'to_them') === currentActionSubTab);
+  if(currentActionSearchQuery) f = f.filter(c => c.text.includes(currentActionSearchQuery));
+  f.sort((a,b)=>b.createdAt-a.createdAt);
+  
+  loadActionOffset = 0;
+  renderActionChunk(f);
+}
+
+function renderActionChunk(f) {
+  const cat = currentActionSubTab === 'to_them' ? '予祂' : '予我';
+  $('#actionListHeader').textContent = `${cat}：共 ${f.length} 份`;
+  const box = $('#actionListContainer'); 
+  
+  if(loadActionOffset === 0) box.innerHTML = '';
+  
+  if(!f.length){ 
+    if(loadActionOffset===0) box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無暗語</div>'; 
+  } else {
+    const chunk = f.slice(loadActionOffset, loadActionOffset + 100);
+    chunk.forEach(c => {
+      const div = document.createElement('div'); div.className = 'card-item';
+      const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
+      box.appendChild(div);
+    });
+  }
+  
+  $('#actionNormalToolbar').style.display = isActionBatchDeleteMode ? 'none' : 'flex';
+  $('#actionBatchToolbar').style.display = isActionBatchDeleteMode ? 'flex' : 'none';
+  if(isActionBatchDeleteMode) $('#actionBatchCount').textContent = `已選 ${selectedActionIds.size} 份`;
+  
+  box.onscroll = () => {
+    if(box.scrollHeight - box.scrollTop - box.clientHeight < 50) {
+      if(loadActionOffset + 100 < f.length) {
+        loadActionOffset += 100;
+        renderActionChunk(f);
+      }
+    }
+  };
+}
+
+window.toggleSelectAction = id => { if(selectedActionIds.has(id)) selectedActionIds.delete(id); else selectedActionIds.add(id); loadAndRenderActions(); };
+window.editAction = (id, oldText) => {
+  showCustomDialog('校對暗語','請修改下方內容',true,'保存', async newText => {
+    newText = newText.trim(); if(!newText || newText === oldText) return;
+    const all = await reqToPromise(tx('actions').getAll());
+    if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有暗語重複！'); return; }
+    const t = all.find(c => c.id === id);
+    if(t){ t.text = newText; await reqToPromise(tx('actions','readwrite').put(t)); toast('已保存修改'); loadAndRenderActions(); }
+  });
+  $('#dialogInput').value = oldText;
+};
+window.deleteSingleAction = id => { showCustomDialog('作廢確認','確定要作廢這條暗語嗎？',false,'作廢', async () => { await reqToPromise(tx('actions','readwrite').delete(id)); toast('已作廢'); loadAndRenderActions(); }); };
+
+async function loadAndRenderMusic(){
+  const musics = await reqToPromise(tx('music').getAll());
+  musics.sort((a,b)=>b.createdAt-a.createdAt);
+  
+  $('#musicListHeader').textContent = `留聲：共 ${musics.length} 首`;
+  const box = $('#musicListContainer'); box.innerHTML = '';
+  
+  const chunk = musics.slice(0, 100);
+  if(!musics.length){ box.innerHTML = '<div style="text-align:center;color:var(--text-secondary);margin-top:20px;">尚無留聲</div>'; }
+  else chunk.forEach(m => {
+    const div = document.createElement('div'); div.className = 'music-list-item';
+    const ch = isMusicBatchMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedMusicIds.has(m.id)?'checked':''} onchange="toggleSelectMusic('${m.id}')">` : '';
+    div.innerHTML = `<div style="display:flex;align-items:center;flex:1;">${ch}<div class="music-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div></div><div class="card-actions" style="display:${isMusicBatchMode?'none':'flex'}"><button class="btn-del" onclick="deleteSingleMusic('${m.id}')">作廢</button></div>`;
+    box.appendChild(div);
+  });
+  
+  $('#musicNormalToolbar').style.display = isMusicBatchMode ? 'none' : 'flex';
+  $('#musicBatchToolbar').style.display = isMusicBatchMode ? 'flex' : 'none';
+  if(isMusicBatchMode) $('#musicBatchCount').textContent = `已選 ${selectedMusicIds.size} 首`;
+}
+window.toggleSelectMusic = id => { if(selectedMusicIds.has(id)) selectedMusicIds.delete(id); else selectedMusicIds.add(id); loadAndRenderMusic(); };
+window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷毀這首留聲嗎？',false,'作廢', async () => { await reqToPromise(tx('music','readwrite').delete(id)); toast('已作廢'); loadAndRenderMusic(); }); };
+
+function initPlayerDrag(){
+  const float = $('#musicPlayerFloat');
+  let dragging = false, sx, sy, il, it;
+  float.addEventListener('touchstart', e => { dragging = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = float.getBoundingClientRect(); il = r.left; it = r.top; float.style.bottom='auto'; float.style.right='auto'; float.style.left=il+'px'; float.style.top=it+'px'; }, { passive:true });
+  float.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) dragging = true; if(dragging){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); float.style.left=l+'px'; float.style.top=tp+'px'; } }, { passive:false });
+  float.addEventListener('touchend', () => { if(!dragging){ $('#musicPlayerPanel').classList.toggle('show'); if($('#musicPlayerPanel').classList.contains('show')){ const r = float.getBoundingClientRect(); const p = $('#musicPlayerPanel'); let pt = r.top - 180; if(pt < 10) pt = r.bottom + 10; let pl = r.left - 100; if(pl < 10) pl = 10; if(pl > window.innerWidth - 270) pl = window.innerWidth - 270; p.style.bottom='auto'; p.style.right='auto'; p.style.top=pt+'px'; p.style.left=pl+'px'; } } });
+}
+
+function showCallPanel(){
+  const p = $('#callPanel'); p.classList.add('show');
+  if(callPanelPos){ const r = p.getBoundingClientRect(); const q = clampPos(callPanelPos.left, callPanelPos.top, r.width, r.height); callPanelPos = q; p.style.left=q.left+'px'; p.style.top=q.top+'px'; p.style.transform='none'; }
+  else { p.style.left='50%'; p.style.top='50%'; p.style.transform=''; }
+}
+function hideCallPanel(){ $('#callPanel').classList.remove('show'); }
+
+function initCallDrag(){
+  const p = $('#callPanel');
+  let drag = false, sx, sy, il, it;
+  p.addEventListener('touchstart', e => { if(e.target.closest('.call-btn')) return; drag = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = p.getBoundingClientRect(); il = r.left; it = r.top; }, { passive:true });
+  p.addEventListener('touchmove', e => { if(e.target.closest('.call-btn')) return; const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) drag = true; if(drag){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - p.offsetWidth, mh = window.innerHeight - p.offsetHeight; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); p.style.left=l+'px'; p.style.top=tp+'px'; p.style.transform='none'; p.classList.add('dragging'); } }, { passive:false });
+  p.addEventListener('touchend', () => { if(drag){ const r = p.getBoundingClientRect(); callPanelPos = { left:r.left, top:r.top }; } p.classList.remove('dragging'); });
+  const f = $('#callFloat');
+  let df = false, fsx, fsy, fil, fit;
+  f.addEventListener('touchstart', e => { df = false; const t = e.touches[0]; fsx = t.clientX; fsy = t.clientY; const r = f.getBoundingClientRect(); fil = r.left; fit = r.top; f.style.bottom='auto'; f.style.right='auto'; f.style.left=fil+'px'; f.style.top=fit+'px'; }, { passive:true });
+  f.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - fsx, dy = t.clientY - fsy; if(Math.abs(dx)>5||Math.abs(dy)>5) df = true; if(df){ e.preventDefault(); let l = fil + dx, tp = fit + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); f.style.left=l+'px'; f.style.top=tp+'px'; } }, { passive:false });
+  f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); callFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showCallPanel(); } });
+}
+
+function showAccompanyPanel(){
+  const p = $('#accompanyPanel'); p.classList.add('show');
+  if(accompanyPanelPos){ const r = p.getBoundingClientRect(); const q = clampPos(accompanyPanelPos.left, accompanyPanelPos.top, r.width, r.height); accompanyPanelPos = q; p.style.left=q.left+'px'; p.style.top=q.top+'px'; p.style.transform='none'; }
+  else { p.style.left='50%'; p.style.top='50%'; p.style.transform=''; }
+}
+function hideAccompanyPanel(){ $('#accompanyPanel').classList.remove('show'); }
+
+function initAccompanyDrag(){
+  const p = $('#accompanyPanel');
+  let drag = false, sx, sy, il, it;
+  p.addEventListener('touchstart', e => { if(e.target.closest('.accompany-btn')) return; drag = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = p.getBoundingClientRect(); il = r.left; it = r.top; }, { passive:true });
+  p.addEventListener('touchmove', e => { if(e.target.closest('.accompany-btn')) return; const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) drag = true; if(drag){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - p.offsetWidth, mh = window.innerHeight - p.offsetHeight; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); p.style.left=l+'px'; p.style.top=tp+'px'; p.style.transform='none'; p.classList.add('dragging'); } }, { passive:false });
+  p.addEventListener('touchend', () => { if(drag){ const r = p.getBoundingClientRect(); accompanyPanelPos = { left:r.left, top:r.top }; } p.classList.remove('dragging'); });
+  const f = $('#accompanyFloat');
+  let df = false, fsx, fsy, fil, fit;
+  f.addEventListener('touchstart', e => { df = false; const t = e.touches[0]; fsx = t.clientX; fsy = t.clientY; const r = f.getBoundingClientRect(); fil = r.left; fit = r.top; f.style.bottom='auto'; f.style.right='auto'; f.style.left=fil+'px'; f.style.top=fit+'px'; }, { passive:true });
+  f.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - fsx, dy = t.clientY - fsy; if(Math.abs(dx)>5||Math.abs(dy)>5) df = true; if(df){ e.preventDefault(); let l = fil + dx, tp = fit + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); f.style.left=l+'px'; f.style.top=tp+'px'; } }, { passive:false });
+  f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); accompanyFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showAccompanyPanel(); } });
+}
+
+function playMusic(musics, index){ playlist = musics; currentTrackIndex = index; loadTrack(); $('#musicPlayerFloat').classList.add('show'); }
+function loadTrack(){
+  if(currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
+  const track = playlist[currentTrackIndex];
+  $('#playerTitle').textContent = track.title; $('#playerArtist').textContent = track.artist;
+  
+  const c = chats.find(x => x.id === currentChatId);
+  const cover = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
+  $('#musicDiscFloat').style.backgroundImage = `url(${cover})`;
+  $('#musicDiscLarge').style.backgroundImage = `url(${cover})`;
+  
+  if(c && c.musicCover) {
+    $('#musicPlayerPanel').style.backgroundImage = `url(${c.musicCover})`;
+  } else if(c && c.chatBgImage) {
+    $('#musicPlayerPanel').style.backgroundImage = `url(${c.chatBgImage})`;
+  } else {
+    $('#musicPlayerPanel').style.backgroundImage = 'none';
+  }
+
+  audioPlayer.src = track.data;
+  audioPlayer.play().then(() => updatePlayState(true)).catch(() => { updatePlayState(false); toast('點擊播放按鈕開始'); });
+}
+audioPlayer.addEventListener('timeupdate', () => { if(!audioPlayer.duration) return; const pc = (audioPlayer.currentTime/audioPlayer.duration)*100; $('#progressFill').style.width = pc + '%'; $('#timeCurrent').textContent = formatTime(audioPlayer.currentTime); });
+audioPlayer.addEventListener('loadedmetadata', () => { $('#timeTotal').textContent = formatTime(audioPlayer.duration); });
+audioPlayer.addEventListener('ended', () => { if(playMode === 1){ audioPlayer.currentTime = 0; audioPlayer.play(); } else if(playMode === 3){ updatePlayState(false); } else playNext(); });
+function formatTime(sec){ const m = Math.floor(sec/60), s = Math.floor(sec%60); return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+function updatePlayState(p){ const f = $('#musicPlayerFloat'), pn = $('#musicPlayerPanel'); if(p){ f.classList.add('playing'); pn.classList.add('playing'); $('#iconPlay').style.display='none'; $('#iconPause').style.display='block'; } else { f.classList.remove('playing'); pn.classList.remove('playing'); $('#iconPlay').style.display='block'; $('#iconPause').style.display='none'; } }
 function playNext(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex+1)%playlist.length; loadTrack(); }
 function playPrev(){ if(!playlist.length) return; if(playMode === 2) currentTrackIndex = Math.floor(Math.random()*playlist.length); else currentTrackIndex = (currentTrackIndex-1+playlist.length)%playlist.length; loadTrack(); }
-
 function updateModeIcon(showToast = true){
   const icon = $('#iconMode'); let name = '';
   if(playMode === 0){ icon.innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>'; name = '列表循環'; }
@@ -2424,8 +1999,7 @@ function hangupCall(){
   toast('通話已掛斷');
   if(wasActive && currentChatId){
     const c = chats.find(x => x.id === currentChatId);
-    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
-    if (Math.random() < 0.5) generateThemMsgBox(c);
+    if(c) { themCollectMyMessage(currentChatId, c.isNightMode); triggerThemWriteNote(0.5); }
   }
 }
 function startCallInteraction(){
@@ -2572,8 +2146,7 @@ function endAccompany(){
   toast('相伴已結束');
   if(wasActive && currentChatId){
     const c = chats.find(x => x.id === currentChatId);
-    if(c) themCollectMyMessage(currentChatId, c.isNightMode);
-    if(c && Math.random() < 0.5) generateThemMsgBox(c);
+    if(c) { themCollectMyMessage(currentChatId, c.isNightMode); triggerThemWriteNote(0.5); }
   }
 }
 function startAccompanyInteraction(){
@@ -2650,10 +2223,6 @@ async function sendAsk(){
   startAskThinking(msg.id, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000);
 }
 
-function openSnapPage(){
-  toast('留影功能整理中');
-}
-
 function renderMessagesUI(forceBottom) {
   const box = $('#messages'); box.innerHTML = '';
   const c = chats.find(x => x.id === currentChatId);
@@ -2662,6 +2231,701 @@ function renderMessagesUI(forceBottom) {
   if (forceBottom) {
       const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
   }
+}
+
+/* ===== 尺素（收藏）功能 ===== */
+async function getAllCollectedMessages(chatId){
+  return new Promise((res, rej) => {
+    const idx = tx('messages').index('chatId');
+    const req = idx.getAll(chatId);
+    req.onsuccess = () => {
+      const arr = (req.result || []).filter(m => m.collectedBy === 'me' || m.collectedBy === 'them');
+      arr.sort((a,b) => b.time - a.time);
+      res(arr);
+    };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function getFavTabName(c){
+  return getDisplayName(c) || (c.roomName || '未命名');
+}
+
+async function openFavPage(){
+  const withData = [];
+  for(const c of chats){
+    const arr = await getAllCollectedMessages(c.id);
+    if(arr.length) withData.push(c);
+  }
+  favTabChatIds = withData.map(c => c.id);
+  const bar = $('#favTabBar'), track = $('#favSwipeTrack');
+  bar.innerHTML = ''; track.innerHTML = '';
+  if(!withData.length){
+    bar.innerHTML = '';
+    track.innerHTML = '<div class="fav-pane"><div class="fav-empty">尚無尺素</div></div>';
+    $('#pageFav').classList.add('show');
+    return;
+  }
+  withData.forEach((c, i) => {
+    const t = document.createElement('div');
+    t.className = 'fav-tab' + (i === 0 ? ' active' : '');
+    t.dataset.chatId = c.id;
+    t.textContent = getFavTabName(c);
+    t.onclick = () => goFavTab(i);
+    bar.appendChild(t);
+  });
+  for(const c of withData){
+    const pane = document.createElement('div');
+    pane.className = 'fav-pane';
+    pane.dataset.chatId = c.id;
+    const arr = await getAllCollectedMessages(c.id);
+    if(!arr.length){ pane.innerHTML = '<div class="fav-empty">尚無尺素</div>'; }
+    else {
+      arr.forEach(m => {
+        pane.appendChild(buildFavCard(m, c));
+      });
+    }
+    track.appendChild(pane);
+  }
+  favCurrentIndex = 0;
+  track.style.transform = 'translateX(0%)';
+  $('#pageFav').classList.add('show');
+}
+
+function buildFavCard(m, c){
+  const card = document.createElement('div');
+  card.className = 'fav-card';
+  const tape = document.createElement('div'); tape.className = 'fav-tape'; card.appendChild(tape);
+  const text = document.createElement('div');
+  text.className = 'fav-text';
+  text.textContent = (m.cards || []).join('\n');
+  card.appendChild(text);
+  const meta = document.createElement('div'); meta.className = 'fav-meta';
+  const src = document.createElement('div'); src.className = 'fav-source';
+  const themName = getDisplayName(c);
+  if(m.collectedBy === 'me') src.textContent = `我收 · ${themName}说`;
+  else src.textContent = `${themName}收 · 我说`;
+  
+  const tObj = getAncientTime(new Date(m.time));
+  const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
+  stamp.textContent = tObj.dateStr;
+  meta.appendChild(src); meta.appendChild(stamp);
+  card.appendChild(meta);
+  let lpTimer = null;
+  card.addEventListener('touchstart', () => { lpTimer = setTimeout(() => { showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => { m.collectedBy = null; await reqToPromise(tx('messages','readwrite').put(m)); toast('已移出尺素'); openFavPage(); }, true); }, 600); }, { passive:true });
+  card.addEventListener('touchend', () => clearTimeout(lpTimer));
+  card.addEventListener('touchmove', () => clearTimeout(lpTimer));
+  return card;
+}
+
+function goFavTab(index){
+  if(index < 0 || index >= favTabChatIds.length) return;
+  favCurrentIndex = index;
+  const track = $('#favSwipeTrack');
+  track.style.transform = `translateX(-${index * 100}%)`;
+  document.querySelectorAll('.fav-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+}
+
+function bindFavSwipe(){
+  const wrap = $('#favSwipeWrap');
+  if(!wrap) return;
+  wrap.addEventListener('touchstart', e => {
+    if(!e.touches[0]) return;
+    favTouchStartX = e.touches[0].clientX; favTouchStartY = e.touches[0].clientY; favDragging = false;
+  }, { passive:true });
+  wrap.addEventListener('touchmove', e => {
+    if(!e.touches[0]) return;
+    const dx = e.touches[0].clientX - favTouchStartX;
+    const dy = e.touches[0].clientY - favTouchStartY;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) favDragging = true;
+  }, { passive:true });
+  wrap.addEventListener('touchend', e => {
+    if(!favDragging) return;
+    const dx = e.changedTouches[0].clientX - favTouchStartX;
+    if(dx < -50) goFavTab(favCurrentIndex + 1);
+    else if(dx > 50) goFavTab(favCurrentIndex - 1);
+    favDragging = false;
+  });
+}
+
+/* ===== 简讯（留言匣）功能 ===== */
+function saveNotes() { localStorage.setItem('nz_notes', JSON.stringify(notesData)); }
+
+function renderNotes() {
+  const list = $('#notesList');
+  if(!notesData.length) { list.innerHTML = '<div class="fav-empty" style="color:var(--text-secondary);text-align:center;margin-top:40px;">匣中空空如也</div>'; return; }
+  list.innerHTML = '';
+  notesData.slice().reverse().forEach(n => {
+    const div = document.createElement('div');
+    div.className = 'note-card ' + n.sender;
+    const tObj = getAncientTime(new Date(n.time));
+    const displayName = n.sender === 'me' ? (n.myName || '我') : (n.themName || '祂');
+    div.innerHTML = `
+      <div class="note-header"><span class="note-name">${escapeHtml(displayName)}</span><span class="note-time">${tObj.dateStr} · ${tObj.timeStr}</span></div>
+      <div class="note-text">${escapeHtml(n.text)}</div>
+    `;
+    div.onclick = () => {
+      currentNoteForAction = n;
+      $('#noteActionMask').classList.add('show');
+    };
+    list.appendChild(div);
+  });
+}
+
+function openNotesPage() {
+  renderNotes();
+  $('#noteInput').value = '';
+  if(chats.length) {
+    const c = chats[0];
+    $('#noteInput').placeholder = `随便写点什么… (默认写给 ${getDisplayName(c)})`;
+    currentNoteReceiverId = c.id;
+  } else {
+    $('#noteInput').placeholder = `随便写点什么…`;
+    currentNoteReceiverId = null;
+  }
+  $('#pageNotes').classList.add('show');
+}
+
+function sendMyNote() {
+  const val = $('#noteInput').value.trim();
+  if(!val) return;
+  const t = chats.find(x => x.id === currentNoteReceiverId) || chats[0];
+  const themName = t ? getDisplayName(t) : '祂';
+  const c = chats.find(x => x.id === currentChatId);
+  const myName = c ? (c.myNick || c.myName || '我') : '我';
+  
+  const note = {
+    id: 'n_' + Date.now(),
+    sender: 'me',
+    text: val,
+    time: Date.now(),
+    themName: themName,
+    myName: myName
+  };
+  notesData.push(note);
+  saveNotes();
+  renderNotes();
+  $('#noteInput').value = '';
+  
+  // 触发祂的留言（80%）
+  if(Math.random() < 0.8) {
+    setTimeout(() => triggerThemWriteNote(1.0), 2000 + Math.random() * 5000);
+  }
+}
+
+async function triggerThemWriteNote(prob = 1.0) {
+  if(Math.random() > prob) return;
+  const allCards = await reqToPromise(tx('cards').getAll());
+  let normal = allCards.filter(x => (x.category || 'normal') === 'normal');
+  if(!normal.length) return;
+  
+  const n = 3 + Math.floor(Math.random() * 3); // 3~5张
+  const picked = [], p = [...normal];
+  for(let i=0;i<n && p.length;i++){
+    const idx = Math.floor(Math.random() * p.length);
+    picked.push(p.splice(idx,1)[0].text);
+  }
+  
+  let text = '';
+  picked.forEach((t, i) => {
+    const lastChar = t.slice(-1);
+    const hasPunc = ['，','。','！','？','、','~','…'].includes(lastChar);
+    if(hasPunc) text += t;
+    else {
+      if(i < picked.length - 1) text += t + '，';
+      else text += t + '。';
+    }
+  });
+  
+  const c = chats.length ? chats[Math.floor(Math.random() * chats.length)] : null;
+  const themName = c ? getDisplayName(c) : '祂';
+  const myName = c ? (c.myNick || c.myName || '我') : '我';
+  
+  const note = {
+    id: 'n_' + Date.now(),
+    sender: 'them',
+    text: text,
+    time: Date.now(),
+    themName: themName,
+    myName: myName
+  };
+  notesData.push(note);
+  saveNotes();
+  if($('#pageNotes').classList.contains('show')) renderNotes();
+}
+
+// 定时触发简讯日常掉落
+setInterval(() => {
+  if(Math.random() * 100 < config.noteRate) {
+    triggerThemWriteNote(1.0);
+  }
+}, 3600000); // 每小时判定一次
+
+function bindEvents(){
+  function exportData() {
+    const stores = ['chats','messages','cards','stickers','actions','music'];
+    let result = {};
+    let completed = 0;
+    $('#progressDialogMask').classList.add('show');
+    $('#progressText').textContent = '正在打包數據...';
+    $('#progressBarFill').style.width = '0%';
+    
+    stores.forEach(storeName => {
+      const req = tx(storeName).getAll();
+      req.onsuccess = () => {
+        result[storeName] = req.result;
+        completed++;
+        $('#progressBarFill').style.width = (completed / stores.length * 100) + '%';
+        if(completed === stores.length) {
+          result['notes'] = notesData;
+          const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
+          const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
+          $('#progressDialogMask').classList.remove('show');
+          toast('存檔成功');
+        }
+      };
+    });
+  }
+
+  function importData(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        showCustomDialog('警告', '讀檔將覆蓋當前所有數據，是否繼續？', false, '確認覆蓋', async () => {
+          $('#progressDialogMask').classList.add('show');
+          $('#progressText').textContent = '正在恢復數據...';
+          
+          const stores = ['chats','messages','cards','stickers','actions','music'];
+          for(let s of stores) {
+             const store = tx(s, 'readwrite');
+             store.clear();
+          }
+          
+          setTimeout(async () => {
+            for(let s of stores) {
+               if(data[s] && Array.isArray(data[s])) {
+                 const store = tx(s, 'readwrite');
+                 data[s].forEach(item => store.add(item));
+               }
+            }
+            if(data['notes'] && Array.isArray(data['notes'])) {
+              notesData = data['notes'];
+              saveNotes();
+            }
+            setTimeout(() => {
+              $('#progressDialogMask').classList.remove('show');
+              toast('讀檔成功，即將刷新');
+              setTimeout(() => location.reload(), 1000);
+            }, 1000);
+          }, 500);
+        }, true);
+      } catch(err) { toast('讀檔失敗：文件格式錯誤'); }
+    };
+    reader.readAsText(file);
+  }
+
+  document.querySelectorAll('.tab-item').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); tab.classList.add('active'); $('#tabContentCards').style.display='none'; $('#tabContentStickers').style.display='none'; $('#tabContentActions').style.display='none'; $('#tabContentMusic').style.display='none'; if(tab.dataset.tab==='cards'){ $('#tabContentCards').style.display='block'; loadAndRenderCards(); } else if(tab.dataset.tab==='stickers'){ $('#tabContentStickers').style.display='block'; loadAndRenderStamps(); } else if(tab.dataset.tab==='actions'){ $('#tabContentActions').style.display='block'; loadAndRenderActions(); } else { $('#tabContentMusic').style.display='block'; loadAndRenderMusic(); } }; });
+  document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
+  document.querySelectorAll('.action-sub-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.action-sub-tab').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); }; });
+  $('#backPostOfficeBtn').onclick = () => $('#pagePostOffice').classList.remove('show');
+
+  const actionMask = $('#actionSheetMask');
+  const closeActionSheet = () => actionMask.classList.remove('show');
+  $('#actCancel').onclick = closeActionSheet;
+  actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
+  $('#actPin').onclick = async () => { closeActionSheet(); if(!activeChatForMenu) return; activeChatForMenu.isPinned = !activeChatForMenu.isPinned; await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); };
+
+  $('#actLayout').onclick = () => {
+    closeActionSheet(); if(!activeChatForMenu) return;
+    const mask = $('#layoutPanelMask');
+    document.querySelectorAll('.layout-option').forEach(o => o.classList.toggle('active', (o.dataset.layout === (activeChatForMenu.layout || 'jiuumeng'))));
+    mask.classList.add('show');
+  };
+  $('#layoutPanelMask').onclick = async e => {
+    if(e.target === $('#layoutPanelMask')){ $('#layoutPanelMask').classList.remove('show'); return; }
+    const opt = e.target.closest('.layout-option');
+    if(!opt) return;
+    const layout = opt.dataset.layout;
+    if(!activeChatForMenu) return;
+    activeChatForMenu.layout = layout;
+    await reqToPromise(tx('chats','readwrite').put(activeChatForMenu));
+    await loadChats();
+    $('#layoutPanelMask').classList.remove('show');
+    const c = chats.find(x => x.id === currentChatId);
+    if(c && c.id === activeChatForMenu.id) applyLayoutClass(c);
+    toast(layout === 'yuyan' ? '已切換：魚雁' : '已切換：舊夢');
+  };
+  
+  $('#actEdit').onclick = () => {
+    closeActionSheet(); if(!activeChatForMenu) return;
+    isEditingChatId = activeChatForMenu.id;
+    $('#createPageTitle').textContent = '編輯資料';
+    $('#inputRoomName').value = activeChatForMenu.roomName || '';
+    $('#inputTheirName').value = activeChatForMenu.theirName || '';
+    $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
+    $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
+    $('#inputMyName').value = activeChatForMenu.myName || '';
+    $('#inputMyNick').value = activeChatForMenu.myNick || '';
+    $('#inputMySign').value = activeChatForMenu.mySign || '';
+    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
+    tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
+    
+    const th = $('#theirAvatar'); if(activeChatForMenu.theirAvatar){ th.style.backgroundImage=`url(${activeChatForMenu.theirAvatar})`; th.textContent=''; } else { th.style.backgroundImage=''; th.textContent='祂'; }
+    const me = $('#myAvatar'); if(activeChatForMenu.myAvatar){ me.style.backgroundImage=`url(${activeChatForMenu.myAvatar})`; me.textContent=''; } else { me.style.backgroundImage=''; me.textContent='我'; }
+    const mc = $('#musicCoverUpload'); if(activeChatForMenu.musicCover){ mc.style.backgroundImage=`url(${activeChatForMenu.musicCover})`; mc.textContent=''; } else { mc.style.backgroundImage=''; mc.textContent='圖'; }
+    const chb = $('#chatBgUploadBox'); if(activeChatForMenu.chatBgImage){ chb.style.backgroundImage=`url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent=''; } else { chb.style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景'; }
+    const nb = $('#nightBgUploadBox'); if(activeChatForMenu.nightBgImage){ nb.style.backgroundImage=`url(${activeChatForMenu.nightBgImage})`; $('#nightBgText').textContent=''; } else { nb.style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景'; }
+    const cb = $('#callBgUploadBox'); if(activeChatForMenu.callBgImage){ cb.style.backgroundImage=`url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent=''; } else { cb.style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景'; }
+    const ab = $('#accompanyBgUploadBox'); if(activeChatForMenu.accompanyBgImage){ ab.style.backgroundImage=`url(${activeChatForMenu.accompanyBgImage})`; $('#accompanyBgText').textContent=''; } else { ab.style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景'; }
+    
+    $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
+    $('#pageCreate').classList.add('show');
+  };
+  
+  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }, true); };
+  $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }, true); };
+
+  const msgMask = $('#msgActionMask');
+  const closeMsgMask = () => msgMask.classList.remove('show');
+  $('#msgActCancel').onclick = closeMsgMask;
+  msgMask.onclick = e => { if(e.target === msgMask) closeMsgMask(); };
+  $('#msgActCollect').onclick = async () => {
+    closeMsgMask();
+    if(!currentMsgForAction) return;
+    const m = currentMsgForAction;
+    if(m.collectedBy === 'me'){
+      m.collectedBy = null;
+      await reqToPromise(tx('messages','readwrite').put(m));
+      toast('已出素');
+    } else {
+      m.collectedBy = 'me';
+      await reqToPromise(tx('messages','readwrite').put(m));
+      toast('已入素');
+    }
+    currentMsgForAction = null;
+  };
+  $('#msgActBurn').onclick = () => {
+    closeMsgMask();
+    if(!pendingBurnMsg) return;
+    const m = pendingBurnMsg;
+    showCustomDialog('焚毀','確定要焚毀這條消息嗎？',false,'焚毀', async () => {
+      await reqToPromise(tx('messages','readwrite').delete(m.id));
+      currentMessages = currentMessages.filter(x => x.id !== m.id);
+      const el = document.querySelector(`.msg-group[data-msg-id="${m.id}"]`);
+      if(el) el.remove();
+      await touchChat(currentChatId);
+      toast('已焚毀');
+    }, true);
+    pendingBurnMsg = null;
+  };
+
+  const noteMask = $('#noteActionMask');
+  const closeNoteMask = () => noteMask.classList.remove('show');
+  $('#noteActCancel').onclick = closeNoteMask;
+  noteMask.onclick = e => { if(e.target === noteMask) closeNoteMask(); };
+  $('#noteActTear').onclick = () => {
+    closeNoteMask();
+    if(!currentNoteForAction) return;
+    notesData = notesData.filter(n => n.id !== currentNoteForAction.id);
+    saveNotes(); renderNotes();
+    toast('已撕下');
+    currentNoteForAction = null;
+  };
+  $('#noteActCollect').onclick = async () => {
+    closeNoteMask();
+    if(!currentNoteForAction) return;
+    const c = chats.length ? chats[0] : null;
+    const msg = {
+      id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      chatId: 'notes_collection',
+      sender: currentNoteForAction.sender,
+      type: 'cards',
+      text: '',
+      cards: [currentNoteForAction.text],
+      cardCategory: 'normal',
+      stickerData: null,
+      time: currentNoteForAction.time,
+      isNightMode: false,
+      collectedBy: 'me'
+    };
+    if(!chats.some(x => x.id === 'notes_collection')) {
+      const nc = { id:'notes_collection', roomName:'留言匣', theirName:'留言', theirNick:'留痕', theirAvatar:null, myAvatar:null, isNightMode:false, isPinned:false, layout:'jiuumeng', updatedAt:Date.now() };
+      await reqToPromise(tx('chats','readwrite').add(nc));
+      await loadChats();
+    }
+    await reqToPromise(tx('messages','readwrite').add(msg));
+    toast('已收入尺素');
+    currentNoteForAction = null;
+  };
+
+  $('#noteSendBtn').onclick = sendMyNote;
+  $('#noteInput').addEventListener('keydown', e => { if(e.key === 'Enter') sendMyNote(); });
+
+  $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
+  
+  $('#btnAddCards').onclick = async () => {
+    const text = $('#newCardsInput').value.trim(); if(!text) return;
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
+    const all = await reqToPromise(tx('cards').getAll()); 
+    const existing = new Set(all.map(c => c.text));
+    let added = 0, dup = 0;
+    const newCards = [];
+    
+    for(let line of lines){ 
+      if(existing.has(line)){ dup++; continue; } 
+      existing.add(line);
+      newCards.push({ id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }); 
+      added++; 
+    }
+    
+    if (newCards.length > 0) {
+      const store = tx('cards','readwrite');
+      newCards.forEach(card => store.add(card));
+    }
+    
+    $('#newCardsInput').value = ''; $('#draftCount').textContent = '待定稿：0 份';
+    toast(`成功定稿 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : ''));
+    loadAndRenderCards();
+  };
+  
+  $('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
+  $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
+  $('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
+  $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }, true); };
+  $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
+  $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }, true); };
+  
+  $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
+  
+  $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
+
+  if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
+  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { const store = tx('stickers','readwrite'); for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { store.add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() }); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
+  $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
+  $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
+  $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };
+  $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
+  $('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
+  $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
+  $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
+
+  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
+  $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
+  $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
+  $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
+  $('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
+  $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }, true); };
+  $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
+  $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
+  $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
+  $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
+
+  $('#musicFileBox').onclick = () => $('#musicFileInput').click();
+  $('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file){ $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
+  $('#btnAddMusic').onclick = async () => { const title = $('#newMusicTitle').value.trim(), artist = $('#newMusicArtist').value.trim(); if(!title || !artist || !tempMusicFileData){ toast('請填寫歌名、歌手並上傳音檔'); return; } await reqToPromise(tx('music','readwrite').add({ id:'m_'+Date.now(), title, artist, data:tempMusicFileData, createdAt:Date.now() })); $('#newMusicTitle').value=''; $('#newMusicArtist').value=''; $('#musicFileName').textContent='點擊上傳音檔'; tempMusicFileData=null; toast('已留聲'); loadAndRenderMusic(); };
+  $('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
+  $('#btnMusicSelectAll').onclick = () => { const cbs = document.querySelectorAll('#musicListContainer input[type="checkbox"]'); if(selectedMusicIds.size === cbs.length && cbs.length > 0) selectedMusicIds.clear(); else cbs.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderMusic(); };
+  $('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }, true); };
+  $('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
+  $('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }, true); };
+
+  $('#stickerBtn').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent'); if(!stickers.length){ toast('尚無印花'); return; } content.innerHTML=''; content.style.display='grid'; $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none'; $('#stickerPanelHeader').innerHTML='選擇印花'; stickers.forEach(s => { const img = document.createElement('img'); img.src = s.data; img.onclick = () => { pendingStickerData = s.data; $('#pendingStickerImg').src = s.data; $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show'); updateSendBtnState(); }; content.appendChild(img); }); $('#stickerPanelMask').classList.add('show'); };
+  $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
+  $('#flashPanelMask').onclick = e => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
+  $('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
+  $('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#cameraInput').value=''; } };
+  $('#flashAlbum').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#albumInput').click(); };
+  $('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#albumInput').value=''; } };
+  $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; await touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+  $('#flashAsk').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAskModal(); };
+  $('#flashMusic').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const musics = await reqToPromise(tx('music').getAll()); if(!musics.length){ toast('郵電所中尚無留聲'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'), ml = $('#musicSelectContent'); content.style.display='none'; list.style.display='none'; ml.style.display='flex'; ml.innerHTML=''; $('#stickerPanelHeader').innerHTML='選擇留聲'; musics.forEach((m, idx) => { const d = document.createElement('div'); d.className='music-select-item'; d.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div>`; d.onclick = () => { $('#stickerPanelMask').classList.remove('show'); playMusic(musics, idx); }; ml.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+  $('#flashAccompany').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAccompanySelect(); };
+
+  $('#btnPlayPause').onclick = () => { if(audioPlayer.paused){ audioPlayer.play(); updatePlayState(true); } else { audioPlayer.pause(); updatePlayState(false); } };
+  $('#btnNext').onclick = playNext; $('#btnPrev').onclick = playPrev;
+  $('#btnMode').onclick = () => { playMode = (playMode+1)%4; updateModeIcon(true); };
+  $('#progressBar').onclick = e => { const bar = e.currentTarget; const r = bar.getBoundingClientRect(); const pc = (e.clientX-r.left)/r.width; if(audioPlayer.duration) audioPlayer.currentTime = pc*audioPlayer.duration; };
+  if($('#btnClosePlayer')) $('#btnClosePlayer').onclick = () => { audioPlayer.pause(); audioPlayer.currentTime = 0; updatePlayState(false); $('#musicPlayerFloat').classList.remove('show'); $('#musicPlayerPanel').classList.remove('show'); $('#musicPlayerFloat').style.bottom='100px'; $('#musicPlayerFloat').style.right='20px'; $('#musicPlayerFloat').style.left='auto'; $('#musicPlayerFloat').style.top='auto'; toast('已關閉留聲'); };
+
+  $('#callBtn').onclick = () => openCallUI(false);
+  $('#btnHangupCall').onclick = hangupCall;
+  $('#btnAnswerCall').onclick = answerCall;
+  $('#btnMinimizeCall').onclick = () => { hideCallPanel(); const f = $('#callFloat'); f.classList.add('show'); if(callFloatPos){ const q = clampPos(callFloatPos.left, callFloatPos.top, 56, 56); callFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
+  $('#btnMinimizeAccompany').onclick = () => { hideAccompanyPanel(); const f = $('#accompanyFloat'); f.classList.add('show'); if(accompanyFloatPos){ const q = clampPos(accompanyFloatPos.left, accompanyFloatPos.top, 56, 56); accompanyFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
+  $('#btnEndAccompany').onclick = endAccompany;
+  $('#accompanySelectMask').onclick = e => { if(e.target === $('#accompanySelectMask')) $('#accompanySelectMask').classList.remove('show'); };
+  $('#askModalMask').onclick = e => { if(e.target === $('#askModalMask')) $('#askModalMask').classList.remove('show'); };
+
+  document.querySelectorAll('.ask-modal-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); askMode = tab.dataset.asktab; if(askMode === 'wen'){ $('#askWenSection').style.display='block'; $('#askTuSection').style.display='none'; } else { $('#askWenSection').style.display='none'; $('#askTuSection').style.display='block'; } }; });
+  $('#askAttachBtn').onclick = () => $('#askAttachFile').click();
+  $('#askAttachFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { askAttachData = b; $('#askAttachPreviewWrap').innerHTML = `<div class="ask-attach-preview"><img src="${b}"><div class="ask-attach-del" id="askAttachDel">✕</div></div>`; $('#askAttachDel').onclick = () => { askAttachData = null; $('#askAttachPreviewWrap').innerHTML=''; }; }); e.target.value=''; };
+  $('#askImgFile').onchange = e => { const files = Array.from(e.target.files); if(!files.length) return; let pending = files.length; files.forEach(f => fileToBase64(f, b => { askImgList.push(b); pending--; if(pending === 0) renderAskImgGrid(); })); e.target.value=''; };
+  $('#askSingleChk').onchange = () => { if($('#askSingleChk').checked) $('#askMultiChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
+  $('#askMultiChk').onchange = () => { if($('#askMultiChk').checked) $('#askSingleChk').checked = false; askSingleChecked = $('#askSingleChk').checked; askMultiChecked = $('#askMultiChk').checked; };
+  $('#askSendBtn').onclick = sendAsk;
+
+  $('#modeToggleBtn').onclick = toggleChatMode;
+  
+  $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); if(favRefreshTimer) { clearInterval(favRefreshTimer); favRefreshTimer = null; } };
+  bindFavSwipe();
+
+  $('#backNotesBtn').onclick = () => { $('#pageNotes').classList.remove('show'); };
+  
+  $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
+
+  $('#newChatBtn').onclick = () => {
+    isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
+    $('#inputRoomName').value=''; $('#inputTheirName').value=''; $('#inputTheirNick').value=''; $('#inputTheirSign').value=''; $('#inputMyName').value=''; $('#inputMyNick').value=''; $('#inputMySign').value='';
+    $('#theirAvatar').style.backgroundImage=''; $('#theirAvatar').textContent='祂';
+    $('#myAvatar').style.backgroundImage=''; $('#myAvatar').textContent='我';
+    $('#musicCoverUpload').style.backgroundImage=''; $('#musicCoverUpload').textContent='圖';
+    $('#chatBgUploadBox').style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景';
+    $('#nightBgUploadBox').style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景';
+    $('#callBgUploadBox').style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景';
+    $('#accompanyBgUploadBox').style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景';
+    $('#chatBgMaskRange').value=60; $('#chatBgMaskValue').textContent='60%';
+    tempTheirAvatar=null; tempMyAvatar=null; tempMusicCover=null; tempChatBg=null; tempNightBg=null; tempCallBg=null; tempAccompanyBg=null; tempChatBgMask=60;
+    $('#pageCreate').classList.add('show');
+  };
+  $('#cancelCreateBtn').onclick = () => $('#pageCreate').classList.remove('show');
+  if($('#theirFile')) $('#theirFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempTheirAvatar = b; $('#theirAvatar').style.backgroundImage=`url(${b})`; $('#theirAvatar').textContent=''; }); };
+  if($('#myFile')) $('#myFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMyAvatar = b; $('#myAvatar').style.backgroundImage=`url(${b})`; $('#myAvatar').textContent=''; }); };
+  if($('#musicCoverFile')) $('#musicCoverFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempMusicCover = b; $('#musicCoverUpload').style.backgroundImage=`url(${b})`; $('#musicCoverUpload').textContent=''; }); };
+  if($('#chatBgFile')) $('#chatBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempChatBg = b; $('#chatBgUploadBox').style.backgroundImage=`url(${b})`; $('#chatBgText').textContent=''; }); };
+  if($('#nightBgFile')) $('#nightBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempNightBg = b; $('#nightBgUploadBox').style.backgroundImage=`url(${b})`; $('#nightBgText').textContent=''; }); };
+  if($('#callBgFile')) $('#callBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempCallBg = b; $('#callBgUploadBox').style.backgroundImage=`url(${b})`; $('#callBgText').textContent=''; }); };
+  if($('#accompanyBgFile')) $('#accompanyBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { tempAccompanyBg = b; $('#accompanyBgUploadBox').style.backgroundImage=`url(${b})`; $('#accompanyBgText').textContent=''; }); };
+  if($('#chatBgMaskRange')) $('#chatBgMaskRange').oninput = e => { tempChatBgMask = parseInt(e.target.value); $('#chatBgMaskValue').textContent = tempChatBgMask + '%'; };
+
+  let isSavingChat = false;
+  $('#saveChatBtn').onclick = async () => {
+    if(isSavingChat) return;
+    const roomName = $('#inputRoomName').value.trim(), theirName = $('#inputTheirName').value.trim(), theirNick = $('#inputTheirNick').value.trim(), theirSign = $('#inputTheirSign').value.trim(), myName = $('#inputMyName').value.trim(), myNick = $('#inputMyNick').value.trim(), mySign = $('#inputMySign').value.trim();
+    if(!roomName){ toast('請輸入聊天室名稱'); return; }
+    isSavingChat = true;
+    
+    if(isEditingChatId){
+      const c = chats.find(x => x.id === isEditingChatId);
+      if(c){
+        c.roomName = roomName; c.theirName = theirName; c.theirNick = theirNick; c.theirSign = theirSign; c.myName = myName; c.myNick = myNick; c.mySign = mySign;
+        if(tempTheirAvatar !== null) c.theirAvatar = tempTheirAvatar;
+        if(tempMyAvatar !== null) c.myAvatar = tempMyAvatar;
+        if(tempMusicCover !== null) c.musicCover = tempMusicCover;
+        if(tempChatBg !== null) c.chatBgImage = tempChatBg;
+        if(tempNightBg !== null) c.nightBgImage = tempNightBg;
+        if(tempCallBg !== null) c.callBgImage = tempCallBg;
+        if(tempAccompanyBg !== null) c.accompanyBgImage = tempAccompanyBg;
+        c.chatBgMask = tempChatBgMask;
+        await reqToPromise(tx('chats','readwrite').put(c));
+        toast('資料已更新');
+      }
+    } else {
+      const c = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), roomName, theirName, theirNick, theirSign, myName, myNick, mySign, theirAvatar:tempTheirAvatar, myAvatar:tempMyAvatar, musicCover:tempMusicCover, chatBgImage:tempChatBg, nightBgImage:tempNightBg, callBgImage:tempCallBg, accompanyBgImage:tempAccompanyBg, chatBgMask:tempChatBgMask, layout:'jiuumeng', isNightMode:false, isPinned:false, createdAt:Date.now(), updatedAt:Date.now() };
+      await reqToPromise(tx('chats','readwrite').add(c));
+      toast('已建立新對話');
+    }
+    await loadChats(); renderChatList(); $('#pageCreate').classList.remove('show');
+    setTimeout(()=>{ isSavingChat = false; }, 500);
+  };
+
+  $('#backBtn').onclick = () => { 
+    $('#pageChat').classList.remove('show'); 
+    const b = document.getElementById('snapModeBar'); if(b) b.remove(); 
+    snapMode = false; snapSelectedIds.clear(); 
+    currentChatId = null; 
+    applyThemeAndBg(); 
+  };
+  $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
+  $('#sendBtn').onclick = sendMyMessage;
+
+  const mask = $('#menuMask');
+  const openMenu = () => mask.classList.add('show');
+  const closeMenu = () => mask.classList.remove('show');
+  $('#menuBtnList').onclick = openMenu;
+  mask.onclick = e => { if(e.target === mask) closeMenu(); };
+  $('#menuPanel').onclick = e => {
+    const act = e.target.dataset.act; if(!act) return; closeMenu();
+    if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
+    else if(act === 'notes'){ openNotesPage(); }
+    else if(act === 'settings') $('#pageSettings').classList.add('show');
+    else if(act === 'adjust') $('#pageAdjust').classList.add('show');
+    else if(act === 'fav'){ 
+      openFavPage(); 
+      if(favRefreshTimer) clearInterval(favRefreshTimer);
+      favRefreshTimer = setInterval(() => {
+        if($('#pageFav').classList.contains('show')) openFavPage();
+        else { clearInterval(favRefreshTimer); favRefreshTimer = null; }
+      }, 5000);
+    }
+    else if(act === 'export') { 
+      showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
+      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary); border-right:1px solid var(--border-light);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
+      $('#btnCancelArchive').onclick = () => $('#dialogMask').classList.remove('show');
+      $('#btnExportData').onclick = () => { $('#dialogMask').classList.remove('show'); exportData(); };
+      $('#btnImportData').onclick = () => { 
+        $('#dialogMask').classList.remove('show');
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; 
+        inp.onchange = ev => { const file = ev.target.files[0]; if(file) importData(file); };
+        inp.click();
+      };
+    }
+    else if(act === 'clear') { 
+      showCustomDialog('焚稿', '警告：這將徹底焚毀所有數據，且無法恢復。是否繼續？', false, '確認焚毀', async () => {
+        const stores = ['chats','messages','cards','stickers','actions','music'];
+        for(let s of stores) { tx(s, 'readwrite').clear(); }
+        localStorage.removeItem('nz_notes');
+        setTimeout(() => location.reload(), 500);
+      }, true);
+    }
+    else if(act === 'about'){ const body = $('#aboutBody'); body.innerHTML = ABOUT_PARAGRAPHS.map(p => `<p>${escapeHtml(p)}</p>`).join(''); $('#aboutModalMask').classList.add('show'); }
+    else if(act === 'letters') toast('郵局：功能籌備中...');
+  };
+
+  $('#backSettingsBtn').onclick = () => $('#pageSettings').classList.remove('show');
+  document.querySelectorAll('.theme-card').forEach(card => { card.onclick = () => setTheme(card.dataset.theme); });
+  if($('#mainBgFile')) $('#mainBgFile').onchange = e => { if(e.target.files[0]) fileToBase64(e.target.files[0], b => { globalBgImage = b; localStorage.setItem('nz_main_bg', b); applyThemeAndBg(); $('#mainBgUploadBox').style.backgroundImage=`url(${b})`; $('#mainBgText').textContent=''; }); };
+
+  if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
+  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
+  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
+
+  if($('#bubbleOpacityInput')) {
+    $('#bubbleOpacityInput').addEventListener('blur', () => {
+      let v = parseInt($('#bubbleOpacityInput').value);
+      if(isNaN(v)) v = 45;
+      if(v < 0) v = 0;
+      if(v > 100) v = 100;
+      $('#bubbleOpacityInput').value = v;
+      config.bubbleOpacity = v;
+      localStorage.setItem('nz_config', JSON.stringify(config));
+      applyThemeAndBg();
+    });
+  }
+
+  $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
+  $('#saveAdjustBtn').onclick = () => {
+    let rMin = parseInt($('#adjReplyMin').value) || 8; if(rMin < 1) rMin = 1; if(rMin > 120) rMin = 120;
+    let rMax = parseInt($('#adjReplyMax').value) || 15; if(rMax < 1) rMax = 1; if(rMax > 120) rMax = 120;
+    config.replyMin = rMin; config.replyMax = rMax;
+    config.callMin = parseInt($('#adjCallMin').value) || 30;
+    config.callMax = parseInt($('#adjCallMax').value) || 90;
+    config.accMin = parseInt($('#adjAccompanyMin').value) || 60;
+    config.accMax = parseInt($('#adjAccompanyMax').value) || 150;
+    config.flirtRate = parseInt($('#adjFlirtRate').value) || 20;
+    config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
+    config.actionRate = parseInt($('#adjActionRate').value) || 15;
+    config.collectRate = parseInt($('#adjCollectRate').value) || 10;
+    config.noteRate = parseInt($('#adjNoteRate').value) || 20;
+    localStorage.setItem('nz_config', JSON.stringify(config));
+    toast('設置已保存');
+    $('#pageAdjust').classList.remove('show');
+  };
+
+  ['#dialogMask','#progressDialogMask','#menuMask','#actionSheetMask','#stickerPanelMask','#flashPanelMask','#noteActionMask'].forEach(id => {
+    const el = document.querySelector(id);
+    if(el){ el.addEventListener('click', e => { if(e.target === el && id !== '#progressDialogMask'){ el.classList.remove('show'); if(id === '#dialogMask'){ setTimeout(() => { $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button>`; $('#dialogCancelBtn').onclick = () => $('#dialogMask').classList.remove('show'); }, 100); } } }); }
+  });
 }
 
 init().catch(err => { console.error(err); toast('資料庫初始化失敗：' + err.message); });

@@ -2497,7 +2497,38 @@ function bindEvents(){
   $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
 
   if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
-  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => { const files = Array.from(e.target.files); if(!files.length) return; $('#progressDialogMask').classList.add('show'); let prog = 0; const t = setInterval(() => { prog += Math.random()*15; if(prog >= 100) prog = 100; $('#progressBarFill').style.width = prog + '%'; $('#progressText').textContent = `正在沖印... ${Math.floor(prog)}%`; if(prog === 100){ clearInterval(t); setTimeout(async () => { const store = tx('stickers','readwrite'); for(const file of files){ await new Promise(res => fileToBase64(file, async b64 => { store.add({ id:'s_'+Date.now()+Math.random(), data:b64, createdAt:Date.now() }); res(); })); } $('#progressDialogMask').classList.remove('show'); $('#progressBarFill').style.width='0%'; $('#stampFileInput').value=''; loadAndRenderStamps(); toast('沖印完成'); }, 500); } }, 100); };
+  if($('#stampFileInput')) $('#stampFileInput').onchange = async e => {
+    const files = Array.from(e.target.files); 
+    if(!files.length) return; 
+    
+    $('#progressDialogMask').classList.add('show'); 
+    $('#progressBarFill').style.width = '50%'; 
+    $('#progressText').textContent = `正在沖印...`; 
+
+    try {
+      const store = tx('stickers', 'readwrite');
+      for (const file of files) {
+        const b64 = await new Promise(res => fileToBase64(file, res));
+        if (b64) {
+          await reqToPromise(store.add({ id: 's_' + Date.now() + Math.random(), data: b64, createdAt: Date.now() }));
+        }
+      }
+      
+      $('#progressBarFill').style.width = '100%'; 
+      setTimeout(() => {
+        $('#progressDialogMask').classList.remove('show'); 
+        $('#progressBarFill').style.width = '0%'; 
+        $('#stampFileInput').value = ''; 
+        loadAndRenderStamps(); 
+        toast('沖印完成'); 
+      }, 300);
+
+    } catch(err) {
+      console.error(err);
+      $('#progressDialogMask').classList.remove('show');
+      toast('沖印失敗，請重試');
+    }
+  };
   $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
   $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
   $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };

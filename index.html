@@ -17,17 +17,14 @@
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
-    /* 气泡颜色 */
     --bubble-daily-them: rgba(255,249,249,0.45);
     --bubble-daily-me: rgba(242,232,213,0.45);
     --bubble-night-them: rgba(74,59,76,0.45);
     --bubble-night-me: rgba(163,74,96,0.45);
     
-    /* 气泡字色 */
     --text-daily: #4A3E3E;
     --text-night: #F7F2F2;
     
-    /* 日期胶囊颜色 */
     --date-daily-bg: rgba(255,249,249,0.8);
     --date-daily-text: #4A3E3E;
     --date-night-bg: rgba(163,74,96,0.8);
@@ -69,12 +66,9 @@
   .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-fav { z-index:4; transform:translateX(100%); } .page-notes { z-index:5; transform:translateX(100%); } .page-adjust { z-index:6; transform:translateX(100%); }
   .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-fav.show,.page-notes.show,.page-adjust.show { transform:translateX(0); }
 
-  /* 去除不需要的黑线：全局顶栏、底栏、分类栏等 */
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; z-index:10; background:transparent; }
   .tab-bar { display:flex; border-bottom:1px solid var(--border-light); }
   .sub-tab { border-bottom:1px solid var(--border-light); }
-  #pageSettings .create-scroll > div { border:none !important; }
-  #pageCreate .create-scroll > div { border:none !important; }
   
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
   
@@ -114,11 +108,9 @@
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
   
-  /* 日期分割线 */
   .date-divider { align-self:center; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: var(--date-daily-bg); color: var(--date-daily-text); }
   body.is-night-mode .date-divider { background: var(--date-night-bg); color: var(--date-night-text); }
 
-  /* ===== 消息组 ===== */
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
@@ -133,7 +125,6 @@
   .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
   .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
-  /* ===== 鱼雁排版 ===== */
   .layout-yuyan .msg-group { align-items:stretch; }
   .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
   .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
@@ -385,7 +376,6 @@
   .accompany-them-proposal { text-align:center; padding:8px 0; }
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   .accompany-proposal-btns { display:flex; gap:10px; justify-content:center; }
-  /* 修复相伴按钮换行问题：强制一行显示 */
   .accompany-proposal-btns button { flex:1; padding:8px 0; border-radius:8px; border:none; font-size:14px; font-weight:600; white-space:nowrap; }
   .accompany-accept-btn { background:#7fa36b; color:#fff; }
   .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
@@ -394,7 +384,6 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問卡片 */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
   body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
@@ -477,7 +466,6 @@
   .adjust-inputs { display:flex; align-items:center; gap:6px; }
   .adjust-input { width:50px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 
-  /* ===== 尺素（收藏）页面 ===== */
   .page-fav { background: var(--bg-color); }
   .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
   .fav-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; overflow:hidden; text-overflow:ellipsis; }
@@ -505,7 +493,6 @@
   .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
   .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
 
-  /* ===== 简讯（留言匣）页面 ===== */
   .page-notes { background: #f4ede3; }
   body.is-night-mode .page-notes { background: #1a1216; }
   .notes-lid { height: 30px; background: linear-gradient(to bottom, #5a3d2b, #3b2618); border-bottom: 2px solid #2a1a10; box-shadow: 0 4px 6px rgba(0,0,0,.2); border-radius: 0 0 10px 10px; flex:0 0 auto; z-index:10; display:flex; justify-content:center; align-items:center; }
@@ -872,7 +859,6 @@
   </div>
 </div>
 
-<!-- 菜单（顺序：簡訊在尺素前） -->
 <div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="notes">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
@@ -937,7 +923,6 @@ const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 
-// 内置2024-2035年精确节气表
 const TERM_TABLE = {
   2024: [6,20,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
   2025: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
@@ -977,7 +962,12 @@ function getAncientTime(date) {
     if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
   }
   if(termIndex < 0) { termIndex = 23; }
-  const monthZhi = (termIndex + 2) % 12;
+  
+  let monthZhi = (termIndex + 2) % 12;
+  if (termIndex === 23) monthZhi = 0;
+  else if (termIndex === 22) monthZhi = 11;
+  else if (termIndex === 21) monthZhi = 10;
+  
   const monthGanBase = (yearGan % 5) * 2 + 2;
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
   const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
@@ -1877,9 +1867,42 @@ window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷
 function initPlayerDrag(){
   const float = $('#musicPlayerFloat');
   let dragging = false, sx, sy, il, it;
-  float.addEventListener('touchstart', e => { dragging = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = float.getBoundingClientRect(); il = r.left; it = r.top; float.style.bottom='auto'; float.style.right='auto'; float.style.left=il+'px'; float.style.top=it+'px'; }, { passive:true });
-  float.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - sx, dy = t.clientY - sy; if(Math.abs(dx)>5||Math.abs(dy)>5) dragging = true; if(dragging){ e.preventDefault(); let l = il + dx, tp = it + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); float.style.left=l+'px'; float.style.top=tp+'px'; } }, { passive:false });
-  float.addEventListener('touchend', () => { if(!dragging){ $('#musicPlayerPanel').classList.toggle('show'); if($('#musicPlayerPanel').classList.contains('show')){ const r = float.getBoundingClientRect(); const p = $('#musicPlayerPanel'); let pt = r.top - 180; if(pt < 10) pt = r.bottom + 10; let pl = r.left - 100; if(pl < 10) pl = 10; if(pl > window.innerWidth - 270) pl = window.innerWidth - 270; p.style.bottom='auto'; p.style.right='auto'; p.style.top=pt+'px'; p.style.left=pl+'px'; } } });
+  float.addEventListener('touchstart', e => { 
+    dragging = false; 
+    const t = e.touches[0]; 
+    sx = t.clientX; sy = t.clientY; 
+    const r = float.getBoundingClientRect(); 
+    il = r.left; it = r.top; 
+    float.style.bottom='auto'; float.style.right='auto'; float.style.left=il+'px'; float.style.top=it+'px'; 
+  }, { passive:true });
+  float.addEventListener('touchmove', e => { 
+    const t = e.touches[0]; 
+    const dx = t.clientX - sx, dy = t.clientY - sy; 
+    if(Math.abs(dx)>5||Math.abs(dy)>5) dragging = true; 
+    if(dragging){ 
+      e.preventDefault(); 
+      let l = il + dx, tp = it + dy; 
+      const mw = window.innerWidth - 56, mh = window.innerHeight - 56; 
+      l = Math.max(0, Math.min(l, mw)); 
+      tp = Math.max(0, Math.min(tp, mh)); 
+      float.style.left=l+'px'; float.style.top=tp+'px'; 
+    } 
+  }, { passive:false });
+  float.addEventListener('touchend', () => { 
+    if(!dragging){ 
+      $('#musicPlayerPanel').classList.toggle('show'); 
+      if($('#musicPlayerPanel').classList.contains('show')){ 
+        const r = float.getBoundingClientRect(); 
+        const p = $('#musicPlayerPanel'); 
+        let pt = r.top - 180; 
+        if(pt < 10) pt = r.bottom + 10; 
+        let pl = r.left - 100; 
+        if(pl < 10) pl = 10; 
+        if(pl > window.innerWidth - 270) pl = window.innerWidth - 270; 
+        p.style.bottom='auto'; p.style.right='auto'; p.style.top=pt+'px'; p.style.left=pl+'px'; 
+      } 
+    } 
+  });
 }
 
 function showCallPanel(){
@@ -2339,7 +2362,6 @@ async function silentUpdateFav(){
   const arr = await getAllCollectedMessages(chatId);
   const currentCount = pane.querySelectorAll('.fav-card').length;
   if(arr.length > currentCount){
-    // 有新数据，重新渲染这一栏
     pane.innerHTML = '';
     arr.forEach(m => pane.appendChild(buildFavCard(m, c)));
   }
@@ -2504,7 +2526,7 @@ async function sendNote(){
   
   let targetChatId = noteTargetChatId;
   if(!targetChatId && chats.length > 0) {
-    // 不强制选
+    // 留空，作为无主随记
   }
   
   const note = {
@@ -2576,15 +2598,23 @@ function bindEvents(){
     for (const storeName of stores) {
       result[storeName] = await reqToPromise(tx(storeName).getAll());
       completed++;
-      $('#progressBarFill').style.width = (completed / totalSteps * 100) + '%';
-      await new Promise(r => setTimeout(r, 10)); // 让UI喘息
+      $('#progressBarFill').style.width = (completed / totalSteps * 80) + '%';
+      await new Promise(r => setTimeout(r, 50));
     }
 
     $('#progressText').textContent = '正在生成文件...';
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
-    $('#progressDialogMask').classList.remove('show');
-    toast('存檔成功');
+    $('#progressBarFill').style.width = '90%';
+    await new Promise(r => setTimeout(r, 100)); 
+    
+    setTimeout(() => {
+      const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
+      $('#progressBarFill').style.width = '100%';
+      setTimeout(() => {
+        $('#progressDialogMask').classList.remove('show');
+        toast('存檔成功');
+      }, 300);
+    }, 100);
   }
 
   function importData(file) {
@@ -2617,7 +2647,7 @@ function bindEvents(){
                  done++;
                  if(done % 100 === 0) {
                    $('#progressBarFill').style.width = (done / total * 100) + '%';
-                   await new Promise(r => setTimeout(r, 0)); // 分批让出主线程
+                   await new Promise(r => setTimeout(r, 0));
                  }
                }
              }

@@ -185,7 +185,7 @@
   /* 去掉tab栏底边线 */
   .tab-bar { display:flex; border-bottom:none; }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); font-weight:500; }
-  .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
+  .tab-item.active { color:var(--primary); border-bottom:none; }
   .add-box { display:flex; flex-direction:column; background:var(--input-bg); border-radius:8px; padding:12px; margin-bottom:20px; }
   .add-textarea { width:100%; height:100px; border:none; background:transparent; color:var(--text-color); font-size:15px; outline:none; resize:none; }
   /* 去掉横线 */
@@ -243,7 +243,7 @@
 
   .dialog-mask { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px; }
   .dialog-mask.show { display:flex; }
-  /* 去掉了弹窗横线 */
+  /* 去掉了弹窗横线、竖线 */
   .dialog { background:var(--bg-color); width:100%; max-width:320px; border-radius:12px; overflow:hidden; color:var(--text-color); border:1px solid var(--topbar-border); }
   .dialog.danger-dialog { background: #ffebee; border-color: #ffcdd2; color: #b71c1c; }
   body.is-night-mode .dialog.danger-dialog { background: #3e1a1a; border-color: #5a2020; color: #ffcdd2; }
@@ -256,8 +256,8 @@
   .dialog-input.single-line { min-height:40px; max-height:40px; resize:none; }
   .dialog-footer { display:flex; border-top:none; }
   .dialog.danger-dialog .dialog-footer { border-top-color: #ffcdd2; }
-  .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; border:none; background:transparent; color:var(--primary); font-weight: 500; }
-  .dialog-btn.cancel { color:var(--text-secondary); border-right:none; }
+  .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; border:none; background:transparent; color:var(--primary); font-weight: 500; border-right:none !important; }
+  .dialog-btn.cancel { color:var(--text-secondary); border-right:none !important; }
   .dialog.danger-dialog .dialog-btn.cancel { border-right-color: #ffcdd2; color: #b71c1c; }
   .dialog-btn.danger { color:#e53935; font-weight: 600; }
   
@@ -454,7 +454,7 @@
   .ask-modal-header { padding:14px 16px; text-align:center; border-bottom:none; font-size:16px; font-weight:600; }
   .ask-modal-tabs { display:flex; border-bottom:none; }
   .ask-modal-tab { flex:1; text-align:center; padding:11px 0; font-size:15px; color:var(--text-secondary); font-weight:500; }
-  .ask-modal-tab.active { color:var(--primary); border-bottom:2px solid var(--primary); }
+  .ask-modal-tab.active { color:var(--primary); border-bottom:none; }
   .ask-modal-body { padding:14px 16px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
   .ask-q-input { width:100%; min-height:70px; max-height:140px; resize:vertical; border-radius:8px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); padding:10px 12px; font-size:15px; outline:none; line-height:1.5; }
   .ask-attach-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
@@ -493,8 +493,8 @@
   .page-fav { background: var(--bg-color); }
   .fav-tab-bar { display:flex; border-bottom:none; flex:0 0 auto; overflow-x:auto; scrollbar-width:none; }
   .fav-tab-bar::-webkit-scrollbar { display:none; }
-  .fav-tab { flex:0 0 auto; min-width:80px; text-align:center; padding:12px 16px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
-  .fav-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+  .fav-tab { flex:0 0 auto; min-width:80px; text-align:center; padding:12px 16px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:none; }
+  .fav-tab.active { color:var(--primary); border-bottom:none; font-weight:600; }
   .fav-swipe-wrap { flex:1; overflow:hidden; position:relative; }
   .fav-swipe-track { display:flex; height:100%; transition:transform .25s ease; }
   .fav-pane { flex:0 0 100%; height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
@@ -559,8 +559,8 @@
   /* ==================== 新增/修改：信訊页面 ==================== */
   .page-letters { background: var(--bg-color); }
   .letter-tab-bar { display:flex; border-bottom:none; flex:0 0 auto; }
-  .letter-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:15px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
-  .letter-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+  .letter-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:15px; color:var(--text-secondary); white-space:nowrap; border-bottom:none; }
+  .letter-tab.active { color:var(--primary); border-bottom:none; font-weight:600; }
   .letter-list-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
   .letter-list { display:flex; flex-direction:column; gap:12px; padding-bottom:20px; }
   .letter-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
@@ -625,8 +625,9 @@
   body.is-night-mode .letter-envelope-name { color:#c8b48a; }
   .letter-seal-anim { position:absolute; left:50%; top:50%; width:38px; height:38px; margin-left:-19px; margin-top:-19px; border-radius:50%; background-size:cover; background-position:center; border:2px solid #b8860b; z-index:3; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#fff; overflow:hidden; }
 
-  /* 竖排按钮去掉，恢复横排 */
-  .vertical-btn { writing-mode: horizontal-tb; text-orientation: mixed; letter-spacing: normal; line-height: normal; padding: 0 8px; font-size: 14px; height: auto; align-self: center; }
+  /* 彻底去掉竖排样式，恢复横排，仅保留必要的布局类 */
+  .inline-edit-actions { display:flex; flex-direction:column; gap:8px; margin-left:10px; justify-content:center; }
+  .inline-edit-actions button { white-space:nowrap; }
 
   @media (max-width: 380px) {
     .sms-card-time { font-size:10px; }
@@ -951,7 +952,7 @@
     <div class="create-scroll" style="padding:15px;">
       <div id="tabContentCards">
         <div style="display:flex;margin-bottom:15px;border-bottom:none;">
-          <div class="sub-tab active" data-subtab="normal" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);">常訊</div>
+          <div class="sub-tab active" data-subtab="normal" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:none;">常訊</div>
           <div class="sub-tab" data-subtab="flirt" style="flex:1;text-align:center;padding:10px 0;font-size:15px;color:var(--text-secondary);">撩撥</div>
         </div>
         <div class="add-box"><textarea class="add-textarea" id="newCardsInput" placeholder="起草新報文..."></textarea><div class="add-footer"><span class="add-count" id="draftCount">待定稿：0 份</span><button class="btn-add" id="btnAddCards">定稿</button></div></div>
@@ -970,7 +971,7 @@
       </div>
       <div id="tabContentActions" style="display:none;">
         <div style="display:flex;margin-bottom:15px;border-bottom:none;">
-          <div class="sub-tab action-sub-tab active" data-subtab="to_them" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);">予祂</div>
+          <div class="sub-tab action-sub-tab active" data-subtab="to_them" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:none;">予祂</div>
           <div class="sub-tab action-sub-tab" data-subtab="to_me" style="flex:1;text-align:center;padding:10px 0;font-size:15px;color:var(--text-secondary);">予我</div>
         </div>
         <div class="add-box"><textarea class="add-textarea" id="newActionsInput" placeholder="寫下動作..."></textarea><div class="add-footer"><span class="add-count" id="actionDraftCount">待定稿：0 份</span><button class="btn-add" id="btnAddActions">留痕</button></div></div>
@@ -1168,7 +1169,6 @@ let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-// 默认概率调整：letterRate 1, smsRate 2, callRate 5
 const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, smsRate: 2, letterRate: 1, callRate: 5, bubbleOpacity: 45 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
 
@@ -1908,8 +1908,6 @@ async function buildThemMessage(chatId, isSpecialScene = false){
   }
   await touchChat(chatId);
 
-  // 触发点：特定行为才触发简讯和信訊（此处只包含字卡正常回复，稍后在通话/暗语单独处理）
-  
   if(Math.random() < (config.actionRate / 100)){
     const allA = await reqToPromise(tx('actions').getAll());
     let toMe = allA.filter(a => a.category === 'to_me');
@@ -1928,13 +1926,11 @@ async function buildThemMessage(chatId, isSpecialScene = false){
       }
       await touchChat(chatId);
       
-      // 触发点：发暗语后触发简讯/信訊
       if(Math.random() * 100 < config.smsRate) await themLeaveSms(chatId, isNight);
       if(Math.random() * 100 < config.letterRate) await themWriteLetter(chatId, isNight);
     }
   }
   
-  // 触发点：发撩拨字卡后触发简讯/信訊
   if (pickedCategory === 'flirt') {
     if(Math.random() * 100 < config.smsRate) await themLeaveSms(chatId, isNight);
     if(Math.random() * 100 < config.letterRate) await themWriteLetter(chatId, isNight);
@@ -1999,9 +1995,13 @@ function renderCardChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       
-      // 如果是编辑模式且是该 ID，则显示编辑框
+      // 修改：编辑状态下按钮上下叠放，文字横排
       if (editMode === 'card' && editingId === c.id) {
-        div.innerHTML = `<textarea id="inlineEditCard_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px;">${escapeHtml(c.text)}</textarea><div style="display:flex;gap:8px;margin-left:10px;"><button class="btn-add" onclick="saveInlineEditCard('${c.id}')">保存</button><button class="batch-btn" style="color:var(--text-secondary)" onclick="cancelInlineEdit()">取消</button></div>`;
+        div.innerHTML = `<textarea id="inlineEditCard_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px; width:100%;">${escapeHtml(c.text)}</textarea>
+                         <div class="inline-edit-actions">
+                           <button class="btn-add" onclick="saveInlineEditCard('${c.id}')">保存</button>
+                           <button class="batch-btn" style="color:var(--text-secondary); text-align:center;" onclick="cancelInlineEdit()">取消</button>
+                         </div>`;
       } else {
         const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
         div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="startInlineEditCard('${c.id}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
@@ -2091,8 +2091,13 @@ function renderActionChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       
+      // 修改：编辑状态下按钮上下叠放，文字横排
       if (editMode === 'action' && editingId === c.id) {
-        div.innerHTML = `<textarea id="inlineEditAction_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px;">${escapeHtml(c.text)}</textarea><div style="display:flex;gap:8px;margin-left:10px;"><button class="btn-add" onclick="saveInlineEditAction('${c.id}')">保存</button><button class="batch-btn" style="color:var(--text-secondary)" onclick="cancelInlineEditAction()">取消</button></div>`;
+        div.innerHTML = `<textarea id="inlineEditAction_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px; width:100%;">${escapeHtml(c.text)}</textarea>
+                         <div class="inline-edit-actions">
+                           <button class="btn-add" onclick="saveInlineEditAction('${c.id}')">保存</button>
+                           <button class="batch-btn" style="color:var(--text-secondary); text-align:center;" onclick="cancelInlineEditAction()">取消</button>
+                         </div>`;
       } else {
         const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
         div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="startInlineEditAction('${c.id}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
@@ -2348,7 +2353,6 @@ function setupIncomingCallTimer(){
               reqToPromise(tx('messages','readwrite').add(msg));
               if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); appendMessageDOM(msg, c, true); }
               
-              // 触发点：未接来电也按概率触发简讯/信訊（可加上接听后挂断，见hangupCall）
               if(Math.random() * 100 < config.smsRate) themLeaveSms(currentChatId, false);
               if(Math.random() * 100 < config.letterRate) themWriteLetter(currentChatId, false);
             }
@@ -3043,8 +3047,8 @@ function bindEvents(){
   }
 
   document.querySelectorAll('.tab-item').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); tab.classList.add('active'); $('#tabContentCards').style.display='none'; $('#tabContentStickers').style.display='none'; $('#tabContentActions').style.display='none'; $('#tabContentMusic').style.display='none'; if(tab.dataset.tab==='cards'){ $('#tabContentCards').style.display='block'; loadAndRenderCards(); } else if(tab.dataset.tab==='stickers'){ $('#tabContentStickers').style.display='block'; loadAndRenderStamps(); } else if(tab.dataset.tab==='actions'){ $('#tabContentActions').style.display='block'; loadAndRenderActions(); } else { $('#tabContentMusic').style.display='block'; loadAndRenderMusic(); } }; });
-  document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
-  document.querySelectorAll('.action-sub-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.action-sub-tab').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='2px solid var(--primary)'; tab.style.fontWeight='600'; currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); }; });
+  document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
+  document.querySelectorAll('.action-sub-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.action-sub-tab').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); }; });
   $('#backPostOfficeBtn').onclick = () => $('#pagePostOffice').classList.remove('show');
 
   const actionMask = $('#actionSheetMask');
@@ -3172,7 +3176,7 @@ function bindEvents(){
   
   $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
   
-  $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
+  $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
 
   if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
   if($('#stampFileInput')) $('#stampFileInput').onchange = e => {
@@ -3232,7 +3236,7 @@ function bindEvents(){
   $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
   $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
   $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
-  $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);border-right:1px solid var(--border-light);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);border-right:1px solid var(--border-light);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
+  $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
 
   $('#musicFileBox').onclick = () => $('#musicFileInput').click();
   $('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file){ $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
@@ -3450,7 +3454,7 @@ function bindEvents(){
     }
     else if(act === 'export') { 
       showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
-      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary); border-right:1px solid var(--border-light);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
+      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
       $('#btnCancelArchive').onclick = () => $('#dialogMask').classList.remove('show');
       $('#btnExportData').onclick = () => { $('#dialogMask').classList.remove('show'); exportData(); };
       $('#btnImportData').onclick = () => { 

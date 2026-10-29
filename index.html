@@ -105,8 +105,9 @@
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
   
-  .date-divider { align-self:center; background:rgba(212, 184, 114, 0.15); color:var(--time-color-daily); font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; border:1px solid rgba(212,184,114,0.2); }
-  body.is-night-mode .date-divider { background:rgba(163, 74, 96, 0.2); color: #E8BCC5; border-color: rgba(163, 74, 96, 0.3); }
+  /* 日期分割线：浅宣纸底 + 深茶灰字 + 极细线 */
+  .date-divider { align-self:center; background:rgba(251, 248, 240, 0.9); color:#4A3E3E; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; border:1px solid rgba(180, 160, 120, 0.3); }
+  body.is-night-mode .date-divider { background:rgba(42, 35, 32, 0.9); color:#e8dcc8; border-color: rgba(200, 170, 130, 0.4); }
 
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
@@ -196,9 +197,12 @@
   .btn-edit,.btn-del { background:transparent; border:none; font-size:13px; }
   .btn-edit { color:var(--primary); } .btn-del { color:#e53935; }
   .stamp-upload-box { width:100%; height:120px; border:2px dashed var(--topbar-border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--text-secondary); margin-bottom:20px; background:rgba(128,128,128,.05); }
-  .stamp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-  .stamp-item { width:100%; aspect-ratio:1 / 1; border-radius:8px; overflow:hidden; background:var(--input-bg); position:relative; display:block; }
-  .stamp-item img { width:100%; height:100%; object-fit:cover; display:block; }
+  
+  /* 彻底重做的印花网格：强制正方形，一行三个，铺满 */
+  .stamp-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; width:100%; }
+  .stamp-item { width:100%; aspect-ratio:1 / 1 !important; border-radius:8px; overflow:hidden; background:var(--input-bg); position:relative; display:block; }
+  .stamp-item img { width:100% !important; height:100% !important; object-fit:cover !important; display:block; }
+  
   .stamp-checkbox { position:absolute; top:5px; right:5px; width:20px; height:20px; accent-color:#e53935; display:none; }
   .stamp-grid.batch-mode .stamp-checkbox { display:block; }
   .music-add-box { display:flex; flex-direction:column; background:var(--input-bg); border-radius:8px; padding:15px; margin-bottom:20px; gap:10px; }
@@ -382,7 +386,7 @@
   .accompany-them-proposal { text-align:center; padding:8px 0; }
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   .accompany-proposal-btns { display:flex; gap:10px; justify-content:center; }
-  .accompany-proposal-btns button { padding:8px 16px; border-radius:8px; border:none; font-size:14px; font-weight:600; }
+  .accompany-proposal-btns button { flex:1; padding:8px 0; border-radius:8px; border:none; font-size:14px; font-weight:600; text-align:center; }
   .accompany-accept-btn { background:#7fa36b; color:#fff; }
   .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
 
@@ -510,8 +514,7 @@
   <div class="page page-create" id="pageCreate">
     <div class="topbar"><button class="icon-btn" id="cancelCreateBtn">←</button><div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="createPageTitle">建立新對話</div><div style="width:40px;"></div></div>
     <div class="create-scroll">
-      <!-- 删除了聊天室名称输入 -->
-      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
+      <!-- 删掉了聊天室名称和多余线条 -->
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">祂的資料</div>
         <div id="theirAvatar" onclick="document.getElementById('theirFile').click()" style="width:80px;height:80px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">祂</div>
@@ -526,9 +529,8 @@
         <input type="file" id="myFile" accept="image/*" style="display:none">
         <input type="text" id="inputMyName" placeholder="名字" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
         <input type="text" id="inputMyNick" placeholder="暱稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
-        <!-- 删除了我的签名 -->
+        <!-- 删掉了我的签名和下面的线条 -->
       </div>
-      <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">專屬留聲底圖</div>
         <div id="musicCoverUpload" onclick="document.getElementById('musicCoverFile').click()" style="width:56px;height:56px;border-radius:50%;background:var(--input-bg);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;margin-bottom:16px;border:2px solid var(--topbar-border);background-size:cover;background-position:center;">圖</div>
@@ -675,15 +677,8 @@
           <input type="number" id="bubbleOpacityInput" class="bubble-opacity-input" min="0" max="100">
         </div>
       </div>
+      <!-- 彻底删掉了干支月自订 -->
 
-      <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
-        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">干支月自訂</div>
-        <div class="bubble-opacity-row">
-          <span>自訂月（留空自動算）</span>
-          <input type="text" id="customMonthInput" class="bubble-opacity-input" placeholder="戊戌月" style="width:80px;">
-        </div>
-      </div>
-      
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主題顏色</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
@@ -728,7 +723,9 @@
         <div class="stamp-upload-box" id="stampUploadBox">點擊上傳印花</div>
         <div class="toolbar" id="stampNormalToolbar"><button class="tool-btn" id="btnStampImport">入畫</button><button class="tool-btn" id="btnStampExport">出畫</button><button class="tool-btn" id="btnStampDeduplicate">清冗</button><button class="tool-btn" id="btnStampBatchDelete" style="color:#e53935;">焚毀</button></div>
         <div class="batch-toolbar" id="stampBatchToolbar" style="display:none;"><span id="stampBatchCount">已選 0 張</span><div style="display:flex;gap:15px;"><button class="batch-btn" id="btnStampSelectAll">全選</button><button class="batch-btn danger" id="btnStampConfirmDelete">確認焚毀</button><button class="batch-btn" id="btnStampCancelDelete">取消</button></div></div>
-        <div class="card-list-header" id="stampListHeader">印花：共 0 張</div><div class="stamp-grid" id="stampGrid" style="height: 50vh; overflow-y: auto; padding-bottom: 20px;"></div>
+        <div class="card-list-header" id="stampListHeader">印花：共 0 張</div>
+        <!-- 新的印花网格，彻底重做 -->
+        <div class="stamp-grid" id="stampGrid" style="height: 50vh; overflow-y: auto; padding-bottom: 20px;"></div>
       </div>
       <div id="tabContentActions" style="display:none;">
         <div style="display:flex;margin-bottom:15px;border-bottom:1px solid var(--border-light);">
@@ -875,14 +872,13 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 精准历法（农历与节气数据表）=====
+// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初初刻','初一刻','初二刻','初三刻','正初刻','正一刻','正二刻','正三刻'];
 const YUE_NAMES = ['陬月','如月','寎月','余月','皋月','且月','相月','壮月','玄月','阳月','辜月','涂月'];
 
-// 节气数据表 20世纪-21世纪 (防止计算偏月)
 function getTermDate(y, n) {
   const century = Math.floor(y / 100);
   const year = y % 100;
@@ -898,7 +894,6 @@ function getAncientTime(date) {
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
-  // 1. 年干支（立春换年）
   const lichun = getTermDate(y, 2);
   let ganZhiYear = y;
   if (utc8Date < lichun) ganZhiYear--;
@@ -906,18 +901,10 @@ function getAncientTime(date) {
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  // 2. 月名（按公历推近似农历月，再套《尔雅》名）
-  // 为了避开农历算法，这里用一个非常准的近似：公历月份对应农历月，冬春交季稍微偏移
-  let lunarMonthIndex = (m + 10) % 12; // 例如10月 -> 8 (九月)，11月 -> 9 (十月)
+  let lunarMonthIndex = (m + 10) % 12; 
   let yueName = YUE_NAMES[lunarMonthIndex] || '玄月';
-  let customMonth = localStorage.getItem('nz_custom_month') || '';
-  if (customMonth.trim()) {
-    yueName = customMonth.trim();
-  } else {
-    yueName = YUE_NAMES[(m >= 10 ? m - 10 : m + 2)] || '玄月'; // 简化映射
-  }
+  yueName = YUE_NAMES[(m >= 10 ? m - 10 : m + 2)] || '玄月';
   
-  // 3. 日干支
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
@@ -925,13 +912,11 @@ function getAncientTime(date) {
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
-  // 4. 时干支
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
-  // 5. 刻
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
   
@@ -1023,7 +1008,7 @@ let isGlobalCallActive = false, callTimer = null, callStartTime = null, callInte
 let callPanelPos = null, callFloatPos = null;
 let isAccompanyActive = false, accompanyStartTime = null, accompanyInterval = null, accompanyPanelPos = null, accompanyFloatPos = null;
 let currentAccompanyAct = '', currentAccompanyActRaw = '';
-let accompanyInteractTimer = null, callInteractTimer = null;
+let accompanyInteractTimer = null, callInteractTimer = null, isAccompanyWaiting = false;
 let isWaitingForMyReply = false;
 
 let askMode = 'wen', askAttachData = null, askImgList = [], askSingleChecked = true, askMultiChecked = false;
@@ -1087,8 +1072,6 @@ async function init(){
     $('#adjCollectRate').value = config.collectRate;
     
     if($('#bubbleOpacityInput')) $('#bubbleOpacityInput').value = config.bubbleOpacity;
-    const customMonth = localStorage.getItem('nz_custom_month');
-    if(customMonth && $('#customMonthInput')) $('#customMonthInput').value = customMonth;
     
   } catch(err){ console.error(err); toast('資料庫初始化失敗：' + err.message); }
 }
@@ -1356,7 +1339,6 @@ function appendMessageDOM(m, c, animate=true){
     innerNode = buildAskCard(m, c);
   } else {
     const bubbleEl = document.createElement('div');
-    // 只有祂的撩拨字卡才使用专属渐变气泡
     let bubbleClass = 'bubble';
     if(m.type === 'action') bubbleClass += ' action-bubble';
     if(m.sender === 'them' && m.cardCategory === 'flirt') bubbleClass += ' flirt-card-bubble';
@@ -2028,7 +2010,7 @@ function openAccompanySelect(){
   if(isAccompanyActive){ toast('請先結束當前相伴'); return; }
   const c = chats.find(x => x.id === currentChatId);
   if(!c) return;
-  currentAccompanyAct = ''; currentAccompanyActRaw = '';
+  currentAccompanyAct = ''; currentAccompanyActRaw = ''; isAccompanyWaiting = false;
   $('#accompanyHint').textContent = `與${getDisplayName(c)}相伴，一同做些什麼`;
   $('#accompanyCustomInput').value = '';
   renderAccompanyActs();
@@ -2045,9 +2027,11 @@ async function doInviteAccompany(){
   const custom = $('#accompanyCustomInput').value.trim();
   const act = custom || currentAccompanyAct;
   if(!act){ toast('請選擇或填寫相伴之事'); return; }
+  isAccompanyWaiting = true;
   $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">等待${getDisplayName(c)}應允…</div></div>`;
   setTimeout(() => {
     const agree = Math.random() < 0.85;
+    isAccompanyWaiting = false;
     $('#accompanySelectMask').classList.remove('show');
     if(agree) startAccompany(act, custom ? 'custom' : 'fixed');
     else toast(`${getDisplayName(c)}婉拒了這次相伴`);
@@ -2055,15 +2039,18 @@ async function doInviteAccompany(){
 }
 async function doThemChoose(){
   const c = chats.find(x => x.id === currentChatId); if(!c) return;
+  isAccompanyWaiting = true;
   $('#accompanySelectFooter').innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在想…</div></div>`;
   setTimeout(() => {
     const act = ACCOMPANY_ACTS[Math.floor(Math.random()*ACCOMPANY_ACTS.length)];
     const footer = $('#accompanySelectFooter');
+    isAccompanyWaiting = false;
     footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">另擬</button></div></div>`;
     
     $('#btnAcceptProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); startAccompany(act, 'fixed'); };
     $('#btnRejectProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); }; 
     $('#btnRetryProposal').onclick = () => {
+      isAccompanyWaiting = true;
       footer.innerHTML = `<div class="accompany-wait-box"><div class="accompany-spinner"></div><div class="accompany-hint">${getDisplayName(c)}正在另想…</div></div>`;
       setTimeout(() => { doThemChoose(); }, 1200 + Math.random()*1200);
     };
@@ -2412,7 +2399,6 @@ function bindEvents(){
     $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
     $('#inputMyName').value = activeChatForMenu.myName || '';
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
-    // 移除 mySign
     tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
     tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
     
@@ -2596,7 +2582,12 @@ function bindEvents(){
   $('#btnMinimizeCall').onclick = () => { hideCallPanel(); const f = $('#callFloat'); f.classList.add('show'); if(callFloatPos){ const q = clampPos(callFloatPos.left, callFloatPos.top, 56, 56); callFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
   $('#btnMinimizeAccompany').onclick = () => { hideAccompanyPanel(); const f = $('#accompanyFloat'); f.classList.add('show'); if(accompanyFloatPos){ const q = clampPos(accompanyFloatPos.left, accompanyFloatPos.top, 56, 56); accompanyFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
   $('#btnEndAccompany').onclick = endAccompany;
-  $('#accompanySelectMask').onclick = e => { if(e.target === $('#accompanySelectMask')) $('#accompanySelectMask').classList.remove('show'); };
+  $('#accompanySelectMask').onclick = e => { 
+    if(e.target === $('#accompanySelectMask')){
+      if(isAccompanyWaiting) return;
+      $('#accompanySelectMask').classList.remove('show'); 
+    }
+  };
   $('#askModalMask').onclick = e => { if(e.target === $('#askModalMask')) $('#askModalMask').classList.remove('show'); };
 
   document.querySelectorAll('.ask-modal-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.ask-modal-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); askMode = tab.dataset.asktab; if(askMode === 'wen'){ $('#askWenSection').style.display='block'; $('#askTuSection').style.display='none'; } else { $('#askWenSection').style.display='none'; $('#askTuSection').style.display='block'; } }; });

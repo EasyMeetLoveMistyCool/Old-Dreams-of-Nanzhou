@@ -84,7 +84,6 @@
 
   .header-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; padding:8px 0; }
   .header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
-  /* 问题7：签名允许换行 */
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:normal; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
@@ -377,8 +376,8 @@
   .accompany-them-proposal { text-align:center; padding:8px 0; }
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   
-  /* 问题6：修复相伴按钮太窄太挤 */
-  .accompany-proposal-btns { display:flex; gap:12px; justify-content:center; width:100%; margin-top:10px; }
+  /* 彻底重写这里的按钮样式，强制平分宽度、等大、带间距 */
+  .accompany-proposal-btns { display:flex; gap:12px; justify-content:center; width:100%; margin-top:10px; padding:0 16px; box-sizing:border-box; }
   .accompany-proposal-btns button { flex:1; padding:12px 0; border-radius:8px; border:none; font-size:15px; font-weight:600; white-space:nowrap; }
   
   .accompany-accept-btn { background:var(--primary); color:#fff; }
@@ -497,7 +496,6 @@
   .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
   .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
 
-  /* 问题5：简讯全屏 */
   .page-notes { background: #f4ede3; }
   body.is-night-mode .page-notes { background: #1a1216; }
   .notes-lid { height: 30px; background: linear-gradient(to bottom, #5a3d2b, #3b2618); border-bottom: 2px solid #2a1a10; box-shadow: 0 4px 6px rgba(0,0,0,.2); border-radius: 0 0 10px 10px; flex:0 0 auto; z-index:10; display:flex; justify-content:center; align-items:center; }
@@ -616,7 +614,7 @@
     </div>
   </div>
 
-  <!-- 简讯（留言匣）页：全屏页面 -->
+  <!-- 简讯（留言匣）页 -->
   <div class="page page-notes" id="pageNotes">
     <div class="topbar" style="border-bottom:none;">
       <button class="icon-btn" id="backNotesBtn">←</button>
@@ -903,7 +901,7 @@
 <input type="file" id="albumInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
- const originalQuerySelector = document.querySelector.bind(document);
+const originalQuerySelector = document.querySelector.bind(document);
 document.querySelector = function(selector) {
   const el = originalQuerySelector(selector);
   if (!el) {
@@ -920,57 +918,49 @@ const toastEl = $('#toast');
 let toastTimer = null;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 1800); }
 
-const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
-
-// ===== 干支算法（精准查表版，按时分精确交节） =====
+// ===== 干支算法（精确匹配节气表） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 
-// 简化版精准交节时间数据 (按2024-2026实际交节日，为简化代码未包含具体分秒，如果当天交节则按中午12点判定)
-// 注意：为了让代码能在前端独立且不出错跑起来，交节时刻使用标准日期近似，确保农历和干支月的对齐。
-const TERM_TABLE = {
-  2024: [6,20,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
-  2025: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
-  2026: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22],
-  2027: [5,20,4,19,6,21,5,20,6,21,6,21,7,23,8,23,8,23,8,24,7,22,7,22],
-  2028: [6,21,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
-  2029: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
-  2030: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22]
+// 节气表（月，日） 24节气
+const TERM_DATES = {
+  2024: [[1,6],[1,20],[2,4],[2,19],[3,5],[3,20],[4,4],[4,19],[5,5],[5,20],[6,5],[6,21],[7,6],[7,22],[8,7],[8,22],[9,7],[9,22],[10,8],[10,23],[11,7],[11,22],[12,6],[12,21]],
+  2025: [[1,5],[1,20],[2,3],[2,18],[3,5],[3,20],[4,4],[4,20],[5,5],[5,21],[6,5],[6,21],[7,7],[7,22],[8,7],[8,23],[9,7],[9,23],[10,8],[10,23],[11,7],[11,22],[12,7],[12,21]],
+  2026: [[1,5],[1,20],[2,4],[2,19],[3,5],[3,20],[4,5],[4,20],[5,5],[5,21],[6,5],[6,21],[7,7],[7,23],[8,7],[8,23],[9,7],[9,23],[10,8],[10,23],[11,7],[11,22],[12,7],[12,22]],
+  2027: [[1,5],[1,20],[2,4],[2,19],[3,6],[3,21],[4,5],[4,20],[5,6],[5,21],[6,6],[6,21],[7,7],[7,23],[8,8],[8,23],[9,8],[9,23],[10,8],[10,24],[11,8],[11,22],[12,7],[12,22]],
+  2028: [[1,6],[1,20],[2,4],[2,19],[3,5],[3,20],[4,4],[4,19],[5,5],[5,20],[6,5],[6,21],[7,6],[7,22],[8,7],[8,22],[9,7],[9,22],[10,8],[10,23],[11,7],[11,22],[12,6],[12,21]]
 };
-
-function getTermDate(y, n) {
-  if (TERM_TABLE[y]) {
-    return new Date(y, Math.floor(n / 2), TERM_TABLE[y][n]);
-  }
-  const year = y % 100;
-  const C = [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94][n];
-  let calcD = Math.floor(year * 0.2422 + C) - Math.floor(year / 4);
-  if (n === 2 || n === 5 || n === 8 || n === 11) calcD -= 1;
-  return new Date(y, Math.floor(n / 2), calcD);
-}
 
 function getAncientTime(date) {
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
-  // 1. 年干支（以立春为界）
-  const lichun = getTermDate(y, 2);
-  let ganZhiYear = y;
-  if (utc8Date < lichun) ganZhiYear--;
-  const yearGan = (ganZhiYear - 4) % 10;
-  const yearZhi = (ganZhiYear - 4) % 12;
+  let yearGan = (y - 4) % 10;
+  let yearZhi = (y - 4) % 12;
+  
+  const terms = TERM_DATES[y];
+  if (terms) {
+    const lichun = terms[2]; // 立春 索引2
+    if (m < lichun[0] || (m === lichun[0] && d < lichun[1])) {
+      yearGan = (y - 5) % 10;
+      yearZhi = (y - 5) % 12;
+    }
+  }
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  // 2. 月干支（以节气为界，五虎遁）
-  const termsThisYear = [];
-  for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
   let termIndex = 23;
-  for(let i=0; i<24; i++) {
-    if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
+  if (terms) {
+    for (let i = 0; i < 24; i++) {
+      const t = terms[i];
+      if (m < t[0] || (m === t[0] && d < t[1])) {
+        termIndex = i - 1;
+        break;
+      }
+    }
   }
-  if(termIndex < 0) { termIndex = 23; }
+  if (termIndex < 0) termIndex = 23;
   
   let monthZhi = (termIndex + 2) % 12;
   if (termIndex === 23) monthZhi = 0;
@@ -981,7 +971,6 @@ function getAncientTime(date) {
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
   const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
-  // 3. 日干支（以2000年1月1日戊午日为基准）
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
@@ -989,13 +978,11 @@ function getAncientTime(date) {
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
-  // 4. 时干支（五鼠遁）
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
-  // 5. 刻（八刻）
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
   
@@ -2468,7 +2455,7 @@ async function openNotesPage(){
   notes.sort((a,b) => b.time - a.time);
   
   if(!notes.length) {
-    wrap.innerHTML = '<div class="fav-empty">匣子空空如也</div>';
+    wrap.innerHTML = '<div class="fav-empty" style="color:#888;text-align:center;padding:50px 20px;">匣子空空如也</div>';
   } else {
     notes.forEach(n => {
       const div = document.createElement('div');

@@ -74,6 +74,19 @@
   .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:none; z-index:10; background:transparent; }
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
   
+  /* 提筆按钮专属修复 */
+  #composeLetterBtn { 
+    width:auto !important; 
+    padding: 0 10px !important; 
+    color:var(--primary) !important; 
+    margin-right:12px !important; 
+    font-size:16px !important; 
+    font-weight:500 !important; 
+    white-space:nowrap !important; 
+    writing-mode: horizontal-tb !important; 
+    line-height:1 !important;
+  }
+
   .header-avatar-wrap { width:36px; height:36px; flex:0 0 36px; margin-right:10px; position:relative; display:flex; align-items:center; justify-content:center; }
   .avatar-sm { width:100%; height:100%; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden; }
   
@@ -763,7 +776,7 @@
     <div class="topbar">
       <button class="icon-btn" id="backLettersBtn">←</button>
       <div class="header-title" style="flex:1;text-align:center;font-size:17px;">信訊</div>
-      <button class="icon-btn" id="composeLetterBtn" style="width:auto;padding:0 8px;color:var(--primary);margin-right:4px;">提筆</button>
+      <button class="icon-btn" id="composeLetterBtn" style="color:var(--primary);">提筆</button>
     </div>
     <div class="letter-tab-bar">
       <div class="letter-tab active" data-lettertab="inbox">鴻雁</div>
@@ -1995,7 +2008,6 @@ function renderCardChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       
-      // 修改：编辑状态下按钮上下叠放，文字横排
       if (editMode === 'card' && editingId === c.id) {
         div.innerHTML = `<textarea id="inlineEditCard_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px; width:100%;">${escapeHtml(c.text)}</textarea>
                          <div class="inline-edit-actions">
@@ -2091,7 +2103,6 @@ function renderActionChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       
-      // 修改：编辑状态下按钮上下叠放，文字横排
       if (editMode === 'action' && editingId === c.id) {
         div.innerHTML = `<textarea id="inlineEditAction_${c.id}" class="add-textarea" style="min-height:80px;background:var(--bg-color);border:1px solid var(--primary); border-radius:6px; padding:8px; width:100%;">${escapeHtml(c.text)}</textarea>
                          <div class="inline-edit-actions">

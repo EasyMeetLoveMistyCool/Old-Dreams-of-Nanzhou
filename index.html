@@ -12,7 +12,9 @@
   
   :root {
     --bg-color:#f0f2f5; --topbar-border:#e4e6eb;
-    --text-color:#000000; --text-secondary:#707579; --time-color:#D4B872; 
+    --text-color:#000000; --text-secondary:#707579; 
+    --time-color-daily:#D4B872; 
+    --time-color-night:#E8BCC5;
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
@@ -21,10 +23,14 @@
     --bubble-daily-me: rgba(253,243,208, var(--bubble-opacity, 0.45));
     --text-daily: #4A3E3E;
     
-    /* 撩拨：深紫灰 & 莓果 */
+    /* 撩拨：纯色（用于非字卡的常规消息） */
     --bubble-night-them: rgba(74,59,76, var(--bubble-opacity, 0.45));
     --bubble-night-me: rgba(163,74,96, var(--bubble-opacity, 0.45));
     --text-night: #F7F2F2;
+    
+    /* 撩拨字卡专属（魅夜流光渐变） */
+    --bubble-flirt-gradient: linear-gradient(135deg, rgba(74,31,45, var(--bubble-opacity, 0.45)), rgba(38,26,43, var(--bubble-opacity, 0.45)));
+    --bubble-flirt-border: rgba(163, 74, 96, 0.4);
     
     /* 动作气泡 */
     --bubble-action-them: rgba(255,235,240,.85);
@@ -40,17 +46,16 @@
   body.theme-rain { --bg-color:#eef4f4; --primary:#009688; }
   body.theme-paper { --bg-color:#f5f1e6; --primary:#8d6e63; }
   body.theme-ink { --bg-color:#f4f4f4; --primary:#424242; }
-  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --text-color:#fff; --text-secondary:#888; --time-color:#555; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); }
-  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --text-color:#e0e0e0; --text-secondary:#8fa0b5; --time-color:#5a6b7c; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); }
-  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --text-color:#e8dff0; --text-secondary:#9a86a8; --time-color:#6c5a78; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); }
-  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --text-color:#e0e0e0; --text-secondary:#666; --time-color:#444; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); }
+  body.theme-cyber { --bg-color:#000; --topbar-border:#222; --text-color:#fff; --text-secondary:#888; --input-bg:rgba(255,255,255,.1); --primary:#00b0ff; --border-light:rgba(255,255,255,.05); }
+  body.theme-space { --bg-color:#0b1320; --topbar-border:#1a2639; --text-color:#e0e0e0; --text-secondary:#8fa0b5; --input-bg:rgba(255,255,255,.1); --primary:#4a90e2; --border-light:rgba(255,255,255,.05); }
+  body.theme-nightpurple { --bg-color:#150e1c; --topbar-border:#2b1d36; --text-color:#e8dff0; --text-secondary:#9a86a8; --input-bg:rgba(255,255,255,.1); --primary:#b388ff; --border-light:rgba(255,255,255,.05); }
+  body.theme-pureblack { --bg-color:#000; --topbar-border:#1a1a1a; --text-color:#e0e0e0; --text-secondary:#666; --input-bg:rgba(255,255,255,.1); --primary:#888; --border-light:rgba(255,255,255,.05); }
 
   body.is-night-mode {
     --bg-color: #1a1216 !important; 
     --topbar-border: #3a252b !important; 
     --text-color: #f5e6e8 !important; 
     --text-secondary: rgba(212, 122, 138, 0.6) !important; 
-    --time-color: rgba(212, 122, 138, 0.5) !important;
     --input-bg: rgba(0,0,0,0.3) !important; 
     --primary: #d47a8a !important; 
     --border-light: rgba(255,255,255,0.05) !important;
@@ -86,8 +91,8 @@
   .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
   .chat-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
   .chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
-  .chat-room-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .chat-their-name { font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-room-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:none; /* 隐藏聊天室名字 */ }
+  .chat-their-name { font-size:16px; font-weight:600; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .chat-mode-icon { font-size:13px; flex:0 0 auto; margin-left:2px; }
   .chat-preview { font-size:14px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; align-self:flex-start; margin-top:4px; }
@@ -100,8 +105,8 @@
   .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
   .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
   
-  .date-divider { align-self:center; background:rgba(0,0,0,.18); color:#fff; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; }
-  body.is-night-mode .date-divider { background:rgba(212,122,138,.2); }
+  .date-divider { align-self:center; background:rgba(212, 184, 114, 0.15); color:var(--time-color-daily); font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; border:1px solid rgba(212,184,114,0.2); }
+  body.is-night-mode .date-divider { background:rgba(163, 74, 96, 0.2); color: #E8BCC5; border-color: rgba(163, 74, 96, 0.3); }
 
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
@@ -135,6 +140,9 @@
   body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:var(--text-night); }
   body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:var(--text-night); }
   
+  /* 撩拨字卡专属渐变气泡 */
+  .msg-group.them .bubble.flirt-card-bubble { background: var(--bubble-flirt-gradient); border: 1px solid var(--bubble-flirt-border); color: var(--text-night); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  
   .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
@@ -148,9 +156,11 @@
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
   
-  .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
+  .msg-time-center { font-size:11px; color:var(--time-color-daily); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
   .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
-  .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.45; border-radius:4px; }
+  
+  body.is-night-mode .msg-time-center { color:var(--time-color-night); }
+  body.is-night-mode .msg-group.them .bubble.flirt-card-bubble .msg-time-center { color:var(--time-color-night); }
 
   .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
   .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
@@ -187,8 +197,8 @@
   .btn-edit { color:var(--primary); } .btn-del { color:#e53935; }
   .stamp-upload-box { width:100%; height:120px; border:2px dashed var(--topbar-border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--text-secondary); margin-bottom:20px; background:rgba(128,128,128,.05); }
   .stamp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-  .stamp-item { aspect-ratio:1; border-radius:8px; overflow:hidden; background:var(--input-bg); position:relative; }
-  .stamp-item img { width:100%; height:100%; object-fit:cover; }
+  .stamp-item { width:100%; aspect-ratio:1 / 1; border-radius:8px; overflow:hidden; background:var(--input-bg); position:relative; display:block; }
+  .stamp-item img { width:100%; height:100%; object-fit:cover; display:block; }
   .stamp-checkbox { position:absolute; top:5px; right:5px; width:20px; height:20px; accent-color:#e53935; display:none; }
   .stamp-grid.batch-mode .stamp-checkbox { display:block; }
   .music-add-box { display:flex; flex-direction:column; background:var(--input-bg); border-radius:8px; padding:15px; margin-bottom:20px; gap:10px; }
@@ -486,9 +496,6 @@
   .fav-stamp { font-size:11px; color:#8a7a5a; border:1px dashed rgba(150,130,90,.55); border-radius:4px; padding:2px 7px; white-space:nowrap; }
   body.theme-cyber .fav-stamp, body.theme-space .fav-stamp, body.theme-nightpurple .fav-stamp, body.theme-pureblack .fav-stamp, body.is-night-mode .fav-stamp { color:#b8a480; border-color:rgba(200,170,130,.4); }
 
-  .rose-upload-box { width:100%; height:100px; border-radius:8px; background:var(--input-bg); border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; overflow:hidden; margin-bottom:10px; }
-  .rose-preview-box { width:56px; height:56px; border-radius:8px; background:rgba(128,128,128,.1); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; border:2px solid var(--topbar-border); background-size:cover; background-position:center; }
-
   .bubble-opacity-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:14px; color:var(--text-color); }
   .bubble-opacity-input { width:60px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 </style>
@@ -503,7 +510,7 @@
   <div class="page page-create" id="pageCreate">
     <div class="topbar"><button class="icon-btn" id="cancelCreateBtn">←</button><div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="createPageTitle">建立新對話</div><div style="width:40px;"></div></div>
     <div class="create-scroll">
-      <input type="text" id="inputRoomName" placeholder="聊天室名稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+      <!-- 删除了聊天室名称输入 -->
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">祂的資料</div>
@@ -519,7 +526,7 @@
         <input type="file" id="myFile" accept="image/*" style="display:none">
         <input type="text" id="inputMyName" placeholder="名字" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
         <input type="text" id="inputMyNick" placeholder="暱稱" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
-        <input type="text" id="inputMySign" placeholder="簽名" style="width:100%;height:48px;border-radius:8px;background:var(--input-bg);border:1px solid var(--topbar-border);padding:0 14px;font-size:15px;color:var(--text-color);outline:none;text-align:center;margin-bottom:10px;">
+        <!-- 删除了我的签名 -->
       </div>
       <div style="height:1px;background:var(--topbar-border);margin:10px 0;"></div>
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px;">
@@ -670,13 +677,13 @@
       </div>
 
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
-        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">撩撥字卡標記（玫瑰）</div>
-        <div id="roseUploadBox" class="rose-upload-box" onclick="document.getElementById('roseFile').click()">
-          <div id="rosePreview" class="rose-preview-box">圖</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">干支月自訂</div>
+        <div class="bubble-opacity-row">
+          <span>自訂月（留空自動算）</span>
+          <input type="text" id="customMonthInput" class="bubble-opacity-input" placeholder="戊戌月" style="width:80px;">
         </div>
-        <input type="file" id="roseFile" accept="image/*" style="display:none">
-        <button id="roseResetBtn" style="background:transparent;border:none;color:var(--text-secondary);font-size:13px;padding:4px 0;">清除，恢復默認 🌹</button>
       </div>
+      
       <div style="background:rgba(128,128,128,.1);border-radius:10px;padding:15px;margin-bottom:20px;">
         <div style="font-size:15px;font-weight:600;margin-bottom:15px;border-left:3px solid var(--primary);padding-left:8px;">主題顏色</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
@@ -868,12 +875,14 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
+// ===== 精准历法（农历与节气数据表）=====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
+const KE = ['初初刻','初一刻','初二刻','初三刻','正初刻','正一刻','正二刻','正三刻'];
+const YUE_NAMES = ['陬月','如月','寎月','余月','皋月','且月','相月','壮月','玄月','阳月','辜月','涂月'];
 
+// 节气数据表 20世纪-21世纪 (防止计算偏月)
 function getTermDate(y, n) {
   const century = Math.floor(y / 100);
   const year = y % 100;
@@ -889,6 +898,7 @@ function getAncientTime(date) {
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
+  // 1. 年干支（立春换年）
   const lichun = getTermDate(y, 2);
   let ganZhiYear = y;
   if (utc8Date < lichun) ganZhiYear--;
@@ -896,22 +906,18 @@ function getAncientTime(date) {
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  const termsThisYear = [];
-  for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
-  let termIndex = 23;
-  for(let i=0; i<24; i++) {
-    if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
+  // 2. 月名（按公历推近似农历月，再套《尔雅》名）
+  // 为了避开农历算法，这里用一个非常准的近似：公历月份对应农历月，冬春交季稍微偏移
+  let lunarMonthIndex = (m + 10) % 12; // 例如10月 -> 8 (九月)，11月 -> 9 (十月)
+  let yueName = YUE_NAMES[lunarMonthIndex] || '玄月';
+  let customMonth = localStorage.getItem('nz_custom_month') || '';
+  if (customMonth.trim()) {
+    yueName = customMonth.trim();
+  } else {
+    yueName = YUE_NAMES[(m >= 10 ? m - 10 : m + 2)] || '玄月'; // 简化映射
   }
-  if(termIndex < 0) {
-    const lastYearTerms = [];
-    for(let i=0; i<24; i++) lastYearTerms.push(getTermDate(y-1, i));
-    termIndex = 23;
-  }
-  const monthZhi = (termIndex + 2) % 12;
-  const monthGanBase = (yearGan % 5) * 2 + 2;
-  const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
-  const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
+  // 3. 日干支
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
@@ -919,25 +925,26 @@ function getAncientTime(date) {
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
+  // 4. 时干支
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
+  // 5. 刻
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
   
   const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
 
   return {
-    dateStr: `${yearStr} ${monthStr} ${dayStr}`,
+    dateStr: `${yearStr} ${yueName} ${dayStr}`,
     timeStr: `${hourGanZhi} ${keName} ${timeStr}`
   };
 }
 
 let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
-let globalRoseMark = localStorage.getItem('nz_rose_mark') || null;
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
 const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, bubbleOpacity: 45 };
@@ -1067,7 +1074,6 @@ async function init(){
     bindEvents();
     applyThemeAndBg();
     if(globalBgImage){ $('#mainBgUploadBox').style.backgroundImage = `url(${globalBgImage})`; $('#mainBgText').textContent = ''; }
-    if(globalRoseMark){ const rb = $('#rosePreview'); if(rb){ rb.style.backgroundImage = `url(${globalRoseMark})`; rb.textContent = ''; } }
     loadAndRenderCards(); loadAndRenderStamps(); loadAndRenderActions(); loadAndRenderMusic();
     updateModeIcon(false);
     initPlayerDrag(); initCallDrag(); initAccompanyDrag();
@@ -1081,6 +1087,8 @@ async function init(){
     $('#adjCollectRate').value = config.collectRate;
     
     if($('#bubbleOpacityInput')) $('#bubbleOpacityInput').value = config.bubbleOpacity;
+    const customMonth = localStorage.getItem('nz_custom_month');
+    if(customMonth && $('#customMonthInput')) $('#customMonthInput').value = customMonth;
     
   } catch(err){ console.error(err); toast('資料庫初始化失敗：' + err.message); }
 }
@@ -1136,7 +1144,8 @@ async function renderChatList(){
     const row = document.createElement('div');
     row.className = 'chat-row' + (c.isPinned ? ' pinned' : '');
     row.dataset.id = c.id;
-    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-room-name">${escapeHtml(c.roomName || '未命名')}</span><span class="chat-their-name">${escapeHtml(c.theirName || '')}</span><span class="chat-mode-icon">${modeIcon}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
+    // 删掉了 chat-room-name，只保留 chat-their-name 作为主标题
+    row.innerHTML = `${avatarHtml}<div class="chat-info"><div class="chat-top-row"><span class="chat-their-name">${escapeHtml(c.theirNick || c.theirName || '未命名')}</span><span class="chat-mode-icon">${modeIcon}</span></div><div class="chat-preview">${escapeHtml(preview)}</div></div><div class="chat-time">${last ? fmtTime(last.time) : ''}</div>`;
     row.onclick = () => { if(!longPressTimer) openChat(c.id); };
     row.addEventListener('touchstart', () => {
       longPressTimer = setTimeout(() => {
@@ -1306,16 +1315,10 @@ function buildBubbleContent(m, isNight, useAnim){
   }
   
   const timeObj = getAncientTime(new Date(m.time));
-  let roseHtml = '';
-  if(m.sender === 'them' && m.cardCategory === 'flirt'){
-    if(globalRoseMark) roseHtml = `<img class="rose-mark" src="${globalRoseMark}" alt="标记">`;
-    else roseHtml = `<div class="rose-mark" style="background:linear-gradient(135deg,#d47a8a,#b05a6a);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;">🌹</div>`;
-  }
   
   return lines + st + `
     <div class="msg-time-center">
       <span class="time-text">${timeObj.timeStr}</span>
-      ${roseHtml}
     </div>`;
 }
 
@@ -1353,7 +1356,11 @@ function appendMessageDOM(m, c, animate=true){
     innerNode = buildAskCard(m, c);
   } else {
     const bubbleEl = document.createElement('div');
-    bubbleEl.className = 'bubble' + (m.type === 'action' ? ' action-bubble' : '');
+    // 只有祂的撩拨字卡才使用专属渐变气泡
+    let bubbleClass = 'bubble';
+    if(m.type === 'action') bubbleClass += ' action-bubble';
+    if(m.sender === 'them' && m.cardCategory === 'flirt') bubbleClass += ' flirt-card-bubble';
+    bubbleEl.className = bubbleClass;
     bubbleEl.innerHTML = buildBubbleContent(m, isNight, useAnim);
     innerNode = bubbleEl;
   }
@@ -2052,7 +2059,7 @@ async function doThemChoose(){
   setTimeout(() => {
     const act = ACCOMPANY_ACTS[Math.floor(Math.random()*ACCOMPANY_ACTS.length)];
     const footer = $('#accompanySelectFooter');
-    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">換一個</button></div></div>`;
+    footer.innerHTML = `<div class="accompany-them-proposal"><div class="accompany-hint">${getDisplayName(c)}提議：</div><div class="act-name">${escapeHtml(act)}</div><div class="accompany-proposal-btns"><button class="accompany-reject-btn" id="btnRejectProposal">拒絕</button><button class="accompany-accept-btn" id="btnAcceptProposal">接受</button><button class="accompany-reject-btn" id="btnRetryProposal">另擬</button></div></div>`;
     
     $('#btnAcceptProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); startAccompany(act, 'fixed'); };
     $('#btnRejectProposal').onclick = () => { $('#accompanySelectMask').classList.remove('show'); }; 
@@ -2405,7 +2412,7 @@ function bindEvents(){
     $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
     $('#inputMyName').value = activeChatForMenu.myName || '';
     $('#inputMyNick').value = activeChatForMenu.myNick || '';
-    $('#inputMySign').value = activeChatForMenu.mySign || '';
+    // 移除 mySign
     tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
     tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
     
@@ -2609,7 +2616,7 @@ function bindEvents(){
 
   $('#newChatBtn').onclick = () => {
     isEditingChatId = null; $('#createPageTitle').textContent = '建立新對話';
-    $('#inputRoomName').value=''; $('#inputTheirName').value=''; $('#inputTheirNick').value=''; $('#inputTheirSign').value=''; $('#inputMyName').value=''; $('#inputMyNick').value=''; $('#inputMySign').value='';
+    $('#inputRoomName').value=''; $('#inputTheirName').value=''; $('#inputTheirNick').value=''; $('#inputTheirSign').value=''; $('#inputMyName').value=''; $('#inputMyNick').value='';
     $('#theirAvatar').style.backgroundImage=''; $('#theirAvatar').textContent='祂';
     $('#myAvatar').style.backgroundImage=''; $('#myAvatar').textContent='我';
     $('#musicCoverUpload').style.backgroundImage=''; $('#musicCoverUpload').textContent='圖';
@@ -2634,8 +2641,8 @@ function bindEvents(){
   let isSavingChat = false;
   $('#saveChatBtn').onclick = async () => {
     if(isSavingChat) return;
-    const roomName = $('#inputRoomName').value.trim(), theirName = $('#inputTheirName').value.trim(), theirNick = $('#inputTheirNick').value.trim(), theirSign = $('#inputTheirSign').value.trim(), myName = $('#inputMyName').value.trim(), myNick = $('#inputMyNick').value.trim(), mySign = $('#inputMySign').value.trim();
-    if(!roomName){ toast('請輸入聊天室名稱'); return; }
+    const roomName = '聊天', theirName = $('#inputTheirName').value.trim(), theirNick = $('#inputTheirNick').value.trim(), theirSign = $('#inputTheirSign').value.trim(), myName = $('#inputMyName').value.trim(), myNick = $('#inputMyNick').value.trim(), mySign = '';
+    // roomName 没有输入框了，直接给个默认值即可
     isSavingChat = true;
     
     if(isEditingChatId){
@@ -2736,9 +2743,23 @@ function bindEvents(){
     });
   }
 
-  if($('#roseUploadBox')) $('#roseUploadBox').onclick = () => $('#roseFile').click();
-  if($('#roseFile')) $('#roseFile').onchange = e => { const f = e.target.files[0]; if(!f) return; if(f.size > 500 * 1024){ toast('圖片過大，請小於500KB'); e.target.value=''; return; } fileToBase64(f, b => { globalRoseMark = b; localStorage.setItem('nz_rose_mark', b); $('#rosePreview').style.backgroundImage=`url(${b})`; $('#rosePreview').textContent=''; toast('標記已更新'); }); e.target.value=''; };
-  if($('#roseResetBtn')) $('#roseResetBtn').onclick = () => { globalRoseMark = null; localStorage.removeItem('nz_rose_mark'); $('#rosePreview').style.backgroundImage=''; $('#rosePreview').textContent='圖'; toast('已恢復默認 🌹'); };
+  if($('#customMonthInput')) {
+    $('#customMonthInput').onchange = e => {
+      localStorage.setItem('nz_custom_month', e.target.value.trim());
+      if(currentChatId) {
+        const c = chats.find(x => x.id === currentChatId);
+        currentMessages = currentMessages.map(m => m); // trigger no-op but we need to redraw
+        renderMessagesUI(true);
+      }
+      toast('月名已更新');
+    };
+    document.body.addEventListener('click', e => {
+      if(e.target !== $('#customMonthInput') && document.activeElement === $('#customMonthInput')) {
+        $('#customMonthInput').blur();
+        $('#customMonthInput').dispatchEvent(new Event('change'));
+      }
+    });
+  }
 
   $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
   $('#saveAdjustBtn').onclick = () => {

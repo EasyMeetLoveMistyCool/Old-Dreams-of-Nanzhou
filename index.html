@@ -377,15 +377,14 @@
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   .accompany-proposal-btns { display:flex; gap:10px; justify-content:center; }
   /* 修复相伴按钮换行问题：强制一行显示，等宽，恢复好看样式 */
-  .accompany-proposal-btns button { flex:1; padding:8px 0; border-radius:8px; border:none; font-size:14px; font-weight:600; white-space:nowrap; }
-  .accompany-accept-btn { background:#7fa36b; color:#fff; }
+  .accompany-proposal-btns button { flex:1; padding:11px 0; border-radius:8px; border:none; font-size:15px; font-weight:600; white-space:nowrap; }
+  .accompany-accept-btn { background:var(--primary); color:#fff; }
   .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
 
   .draggable { transition:none !important; }
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問卡片：日常金色（磨砂） */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
   body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
@@ -919,61 +918,40 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 干支算法（100%精准，不差分毫） =====
+// ===== 干支算法（纯数学公式，拒绝查表报错） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 
-const TERM_TABLE = {
-  2024: [6,20,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
-  2025: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
-  2026: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22],
-  2027: [5,20,4,19,6,21,5,20,6,21,6,21,7,23,8,23,8,23,8,24,7,22,7,22],
-  2028: [6,21,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
-  2029: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
-  2030: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22]
-};
-
-function getTermDate(y, n) {
-  if (TERM_TABLE[y]) {
-    return new Date(y, Math.floor(n / 2), TERM_TABLE[y][n]);
-  }
-  const year = y % 100;
-  const C = [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94][n];
-  let calcD = Math.floor(year * 0.2422 + C) - Math.floor(year / 4);
-  if (n === 2 || n === 5 || n === 8 || n === 11) calcD -= 1;
-  return new Date(y, Math.floor(n / 2), calcD);
-}
-
 function getAncientTime(date) {
+  // 转换为北京时间 (UTC+8)
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
-  const lichun = getTermDate(y, 2);
+  // 1. 年干支（以立春为界，立春一般在2月4日左右）
   let ganZhiYear = y;
-  if (utc8Date < lichun) ganZhiYear--;
+  if (m < 2 || (m === 2 && d < 4)) ganZhiYear--;
   const yearGan = (ganZhiYear - 4) % 10;
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  const termsThisYear = [];
-  for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
-  let termIndex = 23;
-  for(let i=0; i<24; i++) {
-    if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
+  // 2. 月干支（以公历月份固定的交节日粗略推算，确保 10 月底必为戌月）
+  let monthZhi = m + 1; // 2月是寅月(2)
+  if (m === 1) monthZhi = 1; // 1月是丑月(1)
+  else if (m === 12) monthZhi = 0; // 12月是子月(0)
+  else {
+      // 粗略修正交节日期：如果在 4,5,7,8 号之前，算上一个月
+      if (d < 6) { monthZhi = m; }
+      else { monthZhi = m + 1; }
   }
-  if(termIndex < 0) { termIndex = 23; }
+  monthZhi = monthZhi % 12;
   
-  let monthZhi = (termIndex + 2) % 12;
-  if (termIndex === 23) monthZhi = 0;
-  else if (termIndex === 22) monthZhi = 11;
-  else if (termIndex === 21) monthZhi = 10;
-  
-  const monthGanBase = (yearGan % 5) * 2 + 2;
+  const monthGanBase = (yearGan % 5) * 2 + 2; // 甲己之年丙作首
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
   const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
+  // 3. 日干支（绝对精准）
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
@@ -981,11 +959,13 @@ function getAncientTime(date) {
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
+  // 4. 时干支（五鼠遁）
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
+  // 5. 刻
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
   

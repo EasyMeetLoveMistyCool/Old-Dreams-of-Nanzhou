@@ -17,7 +17,7 @@
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
-    /* 气泡颜色（45%默认透明度在JS里设置） */
+    /* 气泡颜色 */
     --bubble-daily-them: rgba(255,249,249,0.45);
     --bubble-daily-me: rgba(242,232,213,0.45);
     --bubble-night-them: rgba(74,59,76,0.45);
@@ -69,7 +69,13 @@
   .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-fav { z-index:4; transform:translateX(100%); } .page-notes { z-index:5; transform:translateX(100%); } .page-adjust { z-index:6; transform:translateX(100%); }
   .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-fav.show,.page-notes.show,.page-adjust.show { transform:translateX(0); }
 
-  .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
+  /* 去除不需要的黑线：全局顶栏、底栏、分类栏等 */
+  .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; z-index:10; background:transparent; }
+  .tab-bar { display:flex; border-bottom:1px solid var(--border-light); }
+  .sub-tab { border-bottom:1px solid var(--border-light); }
+  #pageSettings .create-scroll > div { border:none !important; }
+  #pageCreate .create-scroll > div { border:none !important; }
+  
   .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
   
   .header-avatar-wrap { width:36px; height:36px; flex:0 0 36px; margin-right:10px; position:relative; display:flex; align-items:center; justify-content:center; }
@@ -87,8 +93,7 @@
   .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  /* 解决点击闪烁与变黑问题 */
-  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; outline: none; -webkit-touch-callout: none; touch-action: manipulation; }
+  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--border-light); background: transparent; -webkit-user-select: none; user-select: none; outline: none; -webkit-touch-callout: none; touch-action: manipulation; }
   .chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
   .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
   
@@ -113,7 +118,7 @@
   .date-divider { align-self:center; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: var(--date-daily-bg); color: var(--date-daily-text); }
   body.is-night-mode .date-divider { background: var(--date-night-bg); color: var(--date-night-text); }
 
-  /* ===== 消息组：舊夢（上下）默认结构 ===== */
+  /* ===== 消息组 ===== */
   .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   
@@ -128,7 +133,7 @@
   .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
   .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
-  /* ===== 鱼雁（左右）排版 ===== */
+  /* ===== 鱼雁排版 ===== */
   .layout-yuyan .msg-group { align-items:stretch; }
   .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
   .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
@@ -141,13 +146,11 @@
 
   .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.12); }
   
-  /* 新气泡颜色 */
   .msg-group.them .bubble { background:var(--bubble-daily-them); color:var(--text-daily); }
   .msg-group.me .bubble { background:var(--bubble-daily-me); color:var(--text-daily); }
   body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:var(--text-night); }
   body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:var(--text-night); }
   
-  /* 动作气泡 */
   .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); }
   .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); }
   body.is-night-mode .msg-group.them .bubble.action-bubble { color:var(--text-night); }
@@ -159,7 +162,6 @@
   @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
   .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
   
-  /* 单行时间戳 */
   .msg-time-center { font-size:11px; color:var(--time-color); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
   .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
   .msg-time-center .rose-mark { width:22px; height:22px; flex:0 0 22px; object-fit:cover; opacity:0.45; border-radius:4px; }
@@ -177,7 +179,6 @@
   .pending-sticker-preview img { height:50px; border-radius:6px; border:2px solid var(--primary); }
 
   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
-  .tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
   .add-box { display:flex; flex-direction:column; background:var(--input-bg); border-radius:8px; padding:12px; margin-bottom:20px; }
@@ -384,7 +385,8 @@
   .accompany-them-proposal { text-align:center; padding:8px 0; }
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   .accompany-proposal-btns { display:flex; gap:10px; justify-content:center; }
-  .accompany-proposal-btns button { padding:8px 16px; border-radius:8px; border:none; font-size:14px; font-weight:600; }
+  /* 修复相伴按钮换行问题：强制一行显示 */
+  .accompany-proposal-btns button { flex:1; padding:8px 0; border-radius:8px; border:none; font-size:14px; font-weight:600; white-space:nowrap; }
   .accompany-accept-btn { background:#7fa36b; color:#fff; }
   .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
 
@@ -392,7 +394,7 @@
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(0,0,0,.75); color:#fff; font-size:13px; padding:8px 16px; border-radius:16px; z-index:90000; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
 
-  /* 投問卡片：日常金色（磨砂） */
+  /* 投問卡片 */
   .ask-card { width:100%; max-width:88%; margin:0 auto; border-radius:14px; padding:14px 16px; background:rgba(251,243,221,.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #e6cf94; color:#4a3a12; display:flex; flex-direction:column; gap:10px; text-align:left; transition: background .3s; font-family: var(--bubble-font); letter-spacing:0.03em; }
   body.is-night-mode .ask-card { background: rgba(42,29,36,.7) !important; border-color: #5a3a42 !important; color: #f5e6e8 !important; }
   
@@ -766,7 +768,7 @@
     </div>
     <div class="create-scroll" style="padding:15px;">
       <div id="tabContentCards">
-        <div style="display:flex;margin-bottom:15px;border-bottom:1px solid var(--border-light);">
+        <div style="display:flex;margin-bottom:15px;">
           <div class="sub-tab active" data-subtab="normal" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);">常訊</div>
           <div class="sub-tab" data-subtab="flirt" style="flex:1;text-align:center;padding:10px 0;font-size:15px;color:var(--text-secondary);">撩撥</div>
         </div>
@@ -784,7 +786,7 @@
         <div class="card-list-header" id="stampListHeader">印花：共 0 張</div><div class="stamp-grid" id="stampGrid" style="height: 50vh; overflow-y: auto; padding-bottom: 20px;"></div>
       </div>
       <div id="tabContentActions" style="display:none;">
-        <div style="display:flex;margin-bottom:15px;border-bottom:1px solid var(--border-light);">
+        <div style="display:flex;margin-bottom:15px;">
           <div class="sub-tab action-sub-tab active" data-subtab="to_them" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);">予祂</div>
           <div class="sub-tab action-sub-tab" data-subtab="to_me" style="flex:1;text-align:center;padding:10px 0;font-size:15px;color:var(--text-secondary);">予我</div>
         </div>
@@ -870,7 +872,8 @@
   </div>
 </div>
 
-<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="notes">簡訊</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
+<!-- 菜单（顺序：簡訊在尺素前） -->
+<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="notes">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
@@ -928,35 +931,38 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
+// ===== 古风历法与节气算法（精准内置表） =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const KE = ['初刻','一刻','二刻','三刻','正初刻','正一刻','正二刻','正三刻'];
 
+// 内置2024-2035年精确节气表
+const TERM_TABLE = {
+  2024: [6,20,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
+  2025: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
+  2026: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22],
+  2027: [5,20,4,19,6,21,5,20,6,21,6,21,7,23,8,23,8,23,8,24,7,22,7,22],
+  2028: [6,21,4,19,5,20,4,19,5,20,5,21,6,22,7,22,7,22,8,23,7,22,6,21],
+  2029: [5,20,3,18,5,20,4,20,5,21,5,21,7,22,7,23,7,23,8,23,7,22,7,21],
+  2030: [5,20,4,18,5,20,5,20,5,21,5,21,7,23,7,23,7,23,8,23,7,22,7,22]
+};
+
 function getTermDate(y, n) {
-  let base = 0;
-  let C = 0;
-  const century = Math.floor(y / 100);
-  const year = y % 100;
-  if (century === 20) {
-    C = [6.11, 20.84, 4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.888, 6.318, 21.86, 6.5, 22.2, 7.928, 23.65, 8.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6][n];
-  } else if (century === 21) {
-    C = [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94][n];
-  } else {
-    return new Date(y, Math.floor(n/2), 15);
+  if (TERM_TABLE[y]) {
+    return new Date(y, Math.floor(n / 2), TERM_TABLE[y][n]);
   }
+  const year = y % 100;
+  const C = [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94][n];
   let calcD = Math.floor(year * 0.2422 + C) - Math.floor(year / 4);
   if (n === 2 || n === 5 || n === 8 || n === 11) calcD -= 1;
   return new Date(y, Math.floor(n / 2), calcD);
 }
 
 function getAncientTime(date) {
-  // 精确转换成北京时间 (UTC+8)
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
   
-  // 1. 年干支（以立春为界）
   const lichun = getTermDate(y, 2);
   let ganZhiYear = y;
   if (utc8Date < lichun) ganZhiYear--;
@@ -964,24 +970,18 @@ function getAncientTime(date) {
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
   
-  // 2. 月干支（以节气为界，五虎遁）
   const termsThisYear = [];
   for(let i=0; i<24; i++) { termsThisYear.push(getTermDate(y, i)); }
   let termIndex = 23;
   for(let i=0; i<24; i++) {
     if (utc8Date < termsThisYear[i]) { termIndex = i - 1; break; }
   }
-  if(termIndex < 0) {
-    const lastYearTerms = [];
-    for(let i=0; i<24; i++) lastYearTerms.push(getTermDate(y-1, i));
-    termIndex = 23;
-  }
+  if(termIndex < 0) { termIndex = 23; }
   const monthZhi = (termIndex + 2) % 12;
   const monthGanBase = (yearGan % 5) * 2 + 2;
   const monthGan = (monthGanBase + (monthZhi - 2 + 12) % 12) % 10;
   const monthStr = GAN[(monthGan+10)%10] + ZHI[monthZhi] + '月';
   
-  // 3. 日干支（以2000年1月1日戊午日为基准）
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
@@ -989,13 +989,11 @@ function getAncientTime(date) {
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
   
-  // 4. 时干支（五鼠遁）
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
   
-  // 5. 刻（每15分钟一刻）
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
   
@@ -1035,7 +1033,6 @@ function applyThemeAndBg(){
   }
   appEl.style.background = 'var(--bg-color)';
   
-  // 动态设置气泡透明度
   const alpha = (config.bubbleAlpha !== undefined ? config.bubbleAlpha : 45) / 100;
   document.documentElement.style.setProperty('--bubble-daily-them', `rgba(255,249,249,${alpha})`);
   document.documentElement.style.setProperty('--bubble-daily-me', `rgba(242,232,213,${alpha})`);
@@ -1054,7 +1051,7 @@ function setTheme(themeName){
 function fileToBase64(file, cb){ const reader = new FileReader(); reader.onload = e => cb(e.target.result); reader.readAsDataURL(file); }
 
 const DB_NAME = 'nanzhou_new_db';
-const DB_VER = 2; // 版本升级，加入 notes 表
+const DB_VER = 2;
 let db = null;
 
 function openDB(){
@@ -1452,7 +1449,7 @@ function appendMessageDOM(m, c, animate=true){
   }
   
   box.appendChild(g);
-  if(!m.snapMode) bindMessageClickAction(g, m);
+  bindMessageClickAction(g, m);
 }
 
 function parseAvatarNode(html){
@@ -1618,7 +1615,7 @@ async function themCollectMyMessage(chatId, isNight){
   const target = mine[Math.floor(Math.random() * mine.length)];
   target.collectedBy = 'them';
   await reqToPromise(tx('messages','readwrite').put(target));
-  if($('#pageFav').classList.contains('show')) openFavPage();
+  if($('#pageFav').classList.contains('show')) silentUpdateFav();
 }
 
 async function buildThemMessage(chatId, isSpecialScene = false){
@@ -2330,6 +2327,24 @@ async function openFavPage(){
   $('#pageFav').classList.add('show');
 }
 
+async function silentUpdateFav(){
+  if(!$('#pageFav').classList.contains('show')) return;
+  const pane = document.querySelectorAll('.fav-pane')[favCurrentIndex];
+  if(!pane) return;
+  const chatId = pane.dataset.chatId;
+  if(!chatId) return;
+  const c = chats.find(x => x.id === chatId);
+  if(!c) return;
+  
+  const arr = await getAllCollectedMessages(chatId);
+  const currentCount = pane.querySelectorAll('.fav-card').length;
+  if(arr.length > currentCount){
+    // 有新数据，重新渲染这一栏
+    pane.innerHTML = '';
+    arr.forEach(m => pane.appendChild(buildFavCard(m, c)));
+  }
+}
+
 function buildFavCard(m, c){
   const card = document.createElement('div');
   card.className = 'fav-card';
@@ -2404,7 +2419,6 @@ async function openNotesPage(){
       header.className = 'note-header';
       const nameSpan = document.createElement('span');
       nameSpan.className = 'note-name';
-      // 查找聊天室名称
       const chat = chats.find(c => c.id === n.targetChatId);
       const senderName = n.sender === 'me' ? '我' : (chat ? getDisplayName(chat) : '祂');
       nameSpan.textContent = senderName;
@@ -2490,9 +2504,7 @@ async function sendNote(){
   
   let targetChatId = noteTargetChatId;
   if(!targetChatId && chats.length > 0) {
-    // 如果没有选人，默认发给第一个或者隐藏为“无主”
-    // 这里为了简单，如果没选，就不发，或者提示。
-    // 但我们之前说可以不选，所以如果不选，targetChatId 为 null
+    // 不强制选
   }
   
   const note = {
@@ -2508,7 +2520,6 @@ async function sendNote(){
   toast('已塞入匣子');
   openNotesPage();
   
-  // 触发祂的回复
   if(targetChatId && Math.random() < 0.8) {
     triggerNoteGeneration(targetChatId, 1);
   }
@@ -2520,7 +2531,7 @@ async function triggerNoteGeneration(chatId, chance) {
   const normalCards = allCards.filter(c => (c.category || 'normal') === 'normal');
   if(!normalCards.length) return;
   
-  const count = 3 + Math.floor(Math.random() * 3); // 3-5张
+  const count = 3 + Math.floor(Math.random() * 3);
   const picked = [];
   const pool = [...normalCards];
   for(let i=0; i<count && pool.length > 0; i++){
@@ -2528,7 +2539,6 @@ async function triggerNoteGeneration(chatId, chance) {
     picked.push(pool.splice(idx,1)[0].text);
   }
   
-  // 拼接逻辑
   let finalText = '';
   picked.forEach((t, idx) => {
     const hasPunc = /[，。！？,!.?]$/.test(t);
@@ -2553,28 +2563,28 @@ async function triggerNoteGeneration(chatId, chance) {
 }
 
 function bindEvents(){
-  function exportData() {
-    const stores = ['chats','messages','cards','stickers','actions','music','notes'];
-    let result = {};
-    let completed = 0;
+  async function exportData() {
     $('#progressDialogMask').classList.add('show');
     $('#progressText').textContent = '正在打包數據...';
     $('#progressBarFill').style.width = '0%';
-    
-    stores.forEach(storeName => {
-      const req = tx(storeName).getAll();
-      req.onsuccess = () => {
-        result[storeName] = req.result;
-        completed++;
-        $('#progressBarFill').style.width = (completed / stores.length * 100) + '%';
-        if(completed === stores.length) {
-          const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
-          const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
-          $('#progressDialogMask').classList.remove('show');
-          toast('存檔成功');
-        }
-      };
-    });
+
+    const stores = ['chats','messages','cards','stickers','actions','music','notes'];
+    let result = {};
+    let totalSteps = stores.length;
+    let completed = 0;
+
+    for (const storeName of stores) {
+      result[storeName] = await reqToPromise(tx(storeName).getAll());
+      completed++;
+      $('#progressBarFill').style.width = (completed / totalSteps * 100) + '%';
+      await new Promise(r => setTimeout(r, 10)); // 让UI喘息
+    }
+
+    $('#progressText').textContent = '正在生成文件...';
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
+    $('#progressDialogMask').classList.remove('show');
+    toast('存檔成功');
   }
 
   function importData(file) {
@@ -2584,7 +2594,7 @@ function bindEvents(){
         const data = JSON.parse(e.target.result);
         showCustomDialog('警告', '讀檔將覆蓋當前所有數據，是否繼續？', false, '確認覆蓋', async () => {
           $('#progressDialogMask').classList.add('show');
-          $('#progressText').textContent = '正在恢復數據...';
+          $('#progressText').textContent = '正在清空數據...';
           
           const stores = ['chats','messages','cards','stickers','actions','music','notes'];
           for(let s of stores) {
@@ -2592,18 +2602,32 @@ function bindEvents(){
              store.clear();
           }
           
-          setTimeout(async () => {
-            for(let s of stores) {
-               if(data[s] && Array.isArray(data[s])) {
-                 const store = tx(s, 'readwrite');
-                 data[s].forEach(item => store.add(item));
+          await new Promise(r => setTimeout(r, 500));
+          $('#progressText').textContent = '正在導入數據...';
+          
+          let total = 0;
+          stores.forEach(s => { if(data[s] && Array.isArray(data[s])) total += data[s].length; });
+          let done = 0;
+
+          for(let s of stores) {
+             if(data[s] && Array.isArray(data[s])) {
+               const store = tx(s, 'readwrite');
+               for (const item of data[s]) {
+                 store.add(item);
+                 done++;
+                 if(done % 100 === 0) {
+                   $('#progressBarFill').style.width = (done / total * 100) + '%';
+                   await new Promise(r => setTimeout(r, 0)); // 分批让出主线程
+                 }
                }
-            }
-            setTimeout(() => {
-              $('#progressDialogMask').classList.remove('show');
-              toast('讀檔成功，即將刷新');
-              setTimeout(() => location.reload(), 1000);
-            }, 1000);
+             }
+          }
+          
+          $('#progressBarFill').style.width = '100%';
+          setTimeout(() => {
+            $('#progressDialogMask').classList.remove('show');
+            toast('讀檔成功，即將刷新');
+            setTimeout(() => location.reload(), 1000);
           }, 500);
         }, true);
       } catch(err) { toast('讀檔失敗：文件格式錯誤'); }
@@ -2892,7 +2916,7 @@ function bindEvents(){
     snapMode = false; snapSelectedIds.clear(); 
     currentChatId = null; 
     applyThemeAndBg(); 
-    renderChatList(); // 更新模式图标
+    renderChatList();
   };
   $('#msgInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSendBtnState(); });
   $('#sendBtn').onclick = sendMyMessage;
@@ -2911,7 +2935,7 @@ function bindEvents(){
       openFavPage(); 
       if(favRefreshTimer) clearInterval(favRefreshTimer);
       favRefreshTimer = setInterval(() => {
-        if($('#pageFav').classList.contains('show')) openFavPage();
+        if($('#pageFav').classList.contains('show')) silentUpdateFav();
         else { clearInterval(favRefreshTimer); favRefreshTimer = null; }
       }, 5000);
     }

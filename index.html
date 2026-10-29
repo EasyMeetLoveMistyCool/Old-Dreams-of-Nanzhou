@@ -195,7 +195,7 @@
   .batch-btn.danger { color:#e53935; }
   .card-list-header { font-size:13px; color:var(--text-secondary); margin-bottom:10px; padding-left:5px; }
   .card-item { display:flex; justify-content:space-between; align-items:flex-start; background:var(--input-bg); border-radius:8px; padding:12px 14px; margin-bottom:12px; gap:10px; }
-  .card-text { flex:1; font-size:15px; line-height:1.4; word-break:break-word; }
+  .card-text { flex:1; font-size:15px; line-height:1.4; word-break:break-word; white-space:pre-wrap; }
   .card-actions { display:flex; flex-direction:column; gap:8px; flex:0 0 auto; }
   .btn-edit,.btn-del { background:transparent; border:none; font-size:13px; }
   .btn-edit { color:var(--primary); } .btn-del { color:#e53935; }
@@ -214,8 +214,8 @@
   .music-file-box { flex:1; height:44px; border-radius:6px; border:1px dashed var(--topbar-border); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--text-secondary); background:rgba(128,128,128,.05); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; padding:0 10px; }
   .music-list-item { display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); border-radius:8px; padding:12px; margin-bottom:10px; gap:10px; }
   .music-info { flex:1; min-width:0; }
-  .music-title { font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .music-artist { font-size:13px; color:var(--text-secondary); margin-top:4px; }
+  .music-title { font-size:15px; font-weight:500; white-space:pre-wrap; word-break:break-word; }
+  .music-artist { font-size:13px; color:var(--text-secondary); margin-top:4px; white-space:pre-wrap; word-break:break-word; }
 
   .menu-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:50; }
   .menu-mask.show { display:block; }
@@ -245,7 +245,9 @@
   .dialog.danger-dialog .dialog-title { border-bottom-color: #ffcdd2; color: #b71c1c; }
   .dialog-content { padding:20px; font-size:15px; text-align:center; line-height:1.6; }
   .dialog.danger-dialog .dialog-content { color: #d32f2f; }
-  .dialog-input { width:100%; height:40px; border-radius:6px; border:1px solid var(--topbar-border); padding:0 10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); margin-bottom:10px; }
+  /* 多行编辑弹窗输入框 */
+  .dialog-input { width:100%; min-height:120px; max-height:240px; border-radius:6px; border:1px solid var(--topbar-border); padding:10px; font-size:15px; outline:none; background:var(--input-bg); color:var(--text-color); margin-bottom:10px; resize:vertical; line-height:1.5; font-family:inherit; display:none; }
+  .dialog-input.single-line { min-height:40px; max-height:40px; resize:none; }
   .dialog-footer { display:flex; border-top:1px solid var(--border-light); }
   .dialog.danger-dialog .dialog-footer { border-top-color: #ffcdd2; }
   .dialog-btn { flex:1; padding:14px 0; text-align:center; font-size:15px; border:none; background:transparent; color:var(--primary); font-weight: 500; }
@@ -266,7 +268,7 @@
   .sticker-panel-content { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
   .sticker-panel-content img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; }
   .action-list-content { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
-  .action-select-item { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); font-size:15px; color:var(--text-color); }
+  .action-select-item { padding:15px; text-align:center; border-bottom:1px solid var(--border-light); font-size:15px; color:var(--text-color); white-space:pre-wrap; word-break:break-word; }
   .music-select-item { display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid var(--border-light); }
   .music-select-info { flex:1; text-align:left; }
 
@@ -293,8 +295,8 @@
   .music-player-panel .music-disc-large { width:120px; height:120px; border-radius:50%; background-size:cover; background-position:center; border:2px solid rgba(255,255,255,.2); margin-bottom:15px; animation:spin 4s linear infinite; animation-play-state:paused; position:relative; z-index:1; }
   .music-player-panel.playing .music-disc-large { animation-play-state:running; }
   .music-info-text { text-align:center; width:100%; margin-bottom:15px; position:relative; z-index:1; }
-  .music-title-text { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .music-artist-text { font-size:13px; color:var(--text-secondary); margin-top:4px; }
+  .music-title-text { font-size:16px; font-weight:600; white-space:pre-wrap; word-break:break-word; }
+  .music-artist-text { font-size:13px; color:var(--text-secondary); margin-top:4px; white-space:pre-wrap; word-break:break-word; }
   .music-close-btn { position:absolute; right:-10px; top:-20px; font-size:20px; color:var(--text-secondary); padding:10px; }
   .music-progress-bar { width:100%; height:4px; background:var(--input-bg); border-radius:2px; margin-bottom:10px; position:relative; z-index:1; }
   .music-progress-fill { height:100%; background:var(--primary); width:0%; border-radius:2px; }
@@ -405,13 +407,13 @@
   
   .ask-card-tag { font-size:12px; color:#a8862f !important; font-weight:600; }
   body.is-night-mode .ask-card-tag { color:#d4af37 !important; }
-  .ask-question { font-size:15px; line-height:1.5; word-break:break-word; color: #4a3a12; }
+  .ask-question { font-size:15px; line-height:1.5; word-break:break-word; color: #4a3a12; white-space:pre-wrap; }
   body.is-night-mode .ask-question { color: #f5e6e8; }
   
   .ask-question-img { max-width:100%; max-height:160px; border-radius:8px; object-fit:cover; }
   .ask-options { display:flex; flex-direction:column; gap:8px; }
   
-  .ask-option { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:rgba(214,178,80,.12); border:1px solid transparent; font-size:14px; line-height:1.4; word-break:break-word; color: #4a3a12; }
+  .ask-option { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:rgba(214,178,80,.12); border:1px solid transparent; font-size:14px; line-height:1.4; word-break:break-word; color: #4a3a12; white-space:pre-wrap; }
   body.is-night-mode .ask-option { background:rgba(212,122,138,.1); color: #f5e6e8; }
   .ask-option .ask-check { width:16px; height:16px; flex:0 0 16px; border-radius:50%; border:1.5px solid #c9a227 !important; display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent; }
   body.is-night-mode .ask-option .ask-check { border-color: #d47a8a !important; }
@@ -483,8 +485,9 @@
   .adjust-input { width:50px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 
   .page-fav { background: var(--bg-color); }
-  .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
-  .fav-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; overflow:hidden; text-overflow:ellipsis; }
+  .fav-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; overflow-x:auto; scrollbar-width:none; }
+  .fav-tab-bar::-webkit-scrollbar { display:none; }
+  .fav-tab { flex:0 0 auto; min-width:80px; text-align:center; padding:12px 16px; font-size:14px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
   .fav-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
   .fav-swipe-wrap { flex:1; overflow:hidden; position:relative; }
   .fav-swipe-track { display:flex; height:100%; transition:transform .25s ease; }
@@ -497,7 +500,7 @@
   body.theme-cyber .fav-card::after, body.theme-space .fav-card::after, body.theme-nightpurple .fav-card::after, body.theme-pureblack .fav-card::after, body.is-night-mode .fav-card::after { background:rgba(200,170,130,.18); border-left-color:rgba(200,170,130,.4); }
   .fav-tape { position:absolute; left:14px; top:-9px; width:52px; height:18px; background:rgba(210,195,160,.55); transform:rotate(-4deg); border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,.08); }
   body.theme-cyber .fav-tape, body.theme-space .fav-tape, body.theme-nightpurple .fav-tape, body.theme-pureblack .fav-tape, body.is-night-mode .fav-tape { background:rgba(200,170,130,.3); }
-  .fav-text { font-family: var(--bubble-font); font-size:15px; line-height:1.7; letter-spacing:0.03em; color:#3b3226; word-break:break-word; padding-top:4px; position:relative; z-index:1; }
+  .fav-text { font-family: var(--bubble-font); font-size:15px; line-height:1.7; letter-spacing:0.03em; color:#3b3226; word-break:break-word; padding-top:4px; position:relative; z-index:1; white-space:pre-wrap; }
   body.theme-cyber .fav-text, body.theme-space .fav-text, body.theme-nightpurple .fav-text, body.theme-pureblack .fav-text, body.is-night-mode .fav-text { color:#e8dcc8; }
   .fav-meta { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding-top:8px; border-top:1px dashed rgba(150,130,90,.35); position:relative; z-index:1; }
   body.theme-cyber .fav-meta, body.theme-space .fav-meta, body.theme-nightpurple .fav-meta, body.theme-pureblack .fav-meta, body.is-night-mode .fav-meta { border-top-color:rgba(200,170,130,.25); }
@@ -509,7 +512,7 @@
   .bubble-opacity-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:14px; color:var(--text-color); }
   .bubble-opacity-input { width:60px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
 
-  /* ==================== 新增：簡訊页面 ==================== */
+  /* ==================== 新增/修改：簡訊页面 ==================== */
   .page-sms { background: var(--bg-color); }
   .sms-list-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 12px; }
   .sms-list { display:flex; flex-direction:column; gap:14px; padding-bottom:20px; }
@@ -547,7 +550,7 @@
   .sms-attach-item img { width:100%; height:100%; object-fit:cover; }
   .sms-attach-del { position:absolute; top:0; right:0; width:18px; height:18px; background:rgba(0,0,0,.6); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 
-  /* ==================== 新增：信訊页面 ==================== */
+  /* ==================== 新增/修改：信訊页面 ==================== */
   .page-letters { background: var(--bg-color); }
   .letter-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
   .letter-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:15px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
@@ -556,8 +559,12 @@
   .letter-list { display:flex; flex-direction:column; gap:12px; padding-bottom:20px; }
   .letter-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
 
-  .letter-item { position:relative; display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); overflow:hidden; font-family: var(--bubble-font); }
+  .letter-item { position:relative; display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); overflow:hidden; font-family: var(--bubble-font); transition:opacity .2s; }
   body.theme-cyber .letter-item, body.theme-space .letter-item, body.theme-nightpurple .letter-item, body.theme-pureblack .letter-item, body.is-night-mode .letter-item { background:#2a2320; border-color:#4a3f36; }
+  .letter-item.unopened { border-color:#c9a227; box-shadow:0 0 0 1px rgba(201,162,39,.3), 0 2px 8px rgba(0,0,0,.06); }
+  .letter-item.unopened::before { content:'未展'; position:absolute; top:0; right:0; font-size:10px; background:#c9a227; color:#fff; padding:2px 6px; border-bottom-left-radius:6px; z-index:2; }
+  body.is-night-mode .letter-item.unopened::before { background:#d47a8a; }
+  
   .letter-seal { width:42px; height:42px; flex:0 0 42px; border-radius:50%; background-size:cover; background-position:center; border:2px solid #b8860b; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.2); }
   .letter-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
   .letter-envelope-title { font-size:14px; font-weight:600; color:#3b3226; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -567,13 +574,13 @@
   .letter-time { font-size:11px; color:#8a7a5a; flex:0 0 auto; align-self:flex-start; }
   body.theme-cyber .letter-time, body.theme-space .letter-time, body.theme-nightpurple .letter-time, body.theme-pureblack .letter-time, body.is-night-mode .letter-time { color:#b8a480; }
 
-  /* ==================== 新增：写信页 ==================== */
+  /* ==================== 新增/修改：写信页 ==================== */
   .page-letter-compose { background: var(--bg-color); }
   .compose-scroll { flex:1; overflow-y:auto; padding:16px; }
-  .compose-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .compose-label { font-size:14px; color:var(--text-secondary); flex:0 0 auto; min-width:42px; }
+  .compose-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+  .compose-label { font-size:14px; color:var(--text-secondary); flex:0 0 auto; min-width:42px; padding-top:10px; }
   .compose-select { flex:1; min-width:0; height:40px; border-radius:8px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); font-size:14px; padding:0 10px; outline:none; }
-  .compose-static { flex:1; min-width:0; font-size:15px; color:var(--text-color); padding:0 2px; }
+  .compose-static { flex:1; min-width:0; font-size:15px; color:var(--text-color); padding:10px 2px; line-height:1.4; }
   .compose-textarea { width:100%; min-height:220px; border-radius:10px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); padding:12px; font-size:15px; line-height:1.8; outline:none; resize:vertical; font-family: var(--bubble-font); letter-spacing:0.03em; }
   .compose-attach-row { display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
   .compose-attach-preview { position:relative; width:56px; height:56px; border-radius:8px; overflow:hidden; border:1px solid var(--topbar-border); background:var(--input-bg); }
@@ -582,7 +589,7 @@
   .compose-footer { flex:0 0 auto; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); }
   .compose-send-btn { width:100%; height:48px; border-radius:10px; background:var(--primary); color:#fff; font-size:16px; font-weight:600; border:none; }
 
-  /* ==================== 新增：信件详情 / 开信动画 ==================== */
+  /* ==================== 新增/修改：信件详情 / 开信动画 ==================== */
   .page-letter-detail { background: var(--bg-color); }
   .letter-detail-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 16px 30px; }
   .letter-paper { position:relative; border-radius:12px; padding:22px 20px 18px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 4px 16px rgba(0,0,0,.08); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 30px, rgba(180,160,120,.14) 30px, rgba(180,160,120,.14) 31px); background-size:100% 31px; overflow:hidden; font-family: var(--bubble-font); }
@@ -611,6 +618,9 @@
   .letter-envelope-name { position:absolute; left:0; right:0; bottom:18px; text-align:center; font-size:13px; color:#6b5a3a; z-index:2; }
   body.is-night-mode .letter-envelope-name { color:#c8b48a; }
   .letter-seal-anim { position:absolute; left:50%; top:50%; width:38px; height:38px; margin-left:-19px; margin-top:-19px; border-radius:50%; background-size:cover; background-position:center; border:2px solid #b8860b; z-index:3; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#fff; overflow:hidden; }
+
+  /* 竖排按钮（提筆） */
+  .vertical-btn { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.1em; line-height: 1.1; padding: 4px 0; font-size: 14px; height: auto; align-self: center; }
 
   @media (max-width: 380px) {
     .sms-card-time { font-size:10px; }
@@ -746,7 +756,7 @@
     <div class="topbar">
       <button class="icon-btn" id="backLettersBtn">←</button>
       <div class="header-title" style="flex:1;text-align:center;font-size:17px;">信訊</div>
-      <button class="icon-btn" id="composeLetterBtn" style="font-size:14px;width:auto;padding:0 10px;color:var(--primary);">提筆</button>
+      <button class="icon-btn vertical-btn" id="composeLetterBtn" style="width:auto;padding:0 8px;color:var(--primary);margin-right:4px;">提筆</button>
     </div>
     <div class="letter-tab-bar">
       <div class="letter-tab active" data-lettertab="inbox">鴻雁</div>
@@ -861,6 +871,12 @@
           <span>尺素機率 (%)</span>
           <div class="adjust-inputs">
             <input type="number" id="adjCollectRate" class="adjust-input">
+          </div>
+        </div>
+        <div class="adjust-row">
+          <span>來電機率 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="adjCallRate" class="adjust-input">
           </div>
         </div>
         <div class="adjust-row">
@@ -980,7 +996,7 @@
   <div class="music-time"><span id="timeCurrent">00:00</span><span id="timeTotal">00:00</span></div>
   <div class="music-controls">
     <button class="music-btn" id="btnPrev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-    <button class="music-btn play-btn" id="btnPlayPause"><svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V-5h-4z"/></svg></button>
+    <button class="music-btn play-btn" id="btnPlayPause"><svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
     <button class="music-btn" id="btnNext"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6v12z"/></svg></button>
     <button class="music-btn" id="btnMode"><svg class="mode-icon" id="iconMode" viewBox="0 0 24 24"></svg></button>
   </div>
@@ -1037,7 +1053,7 @@
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
-<div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><input type="text" class="dialog-input" id="dialogInput" style="display:none;"><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
+<div class="dialog-mask" id="dialogMask"><div class="dialog"><div class="dialog-title" id="dialogTitle">提示</div><div class="dialog-content" id="dialogText"></div><textarea class="dialog-input" id="dialogInput" style="display:none;"></textarea><div class="dialog-footer" id="dialogFooter"><button class="dialog-btn cancel" id="dialogCancelBtn">取消</button><button class="dialog-btn" id="dialogOkBtn" style="color:var(--primary);">確定</button></div></div></div>
 <div class="dialog-mask" id="progressDialogMask" style="z-index:100000;"><div class="dialog" style="max-width:260px;"><div class="progress-dialog"><div class="progress-text" id="progressText">正在處理... 0%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div></div></div></div>
 
 <div class="sticker-panel-mask" id="stickerPanelMask"><div class="sticker-panel"><div class="sticker-panel-header" id="stickerPanelHeader">選擇印花</div><div class="sticker-panel-content" id="stickerPanelContent"></div><div class="action-list-content" id="actionListContent" style="display:none;"></div><div class="action-list-content" id="musicSelectContent" style="display:none;"></div></div></div>
@@ -1080,7 +1096,7 @@ document.querySelector = function(selector) {
   if (!el) {
     return {
       onclick: null, addEventListener: () => {}, classList: { add: ()=>{}, remove: ()=>{}, toggle: ()=>{}, contains: ()=>false },
-      style: {}, value: '', textContent: '', innerHTML: '', appendChild: ()=>{}, setAttribute: ()=>{}, getAttribute: ()=>'', closest: ()=>null, querySelectorAll: ()=>[], querySelector: ()=>null
+      style: {}, value: '', textContent: '', innerHTML: '', appendChild: ()=>{}, setAttribute: ()=>{}, getAttribute: ()=>'', closest: ()=>null, querySelectorAll: ()=>[], querySelector: ()=>null, focus: ()=>{}
     };
   }
   return el;
@@ -1146,7 +1162,8 @@ let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, smsRate: 10, letterRate: 10, bubbleOpacity: 45 };
+// 默认概率调整：letterRate 1, smsRate 2, callRate 5
+const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, smsRate: 2, letterRate: 1, callRate: 5, bubbleOpacity: 45 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
 
 function applyBubbleOpacity() {
@@ -1187,13 +1204,32 @@ const DB_NAME = 'nanzhou_new_db';
 const DB_VER = 1;
 let db = null;
 
+// 判断已有数据库是否包含新表
+function hasNewTables(){
+  return new Promise((resolve) => {
+    const req = indexedDB.open(DB_NAME);
+    req.onupgradeneeded = e => {
+      // 如果旧库版本被调高，取消创建，交回下面去删库重建
+      e.target.transaction.abort();
+      resolve(false);
+    };
+    req.onsuccess = e => {
+      const d = e.target.result;
+      const has = d.objectStoreNames.contains('sms') && d.objectStoreNames.contains('letters');
+      d.close();
+      resolve(has);
+    };
+    req.onerror = () => resolve(false);
+  });
+}
+
 function deleteDB(){
   return new Promise((resolve, reject) => {
     if(db){ try{ db.close(); }catch(e){} db = null; }
     const req = indexedDB.deleteDatabase(DB_NAME);
     req.onsuccess = () => resolve();
     req.onerror = () => reject(req.error);
-    req.onblocked = () => reject(new Error('資料庫被佔用'));
+    req.onblocked = () => resolve(); // blocked 时也尝试继续
   });
 }
 
@@ -1243,7 +1279,9 @@ let loadCardOffset = 0, loadActionOffset = 0;
 let pendingBurnMsg = null;
 let currentMsgForAction = null;
 
-let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
+// 尺素记忆上次查看的聊天室
+let favActiveChatId = localStorage.getItem('nz_fav_last_chat') || null;
+let favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
 
 /* ===== 簡訊 / 信訊 状态 ===== */
 let smsList = [];
@@ -1287,7 +1325,10 @@ function getMyName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myN
 
 async function init(){
   try {
-    await deleteDB();
+    const alreadyHasNewTables = await hasNewTables();
+    if(!alreadyHasNewTables){
+      await deleteDB();
+    }
     await openDB();
     await loadChats();
     renderChatList();
@@ -1305,6 +1346,7 @@ async function init(){
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
     $('#adjFlirtRate').value = config.flirtRate; $('#adjStickerRate').value = config.stickerRate; $('#adjActionRate').value = config.actionRate;
     $('#adjCollectRate').value = config.collectRate;
+    if($('#adjCallRate')) $('#adjCallRate').value = config.callRate;
     if($('#adjSmsRate')) $('#adjSmsRate').value = config.smsRate;
     if($('#adjLetterRate')) $('#adjLetterRate').value = config.letterRate;
     
@@ -1859,13 +1901,7 @@ async function buildThemMessage(chatId, isSpecialScene = false){
   }
   await touchChat(chatId);
 
-  // 簡訊/信訊 概率触发（对齐尺素逻辑）
-  if(Math.random() * 100 < config.smsRate){
-    await themLeaveSms(chatId, isNight);
-  }
-  if(Math.random() * 100 < config.letterRate){
-    await themWriteLetter(chatId, isNight);
-  }
+  // 触发点：特定行为才触发简讯和信訊（此处只包含字卡正常回复，稍后在通话/暗语单独处理）
   
   if(Math.random() < (config.actionRate / 100)){
     const allA = await reqToPromise(tx('actions').getAll());
@@ -1884,8 +1920,19 @@ async function buildThemMessage(chatId, isSpecialScene = false){
         }
       }
       await touchChat(chatId);
+      
+      // 触发点：发暗语后触发简讯/信訊
+      if(Math.random() * 100 < config.smsRate) await themLeaveSms(chatId, isNight);
+      if(Math.random() * 100 < config.letterRate) await themWriteLetter(chatId, isNight);
     }
   }
+  
+  // 触发点：发撩拨字卡后触发简讯/信訊
+  if (pickedCategory === 'flirt') {
+    if(Math.random() * 100 < config.smsRate) await themLeaveSms(chatId, isNight);
+    if(Math.random() * 100 < config.letterRate) await themWriteLetter(chatId, isNight);
+  }
+
   await themCollectMyMessage(chatId, isNight);
   return msg;
 }
@@ -1896,10 +1943,17 @@ async function replyFromThem(){
   if(!msg) toast('郵電所中尚無字卡，請先新增');
 }
 
-function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false){
+function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false, singleLine = false){
   $('#dialogTitle').textContent = title; $('#dialogText').textContent = text;
-  $('#dialogInput').style.display = showInput ? 'block' : 'none';
-  if(showInput) $('#dialogInput').value = '';
+  const dInput = $('#dialogInput');
+  if(showInput) {
+    dInput.style.display = 'block';
+    if(singleLine) dInput.classList.add('single-line');
+    else dInput.classList.remove('single-line');
+    dInput.value = '';
+  } else {
+    dInput.style.display = 'none';
+  }
   
   const dlg = document.querySelector('#dialogMask .dialog');
   if (isDanger) dlg.classList.add('danger-dialog'); else dlg.classList.remove('danger-dialog');
@@ -1908,7 +1962,7 @@ function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false
   $('#dialogCancelBtn').onclick = () => { $('#dialogMask').classList.remove('show'); };
   $('#dialogOkBtn').onclick = () => { 
     $('#dialogMask').classList.remove('show'); 
-    if(onOk) onOk($('#dialogInput').value); 
+    if(onOk) onOk(dInput.value); 
   };
   
   $('#dialogMask').classList.add('show');
@@ -1937,7 +1991,7 @@ function renderCardChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       const cbh = isBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedCardIds.has(c.id)?'checked':''} onchange="toggleSelectCard('${c.id}')">` : '';
-      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editCard('${c.id}')">校對</button><button class="btn-del" onclick="deleteSingleCard('${c.id}')">作廢</button></div>`;
       box.appendChild(div);
     });
   }
@@ -1957,15 +2011,16 @@ function renderCardChunk(f) {
 }
 
 window.toggleSelectCard = id => { if(selectedCardIds.has(id)) selectedCardIds.delete(id); else selectedCardIds.add(id); loadAndRenderCards(); };
-window.editCard = (id, oldText) => {
-  showCustomDialog('校對電文','請修改下方內容',true,'保存', async newText => {
-    newText = newText.trim(); if(!newText || newText === oldText) return;
-    const all = await reqToPromise(tx('cards').getAll());
+window.editCard = async (id) => {
+  const all = await reqToPromise(tx('cards').getAll());
+  const target = all.find(c => c.id === id);
+  if(!target) return;
+  showCustomDialog('校對電文','請修改下方內容（支持換行）',true,'保存', async newText => {
+    newText = newText.trim(); if(!newText) return;
     if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有電文重複！'); return; }
-    const t = all.find(c => c.id === id);
-    if(t){ t.text = newText; await reqToPromise(tx('cards','readwrite').put(t)); toast('已保存修改'); loadAndRenderCards(); }
-  });
-  $('#dialogInput').value = oldText;
+    target.text = newText; await reqToPromise(tx('cards','readwrite').put(target)); toast('已保存修改'); loadAndRenderCards();
+  }, false, false);
+  $('#dialogInput').value = target.text;
 };
 window.deleteSingleCard = id => { showCustomDialog('作廢確認','確定要作廢這份電文嗎？',false,'作廢', async () => { await reqToPromise(tx('cards','readwrite').delete(id)); toast('已作廢'); loadAndRenderCards(); }); };
 
@@ -2020,7 +2075,7 @@ function renderActionChunk(f) {
     chunk.forEach(c => {
       const div = document.createElement('div'); div.className = 'card-item';
       const cbh = isActionBatchDeleteMode ? `<input type="checkbox" style="margin-right:10px;width:18px;height:18px;accent-color:#e53935;" ${selectedActionIds.has(c.id)?'checked':''} onchange="toggleSelectAction('${c.id}')">` : '';
-      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}', '${escapeHtml(c.text)}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
+      div.innerHTML = `<div style="display:flex;align-items:flex-start;flex:1;">${cbh}<div class="card-text">${escapeHtml(c.text)}</div></div><div class="card-actions" style="display:${isActionBatchDeleteMode?'none':'flex'}"><button class="btn-edit" onclick="editAction('${c.id}')">校對</button><button class="btn-del" onclick="deleteSingleAction('${c.id}')">作廢</button></div>`;
       box.appendChild(div);
     });
   }
@@ -2040,15 +2095,16 @@ function renderActionChunk(f) {
 }
 
 window.toggleSelectAction = id => { if(selectedActionIds.has(id)) selectedActionIds.delete(id); else selectedActionIds.add(id); loadAndRenderActions(); };
-window.editAction = (id, oldText) => {
-  showCustomDialog('校對暗語','請修改下方內容',true,'保存', async newText => {
-    newText = newText.trim(); if(!newText || newText === oldText) return;
-    const all = await reqToPromise(tx('actions').getAll());
+window.editAction = async (id) => {
+  const all = await reqToPromise(tx('actions').getAll());
+  const target = all.find(c => c.id === id);
+  if(!target) return;
+  showCustomDialog('校對暗語','請修改下方內容（支持換行）',true,'保存', async newText => {
+    newText = newText.trim(); if(!newText) return;
     if(all.find(c => c.text === newText && c.id !== id)){ toast('校對失敗：內容與現有暗語重複！'); return; }
-    const t = all.find(c => c.id === id);
-    if(t){ t.text = newText; await reqToPromise(tx('actions','readwrite').put(t)); toast('已保存修改'); loadAndRenderActions(); }
-  });
-  $('#dialogInput').value = oldText;
+    target.text = newText; await reqToPromise(tx('actions','readwrite').put(target)); toast('已保存修改'); loadAndRenderActions();
+  }, false, false);
+  $('#dialogInput').value = target.text;
 };
 window.deleteSingleAction = id => { showCustomDialog('作廢確認','確定要作廢這條暗語嗎？',false,'作廢', async () => { await reqToPromise(tx('actions','readwrite').delete(id)); toast('已作廢'); loadAndRenderActions(); }); };
 
@@ -2259,7 +2315,7 @@ function setupIncomingCallTimer(){
       const c = chats.find(x => x.id === currentChatId);
       if(c && c.isNightMode) return; 
       
-      if(Math.random() < 0.05){
+      if(Math.random() * 100 < config.callRate){
         openCallUI(true);
         incomingCallTimeout = setTimeout(() => {
           if(isGlobalCallActive && $('#btnAnswerCall').style.display !== 'none'){
@@ -2268,6 +2324,10 @@ function setupIncomingCallTimer(){
               const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'them', type:'cards', text:'', cards:['怎麼不接我電話？'], stickerData:null, time:Date.now(), isNightMode: false };
               reqToPromise(tx('messages','readwrite').add(msg));
               if(currentChatId === c.id && !c.isNightMode) { currentMessages.push(msg); appendMessageDOM(msg, c, true); }
+              
+              // 触发点：未接来电也按概率触发简讯/信訊（可加上接听后挂断，见hangupCall）
+              if(Math.random() * 100 < config.smsRate) themLeaveSms(currentChatId, false);
+              if(Math.random() * 100 < config.letterRate) themWriteLetter(currentChatId, false);
             }
           }
         }, 15000);
@@ -2501,9 +2561,16 @@ async function openFavPage(){
     $('#pageFav').classList.add('show');
     return;
   }
+  
+  // 记忆滚动位置：默认在第一个，如果有记录并在列表里，就用记录的
+  let initIndex = 0;
+  if (favActiveChatId && favTabChatIds.includes(favActiveChatId)) {
+    initIndex = favTabChatIds.indexOf(favActiveChatId);
+  }
+  
   withData.forEach((c, i) => {
     const t = document.createElement('div');
-    t.className = 'fav-tab' + (i === 0 ? ' active' : '');
+    t.className = 'fav-tab' + (i === initIndex ? ' active' : '');
     t.dataset.chatId = c.id;
     t.textContent = getFavTabName(c);
     t.onclick = () => goFavTab(i);
@@ -2522,8 +2589,15 @@ async function openFavPage(){
     }
     track.appendChild(pane);
   }
-  favCurrentIndex = 0;
-  track.style.transform = 'translateX(0%)';
+  favCurrentIndex = initIndex;
+  track.style.transform = `translateX(-${initIndex * 100}%)`;
+  
+  // 将 active tab 滚动到可视区域
+  setTimeout(() => {
+    const activeTab = bar.querySelector('.fav-tab.active');
+    if(activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }, 50);
+
   $('#pageFav').classList.add('show');
 }
 
@@ -2547,6 +2621,7 @@ function buildFavCard(m, c){
   stamp.textContent = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
   meta.appendChild(src); meta.appendChild(stamp);
   card.appendChild(meta);
+  
   card.addEventListener('click', () => {
     showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => {
       m.collectedBy = null;
@@ -2561,9 +2636,16 @@ function buildFavCard(m, c){
 function goFavTab(index){
   if(index < 0 || index >= favTabChatIds.length) return;
   favCurrentIndex = index;
+  favActiveChatId = favTabChatIds[index]; // 记录到本地
+  localStorage.setItem('nz_fav_last_chat', favActiveChatId);
+  
   const track = $('#favSwipeTrack');
   track.style.transform = `translateX(-${index * 100}%)`;
   document.querySelectorAll('.fav-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+  
+  // 自动滚动 tab bar
+  const activeTab = document.querySelectorAll('.fav-tab')[index];
+  if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 function bindFavSwipe(){
@@ -2717,7 +2799,8 @@ async function themWriteLetter(chatId, isNight){
     imageData: null,
     isNightMode: !!isNight,
     time: Date.now(),
-    replied: false
+    replied: false,
+    isOpened: false // 每封信拆封状态独立
   };
   await reqToPromise(tx('letters','readwrite').add(letter));
   if($('#pageLetters').classList.contains('show')) loadAndRenderLetters();
@@ -2741,6 +2824,7 @@ async function sendMyLetter(){
     isNightMode: !!c.isNightMode,
     time: Date.now(),
     replied: false,
+    isOpened: true,
     replyAt: Date.now() + (5 * 3600000) + Math.random() * (3 * 3600000)
   };
   await reqToPromise(tx('letters','readwrite').add(letter));
@@ -2775,7 +2859,8 @@ function scheduleLetterReply(letter){
       imageData: null,
       isNightMode: !!cur.isNightMode,
       time: Date.now(),
-      replied: true
+      replied: true,
+      isOpened: false // 回信也是未拆封
     };
     await reqToPromise(tx('letters','readwrite').add(reply));
     cur.replied = true;
@@ -2800,7 +2885,7 @@ function renderLetterList(){
   letterListData.forEach(l => {
     const c = chats.find(x => x.id === l.chatId);
     const item = document.createElement('div');
-    item.className = 'letter-item';
+    item.className = 'letter-item' + (l.isOpened ? '' : ' unopened');
     const sealName = c ? getDisplayName(c) : '祂';
     const sealChar = sealName.charAt(0);
     const sealHtml = c && c.theirAvatar ? `<div class="letter-seal" style="background-image:url('${c.theirAvatar}')"></div>` : `<div class="letter-seal" style="background:linear-gradient(135deg,#b99a6b,#d8c39a)">${sealChar}</div>`;
@@ -2809,15 +2894,24 @@ function renderLetterList(){
     const timeText = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
     const envTitle = l.direction === 'in' ? `${l.salutation}亲启` : `${l.salutation}亲启`;
     item.innerHTML = `${sealHtml}<div class="letter-info"><div class="letter-envelope-title">${escapeHtml(envTitle)}</div><div class="letter-envelope-sub">${escapeHtml(l.signature)} · ${l.direction === 'in' ? '鴻雁' : '魚書'}</div></div><div class="letter-time">${escapeHtml(timeText)}</div>`;
-    item.addEventListener('click', () => openLetterDetail(l.id, true));
+    item.addEventListener('click', () => openLetterDetail(l.id));
     box.appendChild(item);
   });
 }
 
-async function openLetterDetail(id, animate){
+async function openLetterDetail(id){
   const all = await reqToPromise(tx('letters').getAll());
   const l = all.find(x => x.id === id);
   if(!l) return;
+  
+  // 每次点开时判断自己是否已拆封
+  const needAnimate = !l.isOpened;
+  if(needAnimate) {
+    l.isOpened = true;
+    await reqToPromise(tx('letters','readwrite').put(l));
+    loadAndRenderLetters();
+  }
+
   currentLetterDetailId = id;
   const c = chats.find(x => x.id === l.chatId);
   const scroll = $('#letterDetailScroll');
@@ -2828,10 +2922,13 @@ async function openLetterDetail(id, animate){
   if(l.imageData) attach = `<img class="letter-attach" src="${l.imageData}">`;
   else if(l.stickerData) attach = `<img class="letter-attach sticker" src="${l.stickerData}">`;
   const sealHtml = c && c.theirAvatar ? `<div class="letter-seal-anim" style="background-image:url('${c.theirAvatar}')"></div>` : `<div class="letter-seal-anim" style="background:linear-gradient(135deg,#b99a6b,#d8c39a)">${(c ? getDisplayName(c) : '祂').charAt(0)}</div>`;
-  const stage = animate ? `<div class="letter-open-stage"><div class="letter-envelope-anim"><div class="letter-envelope-body"></div><div class="letter-envelope-flap"></div><div class="letter-envelope-name">${escapeHtml(l.salutation)}亲启</div>${sealHtml}</div></div>` : '';
+  
+  const stage = needAnimate ? `<div class="letter-open-stage"><div class="letter-envelope-anim"><div class="letter-envelope-body"></div><div class="letter-envelope-flap"></div><div class="letter-envelope-name">${escapeHtml(l.salutation)}亲启</div>${sealHtml}</div></div>` : '';
   const paras = (l.body || '').split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
+  
   scroll.innerHTML = `${stage}<div class="letter-paper"><div class="letter-salutation">${escapeHtml(l.salutation)}：</div><div class="letter-body-text">${paras}</div>${attach}<div class="letter-signature">${escapeHtml(l.signature)}</div><div class="letter-detail-meta">${escapeHtml(timeText)}</div></div><div style="margin-top:16px;text-align:center;"><button class="compose-send-btn" id="letterDetailDeleteBtn" style="max-width:200px;background:#c96b5f;">撤信</button></div>`;
   $('#pageLetterDetail').classList.add('show');
+  
   $('#letterDetailDeleteBtn').onclick = () => {
     showCustomDialog('撤信', '確定要撤銷這封信嗎？', false, '撤信', async () => {
       await reqToPromise(tx('letters','readwrite').delete(l.id));
@@ -3199,10 +3296,7 @@ function bindEvents(){
   };
   $('#smsImgDel').onclick = () => { smsPendingImg = null; $('#smsImgPreviewWrap').style.display='none'; if(!smsPendingSticker) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
   $('#smsStickerDel').onclick = () => { smsPendingSticker = null; $('#smsStickerPreviewWrap').style.display='none'; if(!smsPendingImg) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
-  // 簡訊附图：复用现有 albumInput
   $('#smsImgFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { smsPendingImg = b; smsPendingSticker = null; $('#smsImgPreview').src = b; $('#smsImgPreviewWrap').style.display='block'; $('#smsStickerPreviewWrap').style.display='none'; $('#smsAttachPreview').classList.add('show'); updateSmsSendBtnState(); }); e.target.value=''; };
-  // 簡訊的附图按钮：为了不改变 🔗 位置，附图入口挂在输入框左侧小按钮？这里我们把它放在目标行右侧，避免动 🔗
-  // 在 HTML 中没有单独的 smsImgBtn，改用长按 🔗 不合适，所以这里额外在目标行加一个附图按钮（动态创建）
   (function addSmsImgBtn(){
     const row = document.querySelector('.sms-target-row');
     if(row && !document.getElementById('smsImgBtn')){
@@ -3392,8 +3486,9 @@ function bindEvents(){
     config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
     config.actionRate = parseInt($('#adjActionRate').value) || 15;
     config.collectRate = parseInt($('#adjCollectRate').value) || 10;
-    if($('#adjSmsRate')) config.smsRate = parseInt($('#adjSmsRate').value) || 10;
-    if($('#adjLetterRate')) config.letterRate = parseInt($('#adjLetterRate').value) || 10;
+    if($('#adjCallRate')) config.callRate = parseInt($('#adjCallRate').value) || 5;
+    if($('#adjSmsRate')) config.smsRate = parseInt($('#adjSmsRate').value) || 2;
+    if($('#adjLetterRate')) config.letterRate = parseInt($('#adjLetterRate').value) || 1;
     localStorage.setItem('nz_config', JSON.stringify(config));
     toast('設置已保存');
     $('#pageAdjust').classList.remove('show');

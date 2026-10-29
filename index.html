@@ -18,17 +18,21 @@
     --input-bg:rgba(255,255,255,.4); --primary:#3390ec; --border-light:rgba(0,0,0,.05);
     --bubble-font: "LXGW WenKai", "霞鹜文楷", "Kaiti TC", "STKaiti", "Songti TC", "Microsoft JhengHei", serif;
     
+    /* 日常：祂奶白，我淡奶黄 */
     --bubble-daily-them: rgba(255,249,249, var(--bubble-opacity, 0.45));
     --bubble-daily-me: rgba(253,243,208, var(--bubble-opacity, 0.45));
     --text-daily: #4A3E3E;
     
+    /* 撩拨：纯色（用于非字卡的常规消息） */
     --bubble-night-them: rgba(74,59,76, var(--bubble-opacity, 0.45));
     --bubble-night-me: rgba(163,74,96, var(--bubble-opacity, 0.45));
     --text-night: #F7F2F2;
     
+    /* 撩拨字卡专属（魅夜流光渐变） */
     --bubble-flirt-gradient: linear-gradient(135deg, rgba(74,31,45, var(--bubble-opacity, 0.45)), rgba(38,26,43, var(--bubble-opacity, 0.45)));
     --bubble-flirt-border: rgba(163, 74, 96, 0.4);
     
+    /* 动作气泡 */
     --bubble-action-them: rgba(255,235,240,.85);
     --bubble-action-me: rgba(255,230,235,.9);
     --action-daily-text: #8a4a58;
@@ -60,114 +64,121 @@
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
   .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
   .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); }
-  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-adjust.show,.page-fav.show { transform:translateX(0); }
- .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
-.icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
+  .page-sms { z-index:7; transform:translateX(100%); }
+  .page-letters { z-index:8; transform:translateX(100%); }
+  .page-letter-compose { z-index:9; transform:translateX(100%); }
+  .page-letter-detail { z-index:10; transform:translateX(100%); }
+  .page-chat.show,.page-create.show,.page-sub.show,.page-settings.show,.page-adjust.show,.page-fav.show,.page-sms.show,.page-letters.show,.page-letter-compose.show,.page-letter-detail.show { transform:translateX(0); }
 
-.header-avatar-wrap { width:36px; height:36px; flex:0 0 36px; margin-right:10px; position:relative; display:flex; align-items:center; justify-content:center; }
-.avatar-sm { width:100%; height:100%; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden; }
+  .topbar { min-height:56px; flex:0 0 auto; display:flex; align-items:center; padding:0 8px; border-bottom:1px solid var(--topbar-border); z-index:10; background:transparent; }
+  .icon-btn { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--text-secondary); background:transparent; border:none; flex:0 0 40px; z-index:20; }
+  
+  .header-avatar-wrap { width:36px; height:36px; flex:0 0 36px; margin-right:10px; position:relative; display:flex; align-items:center; justify-content:center; }
+  .avatar-sm { width:100%; height:100%; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden; }
+  
+  .header-dual-avatar { position:relative; width:36px; height:36px; }
+  .header-dual-avatar .du-av { position:absolute; width:24px; height:24px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:#fff; top:6px; animation: nightDualBreath 3s ease-in-out infinite alternate, nightDualClose 3.5s ease-in-out infinite alternate; }
+  .header-dual-avatar .du-av.me { left:0; z-index:1; }
+  .header-dual-avatar .du-av.them { right:0; z-index:2; }
+  @keyframes nightDualClose { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+  @keyframes nightDualBreath { 0% { opacity: 0.7; } 100% { opacity: 1; } }
 
-.header-dual-avatar { position:relative; width:36px; height:36px; }
-.header-dual-avatar .du-av { position:absolute; width:24px; height:24px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:#fff; top:6px; animation: nightDualBreath 3s ease-in-out infinite alternate, nightDualClose 3.5s ease-in-out infinite alternate; }
-.header-dual-avatar .du-av.me { left:0; z-index:1; }
-.header-dual-avatar .du-av.them { right:0; z-index:2; }
-@keyframes nightDualClose { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
-@keyframes nightDualBreath { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+  .header-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; padding:8px 0; }
+  .header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
+  .header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-.header-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; padding:8px 0; }
-.header-title { font-size:16px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color); margin-bottom:2px; }
-.header-sub { font-size:12px; color:var(--text-secondary); word-break:break-word; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; outline: none; -webkit-touch-callout: none; touch-action: manipulation; }
+  .chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
+  .chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
+  
+  .avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
+  .chat-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
+  .chat-room-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:none; }
+  .chat-their-name { font-size:16px; font-weight:600; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-mode-icon { font-size:13px; flex:0 0 auto; margin-left:2px; }
+  .chat-preview { font-size:14px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; align-self:flex-start; margin-top:4px; }
+  .chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
+  .fab { position:absolute; right:18px; bottom:22px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; font-size:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.2); z-index:5; border:none; }
 
-.chat-list { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.chat-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--topbar-border); background: transparent; -webkit-user-select: none; user-select: none; outline: none; -webkit-touch-callout: none; touch-action: manipulation; }
-.chat-row:active, .chat-row:focus, .chat-row:hover { background: transparent !important; outline: none !important; }
-.chat-row.pinned .chat-room-name, .chat-row.pinned .chat-their-name, .chat-row.pinned .chat-preview, .chat-row.pinned .chat-time { color: #e57373 !important; }
+  .page-chat { background-size:cover; background-position:center; }
+  .chat-bg-mask { position:absolute; inset:0; pointer-events:none; z-index:1; transition: background .3s; }
+  .page-chat .topbar { background:transparent !important; border-bottom:none; }
+  .messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
+  .messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
+  
+  .date-divider { align-self:center; background:rgba(251, 248, 240, 0.9); color:#4A3E3E; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; border:1px solid rgba(180, 160, 120, 0.3); }
+  body.is-night-mode .date-divider { background:rgba(42, 35, 32, 0.9); color:#e8dcc8; border-color: rgba(200, 170, 130, 0.4); }
 
-.avatar-lg { width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:20px; flex:0 0 48px; overflow:hidden; }
-.chat-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
-.chat-top-row { display:flex; align-items:baseline; gap:6px; overflow:hidden; }
-.chat-room-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:none; }
-.chat-their-name { font-size:16px; font-weight:600; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.chat-mode-icon { font-size:13px; flex:0 0 auto; margin-left:2px; }
-.chat-preview { font-size:14px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.chat-time { font-size:12px; color:var(--text-secondary); flex:0 0 auto; align-self:flex-start; margin-top:4px; }
-.chat-empty { text-align:center; color:var(--text-secondary); padding:40px 20px; font-size:14px; }
-.fab { position:absolute; right:18px; bottom:22px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; font-size:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.2); z-index:5; border:none; }
+  .msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  
+  .msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
+  
+  .msg-dual-avatar { position:relative; width:52px; height:36px; margin-bottom:8px; }
+  .msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
+  .msg-dual-avatar .du-av.them { left:0; }
+  .msg-dual-avatar .du-av.me { right:0; }
+  .msg-group.them .msg-dual-avatar .du-av.them { z-index:3; }
+  .msg-group.them .msg-dual-avatar .du-av.me { z-index:2; }
+  .msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
+  .msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
 
-.page-chat { background-size:cover; background-position:center; }
-.chat-bg-mask { position:absolute; inset:0; pointer-events:none; z-index:1; transition: background .3s; }
-.page-chat .topbar { background:transparent !important; border-bottom:none; }
-.messages-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:2; }
-.messages { padding:10px 14px 20px; display:flex; flex-direction:column; min-height:100%; }
+  .layout-yuyan .msg-group { align-items:stretch; }
+  .layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
+  .layout-yuyan .msg-dual-avatar { margin-bottom:0; }
+  .layout-yuyan .msg-row { display:flex; align-items:flex-start; gap:8px; width:100%; }
+  .layout-yuyan .msg-group.them .msg-row { flex-direction:row; justify-content:flex-start; }
+  .layout-yuyan .msg-group.me .msg-row { flex-direction:row; justify-content:flex-end; }
+  .layout-yuyan .msg-group.them .msg-dual-avatar { margin-right:0; }
+  .layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
+  .layout-yuyan .msg-group .bubble { max-width:72%; }
 
-.date-divider { align-self:center; background:rgba(251, 248, 240, 0.9); color:#4A3E3E; font-size:12px; padding:4px 12px; border-radius:12px; margin:16px 0; font-family: var(--bubble-font); letter-spacing: 0.05em; border:1px solid rgba(180, 160, 120, 0.3); }
-body.is-night-mode .date-divider { background:rgba(42, 35, 32, 0.9); color:#e8dcc8; border-color: rgba(200, 170, 130, 0.4); }
+  .bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; }
+  
+  .msg-group.them .bubble { background:var(--bubble-daily-them); border:1px solid rgba(255,255,255,.12); color:var(--text-daily); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--text-daily); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  
+  body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:var(--text-night); }
+  body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:var(--text-night); }
+  
+  /* 撩拨字卡专属渐变气泡 */
+  .msg-group.them .bubble.flirt-card-bubble { background: var(--bubble-flirt-gradient); border: 1px solid var(--bubble-flirt-border); color: var(--text-night); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  
+  .msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
+  body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; }
+  
+  body.theme-cyber .msg-group .bubble, body.theme-space .msg-group .bubble, body.theme-nightpurple .msg-group .bubble, body.theme-pureblack .msg-group .bubble { color:var(--text-daily); }
+  body.theme-cyber.is-night-mode .msg-group .bubble, body.theme-space.is-night-mode .msg-group .bubble, body.theme-nightpurple.is-night-mode .msg-group .bubble, body.theme-pureblack.is-night-mode .msg-group .bubble { color:var(--text-night); }
 
-.msg-group { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; width:100%; animation:fadeIn .4s ease forwards; position:relative; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .card-line { display:block; opacity:0; transform:translateY(5px); animation:cardIn .5s ease forwards; }
+  .card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
+  @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
+  .bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
+  
+  .msg-time-center { font-size:11px; color:var(--time-color-daily); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
+  .msg-time-center .time-text { font-size:12px; white-space:nowrap; }
+  
+  body.is-night-mode .msg-time-center { color:var(--time-color-night); }
+  body.is-night-mode .msg-group.them .bubble.flirt-card-bubble .msg-time-center { color:var(--time-color-night); }
 
-.msg-avatar-top { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:8px; object-fit:cover; overflow:hidden; }
+  .composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
+  .composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
+  body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
+  .composer textarea::placeholder { color:var(--text-secondary); }
+  .send-btn { width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); color:var(--primary); border:none; display:flex; align-items:center; justify-content:center; flex:0 0 44px; }
+  .send-btn:not(:disabled) { background:var(--primary); color:#fff; opacity:.9; }
+  .send-btn:disabled { opacity:.5; }
+  .send-btn svg { width:22px; height:22px; fill:currentColor; margin-left:2px; }
+  .pending-sticker-preview { width:100%; display:none; margin-bottom:5px; padding-left:10px; }
+  .pending-sticker-preview.show { display:block; }
+  .pending-sticker-preview img { height:50px; border-radius:6px; border:2px solid var(--primary); }
 
-.msg-dual-avatar { position:relative; width:52px; height:36px; margin-bottom:8px; }
-.msg-dual-avatar .du-av { position:absolute; width:36px; height:36px; border-radius:50%; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; top:0; }
-.msg-dual-avatar .du-av.them { left:0; }
-.msg-dual-avatar .du-av.me { right:0; }
-.msg-group.them .msg-dual-avatar .du-av.them { z-index:3; }
-.msg-group.them .msg-dual-avatar .du-av.me { z-index:2; }
-.msg-group.me .msg-dual-avatar .du-av.me { z-index:3; }
-.msg-group.me .msg-dual-avatar .du-av.them { z-index:2; }
-
-.layout-yuyan .msg-group { align-items:stretch; }
-.layout-yuyan .msg-group .msg-avatar-top { margin-bottom:0; }
-.layout-yuyan .msg-dual-avatar { margin-bottom:0; }
-.layout-yuyan .msg-row { display:flex; align-items:flex-start; gap:8px; width:100%; }
-.layout-yuyan .msg-group.them .msg-row { flex-direction:row; justify-content:flex-start; }
-.layout-yuyan .msg-group.me .msg-row { flex-direction:row; justify-content:flex-end; }
-.layout-yuyan .msg-group.them .msg-dual-avatar { margin-right:0; }
-.layout-yuyan .msg-group.me .msg-dual-avatar { margin-left:0; }
-.layout-yuyan .msg-group .bubble { max-width:72%; }
-
-.bubble { max-width:85%; padding:16px 20px; border-radius:16px; font-size:15px; line-height:1.5; word-break:break-word; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,.08); display:flex; flex-direction:column; gap:10px; transition: background .3s, color .3s; font-family: var(--bubble-font); font-weight:400; letter-spacing:0.03em; }
-
-.msg-group.them .bubble { background:var(--bubble-daily-them); border:1px solid rgba(255,255,255,.12); color:var(--text-daily); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-.msg-group.me .bubble { background:var(--bubble-daily-me); border:1px solid rgba(255,255,255,.12); color:var(--text-daily); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-
-body.is-night-mode .msg-group.them .bubble { background:var(--bubble-night-them); color:var(--text-night); }
-body.is-night-mode .msg-group.me .bubble { background:var(--bubble-night-me); color:var(--text-night); }
-
-.msg-group.them .bubble.flirt-card-bubble { background: var(--bubble-flirt-gradient); border: 1px solid var(--bubble-flirt-border); color: var(--text-night); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-
-.msg-group.them .bubble.action-bubble { background:var(--bubble-action-them); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-.msg-group.me .bubble.action-bubble { background:var(--bubble-action-me); border:1px solid rgba(255,150,150,.3); color:var(--action-daily-text); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
-body.is-night-mode .msg-group.them .bubble.action-bubble { color:#F5E6E8; }
-body.is-night-mode .msg-group.me .bubble.action-bubble { color:#F5E6E8; }
-
-body.theme-cyber .msg-group .bubble, body.theme-space .msg-group .bubble, body.theme-nightpurple .msg-group .bubble, body.theme-pureblack .msg-group .bubble { color:var(--text-daily); }
-body.theme-cyber.is-night-mode .msg-group .bubble, body.theme-space.is-night-mode .msg-group .bubble, body.theme-nightpurple.is-night-mode .msg-group .bubble, body.theme-pureblack.is-night-mode .msg-group .bubble { color:var(--text-night); }
-
-.card-line { display:block; opacity:0; transform:translateY(5px); animation:cardIn .5s ease forwards; }
-.card-line.no-anim { animation:none !important; opacity:1 !important; transform:none !important; }
-@keyframes cardIn { to{opacity:1;transform:translateY(0)} }
-.bubble .sticker-img { display:block; max-width:100%; max-height:200px; border-radius:8px; margin:5px auto 0; opacity:0; animation:cardIn .5s ease forwards; }
-
-.msg-time-center { font-size:11px; color:var(--time-color-daily); margin-top:6px; text-align:left; width:100%; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
-.msg-time-center .time-text { font-size:12px; white-space:nowrap; }
-
-body.is-night-mode .msg-time-center { color:var(--time-color-night); }
-body.is-night-mode .msg-group.them .bubble.flirt-card-bubble .msg-time-center { color:var(--time-color-night); }
-
-.composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; transition: background .3s; }
-.composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; transition: background .3s; }
-body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
-.composer textarea::placeholder { color:var(--text-secondary); }
-.send-btn { width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); color:var(--primary); border:none; display:flex; align-items:center; justify-content:center; flex:0 0 44px; }
-.send-btn:not(:disabled) { background:var(--primary); color:#fff; opacity:.9; }
-.send-btn:disabled { opacity:.5; }
-.send-btn svg { width:22px; height:22px; fill:currentColor; margin-left:2px; }
-.pending-sticker-preview { width:100%; display:none; margin-bottom:5px; padding-left:10px; }
-.pending-sticker-preview.show { display:block; }
-.pending-sticker-preview img { height:50px; border-radius:6px; border:2px solid var(--primary); }
-   .create-scroll { flex:1; overflow-y:auto; padding:20px; }
+  .create-scroll { flex:1; overflow-y:auto; padding:20px; }
   .tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); }
   .tab-item { flex:1; text-align:center; padding:12px 0; font-size:15px; color:var(--text-secondary); font-weight:500; }
   .tab-item.active { color:var(--primary); border-bottom:2px solid var(--primary); }
@@ -378,6 +389,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
   .accompany-them-proposal { text-align:center; padding:8px 0; }
   .accompany-them-proposal .act-name { font-size:18px; font-weight:700; color:var(--primary); margin:6px 0 12px; }
   
+  /* 相伴提议的三个按钮，改为和相伴之事一样的卡片样式 */
   .accompany-proposal-btns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
   .accompany-proposal-btns button { padding:9px 4px; text-align:center; border-radius:8px; border:1px solid transparent; font-size:13px; font-weight:400; cursor:pointer; line-height:1.2; }
   .accompany-proposal-btns .accompany-reject-btn { background:var(--input-bg); color:var(--text-color); }
@@ -496,6 +508,114 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
 
   .bubble-opacity-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:14px; color:var(--text-color); }
   .bubble-opacity-input { width:60px; height:32px; border-radius:6px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); text-align:center; font-size:14px; outline:none; }
+
+  /* ==================== 新增：簡訊页面 ==================== */
+  .page-sms { background: var(--bg-color); }
+  .sms-list-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 12px; }
+  .sms-list { display:flex; flex-direction:column; gap:14px; padding-bottom:20px; }
+  .sms-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
+
+  .sms-card { position:relative; border-radius:10px; padding:14px 14px 10px 22px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(180,160,120,.16) 27px, rgba(180,160,120,.16) 28px); background-size:100% 28px; overflow:hidden; font-family: var(--bubble-font); }
+  .sms-card::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:rgba(180,160,120,.35); }
+  .sms-card::after { content:''; position:absolute; right:-14px; top:-14px; width:46px; height:46px; transform:rotate(45deg); background:rgba(200,180,140,.22); border-left:1px dashed rgba(150,130,90,.5); }
+  .sms-card.flirt { background:#2a2320; border-color:#4a3f36; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(200,170,130,.14) 27px, rgba(200,170,130,.14) 28px); }
+  .sms-card.flirt::before { background:rgba(200,170,130,.3); }
+  .sms-card.flirt::after { background:rgba(200,170,130,.18); border-left-color:rgba(200,170,130,.4); }
+  .sms-card-text { font-size:15px; line-height:1.7; letter-spacing:0.03em; color:#3b3226; word-break:break-word; white-space:pre-wrap; padding-top:2px; position:relative; z-index:1; }
+  .sms-card.flirt .sms-card-text { color:#e8dcc8; }
+  .sms-card-attach { max-width:100%; max-height:200px; border-radius:8px; margin-top:8px; display:block; position:relative; z-index:1; }
+  .sms-card-attach.sticker { max-width:120px; max-height:120px; }
+  .sms-card-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:10px; padding-top:8px; border-top:1px dashed rgba(150,130,90,.35); position:relative; z-index:1; }
+  .sms-card.flirt .sms-card-meta { border-top-color:rgba(200,170,130,.25); }
+  .sms-card-name { font-size:13px; color:#8a7a5a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sms-card.flirt .sms-card-name { color:#b8a480; }
+  .sms-card-time { font-size:11px; color:#8a7a5a; white-space:nowrap; text-align:right; }
+  .sms-card.flirt .sms-card-time { color:#b8a480; }
+
+  .sms-composer { flex:0 0 auto; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; z-index:10; background:transparent; flex-wrap:wrap; }
+  .sms-composer textarea { flex:1; min-width:0; height:44px; max-height:120px; border-radius:22px; border:none; background:rgba(255,255,255,.45); backdrop-filter:blur(15px); padding:12px 16px; font-size:15px; color:var(--text-color); outline:none; resize:none; line-height:1.4; }
+  body.is-night-mode .sms-composer textarea { background: rgba(0,0,0,0.3); }
+  .sms-composer textarea::placeholder { color:var(--text-secondary); }
+  .sms-send-text { width:auto; min-width:64px; height:44px; padding:0 16px; border-radius:22px; font-size:14px; font-weight:500; flex:0 0 auto; background:var(--primary); color:#fff; border:none; }
+  .sms-send-text:disabled { opacity:.5; }
+  .sms-target-row { width:100%; display:flex; align-items:center; gap:8px; padding:0 4px 6px; }
+  .sms-target-label { font-size:12px; color:var(--text-secondary); white-space:nowrap; }
+  .sms-target-select { flex:1; min-width:0; height:32px; border-radius:8px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); font-size:13px; padding:0 8px; outline:none; }
+  .sms-attach-preview { width:100%; display:none; gap:10px; padding:0 4px 6px; }
+  .sms-attach-preview.show { display:flex; }
+  .sms-attach-item { position:relative; width:56px; height:56px; border-radius:8px; overflow:hidden; border:1px solid var(--topbar-border); background:var(--input-bg); }
+  .sms-attach-item img { width:100%; height:100%; object-fit:cover; }
+  .sms-attach-del { position:absolute; top:0; right:0; width:18px; height:18px; background:rgba(0,0,0,.6); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+
+  /* ==================== 新增：信訊页面 ==================== */
+  .page-letters { background: var(--bg-color); }
+  .letter-tab-bar { display:flex; border-bottom:1px solid var(--topbar-border); flex:0 0 auto; }
+  .letter-tab { flex:1 1 0px; text-align:center; padding:12px 4px; font-size:15px; color:var(--text-secondary); white-space:nowrap; border-bottom:2px solid transparent; }
+  .letter-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+  .letter-list-wrap { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; }
+  .letter-list { display:flex; flex-direction:column; gap:12px; padding-bottom:20px; }
+  .letter-empty { text-align:center; color:var(--text-secondary); padding:50px 20px; font-size:14px; }
+
+  .letter-item { position:relative; display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 2px 8px rgba(0,0,0,.06); overflow:hidden; font-family: var(--bubble-font); }
+  body.theme-cyber .letter-item, body.theme-space .letter-item, body.theme-nightpurple .letter-item, body.theme-pureblack .letter-item, body.is-night-mode .letter-item { background:#2a2320; border-color:#4a3f36; }
+  .letter-seal { width:42px; height:42px; flex:0 0 42px; border-radius:50%; background-size:cover; background-position:center; border:2px solid #b8860b; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+  .letter-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+  .letter-envelope-title { font-size:14px; font-weight:600; color:#3b3226; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  body.theme-cyber .letter-envelope-title, body.theme-space .letter-envelope-title, body.theme-nightpurple .letter-envelope-title, body.theme-pureblack .letter-envelope-title, body.is-night-mode .letter-envelope-title { color:#e8dcc8; }
+  .letter-envelope-sub { font-size:12px; color:#8a7a5a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  body.theme-cyber .letter-envelope-sub, body.theme-space .letter-envelope-sub, body.theme-nightpurple .letter-envelope-sub, body.theme-pureblack .letter-envelope-sub, body.is-night-mode .letter-envelope-sub { color:#b8a480; }
+  .letter-time { font-size:11px; color:#8a7a5a; flex:0 0 auto; align-self:flex-start; }
+  body.theme-cyber .letter-time, body.theme-space .letter-time, body.theme-nightpurple .letter-time, body.theme-pureblack .letter-time, body.is-night-mode .letter-time { color:#b8a480; }
+
+  /* ==================== 新增：写信页 ==================== */
+  .page-letter-compose { background: var(--bg-color); }
+  .compose-scroll { flex:1; overflow-y:auto; padding:16px; }
+  .compose-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .compose-label { font-size:14px; color:var(--text-secondary); flex:0 0 auto; min-width:42px; }
+  .compose-select { flex:1; min-width:0; height:40px; border-radius:8px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); font-size:14px; padding:0 10px; outline:none; }
+  .compose-static { flex:1; min-width:0; font-size:15px; color:var(--text-color); padding:0 2px; }
+  .compose-textarea { width:100%; min-height:220px; border-radius:10px; border:1px solid var(--topbar-border); background:var(--input-bg); color:var(--text-color); padding:12px; font-size:15px; line-height:1.8; outline:none; resize:vertical; font-family: var(--bubble-font); letter-spacing:0.03em; }
+  .compose-attach-row { display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .compose-attach-preview { position:relative; width:56px; height:56px; border-radius:8px; overflow:hidden; border:1px solid var(--topbar-border); background:var(--input-bg); }
+  .compose-attach-preview img { width:100%; height:100%; object-fit:cover; }
+  .compose-attach-del { position:absolute; top:0; right:0; width:18px; height:18px; background:rgba(0,0,0,.6); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .compose-footer { flex:0 0 auto; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .compose-send-btn { width:100%; height:48px; border-radius:10px; background:var(--primary); color:#fff; font-size:16px; font-weight:600; border:none; }
+
+  /* ==================== 新增：信件详情 / 开信动画 ==================== */
+  .page-letter-detail { background: var(--bg-color); }
+  .letter-detail-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 16px 30px; }
+  .letter-paper { position:relative; border-radius:12px; padding:22px 20px 18px; background:#fbf8f0; border:1px solid #e7dfcc; box-shadow:0 4px 16px rgba(0,0,0,.08); background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 30px, rgba(180,160,120,.14) 30px, rgba(180,160,120,.14) 31px); background-size:100% 31px; overflow:hidden; font-family: var(--bubble-font); }
+  body.theme-cyber .letter-paper, body.theme-space .letter-paper, body.theme-nightpurple .letter-paper, body.theme-pureblack .letter-paper, body.is-night-mode .letter-paper { background:#2a2320; border-color:#4a3f36; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 30px, rgba(200,170,130,.14) 30px, rgba(200,170,130,.14) 31px); }
+  .letter-paper::after { content:''; position:absolute; right:-16px; top:-16px; width:52px; height:52px; transform:rotate(45deg); background:rgba(200,180,140,.2); border-left:1px dashed rgba(150,130,90,.5); }
+  .letter-salutation { font-size:16px; font-weight:600; color:#3b3226; margin-bottom:14px; position:relative; z-index:1; }
+  .letter-body-text { font-size:15px; line-height:1.9; letter-spacing:0.03em; color:#3b3226; white-space:pre-wrap; word-break:break-word; position:relative; z-index:1; margin-bottom:18px; }
+  .letter-body-text p { margin-bottom:10px; }
+  .letter-attach { max-width:100%; max-height:200px; border-radius:8px; margin:10px 0; display:block; position:relative; z-index:1; }
+  .letter-attach.sticker { max-width:120px; max-height:120px; }
+  .letter-signature { text-align:right; font-size:15px; color:#3b3226; position:relative; z-index:1; margin-top:8px; }
+  body.theme-cyber .letter-salutation, body.theme-space .letter-salutation, body.theme-nightpurple .letter-salutation, body.theme-pureblack .letter-salutation, body.is-night-mode .letter-salutation,
+  body.theme-cyber .letter-body-text, body.theme-space .letter-body-text, body.theme-nightpurple .letter-body-text, body.theme-pureblack .letter-body-text, body.is-night-mode .letter-body-text,
+  body.theme-cyber .letter-signature, body.theme-space .letter-signature, body.theme-nightpurple .letter-signature, body.theme-pureblack .letter-signature, body.is-night-mode .letter-signature { color:#e8dcc8; }
+  .letter-detail-meta { margin-top:14px; display:flex; justify-content:flex-end; font-size:11px; color:#8a7a5a; }
+  body.theme-cyber .letter-detail-meta, body.theme-space .letter-detail-meta, body.theme-nightpurple .letter-detail-meta, body.theme-pureblack .letter-detail-meta, body.is-night-mode .letter-detail-meta { color:#b8a480; }
+
+  /* 开信动画：信封盖 → 展开 */
+  .letter-open-stage { position:relative; min-height:120px; display:flex; align-items:center; justify-content:center; }
+  .letter-envelope-anim { position:relative; width:220px; height:150px; perspective:600px; }
+  .letter-envelope-body { position:absolute; inset:0; border-radius:8px; background:#f2e6cf; border:1px solid #d8c39a; overflow:hidden; }
+  body.is-night-mode .letter-envelope-body { background:#3a2c28; border-color:#5a453c; }
+  .letter-envelope-flap { position:absolute; left:0; top:0; width:100%; height:75px; background:#e8d5b0; border:1px solid #d8c39a; border-bottom:none; border-radius:8px 8px 0 0; transform-origin:top center; animation:envelopeFlap 1s ease forwards; }
+  body.is-night-mode .letter-envelope-flap { background:#4a3730; border-color:#5a453c; }
+  @keyframes envelopeFlap { 0%{ transform:rotateX(0deg); } 100%{ transform:rotateX(180deg); } }
+  .letter-envelope-name { position:absolute; left:0; right:0; bottom:18px; text-align:center; font-size:13px; color:#6b5a3a; z-index:2; }
+  body.is-night-mode .letter-envelope-name { color:#c8b48a; }
+  .letter-seal-anim { position:absolute; left:50%; top:50%; width:38px; height:38px; margin-left:-19px; margin-top:-19px; border-radius:50%; background-size:cover; background-position:center; border:2px solid #b8860b; z-index:3; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#fff; overflow:hidden; }
+
+  @media (max-width: 380px) {
+    .sms-card-time { font-size:10px; }
+    .letter-time { font-size:10px; }
+  }
 </style>
 </head>
 <body class="theme-sky">
@@ -505,6 +625,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
     <div class="chat-list" id="chatList"></div>
     <button class="fab" id="newChatBtn">＋</button>
   </div>
+
   <div class="page page-create" id="pageCreate">
     <div class="topbar"><button class="icon-btn" id="cancelCreateBtn">←</button><div class="header-title" style="flex:1;text-align:center;font-size:17px;" id="createPageTitle">建立新對話</div><div style="width:40px;"></div></div>
     <div class="create-scroll">
@@ -555,6 +676,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
       <button id="saveChatBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">完成</button>
     </div>
   </div>
+
   <div class="page page-chat" id="pageChat">
     <div class="chat-bg-mask" id="chatBgMask"></div>
     <div class="topbar">
@@ -573,7 +695,8 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
       <button class="send-btn" id="sendBtn" disabled><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
   </div>
-    <div class="page page-fav" id="pageFav">
+
+  <div class="page page-fav" id="pageFav">
     <div class="topbar">
       <button class="icon-btn" id="backFavBtn">←</button>
       <div class="header-title" style="flex:1;text-align:center;font-size:17px;">尺素</div>
@@ -584,7 +707,101 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
       <div class="fav-swipe-track" id="favSwipeTrack"></div>
     </div>
   </div>
-  
+
+  <!-- ==================== 新增：簡訊页面 ==================== -->
+  <div class="page page-sms" id="pageSms">
+    <div class="topbar">
+      <button class="icon-btn" id="backSmsBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">簡訊</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="sms-list-wrap">
+      <div class="sms-list" id="smsList"></div>
+    </div>
+    <div class="sms-composer" id="smsComposer">
+      <div class="sms-target-row">
+        <span class="sms-target-label">署名</span>
+        <select class="sms-target-select" id="smsTargetSelect">
+          <option value="">我的名字（不指定）</option>
+        </select>
+      </div>
+      <div class="sms-attach-preview" id="smsAttachPreview">
+        <div class="sms-attach-item" id="smsImgPreviewWrap" style="display:none;">
+          <img id="smsImgPreview" src="">
+          <div class="sms-attach-del" id="smsImgDel">✕</div>
+        </div>
+        <div class="sms-attach-item" id="smsStickerPreviewWrap" style="display:none;">
+          <img id="smsStickerPreview" src="">
+          <div class="sms-attach-del" id="smsStickerDel">✕</div>
+        </div>
+      </div>
+      <textarea id="smsInput" placeholder="寫下留言…" rows="1"></textarea>
+      <button class="icon-btn" id="smsStickerBtn" style="font-size:20px;color:var(--text-secondary);">🔗</button>
+      <button class="sms-send-text" id="smsSendBtn" disabled>投訊</button>
+    </div>
+  </div>
+
+  <!-- ==================== 新增：信訊页面 ==================== -->
+  <div class="page page-letters" id="pageLetters">
+    <div class="topbar">
+      <button class="icon-btn" id="backLettersBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">信訊</div>
+      <button class="icon-btn" id="composeLetterBtn" style="font-size:14px;width:auto;padding:0 10px;color:var(--primary);">提筆</button>
+    </div>
+    <div class="letter-tab-bar">
+      <div class="letter-tab active" data-lettertab="inbox">鴻雁</div>
+      <div class="letter-tab" data-lettertab="outbox">魚書</div>
+    </div>
+    <div class="letter-list-wrap">
+      <div class="letter-list" id="letterList"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 新增：写信页 ==================== -->
+  <div class="page page-letter-compose" id="pageLetterCompose">
+    <div class="topbar">
+      <button class="icon-btn" id="backLetterComposeBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">提筆</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="compose-scroll">
+      <div class="compose-row">
+        <span class="compose-label">寫給</span>
+        <select class="compose-select" id="composeToSelect"></select>
+      </div>
+      <div class="compose-row">
+        <span class="compose-label">抬頭</span>
+        <div class="compose-static" id="composeSalutation">—</div>
+      </div>
+      <textarea class="compose-textarea" id="composeBodyInput" placeholder="寫下信中所言…"></textarea>
+      <div class="compose-attach-row">
+        <button class="icon-btn" id="composeStickerBtn" style="font-size:20px;color:var(--text-secondary);">🔗</button>
+        <button class="icon-btn" id="composeImgBtn" style="font-size:20px;color:var(--text-secondary);">🖼️</button>
+        <div class="compose-attach-preview" id="composeAttachPreview" style="display:none;">
+          <img id="composeAttachImg" src="">
+          <div class="compose-attach-del" id="composeAttachDel">✕</div>
+        </div>
+      </div>
+      <div class="compose-row" style="margin-top:14px;">
+        <span class="compose-label">落款</span>
+        <div class="compose-static" id="composeSignature">—</div>
+      </div>
+    </div>
+    <div class="compose-footer">
+      <button class="compose-send-btn" id="composeSendBtn">鴻書</button>
+    </div>
+  </div>
+
+  <!-- ==================== 新增：信件详情页 ==================== -->
+  <div class="page page-letter-detail" id="pageLetterDetail">
+    <div class="topbar">
+      <button class="icon-btn" id="backLetterDetailBtn">←</button>
+      <div class="header-title" style="flex:1;text-align:center;font-size:17px;">展信</div>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="letter-detail-scroll" id="letterDetailScroll"></div>
+  </div>
+
   <div class="page page-adjust" id="pageAdjust">
     <div class="topbar">
       <button class="icon-btn" id="backAdjustBtn">←</button>
@@ -646,6 +863,18 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
             <input type="number" id="adjCollectRate" class="adjust-input">
           </div>
         </div>
+        <div class="adjust-row">
+          <span>簡訊機率 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="adjSmsRate" class="adjust-input">
+          </div>
+        </div>
+        <div class="adjust-row">
+          <span>信訊機率 (%)</span>
+          <div class="adjust-inputs">
+            <input type="number" id="adjLetterRate" class="adjust-input">
+          </div>
+        </div>
       </div>
       
       <button id="saveAdjustBtn" style="width:100%;height:48px;border-radius:8px;background:var(--primary);color:#fff;font-size:16px;font-weight:500;border:none;margin-top:10px;">保存設置</button>
@@ -688,6 +917,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
       </div>
     </div>
   </div>
+
   <div class="page page-sub" id="pagePostOffice">
     <div class="topbar"><button class="icon-btn" id="backPostOfficeBtn">←</button><div class="header-title" style="flex:1;text-align:center;font-size:17px;">郵電所</div><div style="width:40px;"></div></div>
     <div class="tab-bar">
@@ -741,6 +971,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
     </div>
   </div>
 </div>
+
 <div class="music-player-float" id="musicPlayerFloat"><div class="music-disc" id="musicDiscFloat"></div></div>
 <div class="music-player-panel" id="musicPlayerPanel">
   <div class="music-info-text"><div class="music-close-btn" id="btnClosePlayer">✕</div><div class="music-title-text" id="playerTitle">未播放</div><div class="music-artist-text" id="playerArtist">-</div></div>
@@ -749,7 +980,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
   <div class="music-time"><span id="timeCurrent">00:00</span><span id="timeTotal">00:00</span></div>
   <div class="music-controls">
     <button class="music-btn" id="btnPrev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-    <button class="music-btn play-btn" id="btnPlayPause"><svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
+    <button class="music-btn play-btn" id="btnPlayPause"><svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V-5h-4z"/></svg></button>
     <button class="music-btn" id="btnNext"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6v12z"/></svg></button>
     <button class="music-btn" id="btnMode"><svg class="mode-icon" id="iconMode" viewBox="0 0 24 24"></svg></button>
   </div>
@@ -802,7 +1033,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
   </div>
 </div>
 
-<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">郵局</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
+<div class="menu-mask" id="menuMask"><div class="menu" id="menuPanel"><div class="menu-item" data-act="postoffice">郵電所</div><div class="menu-item" data-act="letters">信訊</div><div class="menu-item" data-act="messages">簡訊</div><div class="menu-item" data-act="fav">尺素</div><div class="menu-item" data-act="settings">佈景</div><div class="menu-item" data-act="adjust">微調</div><div class="menu-item" data-act="export">存檔</div><div class="menu-item danger" data-act="clear">焚稿</div><div class="menu-item" data-act="about">南洲誌</div></div></div>
 <div class="action-sheet-mask" id="actionSheetMask"><div class="action-sheet"><div class="action-item" id="actPin">釘選</div><div class="action-item" id="actEdit">編輯</div><div class="action-item" id="actLayout">排版</div><div class="action-item" id="actClear">焚稿</div><div class="action-item danger" id="actDelete">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="actCancel">取消</div></div></div>
 <div class="action-sheet-mask" id="msgActionMask"><div class="action-sheet"><div class="action-item" id="msgActCollect" style="display:none;">入素</div><div class="action-item danger" id="msgActBurn">焚毀</div><div class="action-item" style="color:var(--text-secondary)" id="msgActCancel">取消</div></div></div>
 <div class="layout-panel-mask" id="layoutPanelMask"><div class="layout-panel"><div class="layout-panel-title">排版</div><div class="layout-option" data-layout="jiuumeng">舊夢</div><div class="layout-option" data-layout="yuyan">魚雁</div></div></div>
@@ -811,6 +1042,7 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
 
 <div class="sticker-panel-mask" id="stickerPanelMask"><div class="sticker-panel"><div class="sticker-panel-header" id="stickerPanelHeader">選擇印花</div><div class="sticker-panel-content" id="stickerPanelContent"></div><div class="action-list-content" id="actionListContent" style="display:none;"></div><div class="action-list-content" id="musicSelectContent" style="display:none;"></div></div></div>
 <div class="flash-panel-mask" id="flashPanelMask"><div class="flash-panel"><div class="flash-panel-header">互動</div><div class="flash-grid"><div class="flash-item" id="flashPhoto">攝錄</div><div class="flash-item" id="flashAlbum">舊簿</div><div class="flash-item" id="flashAction">予祂</div><div class="flash-item" id="flashAsk">投問</div><div class="flash-item" id="flashMusic">留聲</div><div class="flash-item" id="flashAccompany">相伴</div></div></div></div>
+
 <div class="ask-modal-mask" id="askModalMask">
   <div class="ask-modal">
     <div class="ask-modal-header">投問</div>
@@ -838,9 +1070,11 @@ body.is-night-mode .composer textarea { background: rgba(0,0,0,0.3); }
 <input type="file" id="askImgFile" accept="image/*" multiple style="display:none">
 <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none">
 <input type="file" id="albumInput" accept="image/*" style="display:none">
+<input type="file" id="smsImgFile" accept="image/*" style="display:none">
+<input type="file" id="composeImgFile" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 <script>
-  const originalQuerySelector = document.querySelector.bind(document);
+ const originalQuerySelector = document.querySelector.bind(document);
 document.querySelector = function(selector) {
   const el = originalQuerySelector(selector);
   if (!el) {
@@ -859,7 +1093,7 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
 
 const EMOJI_POOL = ['😀','😃','😄','😁','😆','🥹','😅','😂','🤣','🥲','☺','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','😶','🫥','😐','🫤','😑','🫨','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶🏻','👏🏻','👍🏻','✌🏻','🫰🏻','👌🏻','🫳🏻','🤏🏻','🫴🏻','👈🏻','👉🏻','👆🏻','👇🏻','✍🏻','🙏🏻','💄','💋','👄','👀','🧥','🥼','👗','👠','🧤','🧣','👒','👑','💍','💼','🧳','🌂','🐶','🐱','🐰','🦊','🙈','🙉','🙊','🦄','🐠','🐟','🐬','🐾','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🪴','🍃','🍂','🍁','🍄','🐚','🪸','💐','🌷','🌹','🪻','🌺','🌸','🌼','🌻','🌚','🌝','🌙','💫','⭐','✨','⚡','🔥','💥','🌈','☀','🌤','⛅','🌥','☁','🌦','🌧','⛈️','🌩','🌨','❄','☃️','⛄','💦','💧','🫧','☔','☂️','🌊','🌫','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🫛','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🥔','🍠','🍞','🧀','🥚','🍳','🥩','🍗','🍖','🍔','🍟','🍕','🥪','🫕','🍝','🍜🏻','🍲','🥮','🍢','🍡','🍧','🍨','🍦','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍯','🥛','☕','🍵','🧃️','🧋','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🍾','🧊️','🍽','🎬','🎤','🎧','🎮','⌚️','📱','📲','💻','🖥','⌨️','🖨','📷','📸','📞','🎞','💰','💎','🔮','💊','🛁','🛀🏻','🧴','🪞','🛋','🛏','🛌','🧸','🛍','🛒','🎁','🎈','🎀','🎉','🎐','🧧','✉️','📩','📨','📧','💌','📜','📮','📃','📑','🩷','❤','🧡','💛','💚','🩵','💙','💜','💔','❤️‍🔥','❤‍🩹','💕','💞','💓','💗','💖','💘','💝','❌','💢','🔞','❗️','❓️','‼️','⁉️','✅','❎','🛜','📶','🆖','🆗','🎵','♥️'];
 
-// ===== 古风历法与节气算法（精准对齐北京时间与万年历） =====
+// ===== 古风历法与节气算法 =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
@@ -880,35 +1114,28 @@ function getTermDate(y, n) {
 function getAncientTime(date) {
   const utc8Date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (8 * 3600000));
   const y = utc8Date.getFullYear(), m = utc8Date.getMonth() + 1, d = utc8Date.getDate(), h = utc8Date.getHours(), min = utc8Date.getMinutes();
-  
   const lichun = getTermDate(y, 2);
   let ganZhiYear = y;
   if (utc8Date < lichun) ganZhiYear--;
   const yearGan = (ganZhiYear - 4) % 10;
   const yearZhi = (ganZhiYear - 4) % 12;
   const yearStr = GAN[(yearGan+10)%10] + ZHI[(yearZhi+12)%12] + ANIMALS[(yearZhi+12)%12] + '年';
-  
-  let lunarMonthIndex = (m + 10) % 12; 
+  let lunarMonthIndex = (m + 10) % 12;
   let yueName = YUE_NAMES[lunarMonthIndex] || '玄月';
   yueName = YUE_NAMES[(m >= 10 ? m - 10 : m + 2)] || '玄月';
-  
   const baseDate = Date.UTC(2000, 0, 1);
   const currentDate = Date.UTC(y, m-1, d);
   const diffDays = Math.round((currentDate - baseDate) / 86400000);
   const dayGan = (diffDays + 4) % 10;
   const dayZhi = (diffDays + 6) % 12;
   const dayStr = GAN[(dayGan+10)%10] + ZHI[(dayZhi+12)%12] + '日';
-  
   const hourZhiIndex = Math.floor(((h + 1) % 24) / 2);
   const hourGanBase = (dayGan % 5) * 2;
   const hourGan = (hourGanBase + hourZhiIndex) % 10;
   const hourGanZhi = GAN[(hourGan+10)%10] + ZHI[hourZhiIndex] + '时';
-  
   const keIndex = Math.floor(min / 15);
   const keName = KE[keIndex];
-  
   const timeStr = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
-
   return {
     dateStr: `${yearStr} ${yueName} ${dayStr}`,
     timeStr: `${hourGanZhi} ${keName} ${timeStr}`
@@ -919,7 +1146,7 @@ let globalBgImage = localStorage.getItem('nz_main_bg') || null;
 let globalBgMask = parseInt(localStorage.getItem('nz_main_bg_mask') || '20');
 
 let config = JSON.parse(localStorage.getItem('nz_config') || '{}');
-const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, bubbleOpacity: 45 };
+const defaultConfig = { replyMin: 8, replyMax: 15, callMin: 30, callMax: 90, accMin: 60, accMax: 150, flirtRate: 20, stickerRate: 10, actionRate: 15, collectRate: 10, smsRate: 10, letterRate: 10, bubbleOpacity: 45 };
 for(let k in defaultConfig) if(config[k] === undefined) config[k] = defaultConfig[k];
 
 function applyBubbleOpacity() {
@@ -934,7 +1161,7 @@ function applyThemeAndBg(){
     if(c && c.isNightMode) document.body.classList.add('is-night-mode');
   }
   document.querySelectorAll('.theme-card').forEach(card => card.classList.toggle('active', card.dataset.theme === savedTheme));
-  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageAdjust','#pageFav'];
+  const bgPages = ['#pageList','#pageCreate','#pageSettings','#pagePostOffice','#pageAdjust','#pageFav','#pageSms','#pageLetters','#pageLetterCompose','#pageLetterDetail'];
   const appEl = $('#app');
   if(globalBgImage){
     const isDark = savedTheme.includes('cyber')||savedTheme.includes('space')||savedTheme.includes('purple')||savedTheme.includes('pureblack');
@@ -960,6 +1187,16 @@ const DB_NAME = 'nanzhou_new_db';
 const DB_VER = 1;
 let db = null;
 
+function deleteDB(){
+  return new Promise((resolve, reject) => {
+    if(db){ try{ db.close(); }catch(e){} db = null; }
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => reject(new Error('資料庫被佔用'));
+  });
+}
+
 function openDB(){
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VER);
@@ -971,7 +1208,8 @@ function openDB(){
       if(!d.objectStoreNames.contains('stickers')) d.createObjectStore('stickers', { keyPath:'id' });
       if(!d.objectStoreNames.contains('actions')){ const s = d.createObjectStore('actions', { keyPath:'id' }); s.createIndex('category','category',{ unique:false }); }
       if(!d.objectStoreNames.contains('music')) d.createObjectStore('music', { keyPath:'id' });
-      if(!d.objectStoreNames.contains('snapshots')){ const s = d.createObjectStore('snapshots', { keyPath:'id' }); s.createIndex('chatId','chatId',{ unique:false }); }
+      if(!d.objectStoreNames.contains('sms')) d.createObjectStore('sms', { keyPath:'id' });
+      if(!d.objectStoreNames.contains('letters')) d.createObjectStore('letters', { keyPath:'id' });
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
@@ -979,7 +1217,8 @@ function openDB(){
 }
 function tx(store, mode='readonly'){ return db.transaction(store, mode).objectStore(store); }
 function reqToPromise(req){ return new Promise((res, rej) => { req.onsuccess = ()=>res(req.result); req.onerror = ()=>rej(req.error); }); }
- let chats = [], currentChatId = null, currentMessages = [], pendingStickerData = null;
+
+let chats = [], currentChatId = null, currentMessages = [], pendingStickerData = null;
 let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempChatBg = null, tempNightBg = null, tempCallBg = null, tempAccompanyBg = null, tempChatBgMask = 60, isEditingChatId = null;
 let longPressTimer = null, activeChatForMenu = null;
 let currentSubTab = 'normal', currentSearchQuery = '', isBatchDeleteMode = false, selectedCardIds = new Set();
@@ -1005,6 +1244,14 @@ let pendingBurnMsg = null;
 let currentMsgForAction = null;
 
 let favActiveChatId = null, favTabChatIds = [], favTouchStartX = 0, favTouchStartY = 0, favDragging = false, favCurrentIndex = 0, favRefreshTimer = null;
+
+/* ===== 簡訊 / 信訊 状态 ===== */
+let smsList = [];
+let smsPendingSticker = null, smsPendingImg = null;
+let letterCurrentTab = 'inbox';
+let letterListData = [];
+let composeToChatId = null, composeSticker = null, composeImg = null;
+let currentLetterDetailId = null;
 
 const ACCOMPANY_ACTS = ['打遊戲','看書','刷帖子','發呆','看實況','做飯','看故事','寫信','曬太陽','散步','逛市集','聽雨','煮茶','淺酌','安眠'];
 
@@ -1036,9 +1283,11 @@ function fmtDur(totalSec){
 function getDisplayName(c){ return (c && (c.theirNick || c.theirName)) ? (c.theirNick || c.theirName) : '祂'; }
 function getTheirDisplayChar(c){ return getDisplayName(c).charAt(0); }
 function getMyDisplayChar(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName).charAt(0) : '我'; }
+function getMyName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myName) : '我'; }
 
 async function init(){
   try {
+    await deleteDB();
     await openDB();
     await loadChats();
     renderChatList();
@@ -1056,6 +1305,8 @@ async function init(){
     $('#adjAccompanyMin').value = config.accMin; $('#adjAccompanyMax').value = config.accMax;
     $('#adjFlirtRate').value = config.flirtRate; $('#adjStickerRate').value = config.stickerRate; $('#adjActionRate').value = config.actionRate;
     $('#adjCollectRate').value = config.collectRate;
+    if($('#adjSmsRate')) $('#adjSmsRate').value = config.smsRate;
+    if($('#adjLetterRate')) $('#adjLetterRate').value = config.letterRate;
     
     if($('#bubbleOpacityInput')) $('#bubbleOpacityInput').value = config.bubbleOpacity;
     
@@ -1377,7 +1628,8 @@ function showMsgActionSheet(msg){
   }
   $('#msgActionMask').classList.add('show');
 }
- function buildAskCard(m, c){
+
+function buildAskCard(m, c){
   const card = document.createElement('div');
   card.className = 'ask-card';
   card.dataset.askId = m.id;
@@ -1518,6 +1770,47 @@ async function themCollectMyMessage(chatId, isNight){
   if($('#pageFav').classList.contains('show')) openFavPage();
 }
 
+/* ===== 簡訊 / 信訊 生成辅助 ===== */
+function joinSmsCards(cards){
+  let out = '';
+  cards.forEach((t, i) => {
+    let s = String(t).trim();
+    if(i < cards.length - 1){
+      if(!/[，。！？、；：,.!?;:]$/.test(s)) s += '，';
+    } else {
+      if(!/[。！？.!?]$/.test(s)) s += '。';
+    }
+    out += s;
+  });
+  return out;
+}
+
+async function buildSmsFromCards(count){
+  const allCards = await reqToPromise(tx('cards').getAll());
+  let normal = allCards.filter(x => (x.category || 'normal') === 'normal');
+  if(!normal.length) return null;
+  const n = count || (3 + Math.floor(Math.random() * 3));
+  const pool = [...normal];
+  const picked = [];
+  for(let i=0;i<n && pool.length;i++){
+    const idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(idx,1)[0].text);
+  }
+  if(!picked.length) return null;
+  return joinSmsCards(picked);
+}
+
+async function themLeaveSms(chatId, isNight){
+  const text = await buildSmsFromCards(3 + Math.floor(Math.random() * 3));
+  if(!text) return;
+  const stickers = await reqToPromise(tx('stickers').getAll());
+  let stickerData = null;
+  if(stickers.length && Math.random() < 0.15){ stickerData = stickers[Math.floor(Math.random()*stickers.length)].data; }
+  const msg = { id:'sms_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId: chatId || (chats[0] && chats[0].id) || null, sender:'them', text, stickerData, imageData:null, isNightMode: !!isNight, time: Date.now() };
+  await reqToPromise(tx('sms','readwrite').add(msg));
+  if($('#pageSms').classList.contains('show')) loadAndRenderSms();
+}
+
 async function buildThemMessage(chatId, isSpecialScene = false){
   const allCards = await reqToPromise(tx('cards').getAll());
   const c = chats.find(x => x.id === chatId);
@@ -1565,6 +1858,14 @@ async function buildThemMessage(chatId, isSpecialScene = false){
     }
   }
   await touchChat(chatId);
+
+  // 簡訊/信訊 概率触发（对齐尺素逻辑）
+  if(Math.random() * 100 < config.smsRate){
+    await themLeaveSms(chatId, isNight);
+  }
+  if(Math.random() * 100 < config.letterRate){
+    await themWriteLetter(chatId, isNight);
+  }
   
   if(Math.random() < (config.actionRate / 100)){
     const allA = await reqToPromise(tx('actions').getAll());
@@ -1612,7 +1913,8 @@ function showCustomDialog(title, text, showInput, okText, onOk, isDanger = false
   
   $('#dialogMask').classList.add('show');
 }
- async function loadAndRenderCards(){
+
+async function loadAndRenderCards(){
   const all = await reqToPromise(tx('cards').getAll());
   let f = all.filter(c => (c.category || 'normal') === currentSubTab);
   if(currentSearchQuery) f = f.filter(c => c.text.includes(currentSearchQuery));
@@ -1772,7 +2074,8 @@ async function loadAndRenderMusic(){
 }
 window.toggleSelectMusic = id => { if(selectedMusicIds.has(id)) selectedMusicIds.delete(id); else selectedMusicIds.add(id); loadAndRenderMusic(); };
 window.deleteSingleMusic = id => { showCustomDialog('作廢留聲','確定要銷毀這首留聲嗎？',false,'作廢', async () => { await reqToPromise(tx('music','readwrite').delete(id)); toast('已作廢'); loadAndRenderMusic(); }); };
- function initPlayerDrag(){
+
+function initPlayerDrag(){
   const float = $('#musicPlayerFloat');
   let dragging = false, sx, sy, il, it;
   float.addEventListener('touchstart', e => { dragging = false; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; const r = float.getBoundingClientRect(); il = r.left; it = r.top; float.style.bottom='auto'; float.style.right='auto'; float.style.left=il+'px'; float.style.top=it+'px'; }, { passive:true });
@@ -1972,7 +2275,8 @@ function setupIncomingCallTimer(){
     }
   }, 300000);
 }
- function renderAccompanyActs(){
+
+function renderAccompanyActs(){
   const box = $('#accompanyActs'); box.innerHTML = '';
   ACCOMPANY_ACTS.forEach(act => {
     const d = document.createElement('div');
@@ -2238,14 +2542,19 @@ function buildFavCard(m, c){
   else src.textContent = `${themName}收 · 我说`;
   
   const tObj = getAncientTime(new Date(m.time));
+  const hourPart = (tObj.timeStr || '').split(' ')[0];
   const stamp = document.createElement('div'); stamp.className = 'fav-stamp';
-  stamp.textContent = tObj.dateStr;
+  stamp.textContent = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
   meta.appendChild(src); meta.appendChild(stamp);
   card.appendChild(meta);
-  let lpTimer = null;
-  card.addEventListener('touchstart', () => { lpTimer = setTimeout(() => { showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => { m.collectedBy = null; await reqToPromise(tx('messages','readwrite').put(m)); toast('已移出尺素'); openFavPage(); }, true); }, 600); }, { passive:true });
-  card.addEventListener('touchend', () => clearTimeout(lpTimer));
-  card.addEventListener('touchmove', () => clearTimeout(lpTimer));
+  card.addEventListener('click', () => {
+    showCustomDialog('移出尺素', '確定要將這條移出尺素嗎？', false, '移出', async () => {
+      m.collectedBy = null;
+      await reqToPromise(tx('messages','readwrite').put(m));
+      toast('已移出尺素');
+      openFavPage();
+    }, true);
+  });
   return card;
 }
 
@@ -2278,9 +2587,289 @@ function bindFavSwipe(){
     favDragging = false;
   });
 }
- function bindEvents(){
+
+/* ===== 簡訊功能 ===== */
+function getSmsDisplayName(item){
+  if(item.sender === 'me'){
+    if(item.chatId){ const c = chats.find(x => x.id === item.chatId); if(c) return getMyName(c); }
+    const anyC = chats[0]; return anyC ? getMyName(anyC) : '我';
+  } else {
+    if(item.chatId){ const c = chats.find(x => x.id === item.chatId); if(c) return getDisplayName(c); }
+    return '祂';
+  }
+}
+
+async function loadAndRenderSms(){
+  smsList = await reqToPromise(tx('sms').getAll());
+  smsList.sort((a,b) => b.time - a.time);
+  renderSmsList();
+  renderSmsTargetOptions();
+}
+
+function renderSmsList(){
+  const box = $('#smsList');
+  if(!smsList.length){ box.innerHTML = '<div class="sms-empty">尚無簡訊</div>'; return; }
+  box.innerHTML = '';
+  smsList.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'sms-card' + (item.isNightMode ? ' flirt' : '');
+    const name = getSmsDisplayName(item);
+    const tObj = getAncientTime(new Date(item.time));
+    const hourPart = (tObj.timeStr || '').split(' ')[0];
+    const timeText = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
+    let attach = '';
+    if(item.imageData) attach = `<img class="sms-card-attach" src="${item.imageData}">`;
+    else if(item.stickerData) attach = `<img class="sms-card-attach sticker" src="${item.stickerData}">`;
+    card.innerHTML = `<div class="sms-card-text">${escapeHtml(item.text || '')}</div>${attach}<div class="sms-card-meta"><span class="sms-card-name">${escapeHtml(name)}</span><span class="sms-card-time">${escapeHtml(timeText)}</span></div>`;
+    card.addEventListener('click', () => {
+      showCustomDialog('撤訊', '確定要撤銷這條簡訊嗎？', false, '撤訊', async () => {
+        await reqToPromise(tx('sms','readwrite').delete(item.id));
+        toast('已撤訊');
+        loadAndRenderSms();
+      }, true);
+    });
+    box.appendChild(card);
+  });
+}
+
+function renderSmsTargetOptions(){
+  const sel = $('#smsTargetSelect');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">我的名字（不指定）</option>';
+  chats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = getDisplayName(c);
+    sel.appendChild(opt);
+  });
+  if(cur && chats.some(c => c.id === cur)) sel.value = cur;
+}
+
+function clearSmsAttach(){
+  smsPendingSticker = null; smsPendingImg = null;
+  $('#smsStickerPreviewWrap').style.display = 'none';
+  $('#smsImgPreviewWrap').style.display = 'none';
+  updateSmsSendBtnState();
+}
+function updateSmsSendBtnState(){
+  const hasText = $('#smsInput').value.trim().length > 0;
+  const hasAttach = !!(smsPendingSticker || smsPendingImg);
+  $('#smsSendBtn').disabled = !(hasText || hasAttach);
+}
+
+async function sendSms(){
+  const text = $('#smsInput').value.trim();
+  if(!text && !smsPendingSticker && !smsPendingImg){ toast('請寫點什麼或附上圖／貼花'); return; }
+  const targetChatId = $('#smsTargetSelect').value || null;
+  let isNight = false;
+  if(targetChatId){ const c = chats.find(x => x.id === targetChatId); if(c) isNight = !!c.isNightMode; }
+  else if(currentChatId){ const c = chats.find(x => x.id === currentChatId); if(c) isNight = !!c.isNightMode; }
+  const item = { id:'sms_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), chatId: targetChatId, sender:'me', text, stickerData: smsPendingSticker, imageData: smsPendingImg, isNightMode: isNight, time: Date.now() };
+  await reqToPromise(tx('sms','readwrite').add(item));
+  $('#smsInput').value = ''; $('#smsInput').style.height = '44px';
+  clearSmsAttach();
+  updateSmsSendBtnState();
+  loadAndRenderSms();
+  toast('已投訊');
+}
+
+/* ===== 信訊功能 ===== */
+async function buildLetterBodyFromCards(){
+  const allCards = await reqToPromise(tx('cards').getAll());
+  const normal = allCards.filter(x => (x.category || 'normal') === 'normal');
+  if(normal.length < 5) return null;
+  const totalWant = 15 + Math.floor(Math.random() * 16); // 15~30
+  const paraCount = 3 + Math.floor(Math.random() * 3); // 3~5
+  const pool = [...normal];
+  const picked = [];
+  const n = Math.min(totalWant, pool.length);
+  for(let i=0;i<n;i++){ const idx = Math.floor(Math.random()*pool.length); picked.push(pool.splice(idx,1)[0].text); }
+  const paras = [];
+  let cursor = 0;
+  for(let p=0;p<paraCount && cursor<picked.length;p++){
+    const remainParas = paraCount - p;
+    const remainCards = picked.length - cursor;
+    let take = Math.max(1, Math.floor(remainCards / remainParas));
+    if(p === paraCount-1) take = remainCards;
+    const chunk = picked.slice(cursor, cursor + take);
+    cursor += take;
+    paras.push(joinSmsCards(chunk));
+  }
+  return paras.join('\n\n');
+}
+
+async function themWriteLetter(chatId, isNight){
+  const body = await buildLetterBodyFromCards();
+  if(!body) return;
+  const c = chats.find(x => x.id === chatId) || chats[0];
+  if(!c) return;
+  const stickers = await reqToPromise(tx('stickers').getAll());
+  let stickerData = null;
+  if(stickers.length && Math.random() < 0.15){ stickerData = stickers[Math.floor(Math.random()*stickers.length)].data; }
+  const letter = {
+    id:'letter_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    chatId: c.id,
+    direction: 'in',
+    salutation: getMyName(c),
+    body,
+    signature: getDisplayName(c),
+    stickerData,
+    imageData: null,
+    isNightMode: !!isNight,
+    time: Date.now(),
+    replied: false
+  };
+  await reqToPromise(tx('letters','readwrite').add(letter));
+  if($('#pageLetters').classList.contains('show')) loadAndRenderLetters();
+}
+
+async function sendMyLetter(){
+  if(!composeToChatId){ toast('請先選擇寫給誰'); return; }
+  const c = chats.find(x => x.id === composeToChatId);
+  if(!c) return;
+  const body = $('#composeBodyInput').value.trim();
+  if(!body && !composeSticker && !composeImg){ toast('請寫下信中內容或附上圖／貼花'); return; }
+  const letter = {
+    id:'letter_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    chatId: c.id,
+    direction: 'out',
+    salutation: getDisplayName(c),
+    body: body || '',
+    signature: getMyName(c),
+    stickerData: composeSticker,
+    imageData: composeImg,
+    isNightMode: !!c.isNightMode,
+    time: Date.now(),
+    replied: false,
+    replyAt: Date.now() + (5 * 3600000) + Math.random() * (3 * 3600000)
+  };
+  await reqToPromise(tx('letters','readwrite').add(letter));
+  $('#composeBodyInput').value = '';
+  composeSticker = null; composeImg = null;
+  $('#composeAttachPreview').style.display = 'none';
+  $('#pageLetterCompose').classList.remove('show');
+  toast('已鴻書，靜候回音');
+  loadAndRenderLetters();
+  scheduleLetterReply(letter);
+}
+
+let letterReplyTimers = {};
+function scheduleLetterReply(letter){
+  const delay = Math.max(0, (letter.replyAt || 0) - Date.now());
+  if(letterReplyTimers[letter.id]) clearTimeout(letterReplyTimers[letter.id]);
+  letterReplyTimers[letter.id] = setTimeout(async () => {
+    const all = await reqToPromise(tx('letters').getAll());
+    const cur = all.find(x => x.id === letter.id);
+    if(!cur || cur.replied) return;
+    const body = await buildLetterBodyFromCards();
+    if(!body){ cur.replied = true; await reqToPromise(tx('letters','readwrite').put(cur)); return; }
+    const c = chats.find(x => x.id === cur.chatId);
+    const reply = {
+      id:'letter_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+      chatId: cur.chatId,
+      direction: 'in',
+      salutation: c ? getMyName(c) : '我',
+      body,
+      signature: c ? getDisplayName(c) : '祂',
+      stickerData: null,
+      imageData: null,
+      isNightMode: !!cur.isNightMode,
+      time: Date.now(),
+      replied: true
+    };
+    await reqToPromise(tx('letters','readwrite').add(reply));
+    cur.replied = true;
+    await reqToPromise(tx('letters','readwrite').put(cur));
+    delete letterReplyTimers[letter.id];
+    if($('#pageLetters').classList.contains('show')) loadAndRenderLetters();
+  }, Math.min(delay, 2147483647));
+}
+
+async function loadAndRenderLetters(){
+  const all = await reqToPromise(tx('letters').getAll());
+  all.sort((a,b) => b.time - a.time);
+  if(letterCurrentTab === 'inbox') letterListData = all.filter(l => l.direction === 'in');
+  else letterListData = all.filter(l => l.direction === 'out');
+  renderLetterList();
+}
+
+function renderLetterList(){
+  const box = $('#letterList');
+  if(!letterListData.length){ box.innerHTML = `<div class="letter-empty">${letterCurrentTab === 'inbox' ? '鴻雁未至' : '魚書未寄'}</div>`; return; }
+  box.innerHTML = '';
+  letterListData.forEach(l => {
+    const c = chats.find(x => x.id === l.chatId);
+    const item = document.createElement('div');
+    item.className = 'letter-item';
+    const sealName = c ? getDisplayName(c) : '祂';
+    const sealChar = sealName.charAt(0);
+    const sealHtml = c && c.theirAvatar ? `<div class="letter-seal" style="background-image:url('${c.theirAvatar}')"></div>` : `<div class="letter-seal" style="background:linear-gradient(135deg,#b99a6b,#d8c39a)">${sealChar}</div>`;
+    const tObj = getAncientTime(new Date(l.time));
+    const hourPart = (tObj.timeStr || '').split(' ')[0];
+    const timeText = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
+    const envTitle = l.direction === 'in' ? `${l.salutation}亲启` : `${l.salutation}亲启`;
+    item.innerHTML = `${sealHtml}<div class="letter-info"><div class="letter-envelope-title">${escapeHtml(envTitle)}</div><div class="letter-envelope-sub">${escapeHtml(l.signature)} · ${l.direction === 'in' ? '鴻雁' : '魚書'}</div></div><div class="letter-time">${escapeHtml(timeText)}</div>`;
+    item.addEventListener('click', () => openLetterDetail(l.id, true));
+    box.appendChild(item);
+  });
+}
+
+async function openLetterDetail(id, animate){
+  const all = await reqToPromise(tx('letters').getAll());
+  const l = all.find(x => x.id === id);
+  if(!l) return;
+  currentLetterDetailId = id;
+  const c = chats.find(x => x.id === l.chatId);
+  const scroll = $('#letterDetailScroll');
+  const tObj = getAncientTime(new Date(l.time));
+  const hourPart = (tObj.timeStr || '').split(' ')[0];
+  const timeText = tObj.dateStr + (hourPart ? ' ' + hourPart : '');
+  let attach = '';
+  if(l.imageData) attach = `<img class="letter-attach" src="${l.imageData}">`;
+  else if(l.stickerData) attach = `<img class="letter-attach sticker" src="${l.stickerData}">`;
+  const sealHtml = c && c.theirAvatar ? `<div class="letter-seal-anim" style="background-image:url('${c.theirAvatar}')"></div>` : `<div class="letter-seal-anim" style="background:linear-gradient(135deg,#b99a6b,#d8c39a)">${(c ? getDisplayName(c) : '祂').charAt(0)}</div>`;
+  const stage = animate ? `<div class="letter-open-stage"><div class="letter-envelope-anim"><div class="letter-envelope-body"></div><div class="letter-envelope-flap"></div><div class="letter-envelope-name">${escapeHtml(l.salutation)}亲启</div>${sealHtml}</div></div>` : '';
+  const paras = (l.body || '').split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
+  scroll.innerHTML = `${stage}<div class="letter-paper"><div class="letter-salutation">${escapeHtml(l.salutation)}：</div><div class="letter-body-text">${paras}</div>${attach}<div class="letter-signature">${escapeHtml(l.signature)}</div><div class="letter-detail-meta">${escapeHtml(timeText)}</div></div><div style="margin-top:16px;text-align:center;"><button class="compose-send-btn" id="letterDetailDeleteBtn" style="max-width:200px;background:#c96b5f;">撤信</button></div>`;
+  $('#pageLetterDetail').classList.add('show');
+  $('#letterDetailDeleteBtn').onclick = () => {
+    showCustomDialog('撤信', '確定要撤銷這封信嗎？', false, '撤信', async () => {
+      await reqToPromise(tx('letters','readwrite').delete(l.id));
+      toast('已撤信');
+      $('#pageLetterDetail').classList.remove('show');
+      loadAndRenderLetters();
+    }, true);
+  };
+}
+
+function openComposeLetter(){
+  if(!chats.length){ toast('請先建立聊天室'); return; }
+  composeToChatId = currentChatId || chats[0].id;
+  composeSticker = null; composeImg = null;
+  $('#composeBodyInput').value = '';
+  $('#composeAttachPreview').style.display = 'none';
+  const sel = $('#composeToSelect');
+  sel.innerHTML = '';
+  chats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = getDisplayName(c);
+    sel.appendChild(opt);
+  });
+  sel.value = composeToChatId;
+  updateComposeSalutation();
+  $('#pageLetterCompose').classList.add('show');
+}
+
+function updateComposeSalutation(){
+  const c = chats.find(x => x.id === composeToChatId);
+  $('#composeSalutation').textContent = c ? getDisplayName(c) : '—';
+  $('#composeSignature').textContent = c ? getMyName(c) : '—';
+}
+
+function bindEvents(){
   function exportData() {
-    const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+    const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
     let result = {};
     let completed = 0;
     $('#progressDialogMask').classList.add('show');
@@ -2312,7 +2901,7 @@ function bindFavSwipe(){
           $('#progressDialogMask').classList.add('show');
           $('#progressText').textContent = '正在恢復數據...';
           
-          const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+          const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
           for(let s of stores) {
              const store = tx(s, 'readwrite');
              store.clear();
@@ -2517,7 +3106,8 @@ function bindFavSwipe(){
   $('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
   $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
   $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
-    $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
+
+  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
   $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
   $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
   $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
@@ -2581,6 +3171,84 @@ function bindFavSwipe(){
   
   $('#backFavBtn').onclick = () => { $('#pageFav').classList.remove('show'); if(favRefreshTimer) { clearInterval(favRefreshTimer); favRefreshTimer = null; } };
   bindFavSwipe();
+
+  /* ===== 簡訊 / 信訊 事件 ===== */
+  $('#backSmsBtn').onclick = () => $('#pageSms').classList.remove('show');
+  $('#smsInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSmsSendBtnState(); });
+  $('#smsSendBtn').onclick = sendSms;
+  $('#smsStickerBtn').onclick = async () => {
+    const stickers = await reqToPromise(tx('stickers').getAll());
+    const content = $('#stickerPanelContent');
+    if(!stickers.length){ toast('尚無印花'); return; }
+    content.innerHTML=''; content.style.display='grid';
+    $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none';
+    $('#stickerPanelHeader').innerHTML='選擇印花';
+    stickers.forEach(s => {
+      const img = document.createElement('img'); img.src = s.data;
+      img.onclick = () => {
+        smsPendingSticker = s.data; smsPendingImg = null;
+        $('#smsStickerPreview').src = s.data; $('#smsStickerPreviewWrap').style.display='block';
+        $('#smsImgPreviewWrap').style.display='none';
+        $('#smsAttachPreview').classList.add('show');
+        $('#stickerPanelMask').classList.remove('show');
+        updateSmsSendBtnState();
+      };
+      content.appendChild(img);
+    });
+    $('#stickerPanelMask').classList.add('show');
+  };
+  $('#smsImgDel').onclick = () => { smsPendingImg = null; $('#smsImgPreviewWrap').style.display='none'; if(!smsPendingSticker) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
+  $('#smsStickerDel').onclick = () => { smsPendingSticker = null; $('#smsStickerPreviewWrap').style.display='none'; if(!smsPendingImg) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
+  // 簡訊附图：复用现有 albumInput
+  $('#smsImgFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { smsPendingImg = b; smsPendingSticker = null; $('#smsImgPreview').src = b; $('#smsImgPreviewWrap').style.display='block'; $('#smsStickerPreviewWrap').style.display='none'; $('#smsAttachPreview').classList.add('show'); updateSmsSendBtnState(); }); e.target.value=''; };
+  // 簡訊的附图按钮：为了不改变 🔗 位置，附图入口挂在输入框左侧小按钮？这里我们把它放在目标行右侧，避免动 🔗
+  // 在 HTML 中没有单独的 smsImgBtn，改用长按 🔗 不合适，所以这里额外在目标行加一个附图按钮（动态创建）
+  (function addSmsImgBtn(){
+    const row = document.querySelector('.sms-target-row');
+    if(row && !document.getElementById('smsImgBtn')){
+      const b = document.createElement('button');
+      b.className = 'icon-btn'; b.id = 'smsImgBtn'; b.style.fontSize='18px'; b.style.color='var(--text-secondary)';
+      b.textContent = '🖼️';
+      b.onclick = () => $('#smsImgFile').click();
+      row.appendChild(b);
+    }
+  })();
+
+  $('#backLettersBtn').onclick = () => $('#pageLetters').classList.remove('show');
+  document.querySelectorAll('.letter-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.letter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      letterCurrentTab = tab.dataset.lettertab;
+      loadAndRenderLetters();
+    };
+  });
+  $('#composeLetterBtn').onclick = openComposeLetter;
+  $('#backLetterComposeBtn').onclick = () => $('#pageLetterCompose').classList.remove('show');
+  $('#composeToSelect').onchange = e => { composeToChatId = e.target.value; updateComposeSalutation(); };
+  $('#composeStickerBtn').onclick = async () => {
+    const stickers = await reqToPromise(tx('stickers').getAll());
+    const content = $('#stickerPanelContent');
+    if(!stickers.length){ toast('尚無印花'); return; }
+    content.innerHTML=''; content.style.display='grid';
+    $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none';
+    $('#stickerPanelHeader').innerHTML='選擇印花';
+    stickers.forEach(s => {
+      const img = document.createElement('img'); img.src = s.data;
+      img.onclick = () => {
+        composeSticker = s.data; composeImg = null;
+        $('#composeAttachImg').src = s.data; $('#composeAttachPreview').style.display='block';
+        $('#stickerPanelMask').classList.remove('show');
+      };
+      content.appendChild(img);
+    });
+    $('#stickerPanelMask').classList.add('show');
+  };
+  $('#composeImgBtn').onclick = () => $('#composeImgFile').click();
+  $('#composeImgFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { composeImg = b; composeSticker = null; $('#composeAttachImg').src = b; $('#composeAttachPreview').style.display='block'; }); e.target.value=''; };
+  $('#composeAttachDel').onclick = () => { composeSticker = null; composeImg = null; $('#composeAttachPreview').style.display='none'; };
+  $('#composeSendBtn').onclick = sendMyLetter;
+  $('#backLetterDetailBtn').onclick = () => $('#pageLetterDetail').classList.remove('show');
 
   $('#aboutModalMask').onclick = e => { if(e.target === $('#aboutModalMask')) $('#aboutModalMask').classList.remove('show'); };
 
@@ -2657,6 +3325,8 @@ function bindFavSwipe(){
     if(act === 'postoffice'){ $('#pagePostOffice').classList.add('show'); loadAndRenderCards(); }
     else if(act === 'settings') $('#pageSettings').classList.add('show');
     else if(act === 'adjust') $('#pageAdjust').classList.add('show');
+    else if(act === 'messages'){ $('#pageSms').classList.add('show'); loadAndRenderSms(); }
+    else if(act === 'letters'){ $('#pageLetters').classList.add('show'); letterCurrentTab='inbox'; document.querySelectorAll('.letter-tab').forEach(t => t.classList.toggle('active', t.dataset.lettertab==='inbox')); loadAndRenderLetters(); }
     else if(act === 'fav'){ 
       openFavPage(); 
       if(favRefreshTimer) clearInterval(favRefreshTimer);
@@ -2679,14 +3349,12 @@ function bindFavSwipe(){
     }
     else if(act === 'clear') { 
       showCustomDialog('焚稿', '警告：這將徹底焚毀所有數據，且無法恢復。是否繼續？', false, '確認焚毀', async () => {
-        const stores = ['chats','messages','cards','stickers','actions','music','snapshots'];
+        const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
         for(let s of stores) { tx(s, 'readwrite').clear(); }
         setTimeout(() => location.reload(), 500);
       }, true);
     }
     else if(act === 'about'){ const body = $('#aboutBody'); body.innerHTML = ABOUT_PARAGRAPHS.map(p => `<p>${escapeHtml(p)}</p>`).join(''); $('#aboutModalMask').classList.add('show'); }
-    else if(act === 'letters') toast('郵局：功能籌備中...');
-    else if(act === 'messages') toast('簡訊：功能籌備中...');
   };
 
   $('#backSettingsBtn').onclick = () => $('#pageSettings').classList.remove('show');
@@ -2711,24 +3379,6 @@ function bindFavSwipe(){
     });
   }
 
-  if($('#customMonthInput')) {
-    $('#customMonthInput').onchange = e => {
-      localStorage.setItem('nz_custom_month', e.target.value.trim());
-      if(currentChatId) {
-        const c = chats.find(x => x.id === currentChatId);
-        currentMessages = currentMessages.map(m => m);
-        renderMessagesUI(true);
-      }
-      toast('月名已更新');
-    };
-    document.body.addEventListener('click', e => {
-      if(e.target !== $('#customMonthInput') && document.activeElement === $('#customMonthInput')) {
-        $('#customMonthInput').blur();
-        $('#customMonthInput').dispatchEvent(new Event('change'));
-      }
-    });
-  }
-
   $('#backAdjustBtn').onclick = () => $('#pageAdjust').classList.remove('show');
   $('#saveAdjustBtn').onclick = () => {
     let rMin = parseInt($('#adjReplyMin').value) || 8; if(rMin < 1) rMin = 1; if(rMin > 120) rMin = 120;
@@ -2742,6 +3392,8 @@ function bindFavSwipe(){
     config.stickerRate = parseInt($('#adjStickerRate').value) || 10;
     config.actionRate = parseInt($('#adjActionRate').value) || 15;
     config.collectRate = parseInt($('#adjCollectRate').value) || 10;
+    if($('#adjSmsRate')) config.smsRate = parseInt($('#adjSmsRate').value) || 10;
+    if($('#adjLetterRate')) config.letterRate = parseInt($('#adjLetterRate').value) || 10;
     localStorage.setItem('nz_config', JSON.stringify(config));
     toast('設置已保存');
     $('#pageAdjust').classList.remove('show');

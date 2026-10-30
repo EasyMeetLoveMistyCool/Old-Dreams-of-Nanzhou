@@ -1278,8 +1278,7 @@ let currentSubTab = 'normal', currentSearchQuery = '', isBatchDeleteMode = false
 let currentActionSubTab = 'to_them', currentActionSearchQuery = '', isActionBatchDeleteMode = false, selectedActionIds = new Set();
 let isStampBatchMode = false, selectedStampIds = new Set();
 let isMusicBatchMode = false, selectedMusicIds = new Set(), tempMusicFileData = null;
-
-let audioPlayer = new Audio();
+ let audioPlayer = new Audio();
 let playlist = [], currentTrackIndex = -1, playMode = 0;
 
 let isGlobalCallActive = false, callTimer = null, callStartTime = null, callInterval = null, incomingCallTimeout = null, checkIncomingInterval = null;
@@ -1728,8 +1727,7 @@ function buildAskCard(m, c){
   applyAskAnswer(card, m, c);
   return card;
 }
-
-function applyAskAnswer(card, m, c){
+ function applyAskAnswer(card, m, c){
   const ans = card.querySelector('.ask-answer');
   const footer = card.querySelector('.ask-card-footer');
   const opts = card.querySelectorAll('.ask-option');
@@ -2051,8 +2049,7 @@ window.cancelInlineEdit = () => { editMode = null; editingId = null; loadAndRend
 
 window.toggleSelectCard = id => { if(selectedCardIds.has(id)) selectedCardIds.delete(id); else selectedCardIds.add(id); loadAndRenderCards(); };
 window.deleteSingleCard = id => { showCustomDialog('作廢確認','確定要作廢這份電文嗎？',false,'作廢', async () => { await reqToPromise(tx('cards','readwrite').delete(id)); toast('已作廢'); loadAndRenderCards(); }); };
-
-async function loadAndRenderStamps(){
+ async function loadAndRenderStamps(){
   const stickers = await reqToPromise(tx('stickers').getAll());
   stickers.sort((a,b)=>b.createdAt-a.createdAt);
   const grid = $('#stampGrid'); grid.innerHTML = ''; grid.className = 'stamp-grid' + (isStampBatchMode ? ' batch-mode' : '');
@@ -2217,29 +2214,33 @@ function initAccompanyDrag(){
   f.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - fsx, dy = t.clientY - fsy; if(Math.abs(dx)>5||Math.abs(dy)>5) df = true; if(df){ e.preventDefault(); let l = fil + dx, tp = fit + dy; const mw = window.innerWidth - 56, mh = window.innerHeight - 56; l = Math.max(0, Math.min(l, mw)); tp = Math.max(0, Math.min(tp, mh)); f.style.left=l+'px'; f.style.top=tp+'px'; } }, { passive:false });
   f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); accompanyFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showAccompanyPanel(); } });
 }
+ function playMusic(musics, index){ playlist = musics; currentTrackIndex = index; loadTrack(); $('#musicPlayerFloat').classList.add('show'); }
 
-function playMusic(musics, index){ playlist = musics; currentTrackIndex = index; loadTrack(); $('#musicPlayerFloat').classList.add('show'); }
 function loadTrack(){
   if(currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
   const track = playlist[currentTrackIndex];
   $('#playerTitle').textContent = track.title; $('#playerArtist').textContent = track.artist;
   
   const c = chats.find(x => x.id === currentChatId);
-  const cover = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
-  $('#musicDiscFloat').style.backgroundImage = `url(${cover})`;
-  $('#musicDiscLarge').style.backgroundImage = `url(${cover})`;
   
-  if(c && c.musicCover) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.musicCover})`;
-  } else if(c && c.chatBgImage) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.chatBgImage})`;
+  // 修复黑屏/闪烁：不再使用网络占位图，没有封面时直接给纯色背景，不搞渐变
+  if (c && c.musicCover) {
+    const coverUrl = `url(${c.musicCover})`;
+    $('#musicDiscFloat').style.backgroundImage = coverUrl;
+    $('#musicDiscLarge').style.backgroundImage = coverUrl;
+    $('#musicPlayerPanel').style.backgroundImage = coverUrl;
   } else {
+    $('#musicDiscFloat').style.backgroundImage = 'none';
+    $('#musicDiscFloat').style.backgroundColor = '#333';
+    $('#musicDiscLarge').style.backgroundImage = 'none';
+    $('#musicDiscLarge').style.backgroundColor = '#333';
     $('#musicPlayerPanel').style.backgroundImage = 'none';
   }
 
   audioPlayer.src = track.data;
   audioPlayer.play().then(() => updatePlayState(true)).catch(() => { updatePlayState(false); toast('點擊播放按鈕開始'); });
 }
+
 audioPlayer.addEventListener('timeupdate', () => { if(!audioPlayer.duration) return; const pc = (audioPlayer.currentTime/audioPlayer.duration)*100; $('#progressFill').style.width = pc + '%'; $('#timeCurrent').textContent = formatTime(audioPlayer.currentTime); });
 audioPlayer.addEventListener('loadedmetadata', () => { $('#timeTotal').textContent = formatTime(audioPlayer.duration); });
 audioPlayer.addEventListener('ended', () => { if(playMode === 1){ audioPlayer.currentTime = 0; audioPlayer.play(); } else if(playMode === 3){ updatePlayState(false); } else playNext(); });
@@ -2565,8 +2566,7 @@ function renderMessagesUI(forceBottom) {
       const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop = wrap.scrollHeight;
   }
 }
-
-/* ===== 尺素（收藏）功能 ===== */
+ /* ===== 尺素（收藏）功能 ===== */
 async function getAllCollectedMessages(chatId){
   return new Promise((res, rej) => {
     const idx = tx('messages').index('chatId');
@@ -2789,8 +2789,7 @@ async function sendSms(){
   loadAndRenderSms();
   toast('已投訊');
 }
-
-/* ===== 信訊功能 ===== */
+ /* ===== 信訊功能 ===== */
 async function buildLetterBodyFromCards(){
   const allCards = await reqToPromise(tx('cards').getAll());
   const normal = allCards.filter(x => (x.category || 'normal') === 'normal');
@@ -2997,8 +2996,7 @@ function updateComposeSalutation(){
   $('#composeSalutation').textContent = c ? getDisplayName(c) : '—';
   $('#composeSignature').textContent = c ? getMyName(c) : '—';
 }
-
-function bindEvents(){
+ function bindEvents(){
   function exportData() {
     const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
     let result = {};
@@ -3058,15 +3056,44 @@ function bindEvents(){
   }
 
   document.querySelectorAll('.tab-item').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); tab.classList.add('active'); $('#tabContentCards').style.display='none'; $('#tabContentStickers').style.display='none'; $('#tabContentActions').style.display='none'; $('#tabContentMusic').style.display='none'; if(tab.dataset.tab==='cards'){ $('#tabContentCards').style.display='block'; loadAndRenderCards(); } else if(tab.dataset.tab==='stickers'){ $('#tabContentStickers').style.display='block'; loadAndRenderStamps(); } else if(tab.dataset.tab==='actions'){ $('#tabContentActions').style.display='block'; loadAndRenderActions(); } else { $('#tabContentMusic').style.display='block'; loadAndRenderMusic(); } }; });
-  document.querySelectorAll('.sub-tab').forEach(tab => { if(tab.classList.contains('action-sub-tab')) return; tab.onclick = () => { document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; else $('#newCardsInput').placeholder='起草私密電文...'; loadAndRenderCards(); }; });
-  document.querySelectorAll('.action-sub-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.action-sub-tab').forEach(t => { t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; }); tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); }; });
+  
+  document.querySelectorAll('.sub-tab').forEach(tab => { 
+    if(tab.classList.contains('action-sub-tab')) return; 
+    tab.onclick = () => { 
+      document.querySelectorAll('.sub-tab:not(.action-sub-tab)').forEach(t => { 
+        t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; 
+      }); 
+      tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; 
+      currentSubTab = tab.dataset.subtab; currentSearchQuery=''; $('#searchCardsInput').value=''; isBatchDeleteMode=false; selectedCardIds.clear(); 
+      if(currentSubTab==='normal') $('#newCardsInput').placeholder='起草新報文...'; 
+      else $('#newCardsInput').placeholder='起草私密電文...'; 
+      loadAndRenderCards(); 
+    }; 
+  });
+  
+  document.querySelectorAll('.action-sub-tab').forEach(tab => { 
+    tab.onclick = () => { 
+      document.querySelectorAll('.action-sub-tab').forEach(t => { 
+        t.classList.remove('active'); t.style.color='var(--text-secondary)'; t.style.borderBottom='none'; t.style.fontWeight='normal'; 
+      }); 
+      tab.classList.add('active'); tab.style.color='var(--primary)'; tab.style.borderBottom='none'; tab.style.fontWeight='600'; 
+      currentActionSubTab = tab.dataset.subtab; currentActionSearchQuery=''; $('#searchActionsInput').value=''; isActionBatchDeleteMode=false; selectedActionIds.clear(); loadAndRenderActions(); 
+    }; 
+  });
+  
   $('#backPostOfficeBtn').onclick = () => $('#pagePostOffice').classList.remove('show');
 
   const actionMask = $('#actionSheetMask');
   const closeActionSheet = () => actionMask.classList.remove('show');
   $('#actCancel').onclick = closeActionSheet;
   actionMask.onclick = e => { if(e.target === actionMask) closeActionSheet(); };
-  $('#actPin').onclick = async () => { closeActionSheet(); if(!activeChatForMenu) return; activeChatForMenu.isPinned = !activeChatForMenu.isPinned; await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); };
+  
+  $('#actPin').onclick = async () => { 
+    closeActionSheet(); if(!activeChatForMenu) return; 
+    activeChatForMenu.isPinned = !activeChatForMenu.isPinned; 
+    await reqToPromise(tx('chats','readwrite').put(activeChatForMenu)); 
+    await loadChats(); renderChatList(); toast(activeChatForMenu.isPinned?'已釘選':'已取消釘選'); 
+  };
 
   $('#actLayout').onclick = () => {
     closeActionSheet(); if(!activeChatForMenu) return;
@@ -3074,6 +3101,7 @@ function bindEvents(){
     document.querySelectorAll('.layout-option').forEach(o => o.classList.toggle('active', (o.dataset.layout === (activeChatForMenu.layout || 'jiuumeng'))));
     mask.classList.add('show');
   };
+  
   $('#layoutPanelMask').onclick = async e => {
     if(e.target === $('#layoutPanelMask')){ $('#layoutPanelMask').classList.remove('show'); return; }
     const opt = e.target.closest('.layout-option');
@@ -3088,186 +3116,198 @@ function bindEvents(){
     if(c && c.id === activeChatForMenu.id) applyLayoutClass(c);
     toast(layout === 'yuyan' ? '已切換：魚雁' : '已切換：舊夢');
   };
-  
   $('#actEdit').onclick = () => {
-    closeActionSheet(); if(!activeChatForMenu) return;
-    isEditingChatId = activeChatForMenu.id;
-    $('#createPageTitle').textContent = '編輯資料';
-    $('#inputRoomName').value = activeChatForMenu.roomName || '';
-    $('#inputTheirName').value = activeChatForMenu.theirName || '';
-    $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
-    $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
-    $('#inputMyName').value = activeChatForMenu.myName || '';
-    $('#inputMyNick').value = activeChatForMenu.myNick || '';
-    tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
-    tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
-    
-    const th = $('#theirAvatar'); if(activeChatForMenu.theirAvatar){ th.style.backgroundImage=`url(${activeChatForMenu.theirAvatar})`; th.textContent=''; } else { th.style.backgroundImage=''; th.textContent='祂'; }
-    const me = $('#myAvatar'); if(activeChatForMenu.myAvatar){ me.style.backgroundImage=`url(${activeChatForMenu.myAvatar})`; me.textContent=''; } else { me.style.backgroundImage=''; me.textContent='我'; }
-    const mc = $('#musicCoverUpload'); if(activeChatForMenu.musicCover){ mc.style.backgroundImage=`url(${activeChatForMenu.musicCover})`; mc.textContent=''; } else { mc.style.backgroundImage=''; mc.textContent='圖'; }
-    const chb = $('#chatBgUploadBox'); if(activeChatForMenu.chatBgImage){ chb.style.backgroundImage=`url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent=''; } else { chb.style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景'; }
-    const nb = $('#nightBgUploadBox'); if(activeChatForMenu.nightBgImage){ nb.style.backgroundImage=`url(${activeChatForMenu.nightBgImage})`; $('#nightBgText').textContent=''; } else { nb.style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景'; }
-    const cb = $('#callBgUploadBox'); if(activeChatForMenu.callBgImage){ cb.style.backgroundImage=`url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent=''; } else { cb.style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景'; }
-    const ab = $('#accompanyBgUploadBox'); if(activeChatForMenu.accompanyBgImage){ ab.style.backgroundImage=`url(${activeChatForMenu.accompanyBgImage})`; $('#accompanyBgText').textContent=''; } else { ab.style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景'; }
-    
-    $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
-    $('#pageCreate').classList.add('show');
-  };
+  closeActionSheet(); if(!activeChatForMenu) return;
+  isEditingChatId = activeChatForMenu.id;
+  $('#createPageTitle').textContent = '編輯資料';
+  $('#inputRoomName').value = activeChatForMenu.roomName || '';
+  $('#inputTheirName').value = activeChatForMenu.theirName || '';
+  $('#inputTheirNick').value = activeChatForMenu.theirNick || '';
+  $('#inputTheirSign').value = activeChatForMenu.theirSign || '';
+  $('#inputMyName').value = activeChatForMenu.myName || '';
+  $('#inputMyNick').value = activeChatForMenu.myNick || '';
+  tempTheirAvatar = null; tempMyAvatar = null; tempMusicCover = null; tempChatBg = null; tempNightBg = null; tempCallBg = null; tempAccompanyBg = null;
+  tempChatBgMask = activeChatForMenu.chatBgMask !== undefined ? activeChatForMenu.chatBgMask : 60;
   
-  $('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }, true); };
-  $('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }, true); };
+  const th = $('#theirAvatar'); if(activeChatForMenu.theirAvatar){ th.style.backgroundImage=`url(${activeChatForMenu.theirAvatar})`; th.textContent=''; } else { th.style.backgroundImage=''; th.textContent='祂'; }
+  const me = $('#myAvatar'); if(activeChatForMenu.myAvatar){ me.style.backgroundImage=`url(${activeChatForMenu.myAvatar})`; me.textContent=''; } else { me.style.backgroundImage=''; me.textContent='我'; }
+  const mc = $('#musicCoverUpload'); if(activeChatForMenu.musicCover){ mc.style.backgroundImage=`url(${activeChatForMenu.musicCover})`; mc.textContent=''; } else { mc.style.backgroundImage=''; mc.textContent='圖'; }
+  const chb = $('#chatBgUploadBox'); if(activeChatForMenu.chatBgImage){ chb.style.backgroundImage=`url(${activeChatForMenu.chatBgImage})`; $('#chatBgText').textContent=''; } else { chb.style.backgroundImage=''; $('#chatBgText').textContent='點擊上傳聊天背景'; }
+  const nb = $('#nightBgUploadBox'); if(activeChatForMenu.nightBgImage){ nb.style.backgroundImage=`url(${activeChatForMenu.nightBgImage})`; $('#nightBgText').textContent=''; } else { nb.style.backgroundImage=''; $('#nightBgText').textContent='點擊上傳撩撥背景'; }
+  const cb = $('#callBgUploadBox'); if(activeChatForMenu.callBgImage){ cb.style.backgroundImage=`url(${activeChatForMenu.callBgImage})`; $('#callBgText').textContent=''; } else { cb.style.backgroundImage=''; $('#callBgText').textContent='點擊上傳通話背景'; }
+  const ab = $('#accompanyBgUploadBox'); if(activeChatForMenu.accompanyBgImage){ ab.style.backgroundImage=`url(${activeChatForMenu.accompanyBgImage})`; $('#accompanyBgText').textContent=''; } else { ab.style.backgroundImage=''; $('#accompanyBgText').textContent='點擊上傳相伴背景'; }
+  
+  $('#chatBgMaskRange').value = tempChatBgMask; $('#chatBgMaskValue').textContent = tempChatBgMask + '%';
+  $('#pageCreate').classList.add('show');
+};
 
-  const msgMask = $('#msgActionMask');
-  const closeMsgMask = () => msgMask.classList.remove('show');
-  $('#msgActCancel').onclick = closeMsgMask;
-  msgMask.onclick = e => { if(e.target === msgMask) closeMsgMask(); };
-  $('#msgActCollect').onclick = async () => {
-    closeMsgMask();
-    if(!currentMsgForAction) return;
-    const m = currentMsgForAction;
-    if(m.collectedBy === 'me'){
-      m.collectedBy = null;
-      await reqToPromise(tx('messages','readwrite').put(m));
-      toast('已出素');
-    } else {
-      m.collectedBy = 'me';
-      await reqToPromise(tx('messages','readwrite').put(m));
-      toast('已入素');
-    }
-    currentMsgForAction = null;
-  };
-  $('#msgActBurn').onclick = () => {
-    closeMsgMask();
-    if(!pendingBurnMsg) return;
-    const m = pendingBurnMsg;
-    showCustomDialog('焚毀','確定要焚毀這條消息嗎？',false,'焚毀', async () => {
-      await reqToPromise(tx('messages','readwrite').delete(m.id));
-      currentMessages = currentMessages.filter(x => x.id !== m.id);
-      const el = document.querySelector(`.msg-group[data-msg-id="${m.id}"]`);
-      if(el) el.remove();
-      await touchChat(currentChatId);
-      toast('已焚毀');
-    }, true);
-    pendingBurnMsg = null;
-  };
+$('#actClear').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚稿','確定要焚毀該聊天記錄嗎？',false,'確定', async () => { const msgs = await getMessages(activeChatForMenu.id); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await touchChat(activeChatForMenu.id); renderChatList(); toast('紀錄已焚毀'); }, true); };
+$('#actDelete').onclick = () => { closeActionSheet(); if(!activeChatForMenu) return; showCustomDialog('焚毀','確定要焚毀此會話嗎？',true,'焚毀', async () => { const idx = tx('messages').index('chatId'); const req = idx.getAll(activeChatForMenu.id); const msgs = await reqToPromise(req); for(const m of msgs) await reqToPromise(tx('messages','readwrite').delete(m.id)); await reqToPromise(tx('chats','readwrite').delete(activeChatForMenu.id)); await loadChats(); renderChatList(); toast('會話已焚毀'); }, true); };
 
-  $('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
+const msgMask = $('#msgActionMask');
+const closeMsgMask = () => msgMask.classList.remove('show');
+$('#msgActCancel').onclick = closeMsgMask;
+msgMask.onclick = e => { if(e.target === msgMask) closeMsgMask(); };
+
+$('#msgActCollect').onclick = async () => {
+  closeMsgMask();
+  if(!currentMsgForAction) return;
+  const m = currentMsgForAction;
+  if(m.collectedBy === 'me'){
+    m.collectedBy = null;
+    await reqToPromise(tx('messages','readwrite').put(m));
+    toast('已出素');
+  } else {
+    m.collectedBy = 'me';
+    await reqToPromise(tx('messages','readwrite').put(m));
+    toast('已入素');
+  }
+  currentMsgForAction = null;
+};
+
+$('#msgActBurn').onclick = () => {
+  closeMsgMask();
+  if(!pendingBurnMsg) return;
+  const m = pendingBurnMsg;
+  showCustomDialog('焚毀','確定要焚毀這條消息嗎？',false,'焚毀', async () => {
+    await reqToPromise(tx('messages','readwrite').delete(m.id));
+    currentMessages = currentMessages.filter(x => x.id !== m.id);
+    const el = document.querySelector(`.msg-group[data-msg-id="${m.id}"]`);
+    if(el) el.remove();
+    await touchChat(currentChatId);
+    toast('已焚毀');
+  }, true);
+  pendingBurnMsg = null;
+};
+
+$('#newCardsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#draftCount').textContent = `待定稿：${lines.length} 份`; });
+
+$('#btnAddCards').onclick = async () => {
+  const text = $('#newCardsInput').value.trim(); if(!text) return;
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
+  const all = await reqToPromise(tx('cards').getAll()); 
+  const existing = new Set(all.map(c => c.text));
+  let added = 0, dup = 0;
+  const newCards = [];
   
-  $('#btnAddCards').onclick = async () => {
-    const text = $('#newCardsInput').value.trim(); if(!text) return;
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
-    const all = await reqToPromise(tx('cards').getAll()); 
-    const existing = new Set(all.map(c => c.text));
-    let added = 0, dup = 0;
-    const newCards = [];
-    
-    for(let line of lines){ 
-      if(existing.has(line)){ dup++; continue; } 
-      existing.add(line);
-      newCards.push({ id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }); 
-      added++; 
-    }
-    
-    if (newCards.length > 0) {
-      const store = tx('cards','readwrite');
-      newCards.forEach(card => store.add(card));
-    }
-    
-    $('#newCardsInput').value = ''; $('#draftCount').textContent = '待定稿：0 份';
-    toast(`成功定稿 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : ''));
-    loadAndRenderCards();
-  };
+  for(let line of lines){ 
+    if(existing.has(line)){ dup++; continue; } 
+    existing.add(line);
+    newCards.push({ id:'c_'+Date.now()+Math.random(), text:line, category:currentSubTab, createdAt:Date.now() }); 
+    added++; 
+  }
   
-  $('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
-  $('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
-  $('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
-  $('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }, true); };
-  $('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
-  $('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }, true); };
+  if (newCards.length > 0) {
+    const store = tx('cards','readwrite');
+    newCards.forEach(card => store.add(card));
+  }
   
+  $('#newCardsInput').value = ''; $('#draftCount').textContent = '待定稿：0 份';
+  toast(`成功定稿 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : ''));
+  loadAndRenderCards();
+};
+
+$('#searchCardsInput').oninput = e => { currentSearchQuery = e.target.value.trim(); loadAndRenderCards(); };
+$('#btnBatchDelete').onclick = () => { isBatchDeleteMode = true; selectedCardIds.clear(); loadAndRenderCards(); };
+$('#btnSelectAll').onclick = () => { const cbs = document.querySelectorAll('#cardListContainer input[type="checkbox"]'); if(selectedCardIds.size === cbs.length && cbs.length > 0) selectedCardIds.clear(); else cbs.forEach(cb => selectedCardIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderCards(); };
+$('#btnConfirmDelete').onclick = () => { if(!selectedCardIds.size) return; showCustomDialog('焚毀確認', `確定要焚毀這 ${selectedCardIds.size} 份電文嗎？`, false, '焚毀', async () => { for(const id of selectedCardIds) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已焚毀所選電文'); isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); }, true); };
+$('#btnCancelDelete').onclick = () => { isBatchDeleteMode = false; selectedCardIds.clear(); loadAndRenderCards(); };
+$('#btnDeduplicate').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複項'); return; } showCustomDialog('清冗', `發現 ${dups.length} 條重複電文，是否一併銷毀？`, false, '確認銷毀', async () => { for(const id of dups) await reqToPromise(tx('cards','readwrite').delete(id)); toast('已清理重複項'); loadAndRenderCards(); }, true); };
   $('#btnImport').onclick = () => { const fi = document.createElement('input'); fi.type='file'; fi.accept='.json,.txt'; fi.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let nc = []; const all = await reqToPromise(tx('cards').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text) { const text=it.text.trim(); if(text) nc.push({ text:text, category:it.category || currentSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const text=line.trim(); if(text) nc.push({ text:text, category:currentSubTab }); }); } } catch(err){ toast('收報失敗：文件格式錯誤'); return; } const newCards=[]; for(const card of nc){ if(existing.has(card.text)) dup++; else { existing.add(card.text); newCards.push({ id:'c_'+Date.now()+Math.random(), text:card.text, category:card.category, createdAt:Date.now() }); added++; } } if(newCards.length>0){ const store = tx('cards','readwrite'); newCards.forEach(c=>store.add(c)); } toast(`收報完成：導入 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderCards(); }; rd.readAsText(file); }; fi.click(); };
+
+$('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
+
+if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
+if($('#stampFileInput')) $('#stampFileInput').onchange = e => {
+  const files = Array.from(e.target.files); 
+  if(!files.length) return; 
   
-  $('#btnExport').onclick = async () => { const all = await reqToPromise(tx('cards').getAll()); const f = all.filter(c => (c.category || 'normal') === currentSubTab); if(!f.length){ toast('暫無電文可發報'); return; } $('#dialogTitle').textContent = '發報'; $('#dialogText').textContent = '請選擇發報格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.json'; a.click(); toast('已發報 (JSON)'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentSubTab==='normal'?'常訊電文':'撩撥電文')+'.txt'; a.click(); toast('已發報 (TXT)'); }; };
+  $('#progressDialogMask').classList.add('show'); 
+  $('#progressBarFill').style.width = '10%'; 
+  $('#progressText').textContent = `正在沖印...`; 
 
-  if($('#stampUploadBox')) $('#stampUploadBox').onclick = () => $('#stampFileInput').click();
-  if($('#stampFileInput')) $('#stampFileInput').onchange = e => {
-    const files = Array.from(e.target.files); 
-    if(!files.length) return; 
-    
-    $('#progressDialogMask').classList.add('show'); 
-    $('#progressBarFill').style.width = '10%'; 
-    $('#progressText').textContent = `正在沖印...`; 
-
-    let count = 0;
-    const total = files.length;
-    
-    files.forEach(file => {
-      fileToBase64(file, b64 => {
-        if (b64) {
-          const request = tx('stickers', 'readwrite').add({ id: 's_' + Date.now() + Math.random(), data: b64, createdAt: Date.now() });
-          
-          request.onsuccess = () => {
-            count++;
-            $('#progressBarFill').style.width = (count / total * 100) + '%';
-            if (count === total) {
-              setTimeout(() => {
-                $('#progressDialogMask').classList.remove('show'); 
-                $('#progressBarFill').style.width = '0%'; 
-                $('#stampFileInput').value = ''; 
-                loadAndRenderStamps(); 
-                toast('沖印完成'); 
-              }, 300);
-            }
-          };
-          
-          request.onerror = () => {
-            $('#progressDialogMask').classList.remove('show');
-            toast('沖印失敗：數據庫寫入錯誤');
-          };
-        } else {
-          toast('圖片讀取失敗');
-        }
-      });
+  let count = 0;
+  const total = files.length;
+  
+  files.forEach(file => {
+    fileToBase64(file, b64 => {
+      if (b64) {
+        const request = tx('stickers', 'readwrite').add({ id: 's_' + Date.now() + Math.random(), data: b64, createdAt: Date.now() });
+        
+        request.onsuccess = () => {
+          count++;
+          $('#progressBarFill').style.width = (count / total * 100) + '%';
+          if (count === total) {
+            setTimeout(() => {
+              $('#progressDialogMask').classList.remove('show'); 
+              $('#progressBarFill').style.width = '0%'; 
+              $('#stampFileInput').value = ''; 
+              loadAndRenderStamps(); 
+              toast('沖印完成'); 
+            }, 300);
+          }
+        };
+        
+        request.onerror = () => {
+          $('#progressDialogMask').classList.remove('show');
+          toast('沖印失敗：數據庫寫入錯誤');
+        };
+      } else {
+        toast('圖片讀取失敗');
+      }
     });
-  };
-  $('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
-  $('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
-  $('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };
-  $('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
-  $('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
-  $('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
-  $('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
+  });
+};
 
-  $('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
-  $('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
-  $('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
-  $('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
-  $('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
-  $('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }, true); };
-  $('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
-  $('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
+$('#btnStampImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { try { const data = JSON.parse(ev.target.result); if(Array.isArray(data)){ const store = tx('stickers','readwrite'); for(const it of data) if(it.data) store.add({ id:'s_'+Date.now()+Math.random(), data:it.data, createdAt:Date.now() }); } toast('入畫完成'); loadAndRenderStamps(); } catch(err){ toast('入畫失敗'); } }; rd.readAsText(file); }; inp.click(); };
+
+$('#btnStampExport').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); if(!stickers.length){ toast('暫無印花'); return; } const blob = new Blob([JSON.stringify(stickers.map(s => ({ data:s.data })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='印花.json'; a.click(); toast('已出畫'); };
+
+$('#btnStampDeduplicate').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const seen = new Set(); const dups = []; stickers.forEach(s => { if(seen.has(s.data)) dups.push(s.id); else seen.add(s.data); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清冗', `發現 ${dups.length} 張重複印花，是否銷毀？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已清理'); loadAndRenderStamps(); }, true); };
+
+$('#btnStampBatchDelete').onclick = () => { isStampBatchMode = true; selectedStampIds.clear(); loadAndRenderStamps(); };
+$('#btnStampSelectAll').onclick = () => { const cbs = document.querySelectorAll('#stampGrid input[type="checkbox"]'); if(selectedStampIds.size === cbs.length && cbs.length > 0) selectedStampIds.clear(); else cbs.forEach(cb => selectedStampIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderStamps(); };
+$('#btnStampConfirmDelete').onclick = () => { if(!selectedStampIds.size) return; showCustomDialog('焚毀', `確定焚毀這 ${selectedStampIds.size} 張印花？`, false, '焚毀', async () => { for(const id of selectedStampIds) await reqToPromise(tx('stickers','readwrite').delete(id)); toast('已焚毀'); isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); }, true); };
+$('#btnStampCancelDelete').onclick = () => { isStampBatchMode = false; selectedStampIds.clear(); loadAndRenderStamps(); };
+
+$('#newActionsInput').addEventListener('input', e => { const lines = e.target.value.split('\n').map(l=>l.trim()).filter(l => l !== ''); $('#actionDraftCount').textContent = `待定稿：${lines.length} 份`; });
+
+$('#btnAddActions').onclick = async () => { const text = $('#newActionsInput').value.trim(); if(!text) return; const lines = text.split('\n').map(l=>l.trim()).filter(l => l !== ''); const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added = 0, dup = 0; const newActs=[]; for(let line of lines){ if(existing.has(line)){ dup++; continue; } existing.add(line); newActs.push({ id:'a_'+Date.now()+Math.random(), text:line, category:currentActionSubTab, createdAt:Date.now() }); added++; } if(newActs.length>0){ const store = tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } $('#newActionsInput').value=''; $('#actionDraftCount').textContent='待定稿：0 份'; toast(`成功留痕 ${added} 份` + (dup ? `，略過 ${dup} 份重複` : '')); loadAndRenderActions(); };
+
+$('#searchActionsInput').oninput = e => { currentActionSearchQuery = e.target.value.trim(); loadAndRenderActions(); };
+
+$('#btnActionBatchDelete').onclick = () => { isActionBatchDeleteMode = true; selectedActionIds.clear(); loadAndRenderActions(); };
+$('#btnActionSelectAll').onclick = () => { const cbs = document.querySelectorAll('#actionListContainer input[type="checkbox"]'); if(selectedActionIds.size === cbs.length && cbs.length > 0) selectedActionIds.clear(); else cbs.forEach(cb => selectedActionIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderActions(); };
+$('#btnActionConfirmDelete').onclick = () => { if(!selectedActionIds.size) return; showCustomDialog('抹除', `確定抹除這 ${selectedActionIds.size} 條暗語？`, false, '抹除', async () => { for(const id of selectedActionIds) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已抹除'); isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); }, true); };
+$('#btnActionCancelDelete').onclick = () => { isActionBatchDeleteMode = false; selectedActionIds.clear(); loadAndRenderActions(); };
+
+$('#btnActionDeduplicate').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); const seen = new Set(); const dups = []; f.forEach(c => { if(seen.has(c.text)) dups.push(c.id); else seen.add(c.text); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清影', `發現 ${dups.length} 條重複暗語？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('actions','readwrite').delete(id)); toast('已清理'); loadAndRenderActions(); }, true); };
   $('#btnActionImport').onclick = () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,.txt'; inp.onchange = e => { const file = e.target.files[0]; if(!file) return; const rd = new FileReader(); rd.onload = async ev => { let na = []; const all = await reqToPromise(tx('actions').getAll()); const existing = new Set(all.map(c=>c.text)); let added=0, dup=0; try { if(file.name.endsWith('.json')){ const data = JSON.parse(ev.target.result); if(Array.isArray(data)) data.forEach(it => { if(it.text){ const t=it.text.trim(); if(t) na.push({ text:t, category:it.category || currentActionSubTab }); } }); } else { ev.target.result.split('\n').forEach(line => { const t=line.trim(); if(t) na.push({ text:t, category:currentActionSubTab }); }); } } catch(err){ toast('導入失敗'); return; } const newActs=[]; for(const act of na){ if(existing.has(act.text)) dup++; else { existing.add(act.text); newActs.push({ id:'a_'+Date.now()+Math.random(), text:act.text, category:act.category, createdAt:Date.now() }); added++; } } if(newActs.length>0){ const store=tx('actions','readwrite'); newActs.forEach(a=>store.add(a)); } toast(`導入 ${added} 份` + (dup ? `，略過 ${dup} 份` : '')); loadAndRenderActions(); }; rd.readAsText(file); }; inp.click(); };
-  $('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
 
-  $('#musicFileBox').onclick = () => $('#musicFileInput').click();
-  $('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file){ $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
-  $('#btnAddMusic').onclick = async () => { const title = $('#newMusicTitle').value.trim(), artist = $('#newMusicArtist').value.trim(); if(!title || !artist || !tempMusicFileData){ toast('請填寫歌名、歌手並上傳音檔'); return; } await reqToPromise(tx('music','readwrite').add({ id:'m_'+Date.now(), title, artist, data:tempMusicFileData, createdAt:Date.now() })); $('#newMusicTitle').value=''; $('#newMusicArtist').value=''; $('#musicFileName').textContent='點擊上傳音檔'; tempMusicFileData=null; toast('已留聲'); loadAndRenderMusic(); };
-  $('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
-  $('#btnMusicSelectAll').onclick = () => { const cbs = document.querySelectorAll('#musicListContainer input[type="checkbox"]'); if(selectedMusicIds.size === cbs.length && cbs.length > 0) selectedMusicIds.clear(); else cbs.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderMusic(); };
-  $('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }, true); };
-  $('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
-  $('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }, true); };
+$('#btnActionExport').onclick = async () => { const all = await reqToPromise(tx('actions').getAll()); const f = all.filter(c => (c.category || 'to_them') === currentActionSubTab); if(!f.length){ toast('暫無暗語'); return; } $('#dialogTitle').textContent='投映'; $('#dialogText').textContent='請選擇格式：'; $('#dialogInput').style.display='none'; $('#dialogFooter').innerHTML=`<button class="dialog-btn" id="btnExportJson" style="color:var(--primary);">JSON</button><button class="dialog-btn" id="btnExportTxt" style="color:var(--primary);">TXT</button><button class="dialog-btn cancel" id="btnExportCancel" style="color:var(--text-secondary);flex:.5;">取消</button>`; $('#dialogMask').classList.add('show'); $('#btnExportCancel').onclick = () => $('#dialogMask').classList.remove('show'); $('#btnExportJson').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([JSON.stringify(f.map(c => ({ text:c.text, category:c.category })), null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.json'; a.click(); toast('已投映'); }; $('#btnExportTxt').onclick = () => { $('#dialogMask').classList.remove('show'); const blob = new Blob([f.map(c => c.text).join('\n')], { type:'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=(currentActionSubTab==='to_them'?'予祂暗語':'予我暗語')+'.txt'; a.click(); toast('已投映'); }; };
 
-  $('#stickerBtn').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent'); if(!stickers.length){ toast('尚無印花'); return; } content.innerHTML=''; content.style.display='grid'; $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none'; $('#stickerPanelHeader').innerHTML='選擇印花'; stickers.forEach(s => { const img = document.createElement('img'); img.src = s.data; img.onclick = () => { pendingStickerData = s.data; $('#pendingStickerImg').src = s.data; $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show'); updateSendBtnState(); }; content.appendChild(img); }); $('#stickerPanelMask').classList.add('show'); };
-  $('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
-  $('#flashPanelMask').onclick = e => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
-  $('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
-  $('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#cameraInput').value=''; } };
-  $('#flashAlbum').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#albumInput').click(); };
-  $('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#albumInput').value=''; } };
-  $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; await touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+$('#musicFileBox').onclick = () => $('#musicFileInput').click();
+$('#musicFileInput').onchange = e => { const file = e.target.files[0]; if(file){ $('#musicFileName').textContent = file.name; fileToBase64(file, b => tempMusicFileData = b); } };
+$('#btnAddMusic').onclick = async () => { const title = $('#newMusicTitle').value.trim(), artist = $('#newMusicArtist').value.trim(); if(!title || !artist || !tempMusicFileData){ toast('請填寫歌名、歌手並上傳音檔'); return; } await reqToPromise(tx('music','readwrite').add({ id:'m_'+Date.now(), title, artist, data:tempMusicFileData, createdAt:Date.now() })); $('#newMusicTitle').value=''; $('#newMusicArtist').value=''; $('#musicFileName').textContent='點擊上傳音檔'; tempMusicFileData=null; toast('已留聲'); loadAndRenderMusic(); };
+$('#btnMusicBatchDelete').onclick = () => { isMusicBatchMode = true; selectedMusicIds.clear(); loadAndRenderMusic(); };
+$('#btnMusicSelectAll').onclick = () => { const cbs = document.querySelectorAll('#musicListContainer input[type="checkbox"]'); if(selectedMusicIds.size === cbs.length && cbs.length > 0) selectedMusicIds.clear(); else cbs.forEach(cb => selectedMusicIds.add(cb.getAttribute('onchange').split("'")[1])); loadAndRenderMusic(); };
+$('#btnMusicConfirmDelete').onclick = () => { if(!selectedMusicIds.size) return; showCustomDialog('消聲', `確定消聲這 ${selectedMusicIds.size} 首歌？`, false, '消聲', async () => { for(const id of selectedMusicIds) await reqToPromise(tx('music','readwrite').delete(id)); toast('已消聲'); isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); }, true); };
+$('#btnMusicCancelDelete').onclick = () => { isMusicBatchMode = false; selectedMusicIds.clear(); loadAndRenderMusic(); };
+$('#btnMusicDeduplicate').onclick = async () => { const all = await reqToPromise(tx('music').getAll()); const seen = new Set(); const dups = []; all.forEach(m => { const key = m.title + m.artist; if(seen.has(key)) dups.push(m.id); else seen.add(key); }); if(!dups.length){ toast('未發現重複'); return; } showCustomDialog('清波', `發現 ${dups.length} 首重複？`, false, '確認', async () => { for(const id of dups) await reqToPromise(tx('music','readwrite').delete(id)); toast('已清理'); loadAndRenderMusic(); }, true); };
+
+$('#stickerBtn').onclick = async () => { const stickers = await reqToPromise(tx('stickers').getAll()); const content = $('#stickerPanelContent'); if(!stickers.length){ toast('尚無印花'); return; } content.innerHTML=''; content.style.display='grid'; $('#actionListContent').style.display='none'; $('#musicSelectContent').style.display='none'; $('#stickerPanelHeader').innerHTML='選擇印花'; stickers.forEach(s => { const img = document.createElement('img'); img.src = s.data; img.onclick = () => { pendingStickerData = s.data; $('#pendingStickerImg').src = s.data; $('#pendingStickerPreview').classList.add('show'); $('#stickerPanelMask').classList.remove('show'); updateSendBtnState(); }; content.appendChild(img); }); $('#stickerPanelMask').classList.add('show'); };
+$('#smallFuncBtn').onclick = () => $('#flashPanelMask').classList.add('show');
+$('#flashPanelMask').onclick = e => { if(e.target === $('#flashPanelMask')) $('#flashPanelMask').classList.remove('show'); };
+$('#flashPhoto').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#cameraInput').click(); };
+$('#cameraInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#cameraInput').value=''; } };
+$('#flashAlbum').onclick = () => { $('#flashPanelMask').classList.remove('show'); $('#albumInput').click(); };
+$('#albumInput').onchange = e => { if(e.target.files[0]){ fileToBase64(e.target.files[0], b64 => { const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'cards', text:'', cards:[], stickerData:b64, time:Date.now(), isNightMode: c.isNightMode }; reqToPromise(tx('messages','readwrite').add(msg)).then(() => { currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }); }); $('#albumInput').value=''; } };
+    $('#flashAction').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const all = await reqToPromise(tx('actions').getAll()); const toThem = all.filter(a => a.category === 'to_them'); if(!toThem.length){ toast('尚未留痕任何對祂的動作'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'); content.style.display='none'; $('#musicSelectContent').style.display='none'; list.style.display='flex'; list.innerHTML=''; $('#stickerPanelHeader').innerHTML='予祂'; toThem.forEach(a => { const d = document.createElement('div'); d.className='action-select-item'; d.textContent = a.text; d.onclick = async () => { $('#stickerPanelMask').classList.remove('show'); const c = chats.find(x => x.id === currentChatId); const msg = { id:'m_'+Date.now(), chatId:currentChatId, sender:'me', type:'action', text:'', cards:[a.text], stickerData:null, time:Date.now(), isNightMode: c.isNightMode }; await reqToPromise(tx('messages','readwrite').add(msg)); currentMessages.push(msg); appendMessageDOM(msg, c, false); const wrap = $('#messagesWrap'); if(wrap) wrap.scrollTop=wrap.scrollHeight; await touchChat(currentChatId); isWaitingForMyReply = false; setTimeout(replyFromThem, config.replyMin * 1000 + Math.random() * (config.replyMax - config.replyMin) * 1000); }; list.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+  
   $('#flashAsk').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAskModal(); };
+  
   $('#flashMusic').onclick = async () => { $('#flashPanelMask').classList.remove('show'); const musics = await reqToPromise(tx('music').getAll()); if(!musics.length){ toast('郵電所中尚無留聲'); return; } const content = $('#stickerPanelContent'), list = $('#actionListContent'), ml = $('#musicSelectContent'); content.style.display='none'; list.style.display='none'; ml.style.display='flex'; ml.innerHTML=''; $('#stickerPanelHeader').innerHTML='選擇留聲'; musics.forEach((m, idx) => { const d = document.createElement('div'); d.className='music-select-item'; d.innerHTML = `<div class="music-select-info"><div class="music-title">${escapeHtml(m.title)}</div><div class="music-artist">${escapeHtml(m.artist)}</div></div>`; d.onclick = () => { $('#stickerPanelMask').classList.remove('show'); playMusic(musics, idx); }; ml.appendChild(d); }); $('#stickerPanelMask').classList.add('show'); };
+  
   $('#flashAccompany').onclick = () => { $('#flashPanelMask').classList.remove('show'); openAccompanySelect(); };
 
   $('#btnPlayPause').onclick = () => { if(audioPlayer.paused){ audioPlayer.play(); updatePlayState(true); } else { audioPlayer.pause(); updatePlayState(false); } };
@@ -3282,6 +3322,7 @@ function bindEvents(){
   $('#btnMinimizeCall').onclick = () => { hideCallPanel(); const f = $('#callFloat'); f.classList.add('show'); if(callFloatPos){ const q = clampPos(callFloatPos.left, callFloatPos.top, 56, 56); callFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
   $('#btnMinimizeAccompany').onclick = () => { hideAccompanyPanel(); const f = $('#accompanyFloat'); f.classList.add('show'); if(accompanyFloatPos){ const q = clampPos(accompanyFloatPos.left, accompanyFloatPos.top, 56, 56); accompanyFloatPos = q; f.style.left=q.left+'px'; f.style.top=q.top+'px'; f.style.bottom='auto'; f.style.right='auto'; } else { f.style.bottom='180px'; f.style.right='20px'; f.style.left='auto'; f.style.top='auto'; } };
   $('#btnEndAccompany').onclick = endAccompany;
+  
   $('#accompanySelectMask').onclick = e => { 
     if(e.target === $('#accompanySelectMask')){
       if(isAccompanyWaiting) return;
@@ -3307,6 +3348,7 @@ function bindEvents(){
   $('#backSmsBtn').onclick = () => $('#pageSms').classList.remove('show');
   $('#smsInput').addEventListener('input', function(){ this.style.height='44px'; this.style.height = this.scrollHeight + 'px'; updateSmsSendBtnState(); });
   $('#smsSendBtn').onclick = sendSms;
+  
   $('#smsStickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent');
@@ -3328,9 +3370,11 @@ function bindEvents(){
     });
     $('#stickerPanelMask').classList.add('show');
   };
+  
   $('#smsImgDel').onclick = () => { smsPendingImg = null; $('#smsImgPreviewWrap').style.display='none'; if(!smsPendingSticker) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
   $('#smsStickerDel').onclick = () => { smsPendingSticker = null; $('#smsStickerPreviewWrap').style.display='none'; if(!smsPendingImg) $('#smsAttachPreview').classList.remove('show'); updateSmsSendBtnState(); };
   $('#smsImgFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { smsPendingImg = b; smsPendingSticker = null; $('#smsImgPreview').src = b; $('#smsImgPreviewWrap').style.display='block'; $('#smsStickerPreviewWrap').style.display='none'; $('#smsAttachPreview').classList.add('show'); updateSmsSendBtnState(); }); e.target.value=''; };
+  
   (function addSmsImgBtn(){
     const row = document.querySelector('.sms-target-row');
     if(row && !document.getElementById('smsImgBtn')){
@@ -3354,6 +3398,7 @@ function bindEvents(){
   $('#composeLetterBtn').onclick = openComposeLetter;
   $('#backLetterComposeBtn').onclick = () => $('#pageLetterCompose').classList.remove('show');
   $('#composeToSelect').onchange = e => { composeToChatId = e.target.value; updateComposeSalutation(); };
+  
   $('#composeStickerBtn').onclick = async () => {
     const stickers = await reqToPromise(tx('stickers').getAll());
     const content = $('#stickerPanelContent');
@@ -3372,6 +3417,7 @@ function bindEvents(){
     });
     $('#stickerPanelMask').classList.add('show');
   };
+  
   $('#composeImgBtn').onclick = () => $('#composeImgFile').click();
   $('#composeImgFile').onchange = e => { const f = e.target.files[0]; if(!f) return; fileToBase64(f, b => { composeImg = b; composeSticker = null; $('#composeAttachImg').src = b; $('#composeAttachPreview').style.display='block'; }); e.target.value=''; };
   $('#composeAttachDel').onclick = () => { composeSticker = null; composeImg = null; $('#composeAttachPreview').style.display='none'; };

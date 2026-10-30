@@ -1271,6 +1271,98 @@ function openDB(){
 function tx(store, mode='readonly'){ return db.transaction(store, mode).objectStore(store); }
 function reqToPromise(req){ return new Promise((res, rej) => { req.onsuccess = ()=>res(req.result); req.onerror = ()=>rej(req.error); }); }
 
+/* ===== 啟動自動快照：防止任何意外導致數據丟失，保留最近 2 份 ===== */
+const SNAPSHOT_STORE_KEY = 'nz_snapshots';
+const SNAPSHOT_KEEP = 2;
+const SNAPSHOT_STORES = ['chats','messages','sms','letters','cards','stickers','actions','music'];
+
+function getSnapshots(){
+  try {
+    const s = JSON.parse(localStorage.getItem(SNAPSHOT_STORE_KEY) || '[]');
+    return Array.isArray(s) ? s : [];
+  } catch(e){ return []; }
+}
+
+async function collectSnapshotData(){
+  const arrs = await Promise.all(SNAPSHOT_STORES.map(s => reqToPromise(tx(s).getAll()).catch(()=>[])));
+  const obj = {};
+  SNAPSHOT_STORES.forEach((s, i) => { obj[s] = arrs[i] || []; });
+  return obj;
+}
+
+async function saveSnapshot(){
+  try {
+    const data = await collectSnapshotData();
+    /* 保險：若當前數據為空（可能已異常），不覆蓋已有好快照 */
+    const isEmpty = (!data.chats || !data.chats.length) && (!data.messages || !data.messages.length)
+      && (!data.letters || !data.letters.length) && (!data.sms || !data.sms.length);
+    if(isEmpty && getSnapshots().length) return;
+    const snaps = getSnapshots();
+    snaps.unshift({ time: Date.now(), data });
+    const trimmed = snaps.slice(0, SNAPSHOT_KEEP);
+    try {
+      localStorage.setItem(SNAPSHOT_STORE_KEY, JSON.stringify(trimmed));
+    } catch(quotaErr) {
+      /* 空間不足：只留最新一份再試，仍失敗則放棄，不影響正常使用 */
+      try { localStorage.setItem(SNAPSHOT_STORE_KEY, JSON.stringify(trimmed.slice(0, 1))); }
+      catch(e2) { }
+    }
+  } catch(e){ }
+}
+
+function fmtSnapshotTime(t){
+  const d = new Date(t);
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+async function restoreSnapshotData(snap){
+  if(!snap || !snap.data) return;
+  $('#progressDialogMask').classList.add('show');
+  $('#progressText').textContent = '正在從快照恢復...';
+  $('#progressBarFill').style.width = '30%';
+  let done = 0;
+  for(const s of SNAPSHOT_STORES){
+    const arr = Array.isArray(snap.data[s]) ? snap.data[s] : null;
+    if(arr){
+      const store = tx(s, 'readwrite');
+      arr.forEach(item => store.put(item));
+    }
+    done++;
+    $('#progressBarFill').style.width = (30 + done / SNAPSHOT_STORES.length * 60) + '%';
+  }
+  $('#progressBarFill').style.width = '100%';
+  setTimeout(() => {
+    $('#progressDialogMask').classList.remove('show');
+    toast('已從快照恢復，即將刷新');
+    setTimeout(() => location.reload(), 1000);
+  }, 800);
+}
+
+function showSnapshotRestore(){
+  const snaps = getSnapshots();
+  if(!snaps.length){ toast('尚無可用快照'); return; }
+  showCustomDialog('快照恢復', '請選擇要恢復的快照：', false, '', null);
+  const items = snaps.map((s, i) => {
+    const chatCount = (s.data && Array.isArray(s.data.chats)) ? s.data.chats.length : 0;
+    const msgCount = (s.data && Array.isArray(s.data.messages)) ? s.data.messages.length : 0;
+    return `<div class="snapshot-item" data-idx="${i}" style="padding:14px 10px;text-align:center;color:var(--primary);font-size:14px;border-top:1px solid var(--border-light);cursor:pointer;">${fmtSnapshotTime(s.time)} · ${chatCount} 聊天室 / ${msgCount} 條記錄</div>`;
+  }).join('');
+  $('#dialogText').innerHTML = items;
+  $('#dialogFooter').innerHTML = `<button class="dialog-btn cancel" id="btnCancelSnapshot" style="color:var(--text-secondary);">取消</button>`;
+  $('#btnCancelSnapshot').onclick = () => $('#dialogMask').classList.remove('show');
+  document.querySelectorAll('.snapshot-item').forEach(el => {
+    el.onclick = () => {
+      const idx = parseInt(el.dataset.idx, 10);
+      const snap = snaps[idx];
+      $('#dialogMask').classList.remove('show');
+      showCustomDialog('警告', '從快照恢復會以快照內容覆蓋同名數據，是否繼續？', false, '確認恢復', async () => {
+        await restoreSnapshotData(snap);
+      }, true);
+    };
+  });
+}
+
 let chats = [], currentChatId = null, currentMessages = [], pendingStickerData = null;
 let tempTheirAvatar = null, tempMyAvatar = null, tempMusicCover = null, tempChatBg = null, tempNightBg = null, tempCallBg = null, tempAccompanyBg = null, tempChatBgMask = 60, isEditingChatId = null;
 let longPressTimer = null, activeChatForMenu = null;
@@ -1345,12 +1437,12 @@ function getMyName(c){ return (c && (c.myNick || c.myName)) ? (c.myNick || c.myN
 
 async function init(){
   try {
-    const alreadyHasNewTables = await hasNewTables();
-    if(!alreadyHasNewTables){
-      await deleteDB();
-    }
+    /* 已移除 hasNewTables()/deleteDB() 升級邏輯：
+       舊寫法在檢測不到 sms/letters 表時會直接刪庫，導致全部數據被清空。
+       實際上 openDB() 內已有「缺哪張補哪張」的自動建表邏輯，數據可原樣保留，無需刪庫。 */
     await openDB();
     await loadChats();
+    try { await saveSnapshot(); } catch(snapErr) { console.warn('快照保存失敗', snapErr); }
     renderChatList();
     bindEvents();
     applyThemeAndBg();
@@ -2218,24 +2310,52 @@ function initAccompanyDrag(){
   f.addEventListener('touchend', () => { const r = f.getBoundingClientRect(); accompanyFloatPos = { left:r.left, top:r.top }; if(!df){ f.classList.remove('show'); showAccompanyPanel(); } });
 }
 
-function playMusic(musics, index){ playlist = musics; currentTrackIndex = index; loadTrack(); $('#musicPlayerFloat').classList.add('show'); }
+/* 留聲底圖：開播時鎖定，切歌不再重新查聊天室，避免掉回初始圖 */
+let playChatId = null;
+let playCover = null;
+/* 未設留聲底圖時的內置黑膠唱片紋理（純本地，不請求境外圖） */
+const DEFAULT_DISC_STYLE = 'radial-gradient(circle at 50% 50%, #3b3b3b 0%, #2b2b2b 16%, #171717 18%, #333 20%, #1c1c1c 34%, #262626 36%, #121212 62%, #0b0b0b 100%)';
+
+function resolveMusicCover(chatId){
+  const c = chats.find(x => x.id === chatId);
+  return (c && c.musicCover) ? c.musicCover : null;
+}
+
+function applyPlayCover(){
+  if(playCover){
+    $('#musicDiscFloat').style.backgroundImage = `url(${playCover})`;
+    $('#musicDiscLarge').style.backgroundImage = `url(${playCover})`;
+    $('#musicPlayerPanel').style.backgroundImage = `url(${playCover})`;
+  } else {
+    $('#musicDiscFloat').style.backgroundImage = DEFAULT_DISC_STYLE;
+    $('#musicDiscLarge').style.backgroundImage = DEFAULT_DISC_STYLE;
+    $('#musicPlayerPanel').style.backgroundImage = 'none';
+  }
+}
+
+/* 編輯聊天室改了留聲底圖時，若正在播放則即時同步 */
+function syncPlayCoverIfPlaying(chatId){
+  if(!$('#musicPlayerFloat')) return;
+  if(!$('#musicPlayerFloat').classList.contains('show')) return;
+  if(playChatId && chatId && playChatId !== chatId) return;
+  playCover = resolveMusicCover(playChatId || chatId);
+  applyPlayCover();
+}
+
+function playMusic(musics, index){
+  playlist = musics; currentTrackIndex = index;
+  playChatId = currentChatId;
+  playCover = resolveMusicCover(playChatId);
+  loadTrack();
+  $('#musicPlayerFloat').classList.add('show');
+}
 function loadTrack(){
   if(currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return;
   const track = playlist[currentTrackIndex];
   $('#playerTitle').textContent = track.title; $('#playerArtist').textContent = track.artist;
   
-  const c = chats.find(x => x.id === currentChatId);
-  const cover = c && c.musicCover ? c.musicCover : 'https://via.placeholder.com/56/000000/FFFFFF?text=Music';
-  $('#musicDiscFloat').style.backgroundImage = `url(${cover})`;
-  $('#musicDiscLarge').style.backgroundImage = `url(${cover})`;
-  
-  if(c && c.musicCover) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.musicCover})`;
-  } else if(c && c.chatBgImage) {
-    $('#musicPlayerPanel').style.backgroundImage = `url(${c.chatBgImage})`;
-  } else {
-    $('#musicPlayerPanel').style.backgroundImage = 'none';
-  }
+  /* 底圖沿用開播時鎖定的 playCover，不隨 currentChatId 變化 */
+  applyPlayCover();
 
   audioPlayer.src = track.data;
   audioPlayer.play().then(() => updatePlayState(true)).catch(() => { updatePlayState(false); toast('點擊播放按鈕開始'); });
@@ -3000,51 +3120,93 @@ function updateComposeSalutation(){
 
 function bindEvents(){
   function exportData() {
-    const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
+    /* 存檔範圍：聊天室、聊天記錄（含尺素）、信訊、簡訊 + localStorage 其他數據；不含郵電所 */
+    const stores = ['chats','messages','sms','letters'];
+    const settingsKeys = ['nz_theme','nz_main_bg','nz_main_bg_mask','nz_config','nz_fav_last_chat'];
     let result = {};
     let completed = 0;
+    let hasFailed = false;
     $('#progressDialogMask').classList.add('show');
     $('#progressText').textContent = '正在打包數據...';
     $('#progressBarFill').style.width = '0%';
     
+    const finishExport = () => {
+      if(hasFailed) return;
+      const payload = { format: 'nanzhou_backup', version: 2, exportTime: new Date().toISOString(), data: result, settings: {} };
+      settingsKeys.forEach(k => { const v = localStorage.getItem(k); if(v !== null) payload.settings[k] = v; });
+      try {
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
+        $('#progressDialogMask').classList.remove('show');
+        toast('存檔成功');
+      } catch(err) {
+        $('#progressDialogMask').classList.remove('show');
+        toast('存檔失敗：文件生成出錯');
+      }
+    };
+    
     stores.forEach(storeName => {
       const req = tx(storeName).getAll();
       req.onsuccess = () => {
+        if(hasFailed) return;
         result[storeName] = req.result;
         completed++;
         $('#progressBarFill').style.width = (completed / stores.length * 100) + '%';
-        if(completed === stores.length) {
-          const blob = new Blob([JSON.stringify(result, null, 2)], { type:'application/json' });
-          const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='南洲舊夢_備份_'+Date.now()+'.json'; a.click();
-          $('#progressDialogMask').classList.remove('show');
-          toast('存檔成功');
-        }
+        if(completed === stores.length) finishExport();
+      };
+      req.onerror = () => {
+        if(hasFailed) return;
+        hasFailed = true;
+        $('#progressDialogMask').classList.remove('show');
+        toast('存檔失敗：讀取數據出錯，請重試');
       };
     });
+    
+    /* 保險：5 秒仍未完成則提示並關閉進度條，避免永久卡死 */
+    setTimeout(() => {
+      if(!hasFailed && completed < stores.length){
+        hasFailed = true;
+        $('#progressDialogMask').classList.remove('show');
+        toast('存檔超時，請重試');
+      }
+    }, 5000);
   }
 
   function importData(file) {
     const reader = new FileReader();
     reader.onload = e => {
       try {
-        const data = JSON.parse(e.target.result);
-        showCustomDialog('警告', '讀檔將覆蓋當前所有數據，是否繼續？', false, '確認覆蓋', async () => {
+        const raw = JSON.parse(e.target.result);
+        /* 兼容舊備份：舊格式頂層直接是 chats/messages...，新格式為 { data:{...}, settings:{...} } */
+        const data = (raw && raw.data && typeof raw.data === 'object') ? raw.data : raw;
+        const settings = (raw && raw.settings && typeof raw.settings === 'object') ? raw.settings : null;
+        showCustomDialog('警告', '讀檔將覆蓋當前聊天室、聊天記錄、信訊與簡訊（郵電所數據保留），是否繼續？', false, '確認覆蓋', async () => {
           $('#progressDialogMask').classList.add('show');
           $('#progressText').textContent = '正在恢復數據...';
+          $('#progressBarFill').style.width = '20%';
           
-          const stores = ['chats','messages','cards','stickers','actions','music','sms','letters'];
+          /* 只清空備份涵蓋的倉庫，郵電所（cards/stickers/actions/music）一律不動 */
+          const stores = ['chats','messages','sms','letters'];
           for(let s of stores) {
              const store = tx(s, 'readwrite');
              store.clear();
           }
           
           setTimeout(async () => {
+            let done = 0;
             for(let s of stores) {
                if(data[s] && Array.isArray(data[s])) {
                  const store = tx(s, 'readwrite');
-                 data[s].forEach(item => store.add(item));
+                 /* put 而非 add：遇到重複主鍵覆寫而非靜默失敗 */
+                 data[s].forEach(item => store.put(item));
                }
+               done++;
+               $('#progressBarFill').style.width = (20 + done / stores.length * 70) + '%';
             }
+            if(settings){
+              Object.keys(settings).forEach(k => { try{ localStorage.setItem(k, settings[k]); }catch(err){} });
+            }
+            $('#progressBarFill').style.width = '100%';
             setTimeout(() => {
               $('#progressDialogMask').classList.remove('show');
               toast('讀檔成功，即將刷新');
@@ -3423,6 +3585,7 @@ function bindEvents(){
         if(tempAccompanyBg !== null) c.accompanyBgImage = tempAccompanyBg;
         c.chatBgMask = tempChatBgMask;
         await reqToPromise(tx('chats','readwrite').put(c));
+        if(tempMusicCover !== null) syncPlayCoverIfPlaying(c.id);
         toast('資料已更新');
       }
     } else {
@@ -3465,8 +3628,9 @@ function bindEvents(){
     }
     else if(act === 'export') { 
       showCustomDialog('存檔與讀檔', '請選擇要匯出備份，或從備份讀取（覆蓋當前數據）。', false, '', null);
-      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
+      $('#dialogFooter').innerHTML = `<button class="dialog-btn" id="btnExportData" style="color:var(--primary);">匯出備份</button><button class="dialog-btn" id="btnImportData" style="color:var(--primary);">導入備份</button><button class="dialog-btn" id="btnSnapshotRestore" style="color:var(--primary);">快照恢復</button><button class="dialog-btn cancel" id="btnCancelArchive" style="color:var(--text-secondary); flex:0.5;">取消</button>`;
       $('#btnCancelArchive').onclick = () => $('#dialogMask').classList.remove('show');
+      $('#btnSnapshotRestore').onclick = () => { $('#dialogMask').classList.remove('show'); showSnapshotRestore(); };
       $('#btnExportData').onclick = () => { $('#dialogMask').classList.remove('show'); exportData(); };
       $('#btnImportData').onclick = () => { 
         $('#dialogMask').classList.remove('show');

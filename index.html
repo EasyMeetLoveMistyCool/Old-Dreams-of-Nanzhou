@@ -62,8 +62,9 @@
   }
 
   #app { height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden; background:var(--bg-color); }
-  .page { position:absolute; inset:0; display:flex; flex-direction:column; transition:transform .25s ease; }
-  .page-list { z-index:1; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); }
+  .page { position:absolute; inset:0; display:flex; flex-direction:column; visibility:hidden; transition:transform .25s ease, visibility 0s linear 0s; }
+  .page.show { visibility:visible; }
+  .page-list { z-index:1; visibility:visible; } .page-create,.page-sub,.page-settings { z-index:2; transform:translateX(100%); } .page-chat { z-index:3; transform:translateX(100%); } .page-adjust { z-index:5; transform:translateX(100%); } .page-fav { z-index:6; transform:translateX(100%); }
   .page-sms { z-index:7; transform:translateX(100%); }
   .page-letters { z-index:8; transform:translateX(100%); }
   .page-letter-compose { z-index:9; transform:translateX(100%); }
